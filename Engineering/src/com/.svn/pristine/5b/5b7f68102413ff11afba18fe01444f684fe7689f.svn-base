@@ -1,0 +1,543 @@
+Index: firstplayable/hxlib/audio/WebAudio.hx
+===================================================================
+--- firstplayable/hxlib/audio/WebAudio.hx	(revision 1450)
++++ firstplayable/hxlib/audio/WebAudio.hx	(working copy)
+@@ -16,21 +16,24 @@
+ import com.firstplayable.hxlib.events.VolumeChangedEvent;
+ import flash.events.EventDispatcher;
+ import haxe.ds.StringMap;
+-import howler.Howl;
+-import howler.Howler;
++#if js
++import lime.media.howlerjs.Howl;
++import lime.media.howlerjs.Howler;
++#end
+ import motion.Actuate;
+ import motion.actuators.GenericActuator;
+ 
+ using com.firstplayable.hxlib.audio.WebAudioObject;
+ 
+-#if !js
+-#error "WebAudio is only supported in html5 target."
++//#if !js
++	//#error "WebAudio is only supported in html5 target."
++//#end
++#if js
++//#if (!howlerjs || howlerjs < "1.1.25")
++//#error "Could not find haxelib 'howlerjs 1.1.25', does it need to be installed?"
++//#end
+ #end
+ 
+-#if (!howlerjs || howlerjs < "1.1.25")
+-#error "Could not find haxelib 'howlerjs 1.1.25', does it need to be installed?"
+-#end
+-
+ class WebAudio
+ {
+ 	private static var HUSH( default, null ):Bool = true;
+@@ -76,7 +79,9 @@
+ 	private static var m_bgmTimer:GenericActuator<Dynamic> = null;
+ 
+ 	//local props
++	#if js
+ 	private var m_audioOptions:StringMap<HowlOptions>;	//options to store lightweight unloaded audio
++	#end
+ 	private var m_audioLoads:StringMap<WebAudioObject>;	//storing loaded audio
+ 	private var m_audioQ:Array<WebAudioObject>;			//storing active audio
+ 	private var m_curSnd:WebAudioObject;				//storing currentaudio
+@@ -98,8 +103,13 @@
+ 	{
+ 		//TODO: Howler.mute() does not seem to work in CocoonJS environment, but volume() is functional in all environments.
+ 		//Howler.mute( muted );
++		#if js
+ 		muted ? Howler.volume( 0 ) : Howler.volume( 1 );
+ 		return mute = muted;
++		#else
++		//TODO: non js impl
++		return true;
++		#end
+ 	}
+ 
+ 	private static function set_muteBgm( muted:Bool ):Bool
+@@ -122,14 +132,21 @@
+ 	//setter for volume
+ 	private static function set_volume( newVolume:Float ):Float
+ 	{
++		#if js
+ 		return volume = Howler.volume( newVolume );
++		#else
++		//TODO: non js impl
++		return 0.0;
++		#end
+ 	}
+ 
+ 	private static function set_bgmVolume( vol:Float ):Float
+ 	{
+ 		if (m_curBgm != null)
+-		{
++		{	
++			#if js
+ 			m_curBgm.sound.volume( Math.max( 0, Math.min( vol, 1.0 ) ) );
++			#end
+ 		}
+ 
+ 		return bgmVolume = vol;
+@@ -147,7 +164,9 @@
+ 	 */
+ 	function new():Void
+ 	{
++		#if js
+ 		m_audioOptions = new StringMap();
++		#end
+ 		m_audioLoads = new StringMap();
+ 		m_audioQ = [];
+ 		mute = false;
+@@ -167,9 +186,11 @@
+ 		
+ 		if( m_curSnd.isValid() )
+ 		{
+-			m_curSnd.sound.off( "end" );
++			#if js
++			m_curSnd.sound.off( "end", null );
+ 			m_curSnd.sound.pause();
+ 			m_curSnd.sound.seek( 0 );
++			#end
+ 		}
+ 		
+ 		stop();
+@@ -192,8 +213,10 @@
+ 				continue;
+ 			}
+ 			
+-			loads.sound.off( "end" );
++			#if js
++			loads.sound.off( "end", null );
+ 			loads.sound.stop();
++			#end
+ 		}
+ 	}
+ 	
+@@ -216,8 +239,9 @@
+ 		var sndName:String = ( id == null ) ? urls[ 0 ] : id;
+ 		sndName = sndName.toLowerCase();
+ 		
+-		var options:HowlOptions = { };
+-		options.src = urls;
++		#if js
++		var options:HowlOptions = { src: urls };
++		//options.src = urls;
+ 		options.onplay = onPlay;
+ 		options.onpause = onPause;
+ 		options.onload = function () onLoad( sndName );
+@@ -232,6 +256,7 @@
+ 		{
+ 			m_audioOptions.set( sndName, options );
+ 		}
++		#end
+ 	}
+ 	
+ 	public function has( id:String ):Bool
+@@ -243,8 +268,12 @@
+ 	{
+ 		id = id.toLowerCase();
+ 		var sound = m_audioLoads.get( id );
+-
++		
++		#if js
+ 		return sound == null ? 0 : sound.sound.duration();
++		#else
++		return 0;
++		#end
+ 	}
+ 	
+ 	/**
+@@ -266,7 +295,9 @@
+ 				continue;
+ 			}
+ 			
++			#if js
+ 			sound.sound.unload();
++			#end
+ 			m_audioLoads.remove( id );
+ 		}
+ 	}
+@@ -290,6 +321,7 @@
+ 				continue;
+ 			}
+ 			
++			#if js
+ 			var opts = m_audioOptions.get( id );
+ 			
+ 			if ( opts == null )
+@@ -299,6 +331,9 @@
+ 			}
+ 			
+ 			var snd:WebAudioObject = new WebAudioObject( id , new Howl( opts ) ); //load audio
++			#else
++			var snd:WebAudioObject = new WebAudioObject( id );
++			#end
+ 			m_audioLoads.set( id, snd );
+ 		}
+ 
+@@ -342,6 +377,7 @@
+ 	//determines if sounds loading are completed
+ 	private function checkDoneLoading():Void
+ 	{
++		#if js
+ 		for ( audioObj in m_audioLoads )
+ 		{
+ 			// Seeing a compile error on state()?
+@@ -357,6 +393,7 @@
+ 			}
+ 			
+ 		}
++		#end
+ 		
+ 		onLoadsComplete();
+ 	}
+@@ -367,7 +404,8 @@
+ 		if (!HUSH) { Debug.log( "sounds loaded" ); }
+ 
+ 		var failed:Array<String> = [];
+-			
++		
++		#if js
+ 		for ( id in m_audioOptions.keys() )
+ 		{
+ 			if ( !m_audioLoads.exists( id ) )
+@@ -375,13 +413,16 @@
+ 				failed.push( id );
+ 			}
+ 		}
++		#end
+ 		for ( webAudioObj in m_audioLoads )
+ 		{
++			#if js
+ 			// See "compile error" note above.
+ 			if ( webAudioObj.sound == null || ( webAudioObj.sound.state() != "loaded" ) )
+ 			{
+ 				failed.push( webAudioObj.id );
+ 			}
++			#end
+ 		}
+ 			
+ 		if (!HUSH) { Debug.log( "The following sounds failed to load... " + failed ); }
+@@ -428,7 +469,11 @@
+ 	//attempts to play the next sound in the queue
+ 	private function playNext():Void
+ 	{
+-		if ( m_curSnd.isValid() && m_curSnd.sound.playing() )
++		if ( m_curSnd.isValid() 
++		#if js
++		&& m_curSnd.sound.playing()
++		#end
++		)
+ 		{
+ 			if (!HUSH) { Debug.log("still playing, skipping..."); }
+ 			return;
+@@ -437,7 +482,9 @@
+ 		m_curSnd = m_audioQ.shift();
+ 		if ( m_curSnd.isValid() )
+ 		{
++			#if js
+ 			m_curSnd.sound.play();
++			#end
+ 		}
+ 	}
+ 	
+@@ -448,7 +495,9 @@
+ 	{
+ 		if ( m_curSnd.isValid() )
+ 		{
++			#if js
+ 			m_curSnd.sound.pause();
++			#end
+ 		}
+ 		
+ 		pauseBGM();
+@@ -462,9 +511,11 @@
+ 		resumeBGM();
+ 		
+ 		if ( !m_curSnd.isValid() ) return;
++		#if js
+ 		m_curSnd.sound.play();
+ 		//TODO: replace with sound id, eventually
+ 		if (!HUSH) { Debug.log( "sound resumed; duration = " + m_curSnd.sound.duration ); }
++		#end
+ 	}
+ 	
+ 	/**
+@@ -485,7 +536,9 @@
+ 				return;
+ 			}
+ 		
++			#if js
+ 			m_curSnd.sound.stop();
++			#end
+ 			if (!HUSH) { Debug.log( "stopping sound " ); }
+ 		
+ 			onEnd();
+@@ -506,7 +559,9 @@
+ 		if (m_audioLoads.exists(id))
+ 		{
+ 			var sound = m_audioLoads.get(id);
++			#if js
+ 			sound.sound.stop();
++			#end
+ 			if (!HUSH) { Debug.log( "stopping sound " + id ); }
+ 		}
+ 	}
+@@ -544,23 +599,31 @@
+ 		if (vol != null)
+ 		{
+ 			// Valid volume is between 0.0 and 1.0
++			#if js
+ 			sound.sound.volume( Math.max( 0, Math.min( vol, 1.0 ) ) );
++			#end
+ 		}
+ 		
+ 		if (callback != null)
+ 		{
++			#if js
+ 			sound.sound.once("end", callback);
++			#end
+ 		}
+ 		
+ 		if (bgmduck)
+ 		{
+ 			duckBGM();
++			#if js
+ 			sound.sound.once("end", unDuckBGM);
++			#end
+ 		}
+ 		
+ 		if (!isSFX)
+ 		{
++			#if js
+ 			sound.sound.once("end", onEnd);
++			#end
+ 		}
+ 		
+ 		//if sfx, play now and skip queue
+@@ -568,10 +631,14 @@
+ 		{
+ 			if (muteSfx)
+ 			{
++				#if js
+ 				sound.sound.volume(0);
++				#end
+ 			}
+ 
++			#if js
+ 			sound.sound.play();
++			#end
+ 			return;
+ 		}
+ 		
+@@ -618,10 +685,12 @@
+ 	 */
+ 	public function isSoundPlaying( id:String ):Bool
+ 	{
++		#if js
+ 		if ( m_curSnd.isValid() && m_curSnd.id == id && m_curSnd.sound.playing() )
+ 		{
+ 			return true;
+ 		}
++		#end
+ 		return false;
+ 	}
+ 	
+@@ -631,6 +700,7 @@
+ 	 */
+ 	public function isVOPlaying():Bool
+ 	{
++		#if js
+ 		if ( m_curSnd.isValid() && m_curSnd.sound.playing() )
+ 		{
+ 			var lowerId:String = m_curSnd.id.toLowerCase();
+@@ -640,6 +710,7 @@
+ 				return true;
+ 			}
+ 		}
++		#end
+ 		return false;
+ 	}
+ 	
+@@ -680,6 +751,7 @@
+ 		
+ 		if (!HUSH) { Debug.log( "play music " + id ); }
+ 		
++		#if js
+ 		m_curBgm.sound.volume( Math.max( 0, Math.min( vol, 1.0 ) ) );
+ 		m_curBgmID = m_curBgm.sound.play();
+ 		//m_curBgm.sound.loop( true, m_curBgmID );
+@@ -687,6 +759,7 @@
+ 		Actuate.stop( m_bgmTimer, null, false, false );
+ 		m_bgmTimer = Actuate.timer( m_curBgm.sound.duration() ).onComplete( loopBGM );
+ 		//m_curBgm.sound.once("end", loopBGM);
++		#end
+ 	}
+ 	
+ 	public function resumeBGMTimer():Void
+@@ -699,7 +772,9 @@
+ 	
+ 	private function loopBGM():Void
+ 	{
++		#if js
+ 		playBGM( m_curBgm.id, true, m_curBgm.sound.volume() );
++		#end
+ 	}
+ 	
+ 	public function stopBGM():Void
+@@ -711,7 +786,9 @@
+ 		
+ 		if ( m_curBgm.isValid() )
+ 		{
++			#if js
+ 			m_curBgm.sound.stop();
++			#end
+ 		}
+ 	}
+ 	
+@@ -724,11 +801,13 @@
+ 	{
+ 		if ( m_curBgm.isValid() )
+ 		{
++			#if js
+ 			m_curBgmID = m_curBgm.sound.play();
+ 			// m_curBgm.sound.loop( true, m_curBgmID );
+ 
+ 			Actuate.stop( m_bgmTimer, null, false, false );
+ 			m_bgmTimer = Actuate.timer( m_curBgm.sound.duration() ).onComplete( loopBGM );
++			#end
+ 		}
+ 	}
+ 
+@@ -741,7 +820,9 @@
+ 	{
+ 		if (play == null)
+ 		{
++			#if js
+ 			play = !m_curBgm.sound.playing();
++			#end
+ 		}
+ 
+ 		if (play)
+@@ -758,17 +839,21 @@
+ 	
+ 	public function duckBGM():Void
+ 	{
++		#if js
+ 		var volume:Float = VOL_DEFAULT_BGM;// m_curBgm.sound.volume();
+ 		if (!HUSH) { Debug.log( "Ducking BGM from " + m_curBgm.sound.volume() + " to " + VOL_DUCKED_BGM ); }
+ 		m_curBgm.sound.fade( volume, VOL_DUCKED_BGM, BGM_DUCK_MS );
++		#end
+ 	}
+ 	
+ 	public function unDuckBGM():Void
+ 	{
++		#if js
+ 		//Note that the sound.volume() is maintained through the fade so we can return to what it was originally set at
+ 		var volume:Float = VOL_DEFAULT_BGM;//m_curBgm.sound.volume();
+ 		if (!HUSH) { Debug.log( "Unducking BGM from " + VOL_DUCKED_BGM + " to " + m_curBgm.sound.volume() ); }
+ 		m_curBgm.sound.fade( VOL_DUCKED_BGM, volume, BGM_UNDUCK_MS );
++		#end
+ 	}
+ 	
+ }
+Index: firstplayable/hxlib/audio/WebAudioObject.hx
+===================================================================
+--- firstplayable/hxlib/audio/WebAudioObject.hx	(revision 1450)
++++ firstplayable/hxlib/audio/WebAudioObject.hx	(working copy)
+@@ -12,23 +12,36 @@
+ ///////////////////////////////////////////////////////////////////////////
+ 
+ package com.firstplayable.hxlib.audio;
+-import howler.Howl;
++#if js
++import lime.media.howlerjs.Howl;
++#end
+ 
+-
+ class WebAudioObject
+ {
+ 	public var id( default, null ):String;
++	#if js
+ 	public var sound( default, null ):Howl;
++	#end
+ 	
++	#if js
+ 	public function new( sndID:String, snd:Howl ):Void
++	#else
++	public function new( sndID:String ):Void
++	#end
+ 	{
+ 		id = sndID;
++		#if js
+ 		sound = snd;
++		#end
+ 	}
+ 	
+ 	public static function isValid( sound:WebAudioObject ):Bool
+ 	{
++		#if js
+ 		return ( sound != null && sound.sound != null );
++		#else
++		return false;
++		#end
+ 	}
+ 
+ }
+\ No newline at end of file
+Index: firstplayable/hxlib/debug/cheats/cheatItems/CheatItem.hx
+===================================================================
+--- firstplayable/hxlib/debug/cheats/cheatItems/CheatItem.hx	(revision 1450)
++++ firstplayable/hxlib/debug/cheats/cheatItems/CheatItem.hx	(working copy)
+@@ -426,7 +426,7 @@
+ 			return false;
+ 		}
+ 		
+-		return (m_textFields.indexOf(e.target) != -1);
++		return (m_textFields.indexOf(cast(e.target, TunableTextField)) != -1);
+ 	}
+ 	
+ 	/**
+Index: firstplayable/hxlib/debug/tunables/tunableItems/TunableItem.hx
+===================================================================
+--- firstplayable/hxlib/debug/tunables/tunableItems/TunableItem.hx	(revision 1450)
++++ firstplayable/hxlib/debug/tunables/tunableItems/TunableItem.hx	(working copy)
+@@ -560,7 +560,7 @@
+ 			return false;
+ 		}
+ 		
+-		return (m_textFields.indexOf(e.target) != -1);
++		return (m_textFields.indexOf(cast(e.target, TunableTextField)) != -1);
+ 	}
+ 	
+ 	/**
+Index: firstplayable/hxlib/display/OPSprite.hx
+===================================================================
+--- firstplayable/hxlib/display/OPSprite.hx	(revision 1450)
++++ firstplayable/hxlib/display/OPSprite.hx	(working copy)
+@@ -524,7 +524,7 @@
+ 				boundsToUse = __tempBounds;
+ 			}
+ 			
+-			var transformedBounds = openfl.geom.Rectangle.__temp;
++			var transformedBounds:Rectangle = new Rectangle();
+ 			boundsToUse.__transform( transformedBounds, matrix );
+ 			rect.__expand( transformedBounds.x, transformedBounds.y, transformedBounds.width, transformedBounds.height );
+ 		}
+Index: firstplayable/hxlib/loader/ResMan.hx
+===================================================================
+--- firstplayable/hxlib/loader/ResMan.hx	(revision 1450)
++++ firstplayable/hxlib/loader/ResMan.hx	(working copy)
+@@ -23,7 +23,7 @@
+ import flash.events.IEventDispatcher;
+ import haxe.Json;
+ import haxe.ds.StringMap;
+-import openfl.Assets.AssetType;
++import openfl.utils.AssetType;
+ import openfl.Lib;
+ import openfl.display.Bitmap;
+ import openfl.display.BitmapData;

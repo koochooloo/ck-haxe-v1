@@ -1,0 +1,6257 @@
+Index: michaelgreenhut/openflump/FlumpMovie.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpMovie.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpMovie.hx	(working copy)
+@@ -0,0 +1,228 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.display.LineScaleMode;
++import flash.display.Sprite;
++import flash.events.Event;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++import flash.geom.Transform;
++import flash.Lib;
++import openfl.display.DisplayObjectContainer;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class FlumpMovie extends Sprite
++{
++	
++	private var _layers:Array<Layer>;
++	private var _callback:Void->Void;
++	private var _internalX:Float;
++	private var _internalY:Float;
++	public var key:Int;
++	private static var count:Int = 0;
++
++	public function new() 
++	{
++		super();
++		key = Std.random(99999);
++		_layers = new Array<Layer>();
++	}
++	
++	public function layers():Array<Layer>
++	{
++		return _layers;
++	}
++	
++	public function clone():FlumpMovie
++	{
++		var fm:FlumpMovie = new FlumpMovie();
++		for (i in 0..._layers.length)
++		{
++			fm.addLayer(_layers[i].clone());
++		}
++		
++		return fm;
++	}
++	
++	public override function toString():String 
++	{
++		var returnString:String = "[";
++		for (i in 0..._layers.length)
++		{
++			if (_layers[i].getImage() == null)
++				returnString += "null";
++			else
++			{
++				for (j in 0..._layers[i].getLength())
++					returnString += ("image: " + _layers[i].hasImageNamed());
++			}
++		}
++		returnString += "]";
++		
++		return returnString;
++	}
++	
++	public function addLayer(layer:Layer):Void
++	{
++		_layers.push(layer);
++		if (layer.hasImageNamed() != null)
++		{
++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(layer.hasImageNamed());
++			//trace("layer name", layer.hasImageNamed(), textureSprite);
++			if (textureSprite == null)
++			{
++				var mv:FlumpMovie = FlumpParser.get().getMovieByName(layer.hasImageNamed());
++				layer.setMovie(mv);
++			}
++			else 
++			{
++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
++				layer.setImage(originalbm.bitmapData.clone());
++			}
++		}
++	}
++	
++	public function process():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++	}
++	
++	public function getLayer(name:String):Layer
++	{
++		for (i in 0..._layers.length)
++		{
++			if (_layers[i].name == name)
++				return _layers[i];
++		}
++		
++		return null;
++	}
++
++	public function internalX():Float
++	{
++		return _internalX;
++	}
++
++	public function internalY():Float 
++	{
++		return _internalY;
++	}
++	
++	public function checkForImage(layer:Layer):Void 
++	{
++		if (layer.getImage() != null)
++		{
++			var image:DisplayObjectContainer = layer.getImage();
++			if (layer.isShown())
++			{
++				addChild(image);
++				count++;
++			//	trace(_internalX, _internalY, image.name, key, count);
++			}
++			else 
++			{
++				if (contains(image))
++				{
++					removeChild(image);
++				}
++			}
++			_internalX = image.x;
++			_internalY = image.y;
++			
++		}
++	}
++	
++	public function play(callb:Void->Void = null):Void
++	{
++		_callback = callb;
++		process();
++		if (!hasEventListener(Event.ENTER_FRAME))
++		{
++			addEventListener(Event.ENTER_FRAME, playInternal);
++		}
++	}
++	
++	public function rewind(callb:Void->Void = null):Void 
++	{
++		_callback = callb;
++		process();
++		if (!hasEventListener(Event.ENTER_FRAME))
++			addEventListener(Event.ENTER_FRAME, rewindInternal);
++	}
++	
++	private function playInternal(e:Event):Void
++	{
++		//trace("playing" + name);
++		if (!nextFrame())
++		{
++			removeEventListener(Event.ENTER_FRAME, playInternal);
++			if (_callback != null)
++				_callback();
++		}
++	}
++	
++	private function rewindInternal(e:Event):Void
++	{		
++		if (!prevFrame())
++		{
++			removeEventListener(Event.ENTER_FRAME, rewindInternal);
++			if (_callback != null)
++				_callback();
++		}
++	}
++	
++	public function nextFrame():Bool
++	{
++		var more:Bool = false;
++		for (i in 0..._layers.length)
++		{
++			var layerMore:Bool = _layers[i].advance();
++			more = more || layerMore;
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++		
++		return more;
++	}
++	
++	public function prevFrame():Bool 
++	{
++		var more:Bool = false;
++		for (i in 0..._layers.length)
++		{
++			more = _layers[i].back();
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++		
++		return more;
++	}
++	
++	public function gotoEnd():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].goto(_layers[i].getLength());
++			_layers[i].process();
++		}
++	}
++	
++	
++	//needs work
++	public function gotoStart():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].goto(0);
++			_layers[i].process();
++		}
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/FlumpParser.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpParser.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpParser.hx	(working copy)
+@@ -0,0 +1,191 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++import flash.Lib;
++import haxe.xml.Fast;
++import openfl.Assets;
++import openfl.utils.ByteArray;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ * Flump was created at Three Rings by Charlie Groves, Tim Conkling, and Bruno Garcia. 
++ * This Flump parser for openFL was created by Michael Greenhut.
++ * For directions on how to use Flump, visit:
++ * http://threerings.github.io/flump/
++	 * Note that this parser makes use of XML only (at the moment), so be sure to export your Flump files 
++	 * using the XML option. 
++ * 
++ * 
++ */
++class FlumpParser
++{
++	private var _fast:Fast;
++	private var _atlas:Bitmap;
++	private var _fm:FlumpMovie;
++	private var _movies:Array<FlumpMovie>;
++	private var _loadedPaths:Array<String>;
++	private static var _flumpParser:FlumpParser;
++	
++	public function new(fpkey:FPKey) 
++	{
++		_loadedPaths = new Array<String>();
++		_movies = new Array<FlumpMovie>();
++	}
++	
++	public function loadPath(resourcePath:String):Void 
++	{
++		if (Lambda.indexOf(_loadedPaths, resourcePath) != -1)
++		{
++			//trace("Already loaded this set.");
++			return;
++		}
++		
++		var lvlbytes:ByteArray = Assets.getBytes( resourcePath );
++		var text:String = lvlbytes.readUTFBytes(lvlbytes.length);
++		//var text:String = Assets.getText(resourcePath);
++		_fast = new Fast(Xml.parse(text));	
++		_loadedPaths.push(resourcePath);
++		makeTextures();
++		makeMovies();
++	}
++	
++	public static function get():FlumpParser
++	{
++		if (_flumpParser == null)
++			_flumpParser = new FlumpParser(new FPKey());
++			
++		return _flumpParser;
++	}
++	
++	public function textToPoint(text:String):Point 
++	{
++		var pointArray:Array<String> = text.split(",");
++		return new Point(Std.parseFloat(pointArray[0]), Std.parseFloat(pointArray[1]));
++	}
++	
++	public function textToRect(text:String):Rectangle
++	{
++		var rectArray:Array<String> = text.split(",");
++		return new Rectangle(Std.parseFloat(rectArray[0]), Std.parseFloat(rectArray[1]), Std.parseFloat(rectArray[2]), Std.parseFloat(rectArray[3]));
++	}
++	
++	private function makeTextures():Void 
++	{
++		for (textureGroups in _fast.node.resources.nodes.textureGroups)
++		{
++			for (textureGroup in textureGroups.nodes.textureGroup)
++			{
++				for (atlas in textureGroup.nodes.atlas)
++				{
++					var bd:BitmapData = Assets.getBitmapData("assets/"+atlas.att.file);
++					var bm:Bitmap = new Bitmap(bd);
++					for (texture in atlas.nodes.texture)
++					{
++						var rectArray:Array<String> = texture.att.rect.split(",");
++						var pointArray:Array<String> = texture.att.origin.split(",");
++						var rect:Rectangle = textToRect(texture.att.rect);
++						var origin:Point = textToPoint(texture.att.origin);
++						FlumpTextures.get().makeTexture(bm, rect, texture.att.name,origin);
++					}
++				}
++			}
++		}
++	}
++	
++	private function makeMovies():Void 
++	{
++		
++		for (movie in _fast.node.resources.nodes.movie)
++		{
++			var fm:FlumpMovie = new FlumpMovie();
++			fm.name = movie.att.name;
++			for (layer in movie.nodes.layer)
++			{
++				var movieLayer:Layer = new Layer();
++				movieLayer.name = layer.att.name;
++
++				for (keyframe in layer.nodes.kf)
++				{
++					//var kf:Keyframe = new Keyframe(Std.int(keyframe.node.duration));
++					var ref:String = "";
++					var loc:Null<Point> = null;
++					var scale:Null<Point> = null;
++					var pivot:Null<Point> = new Point(0,0);
++					var tweened:Bool = false;
++					var ease:Null<Float> = null;
++					var skew:Null<Point> = new Point(0,0);
++					var alpha:Float = 1;
++					if (keyframe.has.ref)
++					{
++						ref = keyframe.att.ref;
++					}
++					//fix by gigbig@libero.it
++					loc = keyframe.has.loc ? textToPoint(keyframe.att.loc) : new Point(0, 0);
++					
++					if (keyframe.has.tweened)
++					{
++						tweened = keyframe.att.tweened == "false" ? false : true;
++					}
++					else
++						tweened = true;
++					if (keyframe.has.scale)
++					{
++						scale = textToPoint(keyframe.att.scale);
++					}
++					if (keyframe.has.pivot)
++					{
++						pivot = textToPoint(keyframe.att.pivot);
++					}
++					if (keyframe.has.skew)
++					{
++						skew = textToPoint(keyframe.att.skew);
++					}
++					if (keyframe.has.ease)
++					{
++						tweened = true;
++						ease = Std.parseFloat(keyframe.att.ease);
++					}
++					if (keyframe.has.alpha)
++					{
++						alpha = Std.parseFloat(keyframe.att.alpha);
++					}
++					var kf:Keyframe = new Keyframe(Std.parseInt(keyframe.att.duration), ref, loc, scale, pivot, tweened, ease, alpha, skew);
++					movieLayer.addKeyframe(kf);
++					//trace("movie ", movieLayer.name);
++				}
++				fm.addLayer(movieLayer);
++			}
++			//fm.process();
++			_movies.push(fm);
++		}
++		trace("made movies", _movies);
++	}
++	
++	public function getMovieByName(name:String):FlumpMovie
++	{
++		for (i in 0..._movies.length)
++		{
++			if (_movies[i].name == name)
++			{
++				var movieToReturn:FlumpMovie = _movies[i];
++				//_movies.splice(i, 1);
++				//trace("returning movie ", name, movieToReturn);
++				return movieToReturn;
++			}
++		}
++		
++		return null;
++	}
++	
++}
++
++class FPKey
++{
++	public function new() 
++	{
++		
++	}
++}
+Index: michaelgreenhut/openflump/FlumpTextures.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpTextures.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpTextures.hx	(working copy)
+@@ -0,0 +1,72 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.display.Sprite;
++import flash.geom.Matrix;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class FlumpTextures
++{
++	
++	private var _textures:Map<String,Sprite>;
++	private static var _flumpTextures:FlumpTextures;
++
++	public function new(ft:FlumpTexturesKey) 
++	{
++		_textures = new Map<String,Sprite>(); 
++	}
++	
++	public function makeTexture(sourcebm:Bitmap, rect:Rectangle, name:String, origin:Point):Void
++	{
++	//	trace("making", name, rect);
++		var newbd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0xffffffff);
++		newbd.copyPixels(sourcebm.bitmapData, rect, new Point(0, 0));
++		var newbm:Bitmap = new Bitmap(newbd);
++		newbm.name = name;
++		newbm.x = -origin.x;
++		newbm.y = -origin.y;
++		var textureSprite:Sprite = new Sprite();
++		textureSprite.addChild(newbm);
++		textureSprite.name = name;
++		_textures.set(name, textureSprite);
++		textureSprite.visible = false;
++	}
++	
++	public static function get():FlumpTextures
++	{
++		if (_flumpTextures == null)
++			_flumpTextures = new FlumpTextures(new FlumpTexturesKey());
++			
++		return _flumpTextures;
++	}
++	
++	public function getTextureByName(name:String):Sprite
++	{
++		return _textures.get(name);
++	}
++	
++	public function cloneTextureByName(name:String):Sprite
++	{
++		var texture:Sprite = _textures.get(name);
++		var bd:BitmapData = new BitmapData(Std.int(texture.width), Std.int(texture.height),true,0xffffff);
++		bd.draw(texture.getChildAt(0));
++		var bm:Bitmap = new Bitmap(bd);
++		var clone:Sprite = new Sprite();
++		clone.addChild(bm);
++		return clone;
++	}
++	
++}
++
++class FlumpTexturesKey
++{
++	public function new()
++	{
++		
++	}
++}
+Index: michaelgreenhut/openflump/ImageData.hx
+===================================================================
+--- michaelgreenhut/openflump/ImageData.hx	(revision 0)
++++ michaelgreenhut/openflump/ImageData.hx	(working copy)
+@@ -0,0 +1,23 @@
++package com.michaelgreenhut.openflump ;
++import flash.geom.Point;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class ImageData
++{
++	public var location:Point;
++	public var scale:Point;
++	public var texture:String;
++	public var pivot:Point;
++
++	public function new(texture:String, location:Point, scale:Point, pivot:Point) 
++	{
++		this.location = location;
++		this.scale = scale;
++		this.texture = texture;
++		this.pivot = pivot;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/Keyframe.hx
+===================================================================
+--- michaelgreenhut/openflump/Keyframe.hx	(revision 0)
++++ michaelgreenhut/openflump/Keyframe.hx	(working copy)
+@@ -0,0 +1,117 @@
++package com.michaelgreenhut.openflump ;
++import flash.geom.Point;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ * TODO: put loc and scale for standard, untransformed instances.
++ */
++class Keyframe
++{
++
++	private var _duration:Int;
++	private var _index:Int = 0;
++	private var _ref:String;
++	private var _location:Point;
++	private var _scale:Point;
++	private var _pivot:Point;
++	private var _tweened:Bool;
++	private var _ease:Float;
++	private var _alpha:Float;
++	private var _skew:Point;
++	
++	public function new(duration:Int, ref:String = null, location:Point = null, scale:Point = null, pivot:Point = null, tweened:Bool = false, ease:Float = 0, alpha:Float = 1, skew:Point = null ) 
++	{
++		_duration = duration;
++		_location = location;
++		_ref = ref;
++		if (scale == null)
++			scale = new Point(1, 1);
++		_scale = scale;
++		_pivot = pivot;
++		_tweened = tweened;
++		_ease = ease;
++		_alpha = alpha;
++		if (skew == null)
++			_skew = new Point(0, 0);
++		else
++			_skew = skew;
++	}
++	
++	public function clone():Keyframe
++	{
++		return new Keyframe(_duration,_ref,_location,_scale,_pivot,_tweened,_ease,_alpha,_skew);
++	}
++	
++	public function back():Bool 
++	{
++		if (_index > 0)
++			_index--;
++		
++		return (_index > 0);
++	}
++	
++	public function advance():Bool
++	{
++		if (_index < _duration)
++			_index++;
++
++		return (_index < _duration);
++	}
++	
++	public function reset():Void
++	{
++		_index = 0;
++	}
++	
++	public function internalIndex():Int 
++	{
++		return _index;
++	}
++	
++	public function getRef():String
++	{
++		return _ref;
++	}
++	
++	public function getDuration():Int 
++	{
++		return _duration;
++	}
++	
++	public function getLocation():Point 
++	{
++		return _location;
++	}
++	
++	public function getSkew():Point
++	{
++		return _skew;
++	}
++	
++	public function getScale():Point 
++	{
++		return _scale;
++	}
++	
++	public function getPivot():Point
++	{
++		return _pivot;
++	}
++	
++	public function getTweened():Bool
++	{
++		return _tweened;
++	}
++	
++	public function getEase():Float
++	{
++		return _ease;
++	}
++	
++	public function getAlpha():Float
++	{
++		return _alpha;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/Layer.hx
+===================================================================
+--- michaelgreenhut/openflump/Layer.hx	(revision 0)
++++ michaelgreenhut/openflump/Layer.hx	(working copy)
+@@ -0,0 +1,300 @@
++package com.michaelgreenhut.openflump ;
++import openfl.display.Bitmap;
++import openfl.display.BitmapData;
++import openfl.display.Sprite;
++import openfl.display.DisplayObjectContainer;
++import flash.geom.Matrix;
++import flash.geom.Point;
++import flash.geom.Transform;
++import flash.Lib;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class Layer
++{
++
++	private var _index:Int = 0;
++	private var _keyframes:Array<Keyframe>;
++	private var _currentTexture:String;
++	private var _previousTexture:String;
++	private var _currentLocation:Point;
++	private var _currentScale:Point;
++	private var _currentPivot:Point;
++	private var _currentSkew:Point;
++	private var _currentAlpha:Float = 1;
++	private var _image:DisplayObjectContainer;
++	private var _length:Int = 0;
++	
++	public var name:String;
++	public var visible:Bool = true;
++	private var _containsImage:String;
++	private var _destinationIndex:Int;
++	private var _preTweenIndex:Int = 0;
++	private var _originalMatrix:Matrix;
++	public function new() 
++	{
++		_keyframes = new Array<Keyframe>();
++		_preTweenIndex = _index;
++		_image = new Sprite();
++	}
++	
++	public function addKeyframe(kf:Keyframe):Void
++	{
++		_keyframes.push(kf);
++		_length += kf.getDuration();
++	
++		if (kf.getRef() != null)
++			_containsImage = kf.getRef();
++	}
++	
++	public function keyFrames():Array<Keyframe>
++	{
++		return _keyframes;
++	}
++	
++	public function back():Bool 
++	{    
++		if (_index >= 0)
++		{
++			if (!_keyframes[_index].back())
++			{
++				if (_index > 0)
++				{
++					_index--;
++					return true;
++				}
++				else
++					return false;
++			}
++			
++			return true;
++		}
++		
++		return false;
++	}
++	
++	public function advance():Bool
++	{
++		if (_index < _keyframes.length)
++		{
++			if (!_keyframes[_index].advance())
++			{
++				if (_index < _keyframes.length - 1)
++				{
++					_index++;
++					{
++						return true;  //if the current keyframe is at the end, and there are more to go
++					}
++				}
++				else 
++				{
++					return false;  //if the current keyframe is at the end, and there are no more to go.
++				}
++			}
++			return true;  //if the current keyframe isn't at the end, and there are more to go
++		}
++		return false;
++	}
++	
++	public function process():Void 
++	{
++		if (_index < 0 || _index >= _keyframes.length)
++			return;
++		if (_keyframes[_index].getLocation() != null)
++		{
++			populateCurrentValues(_index);
++			
++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(_currentTexture);
++			
++			if (textureSprite != null)
++			{
++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
++				setImage(originalbm.bitmapData.clone());
++			}
++			else 
++			{
++				 //it must be a flump movie  or flipbook, and we don't need to call setImage at all.
++                if (Type.getClass(_image) != FlumpMovie)
++                    _image = FlumpParser.get().getMovieByName(_currentTexture).clone();
++
++                if (!cast(_image, FlumpMovie).nextFrame())
++                    cast(_image, FlumpMovie).gotoStart();  //this loops the internal flipbook
++			}
++			
++			if (_image != null)
++			{
++				if (_keyframes[_index].getTweened()) //Stop-gap code to handle tweens
++				{  
++				
++					_destinationIndex = _index + 1;
++					_preTweenIndex = _index;
++					var nextLoc:Point = _keyframes[_destinationIndex].getLocation().clone();  
++					var nextScale:Point = _keyframes[_destinationIndex].getScale().clone();
++					var nextPivot:Point = _keyframes[_destinationIndex].getPivot().clone();
++					var nextAlpha:Float = _keyframes[_destinationIndex].getAlpha();
++					var nextSkew:Point = _keyframes[_destinationIndex].getSkew().clone();
++					_keyframes[_index].internalIndex();
++					var multiplier:Float = _keyframes[_preTweenIndex].internalIndex() /_keyframes[_preTweenIndex].getDuration();
++				
++					_currentAlpha = _keyframes[_preTweenIndex].getAlpha() + (nextAlpha - _keyframes[_preTweenIndex].getAlpha()) * multiplier;
++					_currentScale.x = _keyframes[_preTweenIndex].getScale().x + (nextScale.x - _keyframes[_preTweenIndex].getScale().x) * multiplier;
++					_currentScale.y = _keyframes[_preTweenIndex].getScale().y + (nextScale.y - _keyframes[_preTweenIndex].getScale().y) * multiplier;
++					_currentLocation.x = _keyframes[_index].getLocation().x + (nextLoc.x - _keyframes[_preTweenIndex].getLocation().x) * multiplier;
++				
++					_currentLocation.y = _keyframes[_index].getLocation().y + (nextLoc.y - _keyframes[_preTweenIndex].getLocation().y) * multiplier;
++					
++					_currentPivot.x = _keyframes[_index].getPivot().x + (nextPivot.x - _keyframes[_preTweenIndex].getPivot().x) * multiplier;
++					_currentPivot.y = _keyframes[_index].getPivot().y + (nextPivot.y - _keyframes[_preTweenIndex].getPivot().y) * multiplier;
++					_currentPivot.x *= _currentScale.x;
++					_currentPivot.y *= _currentScale.y;
++					_currentSkew.x = _keyframes[_index].getSkew().x + (nextSkew.x - _keyframes[_preTweenIndex].getSkew().x) * multiplier;
++					_currentSkew.y = _keyframes[_index].getSkew().y + (nextSkew.y - _keyframes[_preTweenIndex].getSkew().y) * multiplier;
++				
++				}
++				_image.scaleX = _currentScale.x;
++				_image.scaleY = _currentScale.y;
++				
++				_image.x = _currentLocation.x;
++				_image.y = _currentLocation.y;
++				if (_image.numChildren > 0)
++				{
++					_image.getChildAt(0).x = -_currentPivot.x;
++					_image.getChildAt(0).y = -_currentPivot.y;
++				}
++				
++				//if (_currentSkew.x != 0 || _currentSkew.y != 0)
++				{
++					_image.rotation = _currentSkew.x * 180 / Math.PI;
++				}
++				
++				_image.visible = visible;
++				_image.alpha = _currentAlpha;
++				
++			}
++			//else 
++			//	trace("NON TWEEN", this.name, "keyframe ", _index);
++		}
++		else // _keyframes[_index].getLocation() is never == null, so this "else" will never be executed
++		{
++			if (_image != null && _image != {})
++				_image.visible = false; 
++			_currentLocation = null;
++			_currentTexture = null;
++			_currentScale = null;
++			_currentPivot = null;
++		}
++	}
++	
++	private function populateCurrentValues(index:Int):Void 
++	{
++		_previousTexture = _currentTexture;
++		_currentTexture = _keyframes[index].getRef();
++		
++		_currentScale = _keyframes[index].getScale().clone();
++		_currentLocation = _keyframes[index].getLocation().clone();
++		_currentPivot = _keyframes[index].getPivot().clone();
++		_currentPivot.x *= _currentScale.x;
++		_currentPivot.y *= _currentScale.y;
++		_currentAlpha = _keyframes[index].getAlpha();
++		_currentSkew = _keyframes[index].getSkew().clone();
++	}
++	
++	public function isShown():Bool
++	{
++		return _image.visible;
++	}
++	
++	public function setImage(bd:BitmapData):Void 
++	{
++		/*var bm:Bitmap = new Bitmap(bd);
++		_image = new Sprite();
++		_image.addChild(bm);
++		_originalMatrix = _image.transform.matrix.clone();*/
++		
++		if (_currentTexture != _previousTexture) {
++			var bm:Bitmap = new Bitmap(bd);
++			if (_image.numChildren > 0 && _image.getChildAt(0) != null) (_image.removeChildAt(0));
++			_image.addChild(bm);
++			_originalMatrix = _image.transform.matrix.clone();
++		}
++	}
++	
++	public function setMovie(mv:FlumpMovie)
++	{
++		_image = mv;
++	}
++	
++	public function getImage():DisplayObjectContainer
++	{
++		return _image;
++	}
++	
++	public function getMovie():FlumpMovie
++	{
++		var mv:FlumpMovie = cast(_image, FlumpMovie);
++		
++		return mv;
++	}
++	
++	public function hasImageNamed():String
++	{
++		return _containsImage;
++	}
++	
++	public function reset():Void 
++	{
++		goto(0);
++	}
++	
++	/*
++	 *  Goes to absolute frame value. 
++	 * 
++	 */
++	public function goto(internalIndex:Int):Void 
++	{
++		_index = 0;	
++	
++		//var count:Int = 0;
++		for (i in 0..._keyframes.length)
++		{	
++			_keyframes[i].reset();
++		}
++		
++		while(_index < _keyframes.length )
++		{
++			if (_index/*count*/ == internalIndex)
++			{
++				break;
++			}
++			if (!_keyframes[_index].advance())
++			{
++				_index++;	
++			}	
++			//count++;
++			
++		}
++	}
++	
++	public function clone():Layer
++	{
++		var layer:Layer = new Layer();
++		for (i in 0..._keyframes.length)
++		{
++			layer.addKeyframe(_keyframes[i].clone());
++		}
++		return layer;
++	}
++	
++	public function getFrame():Int 
++	{
++		return _index;
++	}
++	
++	public function getLength():Int 
++	{
++		return _length;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/MovieManager.hx
+===================================================================
+--- michaelgreenhut/openflump/MovieManager.hx	(revision 0)
++++ michaelgreenhut/openflump/MovieManager.hx	(working copy)
+@@ -0,0 +1,71 @@
++package com.michaelgreenhut.openflump;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class MovieManager
++{
++
++	private var _motionFunctions:Array<Void->Bool> ;
++	private static var _movieManager:MovieManager;
++	
++	public function new(mmkey:MMKey) 
++	{
++		_motionFunctions = new Array<Void->Bool>();
++	}
++	
++	public static function get():MovieManager
++	{
++		if (_movieManager == null)
++			_movieManager = new MovieManager(new MMKey());
++			
++		return _movieManager;
++	}
++	
++	/*
++	 * These are for collections of two SPECIFIC functions only, nextFrame or prevFrame.  The idea is that by using the 
++	 * MovieManager and the animateMovies function, you only have to rely on a single enterFrame loop to process multiple movies. 
++	 * This allows you to pause/resume them all very easily and in sync, and it saves you from ODing on enterFrame functions.
++	 * 
++	 * */
++	public function addAnimationFunction(animationFunc:Void->Bool):Void 
++	{
++		Type.getClass(animationFunc);
++		_motionFunctions.push(animationFunc);
++	}
++	
++	/*
++	 * Put a call to this in a single enterFrame function.  Stop the enterFrame function when you want to pause all the 
++	 * movies involved.
++	 * 
++	 * */
++	public function animateMovies():Void 
++	{
++		if (_motionFunctions.length == 0)
++			return;
++		trace("num", _motionFunctions.length);
++		var numFuncs:Int = -1 * (_motionFunctions.length-1);
++		
++		for (i in numFuncs...1)
++		{
++			trace("eye", i);
++			var fn:Void->Bool = _motionFunctions[ -i];
++			trace(Reflect.isFunction(fn));
++			var moved:Bool = fn();//Reflect.callMethod(FlumpMovie, _motionFunctions[ -i], []);
++			if (!moved)   //if this movie cannot animate any further in its given direction, remove it.
++			{
++				_motionFunctions.splice( -i, 1);
++			}
++		}
++	}
++	
++}
++
++class MMKey
++{
++	public function new()
++	{
++		
++	}
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/FlumpMovie.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpMovie.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpMovie.hx	(working copy)
+@@ -0,0 +1,228 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.display.LineScaleMode;
++import flash.display.Sprite;
++import flash.events.Event;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++import flash.geom.Transform;
++import flash.Lib;
++import openfl.display.DisplayObjectContainer;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class FlumpMovie extends Sprite
++{
++	
++	private var _layers:Array<Layer>;
++	private var _callback:Void->Void;
++	private var _internalX:Float;
++	private var _internalY:Float;
++	public var key:Int;
++	private static var count:Int = 0;
++
++	public function new() 
++	{
++		super();
++		key = Std.random(99999);
++		_layers = new Array<Layer>();
++	}
++	
++	public function layers():Array<Layer>
++	{
++		return _layers;
++	}
++	
++	public function clone():FlumpMovie
++	{
++		var fm:FlumpMovie = new FlumpMovie();
++		for (i in 0..._layers.length)
++		{
++			fm.addLayer(_layers[i].clone());
++		}
++		
++		return fm;
++	}
++	
++	public override function toString():String 
++	{
++		var returnString:String = "[";
++		for (i in 0..._layers.length)
++		{
++			if (_layers[i].getImage() == null)
++				returnString += "null";
++			else
++			{
++				for (j in 0..._layers[i].getLength())
++					returnString += ("image: " + _layers[i].hasImageNamed());
++			}
++		}
++		returnString += "]";
++		
++		return returnString;
++	}
++	
++	public function addLayer(layer:Layer):Void
++	{
++		_layers.push(layer);
++		if (layer.hasImageNamed() != null)
++		{
++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(layer.hasImageNamed());
++			//trace("layer name", layer.hasImageNamed(), textureSprite);
++			if (textureSprite == null)
++			{
++				var mv:FlumpMovie = FlumpParser.get().getMovieByName(layer.hasImageNamed());
++				layer.setMovie(mv);
++			}
++			else 
++			{
++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
++				layer.setImage(originalbm.bitmapData.clone());
++			}
++		}
++	}
++	
++	public function process():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++	}
++	
++	public function getLayer(name:String):Layer
++	{
++		for (i in 0..._layers.length)
++		{
++			if (_layers[i].name == name)
++				return _layers[i];
++		}
++		
++		return null;
++	}
++
++	public function internalX():Float
++	{
++		return _internalX;
++	}
++
++	public function internalY():Float 
++	{
++		return _internalY;
++	}
++	
++	public function checkForImage(layer:Layer):Void 
++	{
++		if (layer.getImage() != null)
++		{
++			var image:DisplayObjectContainer = layer.getImage();
++			if (layer.isShown())
++			{
++				addChild(image);
++				count++;
++			//	trace(_internalX, _internalY, image.name, key, count);
++			}
++			else 
++			{
++				if (contains(image))
++				{
++					removeChild(image);
++				}
++			}
++			_internalX = image.x;
++			_internalY = image.y;
++			
++		}
++	}
++	
++	public function play(callb:Void->Void = null):Void
++	{
++		_callback = callb;
++		process();
++		if (!hasEventListener(Event.ENTER_FRAME))
++		{
++			addEventListener(Event.ENTER_FRAME, playInternal);
++		}
++	}
++	
++	public function rewind(callb:Void->Void = null):Void 
++	{
++		_callback = callb;
++		process();
++		if (!hasEventListener(Event.ENTER_FRAME))
++			addEventListener(Event.ENTER_FRAME, rewindInternal);
++	}
++	
++	private function playInternal(e:Event):Void
++	{
++		//trace("playing" + name);
++		if (!nextFrame())
++		{
++			removeEventListener(Event.ENTER_FRAME, playInternal);
++			if (_callback != null)
++				_callback();
++		}
++	}
++	
++	private function rewindInternal(e:Event):Void
++	{		
++		if (!prevFrame())
++		{
++			removeEventListener(Event.ENTER_FRAME, rewindInternal);
++			if (_callback != null)
++				_callback();
++		}
++	}
++	
++	public function nextFrame():Bool
++	{
++		var more:Bool = false;
++		for (i in 0..._layers.length)
++		{
++			var layerMore:Bool = _layers[i].advance();
++			more = more || layerMore;
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++		
++		return more;
++	}
++	
++	public function prevFrame():Bool 
++	{
++		var more:Bool = false;
++		for (i in 0..._layers.length)
++		{
++			more = _layers[i].back();
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++		
++		return more;
++	}
++	
++	public function gotoEnd():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].goto(_layers[i].getLength());
++			_layers[i].process();
++		}
++	}
++	
++	
++	//needs work
++	public function gotoStart():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].goto(0);
++			_layers[i].process();
++		}
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/FlumpParser.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpParser.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpParser.hx	(working copy)
+@@ -0,0 +1,191 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++import flash.Lib;
++import haxe.xml.Fast;
++import openfl.Assets;
++import openfl.utils.ByteArray;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ * Flump was created at Three Rings by Charlie Groves, Tim Conkling, and Bruno Garcia. 
++ * This Flump parser for openFL was created by Michael Greenhut.
++ * For directions on how to use Flump, visit:
++ * http://threerings.github.io/flump/
++	 * Note that this parser makes use of XML only (at the moment), so be sure to export your Flump files 
++	 * using the XML option. 
++ * 
++ * 
++ */
++class FlumpParser
++{
++	private var _fast:Fast;
++	private var _atlas:Bitmap;
++	private var _fm:FlumpMovie;
++	private var _movies:Array<FlumpMovie>;
++	private var _loadedPaths:Array<String>;
++	private static var _flumpParser:FlumpParser;
++	
++	public function new(fpkey:FPKey) 
++	{
++		_loadedPaths = new Array<String>();
++		_movies = new Array<FlumpMovie>();
++	}
++	
++	public function loadPath(resourcePath:String):Void 
++	{
++		if (Lambda.indexOf(_loadedPaths, resourcePath) != -1)
++		{
++			//trace("Already loaded this set.");
++			return;
++		}
++		
++		var lvlbytes:ByteArray = Assets.getBytes( resourcePath );
++		var text:String = lvlbytes.readUTFBytes(lvlbytes.length);
++		//var text:String = Assets.getText(resourcePath);
++		_fast = new Fast(Xml.parse(text));	
++		_loadedPaths.push(resourcePath);
++		makeTextures();
++		makeMovies();
++	}
++	
++	public static function get():FlumpParser
++	{
++		if (_flumpParser == null)
++			_flumpParser = new FlumpParser(new FPKey());
++			
++		return _flumpParser;
++	}
++	
++	public function textToPoint(text:String):Point 
++	{
++		var pointArray:Array<String> = text.split(",");
++		return new Point(Std.parseFloat(pointArray[0]), Std.parseFloat(pointArray[1]));
++	}
++	
++	public function textToRect(text:String):Rectangle
++	{
++		var rectArray:Array<String> = text.split(",");
++		return new Rectangle(Std.parseFloat(rectArray[0]), Std.parseFloat(rectArray[1]), Std.parseFloat(rectArray[2]), Std.parseFloat(rectArray[3]));
++	}
++	
++	private function makeTextures():Void 
++	{
++		for (textureGroups in _fast.node.resources.nodes.textureGroups)
++		{
++			for (textureGroup in textureGroups.nodes.textureGroup)
++			{
++				for (atlas in textureGroup.nodes.atlas)
++				{
++					var bd:BitmapData = Assets.getBitmapData("assets/"+atlas.att.file);
++					var bm:Bitmap = new Bitmap(bd);
++					for (texture in atlas.nodes.texture)
++					{
++						var rectArray:Array<String> = texture.att.rect.split(",");
++						var pointArray:Array<String> = texture.att.origin.split(",");
++						var rect:Rectangle = textToRect(texture.att.rect);
++						var origin:Point = textToPoint(texture.att.origin);
++						FlumpTextures.get().makeTexture(bm, rect, texture.att.name,origin);
++					}
++				}
++			}
++		}
++	}
++	
++	private function makeMovies():Void 
++	{
++		
++		for (movie in _fast.node.resources.nodes.movie)
++		{
++			var fm:FlumpMovie = new FlumpMovie();
++			fm.name = movie.att.name;
++			for (layer in movie.nodes.layer)
++			{
++				var movieLayer:Layer = new Layer();
++				movieLayer.name = layer.att.name;
++
++				for (keyframe in layer.nodes.kf)
++				{
++					//var kf:Keyframe = new Keyframe(Std.int(keyframe.node.duration));
++					var ref:String = "";
++					var loc:Null<Point> = null;
++					var scale:Null<Point> = null;
++					var pivot:Null<Point> = new Point(0,0);
++					var tweened:Bool = false;
++					var ease:Null<Float> = null;
++					var skew:Null<Point> = new Point(0,0);
++					var alpha:Float = 1;
++					if (keyframe.has.ref)
++					{
++						ref = keyframe.att.ref;
++					}
++					//fix by gigbig@libero.it
++					loc = keyframe.has.loc ? textToPoint(keyframe.att.loc) : new Point(0, 0);
++					
++					if (keyframe.has.tweened)
++					{
++						tweened = keyframe.att.tweened == "false" ? false : true;
++					}
++					else
++						tweened = true;
++					if (keyframe.has.scale)
++					{
++						scale = textToPoint(keyframe.att.scale);
++					}
++					if (keyframe.has.pivot)
++					{
++						pivot = textToPoint(keyframe.att.pivot);
++					}
++					if (keyframe.has.skew)
++					{
++						skew = textToPoint(keyframe.att.skew);
++					}
++					if (keyframe.has.ease)
++					{
++						tweened = true;
++						ease = Std.parseFloat(keyframe.att.ease);
++					}
++					if (keyframe.has.alpha)
++					{
++						alpha = Std.parseFloat(keyframe.att.alpha);
++					}
++					var kf:Keyframe = new Keyframe(Std.parseInt(keyframe.att.duration), ref, loc, scale, pivot, tweened, ease, alpha, skew);
++					movieLayer.addKeyframe(kf);
++					//trace("movie ", movieLayer.name);
++				}
++				fm.addLayer(movieLayer);
++			}
++			//fm.process();
++			_movies.push(fm);
++		}
++		trace("made movies", _movies);
++	}
++	
++	public function getMovieByName(name:String):FlumpMovie
++	{
++		for (i in 0..._movies.length)
++		{
++			if (_movies[i].name == name)
++			{
++				var movieToReturn:FlumpMovie = _movies[i];
++				//_movies.splice(i, 1);
++				//trace("returning movie ", name, movieToReturn);
++				return movieToReturn;
++			}
++		}
++		
++		return null;
++	}
++	
++}
++
++class FPKey
++{
++	public function new() 
++	{
++		
++	}
++}
+Index: michaelgreenhut/openflump/FlumpTextures.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpTextures.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpTextures.hx	(working copy)
+@@ -0,0 +1,72 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.display.Sprite;
++import flash.geom.Matrix;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class FlumpTextures
++{
++	
++	private var _textures:Map<String,Sprite>;
++	private static var _flumpTextures:FlumpTextures;
++
++	public function new(ft:FlumpTexturesKey) 
++	{
++		_textures = new Map<String,Sprite>(); 
++	}
++	
++	public function makeTexture(sourcebm:Bitmap, rect:Rectangle, name:String, origin:Point):Void
++	{
++	//	trace("making", name, rect);
++		var newbd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0xffffffff);
++		newbd.copyPixels(sourcebm.bitmapData, rect, new Point(0, 0));
++		var newbm:Bitmap = new Bitmap(newbd);
++		newbm.name = name;
++		newbm.x = -origin.x;
++		newbm.y = -origin.y;
++		var textureSprite:Sprite = new Sprite();
++		textureSprite.addChild(newbm);
++		textureSprite.name = name;
++		_textures.set(name, textureSprite);
++		textureSprite.visible = false;
++	}
++	
++	public static function get():FlumpTextures
++	{
++		if (_flumpTextures == null)
++			_flumpTextures = new FlumpTextures(new FlumpTexturesKey());
++			
++		return _flumpTextures;
++	}
++	
++	public function getTextureByName(name:String):Sprite
++	{
++		return _textures.get(name);
++	}
++	
++	public function cloneTextureByName(name:String):Sprite
++	{
++		var texture:Sprite = _textures.get(name);
++		var bd:BitmapData = new BitmapData(Std.int(texture.width), Std.int(texture.height),true,0xffffff);
++		bd.draw(texture.getChildAt(0));
++		var bm:Bitmap = new Bitmap(bd);
++		var clone:Sprite = new Sprite();
++		clone.addChild(bm);
++		return clone;
++	}
++	
++}
++
++class FlumpTexturesKey
++{
++	public function new()
++	{
++		
++	}
++}
+Index: michaelgreenhut/openflump/ImageData.hx
+===================================================================
+--- michaelgreenhut/openflump/ImageData.hx	(revision 0)
++++ michaelgreenhut/openflump/ImageData.hx	(working copy)
+@@ -0,0 +1,23 @@
++package com.michaelgreenhut.openflump ;
++import flash.geom.Point;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class ImageData
++{
++	public var location:Point;
++	public var scale:Point;
++	public var texture:String;
++	public var pivot:Point;
++
++	public function new(texture:String, location:Point, scale:Point, pivot:Point) 
++	{
++		this.location = location;
++		this.scale = scale;
++		this.texture = texture;
++		this.pivot = pivot;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/Keyframe.hx
+===================================================================
+--- michaelgreenhut/openflump/Keyframe.hx	(revision 0)
++++ michaelgreenhut/openflump/Keyframe.hx	(working copy)
+@@ -0,0 +1,117 @@
++package com.michaelgreenhut.openflump ;
++import flash.geom.Point;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ * TODO: put loc and scale for standard, untransformed instances.
++ */
++class Keyframe
++{
++
++	private var _duration:Int;
++	private var _index:Int = 0;
++	private var _ref:String;
++	private var _location:Point;
++	private var _scale:Point;
++	private var _pivot:Point;
++	private var _tweened:Bool;
++	private var _ease:Float;
++	private var _alpha:Float;
++	private var _skew:Point;
++	
++	public function new(duration:Int, ref:String = null, location:Point = null, scale:Point = null, pivot:Point = null, tweened:Bool = false, ease:Float = 0, alpha:Float = 1, skew:Point = null ) 
++	{
++		_duration = duration;
++		_location = location;
++		_ref = ref;
++		if (scale == null)
++			scale = new Point(1, 1);
++		_scale = scale;
++		_pivot = pivot;
++		_tweened = tweened;
++		_ease = ease;
++		_alpha = alpha;
++		if (skew == null)
++			_skew = new Point(0, 0);
++		else
++			_skew = skew;
++	}
++	
++	public function clone():Keyframe
++	{
++		return new Keyframe(_duration,_ref,_location,_scale,_pivot,_tweened,_ease,_alpha,_skew);
++	}
++	
++	public function back():Bool 
++	{
++		if (_index > 0)
++			_index--;
++		
++		return (_index > 0);
++	}
++	
++	public function advance():Bool
++	{
++		if (_index < _duration)
++			_index++;
++
++		return (_index < _duration);
++	}
++	
++	public function reset():Void
++	{
++		_index = 0;
++	}
++	
++	public function internalIndex():Int 
++	{
++		return _index;
++	}
++	
++	public function getRef():String
++	{
++		return _ref;
++	}
++	
++	public function getDuration():Int 
++	{
++		return _duration;
++	}
++	
++	public function getLocation():Point 
++	{
++		return _location;
++	}
++	
++	public function getSkew():Point
++	{
++		return _skew;
++	}
++	
++	public function getScale():Point 
++	{
++		return _scale;
++	}
++	
++	public function getPivot():Point
++	{
++		return _pivot;
++	}
++	
++	public function getTweened():Bool
++	{
++		return _tweened;
++	}
++	
++	public function getEase():Float
++	{
++		return _ease;
++	}
++	
++	public function getAlpha():Float
++	{
++		return _alpha;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/Layer.hx
+===================================================================
+--- michaelgreenhut/openflump/Layer.hx	(revision 0)
++++ michaelgreenhut/openflump/Layer.hx	(working copy)
+@@ -0,0 +1,300 @@
++package com.michaelgreenhut.openflump ;
++import openfl.display.Bitmap;
++import openfl.display.BitmapData;
++import openfl.display.Sprite;
++import openfl.display.DisplayObjectContainer;
++import flash.geom.Matrix;
++import flash.geom.Point;
++import flash.geom.Transform;
++import flash.Lib;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class Layer
++{
++
++	private var _index:Int = 0;
++	private var _keyframes:Array<Keyframe>;
++	private var _currentTexture:String;
++	private var _previousTexture:String;
++	private var _currentLocation:Point;
++	private var _currentScale:Point;
++	private var _currentPivot:Point;
++	private var _currentSkew:Point;
++	private var _currentAlpha:Float = 1;
++	private var _image:DisplayObjectContainer;
++	private var _length:Int = 0;
++	
++	public var name:String;
++	public var visible:Bool = true;
++	private var _containsImage:String;
++	private var _destinationIndex:Int;
++	private var _preTweenIndex:Int = 0;
++	private var _originalMatrix:Matrix;
++	public function new() 
++	{
++		_keyframes = new Array<Keyframe>();
++		_preTweenIndex = _index;
++		_image = new Sprite();
++	}
++	
++	public function addKeyframe(kf:Keyframe):Void
++	{
++		_keyframes.push(kf);
++		_length += kf.getDuration();
++	
++		if (kf.getRef() != null)
++			_containsImage = kf.getRef();
++	}
++	
++	public function keyFrames():Array<Keyframe>
++	{
++		return _keyframes;
++	}
++	
++	public function back():Bool 
++	{    
++		if (_index >= 0)
++		{
++			if (!_keyframes[_index].back())
++			{
++				if (_index > 0)
++				{
++					_index--;
++					return true;
++				}
++				else
++					return false;
++			}
++			
++			return true;
++		}
++		
++		return false;
++	}
++	
++	public function advance():Bool
++	{
++		if (_index < _keyframes.length)
++		{
++			if (!_keyframes[_index].advance())
++			{
++				if (_index < _keyframes.length - 1)
++				{
++					_index++;
++					{
++						return true;  //if the current keyframe is at the end, and there are more to go
++					}
++				}
++				else 
++				{
++					return false;  //if the current keyframe is at the end, and there are no more to go.
++				}
++			}
++			return true;  //if the current keyframe isn't at the end, and there are more to go
++		}
++		return false;
++	}
++	
++	public function process():Void 
++	{
++		if (_index < 0 || _index >= _keyframes.length)
++			return;
++		if (_keyframes[_index].getLocation() != null)
++		{
++			populateCurrentValues(_index);
++			
++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(_currentTexture);
++			
++			if (textureSprite != null)
++			{
++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
++				setImage(originalbm.bitmapData.clone());
++			}
++			else 
++			{
++				 //it must be a flump movie  or flipbook, and we don't need to call setImage at all.
++                if (Type.getClass(_image) != FlumpMovie)
++                    _image = FlumpParser.get().getMovieByName(_currentTexture).clone();
++
++                if (!cast(_image, FlumpMovie).nextFrame())
++                    cast(_image, FlumpMovie).gotoStart();  //this loops the internal flipbook
++			}
++			
++			if (_image != null)
++			{
++				if (_keyframes[_index].getTweened()) //Stop-gap code to handle tweens
++				{  
++				
++					_destinationIndex = _index + 1;
++					_preTweenIndex = _index;
++					var nextLoc:Point = _keyframes[_destinationIndex].getLocation().clone();  
++					var nextScale:Point = _keyframes[_destinationIndex].getScale().clone();
++					var nextPivot:Point = _keyframes[_destinationIndex].getPivot().clone();
++					var nextAlpha:Float = _keyframes[_destinationIndex].getAlpha();
++					var nextSkew:Point = _keyframes[_destinationIndex].getSkew().clone();
++					_keyframes[_index].internalIndex();
++					var multiplier:Float = _keyframes[_preTweenIndex].internalIndex() /_keyframes[_preTweenIndex].getDuration();
++				
++					_currentAlpha = _keyframes[_preTweenIndex].getAlpha() + (nextAlpha - _keyframes[_preTweenIndex].getAlpha()) * multiplier;
++					_currentScale.x = _keyframes[_preTweenIndex].getScale().x + (nextScale.x - _keyframes[_preTweenIndex].getScale().x) * multiplier;
++					_currentScale.y = _keyframes[_preTweenIndex].getScale().y + (nextScale.y - _keyframes[_preTweenIndex].getScale().y) * multiplier;
++					_currentLocation.x = _keyframes[_index].getLocation().x + (nextLoc.x - _keyframes[_preTweenIndex].getLocation().x) * multiplier;
++				
++					_currentLocation.y = _keyframes[_index].getLocation().y + (nextLoc.y - _keyframes[_preTweenIndex].getLocation().y) * multiplier;
++					
++					_currentPivot.x = _keyframes[_index].getPivot().x + (nextPivot.x - _keyframes[_preTweenIndex].getPivot().x) * multiplier;
++					_currentPivot.y = _keyframes[_index].getPivot().y + (nextPivot.y - _keyframes[_preTweenIndex].getPivot().y) * multiplier;
++					_currentPivot.x *= _currentScale.x;
++					_currentPivot.y *= _currentScale.y;
++					_currentSkew.x = _keyframes[_index].getSkew().x + (nextSkew.x - _keyframes[_preTweenIndex].getSkew().x) * multiplier;
++					_currentSkew.y = _keyframes[_index].getSkew().y + (nextSkew.y - _keyframes[_preTweenIndex].getSkew().y) * multiplier;
++				
++				}
++				_image.scaleX = _currentScale.x;
++				_image.scaleY = _currentScale.y;
++				
++				_image.x = _currentLocation.x;
++				_image.y = _currentLocation.y;
++				if (_image.numChildren > 0)
++				{
++					_image.getChildAt(0).x = -_currentPivot.x;
++					_image.getChildAt(0).y = -_currentPivot.y;
++				}
++				
++				//if (_currentSkew.x != 0 || _currentSkew.y != 0)
++				{
++					_image.rotation = _currentSkew.x * 180 / Math.PI;
++				}
++				
++				_image.visible = visible;
++				_image.alpha = _currentAlpha;
++				
++			}
++			//else 
++			//	trace("NON TWEEN", this.name, "keyframe ", _index);
++		}
++		else // _keyframes[_index].getLocation() is never == null, so this "else" will never be executed
++		{
++			if (_image != null && _image != {})
++				_image.visible = false; 
++			_currentLocation = null;
++			_currentTexture = null;
++			_currentScale = null;
++			_currentPivot = null;
++		}
++	}
++	
++	private function populateCurrentValues(index:Int):Void 
++	{
++		_previousTexture = _currentTexture;
++		_currentTexture = _keyframes[index].getRef();
++		
++		_currentScale = _keyframes[index].getScale().clone();
++		_currentLocation = _keyframes[index].getLocation().clone();
++		_currentPivot = _keyframes[index].getPivot().clone();
++		_currentPivot.x *= _currentScale.x;
++		_currentPivot.y *= _currentScale.y;
++		_currentAlpha = _keyframes[index].getAlpha();
++		_currentSkew = _keyframes[index].getSkew().clone();
++	}
++	
++	public function isShown():Bool
++	{
++		return _image.visible;
++	}
++	
++	public function setImage(bd:BitmapData):Void 
++	{
++		/*var bm:Bitmap = new Bitmap(bd);
++		_image = new Sprite();
++		_image.addChild(bm);
++		_originalMatrix = _image.transform.matrix.clone();*/
++		
++		if (_currentTexture != _previousTexture) {
++			var bm:Bitmap = new Bitmap(bd);
++			if (_image.numChildren > 0 && _image.getChildAt(0) != null) (_image.removeChildAt(0));
++			_image.addChild(bm);
++			_originalMatrix = _image.transform.matrix.clone();
++		}
++	}
++	
++	public function setMovie(mv:FlumpMovie)
++	{
++		_image = mv;
++	}
++	
++	public function getImage():DisplayObjectContainer
++	{
++		return _image;
++	}
++	
++	public function getMovie():FlumpMovie
++	{
++		var mv:FlumpMovie = cast(_image, FlumpMovie);
++		
++		return mv;
++	}
++	
++	public function hasImageNamed():String
++	{
++		return _containsImage;
++	}
++	
++	public function reset():Void 
++	{
++		goto(0);
++	}
++	
++	/*
++	 *  Goes to absolute frame value. 
++	 * 
++	 */
++	public function goto(internalIndex:Int):Void 
++	{
++		_index = 0;	
++	
++		//var count:Int = 0;
++		for (i in 0..._keyframes.length)
++		{	
++			_keyframes[i].reset();
++		}
++		
++		while(_index < _keyframes.length )
++		{
++			if (_index/*count*/ == internalIndex)
++			{
++				break;
++			}
++			if (!_keyframes[_index].advance())
++			{
++				_index++;	
++			}	
++			//count++;
++			
++		}
++	}
++	
++	public function clone():Layer
++	{
++		var layer:Layer = new Layer();
++		for (i in 0..._keyframes.length)
++		{
++			layer.addKeyframe(_keyframes[i].clone());
++		}
++		return layer;
++	}
++	
++	public function getFrame():Int 
++	{
++		return _index;
++	}
++	
++	public function getLength():Int 
++	{
++		return _length;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/MovieManager.hx
+===================================================================
+--- michaelgreenhut/openflump/MovieManager.hx	(revision 0)
++++ michaelgreenhut/openflump/MovieManager.hx	(working copy)
+@@ -0,0 +1,71 @@
++package com.michaelgreenhut.openflump;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class MovieManager
++{
++
++	private var _motionFunctions:Array<Void->Bool> ;
++	private static var _movieManager:MovieManager;
++	
++	public function new(mmkey:MMKey) 
++	{
++		_motionFunctions = new Array<Void->Bool>();
++	}
++	
++	public static function get():MovieManager
++	{
++		if (_movieManager == null)
++			_movieManager = new MovieManager(new MMKey());
++			
++		return _movieManager;
++	}
++	
++	/*
++	 * These are for collections of two SPECIFIC functions only, nextFrame or prevFrame.  The idea is that by using the 
++	 * MovieManager and the animateMovies function, you only have to rely on a single enterFrame loop to process multiple movies. 
++	 * This allows you to pause/resume them all very easily and in sync, and it saves you from ODing on enterFrame functions.
++	 * 
++	 * */
++	public function addAnimationFunction(animationFunc:Void->Bool):Void 
++	{
++		Type.getClass(animationFunc);
++		_motionFunctions.push(animationFunc);
++	}
++	
++	/*
++	 * Put a call to this in a single enterFrame function.  Stop the enterFrame function when you want to pause all the 
++	 * movies involved.
++	 * 
++	 * */
++	public function animateMovies():Void 
++	{
++		if (_motionFunctions.length == 0)
++			return;
++		trace("num", _motionFunctions.length);
++		var numFuncs:Int = -1 * (_motionFunctions.length-1);
++		
++		for (i in numFuncs...1)
++		{
++			trace("eye", i);
++			var fn:Void->Bool = _motionFunctions[ -i];
++			trace(Reflect.isFunction(fn));
++			var moved:Bool = fn();//Reflect.callMethod(FlumpMovie, _motionFunctions[ -i], []);
++			if (!moved)   //if this movie cannot animate any further in its given direction, remove it.
++			{
++				_motionFunctions.splice( -i, 1);
++			}
++		}
++	}
++	
++}
++
++class MMKey
++{
++	public function new()
++	{
++		
++	}
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/FlumpMovie.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpMovie.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpMovie.hx	(working copy)
+@@ -0,0 +1,228 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.display.LineScaleMode;
++import flash.display.Sprite;
++import flash.events.Event;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++import flash.geom.Transform;
++import flash.Lib;
++import openfl.display.DisplayObjectContainer;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class FlumpMovie extends Sprite
++{
++	
++	private var _layers:Array<Layer>;
++	private var _callback:Void->Void;
++	private var _internalX:Float;
++	private var _internalY:Float;
++	public var key:Int;
++	private static var count:Int = 0;
++
++	public function new() 
++	{
++		super();
++		key = Std.random(99999);
++		_layers = new Array<Layer>();
++	}
++	
++	public function layers():Array<Layer>
++	{
++		return _layers;
++	}
++	
++	public function clone():FlumpMovie
++	{
++		var fm:FlumpMovie = new FlumpMovie();
++		for (i in 0..._layers.length)
++		{
++			fm.addLayer(_layers[i].clone());
++		}
++		
++		return fm;
++	}
++	
++	public override function toString():String 
++	{
++		var returnString:String = "[";
++		for (i in 0..._layers.length)
++		{
++			if (_layers[i].getImage() == null)
++				returnString += "null";
++			else
++			{
++				for (j in 0..._layers[i].getLength())
++					returnString += ("image: " + _layers[i].hasImageNamed());
++			}
++		}
++		returnString += "]";
++		
++		return returnString;
++	}
++	
++	public function addLayer(layer:Layer):Void
++	{
++		_layers.push(layer);
++		if (layer.hasImageNamed() != null)
++		{
++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(layer.hasImageNamed());
++			//trace("layer name", layer.hasImageNamed(), textureSprite);
++			if (textureSprite == null)
++			{
++				var mv:FlumpMovie = FlumpParser.get().getMovieByName(layer.hasImageNamed());
++				layer.setMovie(mv);
++			}
++			else 
++			{
++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
++				layer.setImage(originalbm.bitmapData.clone());
++			}
++		}
++	}
++	
++	public function process():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++	}
++	
++	public function getLayer(name:String):Layer
++	{
++		for (i in 0..._layers.length)
++		{
++			if (_layers[i].name == name)
++				return _layers[i];
++		}
++		
++		return null;
++	}
++
++	public function internalX():Float
++	{
++		return _internalX;
++	}
++
++	public function internalY():Float 
++	{
++		return _internalY;
++	}
++	
++	public function checkForImage(layer:Layer):Void 
++	{
++		if (layer.getImage() != null)
++		{
++			var image:DisplayObjectContainer = layer.getImage();
++			if (layer.isShown())
++			{
++				addChild(image);
++				count++;
++			//	trace(_internalX, _internalY, image.name, key, count);
++			}
++			else 
++			{
++				if (contains(image))
++				{
++					removeChild(image);
++				}
++			}
++			_internalX = image.x;
++			_internalY = image.y;
++			
++		}
++	}
++	
++	public function play(callb:Void->Void = null):Void
++	{
++		_callback = callb;
++		process();
++		if (!hasEventListener(Event.ENTER_FRAME))
++		{
++			addEventListener(Event.ENTER_FRAME, playInternal);
++		}
++	}
++	
++	public function rewind(callb:Void->Void = null):Void 
++	{
++		_callback = callb;
++		process();
++		if (!hasEventListener(Event.ENTER_FRAME))
++			addEventListener(Event.ENTER_FRAME, rewindInternal);
++	}
++	
++	private function playInternal(e:Event):Void
++	{
++		//trace("playing" + name);
++		if (!nextFrame())
++		{
++			removeEventListener(Event.ENTER_FRAME, playInternal);
++			if (_callback != null)
++				_callback();
++		}
++	}
++	
++	private function rewindInternal(e:Event):Void
++	{		
++		if (!prevFrame())
++		{
++			removeEventListener(Event.ENTER_FRAME, rewindInternal);
++			if (_callback != null)
++				_callback();
++		}
++	}
++	
++	public function nextFrame():Bool
++	{
++		var more:Bool = false;
++		for (i in 0..._layers.length)
++		{
++			var layerMore:Bool = _layers[i].advance();
++			more = more || layerMore;
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++		
++		return more;
++	}
++	
++	public function prevFrame():Bool 
++	{
++		var more:Bool = false;
++		for (i in 0..._layers.length)
++		{
++			more = _layers[i].back();
++			_layers[i].process();
++			checkForImage(_layers[i]);
++		}
++		
++		return more;
++	}
++	
++	public function gotoEnd():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].goto(_layers[i].getLength());
++			_layers[i].process();
++		}
++	}
++	
++	
++	//needs work
++	public function gotoStart():Void 
++	{
++		for (i in 0..._layers.length)
++		{
++			_layers[i].goto(0);
++			_layers[i].process();
++		}
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/FlumpParser.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpParser.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpParser.hx	(working copy)
+@@ -0,0 +1,191 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++import flash.Lib;
++import haxe.xml.Fast;
++import openfl.Assets;
++import openfl.utils.ByteArray;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ * Flump was created at Three Rings by Charlie Groves, Tim Conkling, and Bruno Garcia. 
++ * This Flump parser for openFL was created by Michael Greenhut.
++ * For directions on how to use Flump, visit:
++ * http://threerings.github.io/flump/
++	 * Note that this parser makes use of XML only (at the moment), so be sure to export your Flump files 
++	 * using the XML option. 
++ * 
++ * 
++ */
++class FlumpParser
++{
++	private var _fast:Fast;
++	private var _atlas:Bitmap;
++	private var _fm:FlumpMovie;
++	private var _movies:Array<FlumpMovie>;
++	private var _loadedPaths:Array<String>;
++	private static var _flumpParser:FlumpParser;
++	
++	public function new(fpkey:FPKey) 
++	{
++		_loadedPaths = new Array<String>();
++		_movies = new Array<FlumpMovie>();
++	}
++	
++	public function loadPath(resourcePath:String):Void 
++	{
++		if (Lambda.indexOf(_loadedPaths, resourcePath) != -1)
++		{
++			//trace("Already loaded this set.");
++			return;
++		}
++		
++		var lvlbytes:ByteArray = Assets.getBytes( resourcePath );
++		var text:String = lvlbytes.readUTFBytes(lvlbytes.length);
++		//var text:String = Assets.getText(resourcePath);
++		_fast = new Fast(Xml.parse(text));	
++		_loadedPaths.push(resourcePath);
++		makeTextures();
++		makeMovies();
++	}
++	
++	public static function get():FlumpParser
++	{
++		if (_flumpParser == null)
++			_flumpParser = new FlumpParser(new FPKey());
++			
++		return _flumpParser;
++	}
++	
++	public function textToPoint(text:String):Point 
++	{
++		var pointArray:Array<String> = text.split(",");
++		return new Point(Std.parseFloat(pointArray[0]), Std.parseFloat(pointArray[1]));
++	}
++	
++	public function textToRect(text:String):Rectangle
++	{
++		var rectArray:Array<String> = text.split(",");
++		return new Rectangle(Std.parseFloat(rectArray[0]), Std.parseFloat(rectArray[1]), Std.parseFloat(rectArray[2]), Std.parseFloat(rectArray[3]));
++	}
++	
++	private function makeTextures():Void 
++	{
++		for (textureGroups in _fast.node.resources.nodes.textureGroups)
++		{
++			for (textureGroup in textureGroups.nodes.textureGroup)
++			{
++				for (atlas in textureGroup.nodes.atlas)
++				{
++					var bd:BitmapData = Assets.getBitmapData("assets/"+atlas.att.file);
++					var bm:Bitmap = new Bitmap(bd);
++					for (texture in atlas.nodes.texture)
++					{
++						var rectArray:Array<String> = texture.att.rect.split(",");
++						var pointArray:Array<String> = texture.att.origin.split(",");
++						var rect:Rectangle = textToRect(texture.att.rect);
++						var origin:Point = textToPoint(texture.att.origin);
++						FlumpTextures.get().makeTexture(bm, rect, texture.att.name,origin);
++					}
++				}
++			}
++		}
++	}
++	
++	private function makeMovies():Void 
++	{
++		
++		for (movie in _fast.node.resources.nodes.movie)
++		{
++			var fm:FlumpMovie = new FlumpMovie();
++			fm.name = movie.att.name;
++			for (layer in movie.nodes.layer)
++			{
++				var movieLayer:Layer = new Layer();
++				movieLayer.name = layer.att.name;
++
++				for (keyframe in layer.nodes.kf)
++				{
++					//var kf:Keyframe = new Keyframe(Std.int(keyframe.node.duration));
++					var ref:String = "";
++					var loc:Null<Point> = null;
++					var scale:Null<Point> = null;
++					var pivot:Null<Point> = new Point(0,0);
++					var tweened:Bool = false;
++					var ease:Null<Float> = null;
++					var skew:Null<Point> = new Point(0,0);
++					var alpha:Float = 1;
++					if (keyframe.has.ref)
++					{
++						ref = keyframe.att.ref;
++					}
++					//fix by gigbig@libero.it
++					loc = keyframe.has.loc ? textToPoint(keyframe.att.loc) : new Point(0, 0);
++					
++					if (keyframe.has.tweened)
++					{
++						tweened = keyframe.att.tweened == "false" ? false : true;
++					}
++					else
++						tweened = true;
++					if (keyframe.has.scale)
++					{
++						scale = textToPoint(keyframe.att.scale);
++					}
++					if (keyframe.has.pivot)
++					{
++						pivot = textToPoint(keyframe.att.pivot);
++					}
++					if (keyframe.has.skew)
++					{
++						skew = textToPoint(keyframe.att.skew);
++					}
++					if (keyframe.has.ease)
++					{
++						tweened = true;
++						ease = Std.parseFloat(keyframe.att.ease);
++					}
++					if (keyframe.has.alpha)
++					{
++						alpha = Std.parseFloat(keyframe.att.alpha);
++					}
++					var kf:Keyframe = new Keyframe(Std.parseInt(keyframe.att.duration), ref, loc, scale, pivot, tweened, ease, alpha, skew);
++					movieLayer.addKeyframe(kf);
++					//trace("movie ", movieLayer.name);
++				}
++				fm.addLayer(movieLayer);
++			}
++			//fm.process();
++			_movies.push(fm);
++		}
++		trace("made movies", _movies);
++	}
++	
++	public function getMovieByName(name:String):FlumpMovie
++	{
++		for (i in 0..._movies.length)
++		{
++			if (_movies[i].name == name)
++			{
++				var movieToReturn:FlumpMovie = _movies[i];
++				//_movies.splice(i, 1);
++				//trace("returning movie ", name, movieToReturn);
++				return movieToReturn;
++			}
++		}
++		
++		return null;
++	}
++	
++}
++
++class FPKey
++{
++	public function new() 
++	{
++		
++	}
++}
+Index: michaelgreenhut/openflump/FlumpTextures.hx
+===================================================================
+--- michaelgreenhut/openflump/FlumpTextures.hx	(revision 0)
++++ michaelgreenhut/openflump/FlumpTextures.hx	(working copy)
+@@ -0,0 +1,72 @@
++package com.michaelgreenhut.openflump ;
++import flash.display.Bitmap;
++import flash.display.BitmapData;
++import flash.display.Sprite;
++import flash.geom.Matrix;
++import flash.geom.Point;
++import flash.geom.Rectangle;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class FlumpTextures
++{
++	
++	private var _textures:Map<String,Sprite>;
++	private static var _flumpTextures:FlumpTextures;
++
++	public function new(ft:FlumpTexturesKey) 
++	{
++		_textures = new Map<String,Sprite>(); 
++	}
++	
++	public function makeTexture(sourcebm:Bitmap, rect:Rectangle, name:String, origin:Point):Void
++	{
++	//	trace("making", name, rect);
++		var newbd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0xffffffff);
++		newbd.copyPixels(sourcebm.bitmapData, rect, new Point(0, 0));
++		var newbm:Bitmap = new Bitmap(newbd);
++		newbm.name = name;
++		newbm.x = -origin.x;
++		newbm.y = -origin.y;
++		var textureSprite:Sprite = new Sprite();
++		textureSprite.addChild(newbm);
++		textureSprite.name = name;
++		_textures.set(name, textureSprite);
++		textureSprite.visible = false;
++	}
++	
++	public static function get():FlumpTextures
++	{
++		if (_flumpTextures == null)
++			_flumpTextures = new FlumpTextures(new FlumpTexturesKey());
++			
++		return _flumpTextures;
++	}
++	
++	public function getTextureByName(name:String):Sprite
++	{
++		return _textures.get(name);
++	}
++	
++	public function cloneTextureByName(name:String):Sprite
++	{
++		var texture:Sprite = _textures.get(name);
++		var bd:BitmapData = new BitmapData(Std.int(texture.width), Std.int(texture.height),true,0xffffff);
++		bd.draw(texture.getChildAt(0));
++		var bm:Bitmap = new Bitmap(bd);
++		var clone:Sprite = new Sprite();
++		clone.addChild(bm);
++		return clone;
++	}
++	
++}
++
++class FlumpTexturesKey
++{
++	public function new()
++	{
++		
++	}
++}
+Index: michaelgreenhut/openflump/ImageData.hx
+===================================================================
+--- michaelgreenhut/openflump/ImageData.hx	(revision 0)
++++ michaelgreenhut/openflump/ImageData.hx	(working copy)
+@@ -0,0 +1,23 @@
++package com.michaelgreenhut.openflump ;
++import flash.geom.Point;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class ImageData
++{
++	public var location:Point;
++	public var scale:Point;
++	public var texture:String;
++	public var pivot:Point;
++
++	public function new(texture:String, location:Point, scale:Point, pivot:Point) 
++	{
++		this.location = location;
++		this.scale = scale;
++		this.texture = texture;
++		this.pivot = pivot;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/Keyframe.hx
+===================================================================
+--- michaelgreenhut/openflump/Keyframe.hx	(revision 0)
++++ michaelgreenhut/openflump/Keyframe.hx	(working copy)
+@@ -0,0 +1,117 @@
++package com.michaelgreenhut.openflump ;
++import flash.geom.Point;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ * TODO: put loc and scale for standard, untransformed instances.
++ */
++class Keyframe
++{
++
++	private var _duration:Int;
++	private var _index:Int = 0;
++	private var _ref:String;
++	private var _location:Point;
++	private var _scale:Point;
++	private var _pivot:Point;
++	private var _tweened:Bool;
++	private var _ease:Float;
++	private var _alpha:Float;
++	private var _skew:Point;
++	
++	public function new(duration:Int, ref:String = null, location:Point = null, scale:Point = null, pivot:Point = null, tweened:Bool = false, ease:Float = 0, alpha:Float = 1, skew:Point = null ) 
++	{
++		_duration = duration;
++		_location = location;
++		_ref = ref;
++		if (scale == null)
++			scale = new Point(1, 1);
++		_scale = scale;
++		_pivot = pivot;
++		_tweened = tweened;
++		_ease = ease;
++		_alpha = alpha;
++		if (skew == null)
++			_skew = new Point(0, 0);
++		else
++			_skew = skew;
++	}
++	
++	public function clone():Keyframe
++	{
++		return new Keyframe(_duration,_ref,_location,_scale,_pivot,_tweened,_ease,_alpha,_skew);
++	}
++	
++	public function back():Bool 
++	{
++		if (_index > 0)
++			_index--;
++		
++		return (_index > 0);
++	}
++	
++	public function advance():Bool
++	{
++		if (_index < _duration)
++			_index++;
++
++		return (_index < _duration);
++	}
++	
++	public function reset():Void
++	{
++		_index = 0;
++	}
++	
++	public function internalIndex():Int 
++	{
++		return _index;
++	}
++	
++	public function getRef():String
++	{
++		return _ref;
++	}
++	
++	public function getDuration():Int 
++	{
++		return _duration;
++	}
++	
++	public function getLocation():Point 
++	{
++		return _location;
++	}
++	
++	public function getSkew():Point
++	{
++		return _skew;
++	}
++	
++	public function getScale():Point 
++	{
++		return _scale;
++	}
++	
++	public function getPivot():Point
++	{
++		return _pivot;
++	}
++	
++	public function getTweened():Bool
++	{
++		return _tweened;
++	}
++	
++	public function getEase():Float
++	{
++		return _ease;
++	}
++	
++	public function getAlpha():Float
++	{
++		return _alpha;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/Layer.hx
+===================================================================
+--- michaelgreenhut/openflump/Layer.hx	(revision 0)
++++ michaelgreenhut/openflump/Layer.hx	(working copy)
+@@ -0,0 +1,300 @@
++package com.michaelgreenhut.openflump ;
++import openfl.display.Bitmap;
++import openfl.display.BitmapData;
++import openfl.display.Sprite;
++import openfl.display.DisplayObjectContainer;
++import flash.geom.Matrix;
++import flash.geom.Point;
++import flash.geom.Transform;
++import flash.Lib;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class Layer
++{
++
++	private var _index:Int = 0;
++	private var _keyframes:Array<Keyframe>;
++	private var _currentTexture:String;
++	private var _previousTexture:String;
++	private var _currentLocation:Point;
++	private var _currentScale:Point;
++	private var _currentPivot:Point;
++	private var _currentSkew:Point;
++	private var _currentAlpha:Float = 1;
++	private var _image:DisplayObjectContainer;
++	private var _length:Int = 0;
++	
++	public var name:String;
++	public var visible:Bool = true;
++	private var _containsImage:String;
++	private var _destinationIndex:Int;
++	private var _preTweenIndex:Int = 0;
++	private var _originalMatrix:Matrix;
++	public function new() 
++	{
++		_keyframes = new Array<Keyframe>();
++		_preTweenIndex = _index;
++		_image = new Sprite();
++	}
++	
++	public function addKeyframe(kf:Keyframe):Void
++	{
++		_keyframes.push(kf);
++		_length += kf.getDuration();
++	
++		if (kf.getRef() != null)
++			_containsImage = kf.getRef();
++	}
++	
++	public function keyFrames():Array<Keyframe>
++	{
++		return _keyframes;
++	}
++	
++	public function back():Bool 
++	{    
++		if (_index >= 0)
++		{
++			if (!_keyframes[_index].back())
++			{
++				if (_index > 0)
++				{
++					_index--;
++					return true;
++				}
++				else
++					return false;
++			}
++			
++			return true;
++		}
++		
++		return false;
++	}
++	
++	public function advance():Bool
++	{
++		if (_index < _keyframes.length)
++		{
++			if (!_keyframes[_index].advance())
++			{
++				if (_index < _keyframes.length - 1)
++				{
++					_index++;
++					{
++						return true;  //if the current keyframe is at the end, and there are more to go
++					}
++				}
++				else 
++				{
++					return false;  //if the current keyframe is at the end, and there are no more to go.
++				}
++			}
++			return true;  //if the current keyframe isn't at the end, and there are more to go
++		}
++		return false;
++	}
++	
++	public function process():Void 
++	{
++		if (_index < 0 || _index >= _keyframes.length)
++			return;
++		if (_keyframes[_index].getLocation() != null)
++		{
++			populateCurrentValues(_index);
++			
++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(_currentTexture);
++			
++			if (textureSprite != null)
++			{
++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
++				setImage(originalbm.bitmapData.clone());
++			}
++			else 
++			{
++				 //it must be a flump movie  or flipbook, and we don't need to call setImage at all.
++                if (Type.getClass(_image) != FlumpMovie)
++                    _image = FlumpParser.get().getMovieByName(_currentTexture).clone();
++
++                if (!cast(_image, FlumpMovie).nextFrame())
++                    cast(_image, FlumpMovie).gotoStart();  //this loops the internal flipbook
++			}
++			
++			if (_image != null)
++			{
++				if (_keyframes[_index].getTweened()) //Stop-gap code to handle tweens
++				{  
++				
++					_destinationIndex = _index + 1;
++					_preTweenIndex = _index;
++					var nextLoc:Point = _keyframes[_destinationIndex].getLocation().clone();  
++					var nextScale:Point = _keyframes[_destinationIndex].getScale().clone();
++					var nextPivot:Point = _keyframes[_destinationIndex].getPivot().clone();
++					var nextAlpha:Float = _keyframes[_destinationIndex].getAlpha();
++					var nextSkew:Point = _keyframes[_destinationIndex].getSkew().clone();
++					_keyframes[_index].internalIndex();
++					var multiplier:Float = _keyframes[_preTweenIndex].internalIndex() /_keyframes[_preTweenIndex].getDuration();
++				
++					_currentAlpha = _keyframes[_preTweenIndex].getAlpha() + (nextAlpha - _keyframes[_preTweenIndex].getAlpha()) * multiplier;
++					_currentScale.x = _keyframes[_preTweenIndex].getScale().x + (nextScale.x - _keyframes[_preTweenIndex].getScale().x) * multiplier;
++					_currentScale.y = _keyframes[_preTweenIndex].getScale().y + (nextScale.y - _keyframes[_preTweenIndex].getScale().y) * multiplier;
++					_currentLocation.x = _keyframes[_index].getLocation().x + (nextLoc.x - _keyframes[_preTweenIndex].getLocation().x) * multiplier;
++				
++					_currentLocation.y = _keyframes[_index].getLocation().y + (nextLoc.y - _keyframes[_preTweenIndex].getLocation().y) * multiplier;
++					
++					_currentPivot.x = _keyframes[_index].getPivot().x + (nextPivot.x - _keyframes[_preTweenIndex].getPivot().x) * multiplier;
++					_currentPivot.y = _keyframes[_index].getPivot().y + (nextPivot.y - _keyframes[_preTweenIndex].getPivot().y) * multiplier;
++					_currentPivot.x *= _currentScale.x;
++					_currentPivot.y *= _currentScale.y;
++					_currentSkew.x = _keyframes[_index].getSkew().x + (nextSkew.x - _keyframes[_preTweenIndex].getSkew().x) * multiplier;
++					_currentSkew.y = _keyframes[_index].getSkew().y + (nextSkew.y - _keyframes[_preTweenIndex].getSkew().y) * multiplier;
++				
++				}
++				_image.scaleX = _currentScale.x;
++				_image.scaleY = _currentScale.y;
++				
++				_image.x = _currentLocation.x;
++				_image.y = _currentLocation.y;
++				if (_image.numChildren > 0)
++				{
++					_image.getChildAt(0).x = -_currentPivot.x;
++					_image.getChildAt(0).y = -_currentPivot.y;
++				}
++				
++				//if (_currentSkew.x != 0 || _currentSkew.y != 0)
++				{
++					_image.rotation = _currentSkew.x * 180 / Math.PI;
++				}
++				
++				_image.visible = visible;
++				_image.alpha = _currentAlpha;
++				
++			}
++			//else 
++			//	trace("NON TWEEN", this.name, "keyframe ", _index);
++		}
++		else // _keyframes[_index].getLocation() is never == null, so this "else" will never be executed
++		{
++			if (_image != null && _image != {})
++				_image.visible = false; 
++			_currentLocation = null;
++			_currentTexture = null;
++			_currentScale = null;
++			_currentPivot = null;
++		}
++	}
++	
++	private function populateCurrentValues(index:Int):Void 
++	{
++		_previousTexture = _currentTexture;
++		_currentTexture = _keyframes[index].getRef();
++		
++		_currentScale = _keyframes[index].getScale().clone();
++		_currentLocation = _keyframes[index].getLocation().clone();
++		_currentPivot = _keyframes[index].getPivot().clone();
++		_currentPivot.x *= _currentScale.x;
++		_currentPivot.y *= _currentScale.y;
++		_currentAlpha = _keyframes[index].getAlpha();
++		_currentSkew = _keyframes[index].getSkew().clone();
++	}
++	
++	public function isShown():Bool
++	{
++		return _image.visible;
++	}
++	
++	public function setImage(bd:BitmapData):Void 
++	{
++		/*var bm:Bitmap = new Bitmap(bd);
++		_image = new Sprite();
++		_image.addChild(bm);
++		_originalMatrix = _image.transform.matrix.clone();*/
++		
++		if (_currentTexture != _previousTexture) {
++			var bm:Bitmap = new Bitmap(bd);
++			if (_image.numChildren > 0 && _image.getChildAt(0) != null) (_image.removeChildAt(0));
++			_image.addChild(bm);
++			_originalMatrix = _image.transform.matrix.clone();
++		}
++	}
++	
++	public function setMovie(mv:FlumpMovie)
++	{
++		_image = mv;
++	}
++	
++	public function getImage():DisplayObjectContainer
++	{
++		return _image;
++	}
++	
++	public function getMovie():FlumpMovie
++	{
++		var mv:FlumpMovie = cast(_image, FlumpMovie);
++		
++		return mv;
++	}
++	
++	public function hasImageNamed():String
++	{
++		return _containsImage;
++	}
++	
++	public function reset():Void 
++	{
++		goto(0);
++	}
++	
++	/*
++	 *  Goes to absolute frame value. 
++	 * 
++	 */
++	public function goto(internalIndex:Int):Void 
++	{
++		_index = 0;	
++	
++		//var count:Int = 0;
++		for (i in 0..._keyframes.length)
++		{	
++			_keyframes[i].reset();
++		}
++		
++		while(_index < _keyframes.length )
++		{
++			if (_index/*count*/ == internalIndex)
++			{
++				break;
++			}
++			if (!_keyframes[_index].advance())
++			{
++				_index++;	
++			}	
++			//count++;
++			
++		}
++	}
++	
++	public function clone():Layer
++	{
++		var layer:Layer = new Layer();
++		for (i in 0..._keyframes.length)
++		{
++			layer.addKeyframe(_keyframes[i].clone());
++		}
++		return layer;
++	}
++	
++	public function getFrame():Int 
++	{
++		return _index;
++	}
++	
++	public function getLength():Int 
++	{
++		return _length;
++	}
++	
++}
+\ No newline at end of file
+Index: michaelgreenhut/openflump/MovieManager.hx
+===================================================================
+--- michaelgreenhut/openflump/MovieManager.hx	(revision 0)
++++ michaelgreenhut/openflump/MovieManager.hx	(working copy)
+@@ -0,0 +1,71 @@
++package com.michaelgreenhut.openflump;
++
++/**
++ * ...
++ * @author Michael Greenhut
++ */
++class MovieManager
++{
++
++	private var _motionFunctions:Array<Void->Bool> ;
++	private static var _movieManager:MovieManager;
++	
++	public function new(mmkey:MMKey) 
++	{
++		_motionFunctions = new Array<Void->Bool>();
++	}
++	
++	public static function get():MovieManager
++	{
++		if (_movieManager == null)
++			_movieManager = new MovieManager(new MMKey());
++			
++		return _movieManager;
++	}
++	
++	/*
++	 * These are for collections of two SPECIFIC functions only, nextFrame or prevFrame.  The idea is that by using the 
++	 * MovieManager and the animateMovies function, you only have to rely on a single enterFrame loop to process multiple movies. 
++	 * This allows you to pause/resume them all very easily and in sync, and it saves you from ODing on enterFrame functions.
++	 * 
++	 * */
++	public function addAnimationFunction(animationFunc:Void->Bool):Void 
++	{
++		Type.getClass(animationFunc);
++		_motionFunctions.push(animationFunc);
++	}
++	
++	/*
++	 * Put a call to this in a single enterFrame function.  Stop the enterFrame function when you want to pause all the 
++	 * movies involved.
++	 * 
++	 * */
++	public function animateMovies():Void 
++	{
++		if (_motionFunctions.length == 0)
++			return;
++		trace("num", _motionFunctions.length);
++		var numFuncs:Int = -1 * (_motionFunctions.length-1);
++		
++		for (i in numFuncs...1)
++		{
++			trace("eye", i);
++			var fn:Void->Bool = _motionFunctions[ -i];
++			trace(Reflect.isFunction(fn));
++			var moved:Bool = fn();//Reflect.callMethod(FlumpMovie, _motionFunctions[ -i], []);
++			if (!moved)   //if this movie cannot animate any further in its given direction, remove it.
++			{
++				_motionFunctions.splice( -i, 1);
++			}
++		}
++	}
++	
++}
++
++class MMKey
++{
++	public function new()
++	{
++		
++	}
++}
+\ No newline at end of file
+Index: patches/chrish/openflump.patch
+===================================================================
+--- patches/chrish/openflump.patch	(revision 0)
++++ patches/chrish/openflump.patch	(working copy)
+@@ -0,0 +1,3126 @@
++Index: michaelgreenhut/openflump/FlumpMovie.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpMovie.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpMovie.hx	(working copy)
++@@ -0,0 +1,228 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.display.LineScaleMode;
+++import flash.display.Sprite;
+++import flash.events.Event;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++import flash.geom.Transform;
+++import flash.Lib;
+++import openfl.display.DisplayObjectContainer;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class FlumpMovie extends Sprite
+++{
+++	
+++	private var _layers:Array<Layer>;
+++	private var _callback:Void->Void;
+++	private var _internalX:Float;
+++	private var _internalY:Float;
+++	public var key:Int;
+++	private static var count:Int = 0;
+++
+++	public function new() 
+++	{
+++		super();
+++		key = Std.random(99999);
+++		_layers = new Array<Layer>();
+++	}
+++	
+++	public function layers():Array<Layer>
+++	{
+++		return _layers;
+++	}
+++	
+++	public function clone():FlumpMovie
+++	{
+++		var fm:FlumpMovie = new FlumpMovie();
+++		for (i in 0..._layers.length)
+++		{
+++			fm.addLayer(_layers[i].clone());
+++		}
+++		
+++		return fm;
+++	}
+++	
+++	public override function toString():String 
+++	{
+++		var returnString:String = "[";
+++		for (i in 0..._layers.length)
+++		{
+++			if (_layers[i].getImage() == null)
+++				returnString += "null";
+++			else
+++			{
+++				for (j in 0..._layers[i].getLength())
+++					returnString += ("image: " + _layers[i].hasImageNamed());
+++			}
+++		}
+++		returnString += "]";
+++		
+++		return returnString;
+++	}
+++	
+++	public function addLayer(layer:Layer):Void
+++	{
+++		_layers.push(layer);
+++		if (layer.hasImageNamed() != null)
+++		{
+++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(layer.hasImageNamed());
+++			//trace("layer name", layer.hasImageNamed(), textureSprite);
+++			if (textureSprite == null)
+++			{
+++				var mv:FlumpMovie = FlumpParser.get().getMovieByName(layer.hasImageNamed());
+++				layer.setMovie(mv);
+++			}
+++			else 
+++			{
+++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
+++				layer.setImage(originalbm.bitmapData.clone());
+++			}
+++		}
+++	}
+++	
+++	public function process():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++	}
+++	
+++	public function getLayer(name:String):Layer
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			if (_layers[i].name == name)
+++				return _layers[i];
+++		}
+++		
+++		return null;
+++	}
+++
+++	public function internalX():Float
+++	{
+++		return _internalX;
+++	}
+++
+++	public function internalY():Float 
+++	{
+++		return _internalY;
+++	}
+++	
+++	public function checkForImage(layer:Layer):Void 
+++	{
+++		if (layer.getImage() != null)
+++		{
+++			var image:DisplayObjectContainer = layer.getImage();
+++			if (layer.isShown())
+++			{
+++				addChild(image);
+++				count++;
+++			//	trace(_internalX, _internalY, image.name, key, count);
+++			}
+++			else 
+++			{
+++				if (contains(image))
+++				{
+++					removeChild(image);
+++				}
+++			}
+++			_internalX = image.x;
+++			_internalY = image.y;
+++			
+++		}
+++	}
+++	
+++	public function play(callb:Void->Void = null):Void
+++	{
+++		_callback = callb;
+++		process();
+++		if (!hasEventListener(Event.ENTER_FRAME))
+++		{
+++			addEventListener(Event.ENTER_FRAME, playInternal);
+++		}
+++	}
+++	
+++	public function rewind(callb:Void->Void = null):Void 
+++	{
+++		_callback = callb;
+++		process();
+++		if (!hasEventListener(Event.ENTER_FRAME))
+++			addEventListener(Event.ENTER_FRAME, rewindInternal);
+++	}
+++	
+++	private function playInternal(e:Event):Void
+++	{
+++		//trace("playing" + name);
+++		if (!nextFrame())
+++		{
+++			removeEventListener(Event.ENTER_FRAME, playInternal);
+++			if (_callback != null)
+++				_callback();
+++		}
+++	}
+++	
+++	private function rewindInternal(e:Event):Void
+++	{		
+++		if (!prevFrame())
+++		{
+++			removeEventListener(Event.ENTER_FRAME, rewindInternal);
+++			if (_callback != null)
+++				_callback();
+++		}
+++	}
+++	
+++	public function nextFrame():Bool
+++	{
+++		var more:Bool = false;
+++		for (i in 0..._layers.length)
+++		{
+++			var layerMore:Bool = _layers[i].advance();
+++			more = more || layerMore;
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++		
+++		return more;
+++	}
+++	
+++	public function prevFrame():Bool 
+++	{
+++		var more:Bool = false;
+++		for (i in 0..._layers.length)
+++		{
+++			more = _layers[i].back();
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++		
+++		return more;
+++	}
+++	
+++	public function gotoEnd():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].goto(_layers[i].getLength());
+++			_layers[i].process();
+++		}
+++	}
+++	
+++	
+++	//needs work
+++	public function gotoStart():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].goto(0);
+++			_layers[i].process();
+++		}
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/FlumpParser.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpParser.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpParser.hx	(working copy)
++@@ -0,0 +1,191 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++import flash.Lib;
+++import haxe.xml.Fast;
+++import openfl.Assets;
+++import openfl.utils.ByteArray;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ * Flump was created at Three Rings by Charlie Groves, Tim Conkling, and Bruno Garcia. 
+++ * This Flump parser for openFL was created by Michael Greenhut.
+++ * For directions on how to use Flump, visit:
+++ * http://threerings.github.io/flump/
+++	 * Note that this parser makes use of XML only (at the moment), so be sure to export your Flump files 
+++	 * using the XML option. 
+++ * 
+++ * 
+++ */
+++class FlumpParser
+++{
+++	private var _fast:Fast;
+++	private var _atlas:Bitmap;
+++	private var _fm:FlumpMovie;
+++	private var _movies:Array<FlumpMovie>;
+++	private var _loadedPaths:Array<String>;
+++	private static var _flumpParser:FlumpParser;
+++	
+++	public function new(fpkey:FPKey) 
+++	{
+++		_loadedPaths = new Array<String>();
+++		_movies = new Array<FlumpMovie>();
+++	}
+++	
+++	public function loadPath(resourcePath:String):Void 
+++	{
+++		if (Lambda.indexOf(_loadedPaths, resourcePath) != -1)
+++		{
+++			//trace("Already loaded this set.");
+++			return;
+++		}
+++		
+++		var lvlbytes:ByteArray = Assets.getBytes( resourcePath );
+++		var text:String = lvlbytes.readUTFBytes(lvlbytes.length);
+++		//var text:String = Assets.getText(resourcePath);
+++		_fast = new Fast(Xml.parse(text));	
+++		_loadedPaths.push(resourcePath);
+++		makeTextures();
+++		makeMovies();
+++	}
+++	
+++	public static function get():FlumpParser
+++	{
+++		if (_flumpParser == null)
+++			_flumpParser = new FlumpParser(new FPKey());
+++			
+++		return _flumpParser;
+++	}
+++	
+++	public function textToPoint(text:String):Point 
+++	{
+++		var pointArray:Array<String> = text.split(",");
+++		return new Point(Std.parseFloat(pointArray[0]), Std.parseFloat(pointArray[1]));
+++	}
+++	
+++	public function textToRect(text:String):Rectangle
+++	{
+++		var rectArray:Array<String> = text.split(",");
+++		return new Rectangle(Std.parseFloat(rectArray[0]), Std.parseFloat(rectArray[1]), Std.parseFloat(rectArray[2]), Std.parseFloat(rectArray[3]));
+++	}
+++	
+++	private function makeTextures():Void 
+++	{
+++		for (textureGroups in _fast.node.resources.nodes.textureGroups)
+++		{
+++			for (textureGroup in textureGroups.nodes.textureGroup)
+++			{
+++				for (atlas in textureGroup.nodes.atlas)
+++				{
+++					var bd:BitmapData = Assets.getBitmapData("assets/"+atlas.att.file);
+++					var bm:Bitmap = new Bitmap(bd);
+++					for (texture in atlas.nodes.texture)
+++					{
+++						var rectArray:Array<String> = texture.att.rect.split(",");
+++						var pointArray:Array<String> = texture.att.origin.split(",");
+++						var rect:Rectangle = textToRect(texture.att.rect);
+++						var origin:Point = textToPoint(texture.att.origin);
+++						FlumpTextures.get().makeTexture(bm, rect, texture.att.name,origin);
+++					}
+++				}
+++			}
+++		}
+++	}
+++	
+++	private function makeMovies():Void 
+++	{
+++		
+++		for (movie in _fast.node.resources.nodes.movie)
+++		{
+++			var fm:FlumpMovie = new FlumpMovie();
+++			fm.name = movie.att.name;
+++			for (layer in movie.nodes.layer)
+++			{
+++				var movieLayer:Layer = new Layer();
+++				movieLayer.name = layer.att.name;
+++
+++				for (keyframe in layer.nodes.kf)
+++				{
+++					//var kf:Keyframe = new Keyframe(Std.int(keyframe.node.duration));
+++					var ref:String = "";
+++					var loc:Null<Point> = null;
+++					var scale:Null<Point> = null;
+++					var pivot:Null<Point> = new Point(0,0);
+++					var tweened:Bool = false;
+++					var ease:Null<Float> = null;
+++					var skew:Null<Point> = new Point(0,0);
+++					var alpha:Float = 1;
+++					if (keyframe.has.ref)
+++					{
+++						ref = keyframe.att.ref;
+++					}
+++					//fix by gigbig@libero.it
+++					loc = keyframe.has.loc ? textToPoint(keyframe.att.loc) : new Point(0, 0);
+++					
+++					if (keyframe.has.tweened)
+++					{
+++						tweened = keyframe.att.tweened == "false" ? false : true;
+++					}
+++					else
+++						tweened = true;
+++					if (keyframe.has.scale)
+++					{
+++						scale = textToPoint(keyframe.att.scale);
+++					}
+++					if (keyframe.has.pivot)
+++					{
+++						pivot = textToPoint(keyframe.att.pivot);
+++					}
+++					if (keyframe.has.skew)
+++					{
+++						skew = textToPoint(keyframe.att.skew);
+++					}
+++					if (keyframe.has.ease)
+++					{
+++						tweened = true;
+++						ease = Std.parseFloat(keyframe.att.ease);
+++					}
+++					if (keyframe.has.alpha)
+++					{
+++						alpha = Std.parseFloat(keyframe.att.alpha);
+++					}
+++					var kf:Keyframe = new Keyframe(Std.parseInt(keyframe.att.duration), ref, loc, scale, pivot, tweened, ease, alpha, skew);
+++					movieLayer.addKeyframe(kf);
+++					//trace("movie ", movieLayer.name);
+++				}
+++				fm.addLayer(movieLayer);
+++			}
+++			//fm.process();
+++			_movies.push(fm);
+++		}
+++		trace("made movies", _movies);
+++	}
+++	
+++	public function getMovieByName(name:String):FlumpMovie
+++	{
+++		for (i in 0..._movies.length)
+++		{
+++			if (_movies[i].name == name)
+++			{
+++				var movieToReturn:FlumpMovie = _movies[i];
+++				//_movies.splice(i, 1);
+++				//trace("returning movie ", name, movieToReturn);
+++				return movieToReturn;
+++			}
+++		}
+++		
+++		return null;
+++	}
+++	
+++}
+++
+++class FPKey
+++{
+++	public function new() 
+++	{
+++		
+++	}
+++}
++Index: michaelgreenhut/openflump/FlumpTextures.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpTextures.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpTextures.hx	(working copy)
++@@ -0,0 +1,72 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.display.Sprite;
+++import flash.geom.Matrix;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class FlumpTextures
+++{
+++	
+++	private var _textures:Map<String,Sprite>;
+++	private static var _flumpTextures:FlumpTextures;
+++
+++	public function new(ft:FlumpTexturesKey) 
+++	{
+++		_textures = new Map<String,Sprite>(); 
+++	}
+++	
+++	public function makeTexture(sourcebm:Bitmap, rect:Rectangle, name:String, origin:Point):Void
+++	{
+++	//	trace("making", name, rect);
+++		var newbd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0xffffffff);
+++		newbd.copyPixels(sourcebm.bitmapData, rect, new Point(0, 0));
+++		var newbm:Bitmap = new Bitmap(newbd);
+++		newbm.name = name;
+++		newbm.x = -origin.x;
+++		newbm.y = -origin.y;
+++		var textureSprite:Sprite = new Sprite();
+++		textureSprite.addChild(newbm);
+++		textureSprite.name = name;
+++		_textures.set(name, textureSprite);
+++		textureSprite.visible = false;
+++	}
+++	
+++	public static function get():FlumpTextures
+++	{
+++		if (_flumpTextures == null)
+++			_flumpTextures = new FlumpTextures(new FlumpTexturesKey());
+++			
+++		return _flumpTextures;
+++	}
+++	
+++	public function getTextureByName(name:String):Sprite
+++	{
+++		return _textures.get(name);
+++	}
+++	
+++	public function cloneTextureByName(name:String):Sprite
+++	{
+++		var texture:Sprite = _textures.get(name);
+++		var bd:BitmapData = new BitmapData(Std.int(texture.width), Std.int(texture.height),true,0xffffff);
+++		bd.draw(texture.getChildAt(0));
+++		var bm:Bitmap = new Bitmap(bd);
+++		var clone:Sprite = new Sprite();
+++		clone.addChild(bm);
+++		return clone;
+++	}
+++	
+++}
+++
+++class FlumpTexturesKey
+++{
+++	public function new()
+++	{
+++		
+++	}
+++}
++Index: michaelgreenhut/openflump/ImageData.hx
++===================================================================
++--- michaelgreenhut/openflump/ImageData.hx	(revision 0)
+++++ michaelgreenhut/openflump/ImageData.hx	(working copy)
++@@ -0,0 +1,23 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.geom.Point;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class ImageData
+++{
+++	public var location:Point;
+++	public var scale:Point;
+++	public var texture:String;
+++	public var pivot:Point;
+++
+++	public function new(texture:String, location:Point, scale:Point, pivot:Point) 
+++	{
+++		this.location = location;
+++		this.scale = scale;
+++		this.texture = texture;
+++		this.pivot = pivot;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/Keyframe.hx
++===================================================================
++--- michaelgreenhut/openflump/Keyframe.hx	(revision 0)
+++++ michaelgreenhut/openflump/Keyframe.hx	(working copy)
++@@ -0,0 +1,117 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.geom.Point;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ * TODO: put loc and scale for standard, untransformed instances.
+++ */
+++class Keyframe
+++{
+++
+++	private var _duration:Int;
+++	private var _index:Int = 0;
+++	private var _ref:String;
+++	private var _location:Point;
+++	private var _scale:Point;
+++	private var _pivot:Point;
+++	private var _tweened:Bool;
+++	private var _ease:Float;
+++	private var _alpha:Float;
+++	private var _skew:Point;
+++	
+++	public function new(duration:Int, ref:String = null, location:Point = null, scale:Point = null, pivot:Point = null, tweened:Bool = false, ease:Float = 0, alpha:Float = 1, skew:Point = null ) 
+++	{
+++		_duration = duration;
+++		_location = location;
+++		_ref = ref;
+++		if (scale == null)
+++			scale = new Point(1, 1);
+++		_scale = scale;
+++		_pivot = pivot;
+++		_tweened = tweened;
+++		_ease = ease;
+++		_alpha = alpha;
+++		if (skew == null)
+++			_skew = new Point(0, 0);
+++		else
+++			_skew = skew;
+++	}
+++	
+++	public function clone():Keyframe
+++	{
+++		return new Keyframe(_duration,_ref,_location,_scale,_pivot,_tweened,_ease,_alpha,_skew);
+++	}
+++	
+++	public function back():Bool 
+++	{
+++		if (_index > 0)
+++			_index--;
+++		
+++		return (_index > 0);
+++	}
+++	
+++	public function advance():Bool
+++	{
+++		if (_index < _duration)
+++			_index++;
+++
+++		return (_index < _duration);
+++	}
+++	
+++	public function reset():Void
+++	{
+++		_index = 0;
+++	}
+++	
+++	public function internalIndex():Int 
+++	{
+++		return _index;
+++	}
+++	
+++	public function getRef():String
+++	{
+++		return _ref;
+++	}
+++	
+++	public function getDuration():Int 
+++	{
+++		return _duration;
+++	}
+++	
+++	public function getLocation():Point 
+++	{
+++		return _location;
+++	}
+++	
+++	public function getSkew():Point
+++	{
+++		return _skew;
+++	}
+++	
+++	public function getScale():Point 
+++	{
+++		return _scale;
+++	}
+++	
+++	public function getPivot():Point
+++	{
+++		return _pivot;
+++	}
+++	
+++	public function getTweened():Bool
+++	{
+++		return _tweened;
+++	}
+++	
+++	public function getEase():Float
+++	{
+++		return _ease;
+++	}
+++	
+++	public function getAlpha():Float
+++	{
+++		return _alpha;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/Layer.hx
++===================================================================
++--- michaelgreenhut/openflump/Layer.hx	(revision 0)
+++++ michaelgreenhut/openflump/Layer.hx	(working copy)
++@@ -0,0 +1,300 @@
+++package com.michaelgreenhut.openflump ;
+++import openfl.display.Bitmap;
+++import openfl.display.BitmapData;
+++import openfl.display.Sprite;
+++import openfl.display.DisplayObjectContainer;
+++import flash.geom.Matrix;
+++import flash.geom.Point;
+++import flash.geom.Transform;
+++import flash.Lib;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class Layer
+++{
+++
+++	private var _index:Int = 0;
+++	private var _keyframes:Array<Keyframe>;
+++	private var _currentTexture:String;
+++	private var _previousTexture:String;
+++	private var _currentLocation:Point;
+++	private var _currentScale:Point;
+++	private var _currentPivot:Point;
+++	private var _currentSkew:Point;
+++	private var _currentAlpha:Float = 1;
+++	private var _image:DisplayObjectContainer;
+++	private var _length:Int = 0;
+++	
+++	public var name:String;
+++	public var visible:Bool = true;
+++	private var _containsImage:String;
+++	private var _destinationIndex:Int;
+++	private var _preTweenIndex:Int = 0;
+++	private var _originalMatrix:Matrix;
+++	public function new() 
+++	{
+++		_keyframes = new Array<Keyframe>();
+++		_preTweenIndex = _index;
+++		_image = new Sprite();
+++	}
+++	
+++	public function addKeyframe(kf:Keyframe):Void
+++	{
+++		_keyframes.push(kf);
+++		_length += kf.getDuration();
+++	
+++		if (kf.getRef() != null)
+++			_containsImage = kf.getRef();
+++	}
+++	
+++	public function keyFrames():Array<Keyframe>
+++	{
+++		return _keyframes;
+++	}
+++	
+++	public function back():Bool 
+++	{    
+++		if (_index >= 0)
+++		{
+++			if (!_keyframes[_index].back())
+++			{
+++				if (_index > 0)
+++				{
+++					_index--;
+++					return true;
+++				}
+++				else
+++					return false;
+++			}
+++			
+++			return true;
+++		}
+++		
+++		return false;
+++	}
+++	
+++	public function advance():Bool
+++	{
+++		if (_index < _keyframes.length)
+++		{
+++			if (!_keyframes[_index].advance())
+++			{
+++				if (_index < _keyframes.length - 1)
+++				{
+++					_index++;
+++					{
+++						return true;  //if the current keyframe is at the end, and there are more to go
+++					}
+++				}
+++				else 
+++				{
+++					return false;  //if the current keyframe is at the end, and there are no more to go.
+++				}
+++			}
+++			return true;  //if the current keyframe isn't at the end, and there are more to go
+++		}
+++		return false;
+++	}
+++	
+++	public function process():Void 
+++	{
+++		if (_index < 0 || _index >= _keyframes.length)
+++			return;
+++		if (_keyframes[_index].getLocation() != null)
+++		{
+++			populateCurrentValues(_index);
+++			
+++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(_currentTexture);
+++			
+++			if (textureSprite != null)
+++			{
+++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
+++				setImage(originalbm.bitmapData.clone());
+++			}
+++			else 
+++			{
+++				 //it must be a flump movie  or flipbook, and we don't need to call setImage at all.
+++                if (Type.getClass(_image) != FlumpMovie)
+++                    _image = FlumpParser.get().getMovieByName(_currentTexture).clone();
+++
+++                if (!cast(_image, FlumpMovie).nextFrame())
+++                    cast(_image, FlumpMovie).gotoStart();  //this loops the internal flipbook
+++			}
+++			
+++			if (_image != null)
+++			{
+++				if (_keyframes[_index].getTweened()) //Stop-gap code to handle tweens
+++				{  
+++				
+++					_destinationIndex = _index + 1;
+++					_preTweenIndex = _index;
+++					var nextLoc:Point = _keyframes[_destinationIndex].getLocation().clone();  
+++					var nextScale:Point = _keyframes[_destinationIndex].getScale().clone();
+++					var nextPivot:Point = _keyframes[_destinationIndex].getPivot().clone();
+++					var nextAlpha:Float = _keyframes[_destinationIndex].getAlpha();
+++					var nextSkew:Point = _keyframes[_destinationIndex].getSkew().clone();
+++					_keyframes[_index].internalIndex();
+++					var multiplier:Float = _keyframes[_preTweenIndex].internalIndex() /_keyframes[_preTweenIndex].getDuration();
+++				
+++					_currentAlpha = _keyframes[_preTweenIndex].getAlpha() + (nextAlpha - _keyframes[_preTweenIndex].getAlpha()) * multiplier;
+++					_currentScale.x = _keyframes[_preTweenIndex].getScale().x + (nextScale.x - _keyframes[_preTweenIndex].getScale().x) * multiplier;
+++					_currentScale.y = _keyframes[_preTweenIndex].getScale().y + (nextScale.y - _keyframes[_preTweenIndex].getScale().y) * multiplier;
+++					_currentLocation.x = _keyframes[_index].getLocation().x + (nextLoc.x - _keyframes[_preTweenIndex].getLocation().x) * multiplier;
+++				
+++					_currentLocation.y = _keyframes[_index].getLocation().y + (nextLoc.y - _keyframes[_preTweenIndex].getLocation().y) * multiplier;
+++					
+++					_currentPivot.x = _keyframes[_index].getPivot().x + (nextPivot.x - _keyframes[_preTweenIndex].getPivot().x) * multiplier;
+++					_currentPivot.y = _keyframes[_index].getPivot().y + (nextPivot.y - _keyframes[_preTweenIndex].getPivot().y) * multiplier;
+++					_currentPivot.x *= _currentScale.x;
+++					_currentPivot.y *= _currentScale.y;
+++					_currentSkew.x = _keyframes[_index].getSkew().x + (nextSkew.x - _keyframes[_preTweenIndex].getSkew().x) * multiplier;
+++					_currentSkew.y = _keyframes[_index].getSkew().y + (nextSkew.y - _keyframes[_preTweenIndex].getSkew().y) * multiplier;
+++				
+++				}
+++				_image.scaleX = _currentScale.x;
+++				_image.scaleY = _currentScale.y;
+++				
+++				_image.x = _currentLocation.x;
+++				_image.y = _currentLocation.y;
+++				if (_image.numChildren > 0)
+++				{
+++					_image.getChildAt(0).x = -_currentPivot.x;
+++					_image.getChildAt(0).y = -_currentPivot.y;
+++				}
+++				
+++				//if (_currentSkew.x != 0 || _currentSkew.y != 0)
+++				{
+++					_image.rotation = _currentSkew.x * 180 / Math.PI;
+++				}
+++				
+++				_image.visible = visible;
+++				_image.alpha = _currentAlpha;
+++				
+++			}
+++			//else 
+++			//	trace("NON TWEEN", this.name, "keyframe ", _index);
+++		}
+++		else // _keyframes[_index].getLocation() is never == null, so this "else" will never be executed
+++		{
+++			if (_image != null && _image != {})
+++				_image.visible = false; 
+++			_currentLocation = null;
+++			_currentTexture = null;
+++			_currentScale = null;
+++			_currentPivot = null;
+++		}
+++	}
+++	
+++	private function populateCurrentValues(index:Int):Void 
+++	{
+++		_previousTexture = _currentTexture;
+++		_currentTexture = _keyframes[index].getRef();
+++		
+++		_currentScale = _keyframes[index].getScale().clone();
+++		_currentLocation = _keyframes[index].getLocation().clone();
+++		_currentPivot = _keyframes[index].getPivot().clone();
+++		_currentPivot.x *= _currentScale.x;
+++		_currentPivot.y *= _currentScale.y;
+++		_currentAlpha = _keyframes[index].getAlpha();
+++		_currentSkew = _keyframes[index].getSkew().clone();
+++	}
+++	
+++	public function isShown():Bool
+++	{
+++		return _image.visible;
+++	}
+++	
+++	public function setImage(bd:BitmapData):Void 
+++	{
+++		/*var bm:Bitmap = new Bitmap(bd);
+++		_image = new Sprite();
+++		_image.addChild(bm);
+++		_originalMatrix = _image.transform.matrix.clone();*/
+++		
+++		if (_currentTexture != _previousTexture) {
+++			var bm:Bitmap = new Bitmap(bd);
+++			if (_image.numChildren > 0 && _image.getChildAt(0) != null) (_image.removeChildAt(0));
+++			_image.addChild(bm);
+++			_originalMatrix = _image.transform.matrix.clone();
+++		}
+++	}
+++	
+++	public function setMovie(mv:FlumpMovie)
+++	{
+++		_image = mv;
+++	}
+++	
+++	public function getImage():DisplayObjectContainer
+++	{
+++		return _image;
+++	}
+++	
+++	public function getMovie():FlumpMovie
+++	{
+++		var mv:FlumpMovie = cast(_image, FlumpMovie);
+++		
+++		return mv;
+++	}
+++	
+++	public function hasImageNamed():String
+++	{
+++		return _containsImage;
+++	}
+++	
+++	public function reset():Void 
+++	{
+++		goto(0);
+++	}
+++	
+++	/*
+++	 *  Goes to absolute frame value. 
+++	 * 
+++	 */
+++	public function goto(internalIndex:Int):Void 
+++	{
+++		_index = 0;	
+++	
+++		//var count:Int = 0;
+++		for (i in 0..._keyframes.length)
+++		{	
+++			_keyframes[i].reset();
+++		}
+++		
+++		while(_index < _keyframes.length )
+++		{
+++			if (_index/*count*/ == internalIndex)
+++			{
+++				break;
+++			}
+++			if (!_keyframes[_index].advance())
+++			{
+++				_index++;	
+++			}	
+++			//count++;
+++			
+++		}
+++	}
+++	
+++	public function clone():Layer
+++	{
+++		var layer:Layer = new Layer();
+++		for (i in 0..._keyframes.length)
+++		{
+++			layer.addKeyframe(_keyframes[i].clone());
+++		}
+++		return layer;
+++	}
+++	
+++	public function getFrame():Int 
+++	{
+++		return _index;
+++	}
+++	
+++	public function getLength():Int 
+++	{
+++		return _length;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/MovieManager.hx
++===================================================================
++--- michaelgreenhut/openflump/MovieManager.hx	(revision 0)
+++++ michaelgreenhut/openflump/MovieManager.hx	(working copy)
++@@ -0,0 +1,71 @@
+++package com.michaelgreenhut.openflump;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class MovieManager
+++{
+++
+++	private var _motionFunctions:Array<Void->Bool> ;
+++	private static var _movieManager:MovieManager;
+++	
+++	public function new(mmkey:MMKey) 
+++	{
+++		_motionFunctions = new Array<Void->Bool>();
+++	}
+++	
+++	public static function get():MovieManager
+++	{
+++		if (_movieManager == null)
+++			_movieManager = new MovieManager(new MMKey());
+++			
+++		return _movieManager;
+++	}
+++	
+++	/*
+++	 * These are for collections of two SPECIFIC functions only, nextFrame or prevFrame.  The idea is that by using the 
+++	 * MovieManager and the animateMovies function, you only have to rely on a single enterFrame loop to process multiple movies. 
+++	 * This allows you to pause/resume them all very easily and in sync, and it saves you from ODing on enterFrame functions.
+++	 * 
+++	 * */
+++	public function addAnimationFunction(animationFunc:Void->Bool):Void 
+++	{
+++		Type.getClass(animationFunc);
+++		_motionFunctions.push(animationFunc);
+++	}
+++	
+++	/*
+++	 * Put a call to this in a single enterFrame function.  Stop the enterFrame function when you want to pause all the 
+++	 * movies involved.
+++	 * 
+++	 * */
+++	public function animateMovies():Void 
+++	{
+++		if (_motionFunctions.length == 0)
+++			return;
+++		trace("num", _motionFunctions.length);
+++		var numFuncs:Int = -1 * (_motionFunctions.length-1);
+++		
+++		for (i in numFuncs...1)
+++		{
+++			trace("eye", i);
+++			var fn:Void->Bool = _motionFunctions[ -i];
+++			trace(Reflect.isFunction(fn));
+++			var moved:Bool = fn();//Reflect.callMethod(FlumpMovie, _motionFunctions[ -i], []);
+++			if (!moved)   //if this movie cannot animate any further in its given direction, remove it.
+++			{
+++				_motionFunctions.splice( -i, 1);
+++			}
+++		}
+++	}
+++	
+++}
+++
+++class MMKey
+++{
+++	public function new()
+++	{
+++		
+++	}
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/FlumpMovie.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpMovie.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpMovie.hx	(working copy)
++@@ -0,0 +1,228 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.display.LineScaleMode;
+++import flash.display.Sprite;
+++import flash.events.Event;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++import flash.geom.Transform;
+++import flash.Lib;
+++import openfl.display.DisplayObjectContainer;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class FlumpMovie extends Sprite
+++{
+++	
+++	private var _layers:Array<Layer>;
+++	private var _callback:Void->Void;
+++	private var _internalX:Float;
+++	private var _internalY:Float;
+++	public var key:Int;
+++	private static var count:Int = 0;
+++
+++	public function new() 
+++	{
+++		super();
+++		key = Std.random(99999);
+++		_layers = new Array<Layer>();
+++	}
+++	
+++	public function layers():Array<Layer>
+++	{
+++		return _layers;
+++	}
+++	
+++	public function clone():FlumpMovie
+++	{
+++		var fm:FlumpMovie = new FlumpMovie();
+++		for (i in 0..._layers.length)
+++		{
+++			fm.addLayer(_layers[i].clone());
+++		}
+++		
+++		return fm;
+++	}
+++	
+++	public override function toString():String 
+++	{
+++		var returnString:String = "[";
+++		for (i in 0..._layers.length)
+++		{
+++			if (_layers[i].getImage() == null)
+++				returnString += "null";
+++			else
+++			{
+++				for (j in 0..._layers[i].getLength())
+++					returnString += ("image: " + _layers[i].hasImageNamed());
+++			}
+++		}
+++		returnString += "]";
+++		
+++		return returnString;
+++	}
+++	
+++	public function addLayer(layer:Layer):Void
+++	{
+++		_layers.push(layer);
+++		if (layer.hasImageNamed() != null)
+++		{
+++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(layer.hasImageNamed());
+++			//trace("layer name", layer.hasImageNamed(), textureSprite);
+++			if (textureSprite == null)
+++			{
+++				var mv:FlumpMovie = FlumpParser.get().getMovieByName(layer.hasImageNamed());
+++				layer.setMovie(mv);
+++			}
+++			else 
+++			{
+++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
+++				layer.setImage(originalbm.bitmapData.clone());
+++			}
+++		}
+++	}
+++	
+++	public function process():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++	}
+++	
+++	public function getLayer(name:String):Layer
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			if (_layers[i].name == name)
+++				return _layers[i];
+++		}
+++		
+++		return null;
+++	}
+++
+++	public function internalX():Float
+++	{
+++		return _internalX;
+++	}
+++
+++	public function internalY():Float 
+++	{
+++		return _internalY;
+++	}
+++	
+++	public function checkForImage(layer:Layer):Void 
+++	{
+++		if (layer.getImage() != null)
+++		{
+++			var image:DisplayObjectContainer = layer.getImage();
+++			if (layer.isShown())
+++			{
+++				addChild(image);
+++				count++;
+++			//	trace(_internalX, _internalY, image.name, key, count);
+++			}
+++			else 
+++			{
+++				if (contains(image))
+++				{
+++					removeChild(image);
+++				}
+++			}
+++			_internalX = image.x;
+++			_internalY = image.y;
+++			
+++		}
+++	}
+++	
+++	public function play(callb:Void->Void = null):Void
+++	{
+++		_callback = callb;
+++		process();
+++		if (!hasEventListener(Event.ENTER_FRAME))
+++		{
+++			addEventListener(Event.ENTER_FRAME, playInternal);
+++		}
+++	}
+++	
+++	public function rewind(callb:Void->Void = null):Void 
+++	{
+++		_callback = callb;
+++		process();
+++		if (!hasEventListener(Event.ENTER_FRAME))
+++			addEventListener(Event.ENTER_FRAME, rewindInternal);
+++	}
+++	
+++	private function playInternal(e:Event):Void
+++	{
+++		//trace("playing" + name);
+++		if (!nextFrame())
+++		{
+++			removeEventListener(Event.ENTER_FRAME, playInternal);
+++			if (_callback != null)
+++				_callback();
+++		}
+++	}
+++	
+++	private function rewindInternal(e:Event):Void
+++	{		
+++		if (!prevFrame())
+++		{
+++			removeEventListener(Event.ENTER_FRAME, rewindInternal);
+++			if (_callback != null)
+++				_callback();
+++		}
+++	}
+++	
+++	public function nextFrame():Bool
+++	{
+++		var more:Bool = false;
+++		for (i in 0..._layers.length)
+++		{
+++			var layerMore:Bool = _layers[i].advance();
+++			more = more || layerMore;
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++		
+++		return more;
+++	}
+++	
+++	public function prevFrame():Bool 
+++	{
+++		var more:Bool = false;
+++		for (i in 0..._layers.length)
+++		{
+++			more = _layers[i].back();
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++		
+++		return more;
+++	}
+++	
+++	public function gotoEnd():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].goto(_layers[i].getLength());
+++			_layers[i].process();
+++		}
+++	}
+++	
+++	
+++	//needs work
+++	public function gotoStart():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].goto(0);
+++			_layers[i].process();
+++		}
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/FlumpParser.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpParser.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpParser.hx	(working copy)
++@@ -0,0 +1,191 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++import flash.Lib;
+++import haxe.xml.Fast;
+++import openfl.Assets;
+++import openfl.utils.ByteArray;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ * Flump was created at Three Rings by Charlie Groves, Tim Conkling, and Bruno Garcia. 
+++ * This Flump parser for openFL was created by Michael Greenhut.
+++ * For directions on how to use Flump, visit:
+++ * http://threerings.github.io/flump/
+++	 * Note that this parser makes use of XML only (at the moment), so be sure to export your Flump files 
+++	 * using the XML option. 
+++ * 
+++ * 
+++ */
+++class FlumpParser
+++{
+++	private var _fast:Fast;
+++	private var _atlas:Bitmap;
+++	private var _fm:FlumpMovie;
+++	private var _movies:Array<FlumpMovie>;
+++	private var _loadedPaths:Array<String>;
+++	private static var _flumpParser:FlumpParser;
+++	
+++	public function new(fpkey:FPKey) 
+++	{
+++		_loadedPaths = new Array<String>();
+++		_movies = new Array<FlumpMovie>();
+++	}
+++	
+++	public function loadPath(resourcePath:String):Void 
+++	{
+++		if (Lambda.indexOf(_loadedPaths, resourcePath) != -1)
+++		{
+++			//trace("Already loaded this set.");
+++			return;
+++		}
+++		
+++		var lvlbytes:ByteArray = Assets.getBytes( resourcePath );
+++		var text:String = lvlbytes.readUTFBytes(lvlbytes.length);
+++		//var text:String = Assets.getText(resourcePath);
+++		_fast = new Fast(Xml.parse(text));	
+++		_loadedPaths.push(resourcePath);
+++		makeTextures();
+++		makeMovies();
+++	}
+++	
+++	public static function get():FlumpParser
+++	{
+++		if (_flumpParser == null)
+++			_flumpParser = new FlumpParser(new FPKey());
+++			
+++		return _flumpParser;
+++	}
+++	
+++	public function textToPoint(text:String):Point 
+++	{
+++		var pointArray:Array<String> = text.split(",");
+++		return new Point(Std.parseFloat(pointArray[0]), Std.parseFloat(pointArray[1]));
+++	}
+++	
+++	public function textToRect(text:String):Rectangle
+++	{
+++		var rectArray:Array<String> = text.split(",");
+++		return new Rectangle(Std.parseFloat(rectArray[0]), Std.parseFloat(rectArray[1]), Std.parseFloat(rectArray[2]), Std.parseFloat(rectArray[3]));
+++	}
+++	
+++	private function makeTextures():Void 
+++	{
+++		for (textureGroups in _fast.node.resources.nodes.textureGroups)
+++		{
+++			for (textureGroup in textureGroups.nodes.textureGroup)
+++			{
+++				for (atlas in textureGroup.nodes.atlas)
+++				{
+++					var bd:BitmapData = Assets.getBitmapData("assets/"+atlas.att.file);
+++					var bm:Bitmap = new Bitmap(bd);
+++					for (texture in atlas.nodes.texture)
+++					{
+++						var rectArray:Array<String> = texture.att.rect.split(",");
+++						var pointArray:Array<String> = texture.att.origin.split(",");
+++						var rect:Rectangle = textToRect(texture.att.rect);
+++						var origin:Point = textToPoint(texture.att.origin);
+++						FlumpTextures.get().makeTexture(bm, rect, texture.att.name,origin);
+++					}
+++				}
+++			}
+++		}
+++	}
+++	
+++	private function makeMovies():Void 
+++	{
+++		
+++		for (movie in _fast.node.resources.nodes.movie)
+++		{
+++			var fm:FlumpMovie = new FlumpMovie();
+++			fm.name = movie.att.name;
+++			for (layer in movie.nodes.layer)
+++			{
+++				var movieLayer:Layer = new Layer();
+++				movieLayer.name = layer.att.name;
+++
+++				for (keyframe in layer.nodes.kf)
+++				{
+++					//var kf:Keyframe = new Keyframe(Std.int(keyframe.node.duration));
+++					var ref:String = "";
+++					var loc:Null<Point> = null;
+++					var scale:Null<Point> = null;
+++					var pivot:Null<Point> = new Point(0,0);
+++					var tweened:Bool = false;
+++					var ease:Null<Float> = null;
+++					var skew:Null<Point> = new Point(0,0);
+++					var alpha:Float = 1;
+++					if (keyframe.has.ref)
+++					{
+++						ref = keyframe.att.ref;
+++					}
+++					//fix by gigbig@libero.it
+++					loc = keyframe.has.loc ? textToPoint(keyframe.att.loc) : new Point(0, 0);
+++					
+++					if (keyframe.has.tweened)
+++					{
+++						tweened = keyframe.att.tweened == "false" ? false : true;
+++					}
+++					else
+++						tweened = true;
+++					if (keyframe.has.scale)
+++					{
+++						scale = textToPoint(keyframe.att.scale);
+++					}
+++					if (keyframe.has.pivot)
+++					{
+++						pivot = textToPoint(keyframe.att.pivot);
+++					}
+++					if (keyframe.has.skew)
+++					{
+++						skew = textToPoint(keyframe.att.skew);
+++					}
+++					if (keyframe.has.ease)
+++					{
+++						tweened = true;
+++						ease = Std.parseFloat(keyframe.att.ease);
+++					}
+++					if (keyframe.has.alpha)
+++					{
+++						alpha = Std.parseFloat(keyframe.att.alpha);
+++					}
+++					var kf:Keyframe = new Keyframe(Std.parseInt(keyframe.att.duration), ref, loc, scale, pivot, tweened, ease, alpha, skew);
+++					movieLayer.addKeyframe(kf);
+++					//trace("movie ", movieLayer.name);
+++				}
+++				fm.addLayer(movieLayer);
+++			}
+++			//fm.process();
+++			_movies.push(fm);
+++		}
+++		trace("made movies", _movies);
+++	}
+++	
+++	public function getMovieByName(name:String):FlumpMovie
+++	{
+++		for (i in 0..._movies.length)
+++		{
+++			if (_movies[i].name == name)
+++			{
+++				var movieToReturn:FlumpMovie = _movies[i];
+++				//_movies.splice(i, 1);
+++				//trace("returning movie ", name, movieToReturn);
+++				return movieToReturn;
+++			}
+++		}
+++		
+++		return null;
+++	}
+++	
+++}
+++
+++class FPKey
+++{
+++	public function new() 
+++	{
+++		
+++	}
+++}
++Index: michaelgreenhut/openflump/FlumpTextures.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpTextures.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpTextures.hx	(working copy)
++@@ -0,0 +1,72 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.display.Sprite;
+++import flash.geom.Matrix;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class FlumpTextures
+++{
+++	
+++	private var _textures:Map<String,Sprite>;
+++	private static var _flumpTextures:FlumpTextures;
+++
+++	public function new(ft:FlumpTexturesKey) 
+++	{
+++		_textures = new Map<String,Sprite>(); 
+++	}
+++	
+++	public function makeTexture(sourcebm:Bitmap, rect:Rectangle, name:String, origin:Point):Void
+++	{
+++	//	trace("making", name, rect);
+++		var newbd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0xffffffff);
+++		newbd.copyPixels(sourcebm.bitmapData, rect, new Point(0, 0));
+++		var newbm:Bitmap = new Bitmap(newbd);
+++		newbm.name = name;
+++		newbm.x = -origin.x;
+++		newbm.y = -origin.y;
+++		var textureSprite:Sprite = new Sprite();
+++		textureSprite.addChild(newbm);
+++		textureSprite.name = name;
+++		_textures.set(name, textureSprite);
+++		textureSprite.visible = false;
+++	}
+++	
+++	public static function get():FlumpTextures
+++	{
+++		if (_flumpTextures == null)
+++			_flumpTextures = new FlumpTextures(new FlumpTexturesKey());
+++			
+++		return _flumpTextures;
+++	}
+++	
+++	public function getTextureByName(name:String):Sprite
+++	{
+++		return _textures.get(name);
+++	}
+++	
+++	public function cloneTextureByName(name:String):Sprite
+++	{
+++		var texture:Sprite = _textures.get(name);
+++		var bd:BitmapData = new BitmapData(Std.int(texture.width), Std.int(texture.height),true,0xffffff);
+++		bd.draw(texture.getChildAt(0));
+++		var bm:Bitmap = new Bitmap(bd);
+++		var clone:Sprite = new Sprite();
+++		clone.addChild(bm);
+++		return clone;
+++	}
+++	
+++}
+++
+++class FlumpTexturesKey
+++{
+++	public function new()
+++	{
+++		
+++	}
+++}
++Index: michaelgreenhut/openflump/ImageData.hx
++===================================================================
++--- michaelgreenhut/openflump/ImageData.hx	(revision 0)
+++++ michaelgreenhut/openflump/ImageData.hx	(working copy)
++@@ -0,0 +1,23 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.geom.Point;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class ImageData
+++{
+++	public var location:Point;
+++	public var scale:Point;
+++	public var texture:String;
+++	public var pivot:Point;
+++
+++	public function new(texture:String, location:Point, scale:Point, pivot:Point) 
+++	{
+++		this.location = location;
+++		this.scale = scale;
+++		this.texture = texture;
+++		this.pivot = pivot;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/Keyframe.hx
++===================================================================
++--- michaelgreenhut/openflump/Keyframe.hx	(revision 0)
+++++ michaelgreenhut/openflump/Keyframe.hx	(working copy)
++@@ -0,0 +1,117 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.geom.Point;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ * TODO: put loc and scale for standard, untransformed instances.
+++ */
+++class Keyframe
+++{
+++
+++	private var _duration:Int;
+++	private var _index:Int = 0;
+++	private var _ref:String;
+++	private var _location:Point;
+++	private var _scale:Point;
+++	private var _pivot:Point;
+++	private var _tweened:Bool;
+++	private var _ease:Float;
+++	private var _alpha:Float;
+++	private var _skew:Point;
+++	
+++	public function new(duration:Int, ref:String = null, location:Point = null, scale:Point = null, pivot:Point = null, tweened:Bool = false, ease:Float = 0, alpha:Float = 1, skew:Point = null ) 
+++	{
+++		_duration = duration;
+++		_location = location;
+++		_ref = ref;
+++		if (scale == null)
+++			scale = new Point(1, 1);
+++		_scale = scale;
+++		_pivot = pivot;
+++		_tweened = tweened;
+++		_ease = ease;
+++		_alpha = alpha;
+++		if (skew == null)
+++			_skew = new Point(0, 0);
+++		else
+++			_skew = skew;
+++	}
+++	
+++	public function clone():Keyframe
+++	{
+++		return new Keyframe(_duration,_ref,_location,_scale,_pivot,_tweened,_ease,_alpha,_skew);
+++	}
+++	
+++	public function back():Bool 
+++	{
+++		if (_index > 0)
+++			_index--;
+++		
+++		return (_index > 0);
+++	}
+++	
+++	public function advance():Bool
+++	{
+++		if (_index < _duration)
+++			_index++;
+++
+++		return (_index < _duration);
+++	}
+++	
+++	public function reset():Void
+++	{
+++		_index = 0;
+++	}
+++	
+++	public function internalIndex():Int 
+++	{
+++		return _index;
+++	}
+++	
+++	public function getRef():String
+++	{
+++		return _ref;
+++	}
+++	
+++	public function getDuration():Int 
+++	{
+++		return _duration;
+++	}
+++	
+++	public function getLocation():Point 
+++	{
+++		return _location;
+++	}
+++	
+++	public function getSkew():Point
+++	{
+++		return _skew;
+++	}
+++	
+++	public function getScale():Point 
+++	{
+++		return _scale;
+++	}
+++	
+++	public function getPivot():Point
+++	{
+++		return _pivot;
+++	}
+++	
+++	public function getTweened():Bool
+++	{
+++		return _tweened;
+++	}
+++	
+++	public function getEase():Float
+++	{
+++		return _ease;
+++	}
+++	
+++	public function getAlpha():Float
+++	{
+++		return _alpha;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/Layer.hx
++===================================================================
++--- michaelgreenhut/openflump/Layer.hx	(revision 0)
+++++ michaelgreenhut/openflump/Layer.hx	(working copy)
++@@ -0,0 +1,300 @@
+++package com.michaelgreenhut.openflump ;
+++import openfl.display.Bitmap;
+++import openfl.display.BitmapData;
+++import openfl.display.Sprite;
+++import openfl.display.DisplayObjectContainer;
+++import flash.geom.Matrix;
+++import flash.geom.Point;
+++import flash.geom.Transform;
+++import flash.Lib;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class Layer
+++{
+++
+++	private var _index:Int = 0;
+++	private var _keyframes:Array<Keyframe>;
+++	private var _currentTexture:String;
+++	private var _previousTexture:String;
+++	private var _currentLocation:Point;
+++	private var _currentScale:Point;
+++	private var _currentPivot:Point;
+++	private var _currentSkew:Point;
+++	private var _currentAlpha:Float = 1;
+++	private var _image:DisplayObjectContainer;
+++	private var _length:Int = 0;
+++	
+++	public var name:String;
+++	public var visible:Bool = true;
+++	private var _containsImage:String;
+++	private var _destinationIndex:Int;
+++	private var _preTweenIndex:Int = 0;
+++	private var _originalMatrix:Matrix;
+++	public function new() 
+++	{
+++		_keyframes = new Array<Keyframe>();
+++		_preTweenIndex = _index;
+++		_image = new Sprite();
+++	}
+++	
+++	public function addKeyframe(kf:Keyframe):Void
+++	{
+++		_keyframes.push(kf);
+++		_length += kf.getDuration();
+++	
+++		if (kf.getRef() != null)
+++			_containsImage = kf.getRef();
+++	}
+++	
+++	public function keyFrames():Array<Keyframe>
+++	{
+++		return _keyframes;
+++	}
+++	
+++	public function back():Bool 
+++	{    
+++		if (_index >= 0)
+++		{
+++			if (!_keyframes[_index].back())
+++			{
+++				if (_index > 0)
+++				{
+++					_index--;
+++					return true;
+++				}
+++				else
+++					return false;
+++			}
+++			
+++			return true;
+++		}
+++		
+++		return false;
+++	}
+++	
+++	public function advance():Bool
+++	{
+++		if (_index < _keyframes.length)
+++		{
+++			if (!_keyframes[_index].advance())
+++			{
+++				if (_index < _keyframes.length - 1)
+++				{
+++					_index++;
+++					{
+++						return true;  //if the current keyframe is at the end, and there are more to go
+++					}
+++				}
+++				else 
+++				{
+++					return false;  //if the current keyframe is at the end, and there are no more to go.
+++				}
+++			}
+++			return true;  //if the current keyframe isn't at the end, and there are more to go
+++		}
+++		return false;
+++	}
+++	
+++	public function process():Void 
+++	{
+++		if (_index < 0 || _index >= _keyframes.length)
+++			return;
+++		if (_keyframes[_index].getLocation() != null)
+++		{
+++			populateCurrentValues(_index);
+++			
+++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(_currentTexture);
+++			
+++			if (textureSprite != null)
+++			{
+++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
+++				setImage(originalbm.bitmapData.clone());
+++			}
+++			else 
+++			{
+++				 //it must be a flump movie  or flipbook, and we don't need to call setImage at all.
+++                if (Type.getClass(_image) != FlumpMovie)
+++                    _image = FlumpParser.get().getMovieByName(_currentTexture).clone();
+++
+++                if (!cast(_image, FlumpMovie).nextFrame())
+++                    cast(_image, FlumpMovie).gotoStart();  //this loops the internal flipbook
+++			}
+++			
+++			if (_image != null)
+++			{
+++				if (_keyframes[_index].getTweened()) //Stop-gap code to handle tweens
+++				{  
+++				
+++					_destinationIndex = _index + 1;
+++					_preTweenIndex = _index;
+++					var nextLoc:Point = _keyframes[_destinationIndex].getLocation().clone();  
+++					var nextScale:Point = _keyframes[_destinationIndex].getScale().clone();
+++					var nextPivot:Point = _keyframes[_destinationIndex].getPivot().clone();
+++					var nextAlpha:Float = _keyframes[_destinationIndex].getAlpha();
+++					var nextSkew:Point = _keyframes[_destinationIndex].getSkew().clone();
+++					_keyframes[_index].internalIndex();
+++					var multiplier:Float = _keyframes[_preTweenIndex].internalIndex() /_keyframes[_preTweenIndex].getDuration();
+++				
+++					_currentAlpha = _keyframes[_preTweenIndex].getAlpha() + (nextAlpha - _keyframes[_preTweenIndex].getAlpha()) * multiplier;
+++					_currentScale.x = _keyframes[_preTweenIndex].getScale().x + (nextScale.x - _keyframes[_preTweenIndex].getScale().x) * multiplier;
+++					_currentScale.y = _keyframes[_preTweenIndex].getScale().y + (nextScale.y - _keyframes[_preTweenIndex].getScale().y) * multiplier;
+++					_currentLocation.x = _keyframes[_index].getLocation().x + (nextLoc.x - _keyframes[_preTweenIndex].getLocation().x) * multiplier;
+++				
+++					_currentLocation.y = _keyframes[_index].getLocation().y + (nextLoc.y - _keyframes[_preTweenIndex].getLocation().y) * multiplier;
+++					
+++					_currentPivot.x = _keyframes[_index].getPivot().x + (nextPivot.x - _keyframes[_preTweenIndex].getPivot().x) * multiplier;
+++					_currentPivot.y = _keyframes[_index].getPivot().y + (nextPivot.y - _keyframes[_preTweenIndex].getPivot().y) * multiplier;
+++					_currentPivot.x *= _currentScale.x;
+++					_currentPivot.y *= _currentScale.y;
+++					_currentSkew.x = _keyframes[_index].getSkew().x + (nextSkew.x - _keyframes[_preTweenIndex].getSkew().x) * multiplier;
+++					_currentSkew.y = _keyframes[_index].getSkew().y + (nextSkew.y - _keyframes[_preTweenIndex].getSkew().y) * multiplier;
+++				
+++				}
+++				_image.scaleX = _currentScale.x;
+++				_image.scaleY = _currentScale.y;
+++				
+++				_image.x = _currentLocation.x;
+++				_image.y = _currentLocation.y;
+++				if (_image.numChildren > 0)
+++				{
+++					_image.getChildAt(0).x = -_currentPivot.x;
+++					_image.getChildAt(0).y = -_currentPivot.y;
+++				}
+++				
+++				//if (_currentSkew.x != 0 || _currentSkew.y != 0)
+++				{
+++					_image.rotation = _currentSkew.x * 180 / Math.PI;
+++				}
+++				
+++				_image.visible = visible;
+++				_image.alpha = _currentAlpha;
+++				
+++			}
+++			//else 
+++			//	trace("NON TWEEN", this.name, "keyframe ", _index);
+++		}
+++		else // _keyframes[_index].getLocation() is never == null, so this "else" will never be executed
+++		{
+++			if (_image != null && _image != {})
+++				_image.visible = false; 
+++			_currentLocation = null;
+++			_currentTexture = null;
+++			_currentScale = null;
+++			_currentPivot = null;
+++		}
+++	}
+++	
+++	private function populateCurrentValues(index:Int):Void 
+++	{
+++		_previousTexture = _currentTexture;
+++		_currentTexture = _keyframes[index].getRef();
+++		
+++		_currentScale = _keyframes[index].getScale().clone();
+++		_currentLocation = _keyframes[index].getLocation().clone();
+++		_currentPivot = _keyframes[index].getPivot().clone();
+++		_currentPivot.x *= _currentScale.x;
+++		_currentPivot.y *= _currentScale.y;
+++		_currentAlpha = _keyframes[index].getAlpha();
+++		_currentSkew = _keyframes[index].getSkew().clone();
+++	}
+++	
+++	public function isShown():Bool
+++	{
+++		return _image.visible;
+++	}
+++	
+++	public function setImage(bd:BitmapData):Void 
+++	{
+++		/*var bm:Bitmap = new Bitmap(bd);
+++		_image = new Sprite();
+++		_image.addChild(bm);
+++		_originalMatrix = _image.transform.matrix.clone();*/
+++		
+++		if (_currentTexture != _previousTexture) {
+++			var bm:Bitmap = new Bitmap(bd);
+++			if (_image.numChildren > 0 && _image.getChildAt(0) != null) (_image.removeChildAt(0));
+++			_image.addChild(bm);
+++			_originalMatrix = _image.transform.matrix.clone();
+++		}
+++	}
+++	
+++	public function setMovie(mv:FlumpMovie)
+++	{
+++		_image = mv;
+++	}
+++	
+++	public function getImage():DisplayObjectContainer
+++	{
+++		return _image;
+++	}
+++	
+++	public function getMovie():FlumpMovie
+++	{
+++		var mv:FlumpMovie = cast(_image, FlumpMovie);
+++		
+++		return mv;
+++	}
+++	
+++	public function hasImageNamed():String
+++	{
+++		return _containsImage;
+++	}
+++	
+++	public function reset():Void 
+++	{
+++		goto(0);
+++	}
+++	
+++	/*
+++	 *  Goes to absolute frame value. 
+++	 * 
+++	 */
+++	public function goto(internalIndex:Int):Void 
+++	{
+++		_index = 0;	
+++	
+++		//var count:Int = 0;
+++		for (i in 0..._keyframes.length)
+++		{	
+++			_keyframes[i].reset();
+++		}
+++		
+++		while(_index < _keyframes.length )
+++		{
+++			if (_index/*count*/ == internalIndex)
+++			{
+++				break;
+++			}
+++			if (!_keyframes[_index].advance())
+++			{
+++				_index++;	
+++			}	
+++			//count++;
+++			
+++		}
+++	}
+++	
+++	public function clone():Layer
+++	{
+++		var layer:Layer = new Layer();
+++		for (i in 0..._keyframes.length)
+++		{
+++			layer.addKeyframe(_keyframes[i].clone());
+++		}
+++		return layer;
+++	}
+++	
+++	public function getFrame():Int 
+++	{
+++		return _index;
+++	}
+++	
+++	public function getLength():Int 
+++	{
+++		return _length;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/MovieManager.hx
++===================================================================
++--- michaelgreenhut/openflump/MovieManager.hx	(revision 0)
+++++ michaelgreenhut/openflump/MovieManager.hx	(working copy)
++@@ -0,0 +1,71 @@
+++package com.michaelgreenhut.openflump;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class MovieManager
+++{
+++
+++	private var _motionFunctions:Array<Void->Bool> ;
+++	private static var _movieManager:MovieManager;
+++	
+++	public function new(mmkey:MMKey) 
+++	{
+++		_motionFunctions = new Array<Void->Bool>();
+++	}
+++	
+++	public static function get():MovieManager
+++	{
+++		if (_movieManager == null)
+++			_movieManager = new MovieManager(new MMKey());
+++			
+++		return _movieManager;
+++	}
+++	
+++	/*
+++	 * These are for collections of two SPECIFIC functions only, nextFrame or prevFrame.  The idea is that by using the 
+++	 * MovieManager and the animateMovies function, you only have to rely on a single enterFrame loop to process multiple movies. 
+++	 * This allows you to pause/resume them all very easily and in sync, and it saves you from ODing on enterFrame functions.
+++	 * 
+++	 * */
+++	public function addAnimationFunction(animationFunc:Void->Bool):Void 
+++	{
+++		Type.getClass(animationFunc);
+++		_motionFunctions.push(animationFunc);
+++	}
+++	
+++	/*
+++	 * Put a call to this in a single enterFrame function.  Stop the enterFrame function when you want to pause all the 
+++	 * movies involved.
+++	 * 
+++	 * */
+++	public function animateMovies():Void 
+++	{
+++		if (_motionFunctions.length == 0)
+++			return;
+++		trace("num", _motionFunctions.length);
+++		var numFuncs:Int = -1 * (_motionFunctions.length-1);
+++		
+++		for (i in numFuncs...1)
+++		{
+++			trace("eye", i);
+++			var fn:Void->Bool = _motionFunctions[ -i];
+++			trace(Reflect.isFunction(fn));
+++			var moved:Bool = fn();//Reflect.callMethod(FlumpMovie, _motionFunctions[ -i], []);
+++			if (!moved)   //if this movie cannot animate any further in its given direction, remove it.
+++			{
+++				_motionFunctions.splice( -i, 1);
+++			}
+++		}
+++	}
+++	
+++}
+++
+++class MMKey
+++{
+++	public function new()
+++	{
+++		
+++	}
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/FlumpMovie.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpMovie.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpMovie.hx	(working copy)
++@@ -0,0 +1,228 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.display.LineScaleMode;
+++import flash.display.Sprite;
+++import flash.events.Event;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++import flash.geom.Transform;
+++import flash.Lib;
+++import openfl.display.DisplayObjectContainer;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class FlumpMovie extends Sprite
+++{
+++	
+++	private var _layers:Array<Layer>;
+++	private var _callback:Void->Void;
+++	private var _internalX:Float;
+++	private var _internalY:Float;
+++	public var key:Int;
+++	private static var count:Int = 0;
+++
+++	public function new() 
+++	{
+++		super();
+++		key = Std.random(99999);
+++		_layers = new Array<Layer>();
+++	}
+++	
+++	public function layers():Array<Layer>
+++	{
+++		return _layers;
+++	}
+++	
+++	public function clone():FlumpMovie
+++	{
+++		var fm:FlumpMovie = new FlumpMovie();
+++		for (i in 0..._layers.length)
+++		{
+++			fm.addLayer(_layers[i].clone());
+++		}
+++		
+++		return fm;
+++	}
+++	
+++	public override function toString():String 
+++	{
+++		var returnString:String = "[";
+++		for (i in 0..._layers.length)
+++		{
+++			if (_layers[i].getImage() == null)
+++				returnString += "null";
+++			else
+++			{
+++				for (j in 0..._layers[i].getLength())
+++					returnString += ("image: " + _layers[i].hasImageNamed());
+++			}
+++		}
+++		returnString += "]";
+++		
+++		return returnString;
+++	}
+++	
+++	public function addLayer(layer:Layer):Void
+++	{
+++		_layers.push(layer);
+++		if (layer.hasImageNamed() != null)
+++		{
+++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(layer.hasImageNamed());
+++			//trace("layer name", layer.hasImageNamed(), textureSprite);
+++			if (textureSprite == null)
+++			{
+++				var mv:FlumpMovie = FlumpParser.get().getMovieByName(layer.hasImageNamed());
+++				layer.setMovie(mv);
+++			}
+++			else 
+++			{
+++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
+++				layer.setImage(originalbm.bitmapData.clone());
+++			}
+++		}
+++	}
+++	
+++	public function process():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++	}
+++	
+++	public function getLayer(name:String):Layer
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			if (_layers[i].name == name)
+++				return _layers[i];
+++		}
+++		
+++		return null;
+++	}
+++
+++	public function internalX():Float
+++	{
+++		return _internalX;
+++	}
+++
+++	public function internalY():Float 
+++	{
+++		return _internalY;
+++	}
+++	
+++	public function checkForImage(layer:Layer):Void 
+++	{
+++		if (layer.getImage() != null)
+++		{
+++			var image:DisplayObjectContainer = layer.getImage();
+++			if (layer.isShown())
+++			{
+++				addChild(image);
+++				count++;
+++			//	trace(_internalX, _internalY, image.name, key, count);
+++			}
+++			else 
+++			{
+++				if (contains(image))
+++				{
+++					removeChild(image);
+++				}
+++			}
+++			_internalX = image.x;
+++			_internalY = image.y;
+++			
+++		}
+++	}
+++	
+++	public function play(callb:Void->Void = null):Void
+++	{
+++		_callback = callb;
+++		process();
+++		if (!hasEventListener(Event.ENTER_FRAME))
+++		{
+++			addEventListener(Event.ENTER_FRAME, playInternal);
+++		}
+++	}
+++	
+++	public function rewind(callb:Void->Void = null):Void 
+++	{
+++		_callback = callb;
+++		process();
+++		if (!hasEventListener(Event.ENTER_FRAME))
+++			addEventListener(Event.ENTER_FRAME, rewindInternal);
+++	}
+++	
+++	private function playInternal(e:Event):Void
+++	{
+++		//trace("playing" + name);
+++		if (!nextFrame())
+++		{
+++			removeEventListener(Event.ENTER_FRAME, playInternal);
+++			if (_callback != null)
+++				_callback();
+++		}
+++	}
+++	
+++	private function rewindInternal(e:Event):Void
+++	{		
+++		if (!prevFrame())
+++		{
+++			removeEventListener(Event.ENTER_FRAME, rewindInternal);
+++			if (_callback != null)
+++				_callback();
+++		}
+++	}
+++	
+++	public function nextFrame():Bool
+++	{
+++		var more:Bool = false;
+++		for (i in 0..._layers.length)
+++		{
+++			var layerMore:Bool = _layers[i].advance();
+++			more = more || layerMore;
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++		
+++		return more;
+++	}
+++	
+++	public function prevFrame():Bool 
+++	{
+++		var more:Bool = false;
+++		for (i in 0..._layers.length)
+++		{
+++			more = _layers[i].back();
+++			_layers[i].process();
+++			checkForImage(_layers[i]);
+++		}
+++		
+++		return more;
+++	}
+++	
+++	public function gotoEnd():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].goto(_layers[i].getLength());
+++			_layers[i].process();
+++		}
+++	}
+++	
+++	
+++	//needs work
+++	public function gotoStart():Void 
+++	{
+++		for (i in 0..._layers.length)
+++		{
+++			_layers[i].goto(0);
+++			_layers[i].process();
+++		}
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/FlumpParser.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpParser.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpParser.hx	(working copy)
++@@ -0,0 +1,191 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++import flash.Lib;
+++import haxe.xml.Fast;
+++import openfl.Assets;
+++import openfl.utils.ByteArray;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ * Flump was created at Three Rings by Charlie Groves, Tim Conkling, and Bruno Garcia. 
+++ * This Flump parser for openFL was created by Michael Greenhut.
+++ * For directions on how to use Flump, visit:
+++ * http://threerings.github.io/flump/
+++	 * Note that this parser makes use of XML only (at the moment), so be sure to export your Flump files 
+++	 * using the XML option. 
+++ * 
+++ * 
+++ */
+++class FlumpParser
+++{
+++	private var _fast:Fast;
+++	private var _atlas:Bitmap;
+++	private var _fm:FlumpMovie;
+++	private var _movies:Array<FlumpMovie>;
+++	private var _loadedPaths:Array<String>;
+++	private static var _flumpParser:FlumpParser;
+++	
+++	public function new(fpkey:FPKey) 
+++	{
+++		_loadedPaths = new Array<String>();
+++		_movies = new Array<FlumpMovie>();
+++	}
+++	
+++	public function loadPath(resourcePath:String):Void 
+++	{
+++		if (Lambda.indexOf(_loadedPaths, resourcePath) != -1)
+++		{
+++			//trace("Already loaded this set.");
+++			return;
+++		}
+++		
+++		var lvlbytes:ByteArray = Assets.getBytes( resourcePath );
+++		var text:String = lvlbytes.readUTFBytes(lvlbytes.length);
+++		//var text:String = Assets.getText(resourcePath);
+++		_fast = new Fast(Xml.parse(text));	
+++		_loadedPaths.push(resourcePath);
+++		makeTextures();
+++		makeMovies();
+++	}
+++	
+++	public static function get():FlumpParser
+++	{
+++		if (_flumpParser == null)
+++			_flumpParser = new FlumpParser(new FPKey());
+++			
+++		return _flumpParser;
+++	}
+++	
+++	public function textToPoint(text:String):Point 
+++	{
+++		var pointArray:Array<String> = text.split(",");
+++		return new Point(Std.parseFloat(pointArray[0]), Std.parseFloat(pointArray[1]));
+++	}
+++	
+++	public function textToRect(text:String):Rectangle
+++	{
+++		var rectArray:Array<String> = text.split(",");
+++		return new Rectangle(Std.parseFloat(rectArray[0]), Std.parseFloat(rectArray[1]), Std.parseFloat(rectArray[2]), Std.parseFloat(rectArray[3]));
+++	}
+++	
+++	private function makeTextures():Void 
+++	{
+++		for (textureGroups in _fast.node.resources.nodes.textureGroups)
+++		{
+++			for (textureGroup in textureGroups.nodes.textureGroup)
+++			{
+++				for (atlas in textureGroup.nodes.atlas)
+++				{
+++					var bd:BitmapData = Assets.getBitmapData("assets/"+atlas.att.file);
+++					var bm:Bitmap = new Bitmap(bd);
+++					for (texture in atlas.nodes.texture)
+++					{
+++						var rectArray:Array<String> = texture.att.rect.split(",");
+++						var pointArray:Array<String> = texture.att.origin.split(",");
+++						var rect:Rectangle = textToRect(texture.att.rect);
+++						var origin:Point = textToPoint(texture.att.origin);
+++						FlumpTextures.get().makeTexture(bm, rect, texture.att.name,origin);
+++					}
+++				}
+++			}
+++		}
+++	}
+++	
+++	private function makeMovies():Void 
+++	{
+++		
+++		for (movie in _fast.node.resources.nodes.movie)
+++		{
+++			var fm:FlumpMovie = new FlumpMovie();
+++			fm.name = movie.att.name;
+++			for (layer in movie.nodes.layer)
+++			{
+++				var movieLayer:Layer = new Layer();
+++				movieLayer.name = layer.att.name;
+++
+++				for (keyframe in layer.nodes.kf)
+++				{
+++					//var kf:Keyframe = new Keyframe(Std.int(keyframe.node.duration));
+++					var ref:String = "";
+++					var loc:Null<Point> = null;
+++					var scale:Null<Point> = null;
+++					var pivot:Null<Point> = new Point(0,0);
+++					var tweened:Bool = false;
+++					var ease:Null<Float> = null;
+++					var skew:Null<Point> = new Point(0,0);
+++					var alpha:Float = 1;
+++					if (keyframe.has.ref)
+++					{
+++						ref = keyframe.att.ref;
+++					}
+++					//fix by gigbig@libero.it
+++					loc = keyframe.has.loc ? textToPoint(keyframe.att.loc) : new Point(0, 0);
+++					
+++					if (keyframe.has.tweened)
+++					{
+++						tweened = keyframe.att.tweened == "false" ? false : true;
+++					}
+++					else
+++						tweened = true;
+++					if (keyframe.has.scale)
+++					{
+++						scale = textToPoint(keyframe.att.scale);
+++					}
+++					if (keyframe.has.pivot)
+++					{
+++						pivot = textToPoint(keyframe.att.pivot);
+++					}
+++					if (keyframe.has.skew)
+++					{
+++						skew = textToPoint(keyframe.att.skew);
+++					}
+++					if (keyframe.has.ease)
+++					{
+++						tweened = true;
+++						ease = Std.parseFloat(keyframe.att.ease);
+++					}
+++					if (keyframe.has.alpha)
+++					{
+++						alpha = Std.parseFloat(keyframe.att.alpha);
+++					}
+++					var kf:Keyframe = new Keyframe(Std.parseInt(keyframe.att.duration), ref, loc, scale, pivot, tweened, ease, alpha, skew);
+++					movieLayer.addKeyframe(kf);
+++					//trace("movie ", movieLayer.name);
+++				}
+++				fm.addLayer(movieLayer);
+++			}
+++			//fm.process();
+++			_movies.push(fm);
+++		}
+++		trace("made movies", _movies);
+++	}
+++	
+++	public function getMovieByName(name:String):FlumpMovie
+++	{
+++		for (i in 0..._movies.length)
+++		{
+++			if (_movies[i].name == name)
+++			{
+++				var movieToReturn:FlumpMovie = _movies[i];
+++				//_movies.splice(i, 1);
+++				//trace("returning movie ", name, movieToReturn);
+++				return movieToReturn;
+++			}
+++		}
+++		
+++		return null;
+++	}
+++	
+++}
+++
+++class FPKey
+++{
+++	public function new() 
+++	{
+++		
+++	}
+++}
++Index: michaelgreenhut/openflump/FlumpTextures.hx
++===================================================================
++--- michaelgreenhut/openflump/FlumpTextures.hx	(revision 0)
+++++ michaelgreenhut/openflump/FlumpTextures.hx	(working copy)
++@@ -0,0 +1,72 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.display.Bitmap;
+++import flash.display.BitmapData;
+++import flash.display.Sprite;
+++import flash.geom.Matrix;
+++import flash.geom.Point;
+++import flash.geom.Rectangle;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class FlumpTextures
+++{
+++	
+++	private var _textures:Map<String,Sprite>;
+++	private static var _flumpTextures:FlumpTextures;
+++
+++	public function new(ft:FlumpTexturesKey) 
+++	{
+++		_textures = new Map<String,Sprite>(); 
+++	}
+++	
+++	public function makeTexture(sourcebm:Bitmap, rect:Rectangle, name:String, origin:Point):Void
+++	{
+++	//	trace("making", name, rect);
+++		var newbd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0xffffffff);
+++		newbd.copyPixels(sourcebm.bitmapData, rect, new Point(0, 0));
+++		var newbm:Bitmap = new Bitmap(newbd);
+++		newbm.name = name;
+++		newbm.x = -origin.x;
+++		newbm.y = -origin.y;
+++		var textureSprite:Sprite = new Sprite();
+++		textureSprite.addChild(newbm);
+++		textureSprite.name = name;
+++		_textures.set(name, textureSprite);
+++		textureSprite.visible = false;
+++	}
+++	
+++	public static function get():FlumpTextures
+++	{
+++		if (_flumpTextures == null)
+++			_flumpTextures = new FlumpTextures(new FlumpTexturesKey());
+++			
+++		return _flumpTextures;
+++	}
+++	
+++	public function getTextureByName(name:String):Sprite
+++	{
+++		return _textures.get(name);
+++	}
+++	
+++	public function cloneTextureByName(name:String):Sprite
+++	{
+++		var texture:Sprite = _textures.get(name);
+++		var bd:BitmapData = new BitmapData(Std.int(texture.width), Std.int(texture.height),true,0xffffff);
+++		bd.draw(texture.getChildAt(0));
+++		var bm:Bitmap = new Bitmap(bd);
+++		var clone:Sprite = new Sprite();
+++		clone.addChild(bm);
+++		return clone;
+++	}
+++	
+++}
+++
+++class FlumpTexturesKey
+++{
+++	public function new()
+++	{
+++		
+++	}
+++}
++Index: michaelgreenhut/openflump/ImageData.hx
++===================================================================
++--- michaelgreenhut/openflump/ImageData.hx	(revision 0)
+++++ michaelgreenhut/openflump/ImageData.hx	(working copy)
++@@ -0,0 +1,23 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.geom.Point;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class ImageData
+++{
+++	public var location:Point;
+++	public var scale:Point;
+++	public var texture:String;
+++	public var pivot:Point;
+++
+++	public function new(texture:String, location:Point, scale:Point, pivot:Point) 
+++	{
+++		this.location = location;
+++		this.scale = scale;
+++		this.texture = texture;
+++		this.pivot = pivot;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/Keyframe.hx
++===================================================================
++--- michaelgreenhut/openflump/Keyframe.hx	(revision 0)
+++++ michaelgreenhut/openflump/Keyframe.hx	(working copy)
++@@ -0,0 +1,117 @@
+++package com.michaelgreenhut.openflump ;
+++import flash.geom.Point;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ * TODO: put loc and scale for standard, untransformed instances.
+++ */
+++class Keyframe
+++{
+++
+++	private var _duration:Int;
+++	private var _index:Int = 0;
+++	private var _ref:String;
+++	private var _location:Point;
+++	private var _scale:Point;
+++	private var _pivot:Point;
+++	private var _tweened:Bool;
+++	private var _ease:Float;
+++	private var _alpha:Float;
+++	private var _skew:Point;
+++	
+++	public function new(duration:Int, ref:String = null, location:Point = null, scale:Point = null, pivot:Point = null, tweened:Bool = false, ease:Float = 0, alpha:Float = 1, skew:Point = null ) 
+++	{
+++		_duration = duration;
+++		_location = location;
+++		_ref = ref;
+++		if (scale == null)
+++			scale = new Point(1, 1);
+++		_scale = scale;
+++		_pivot = pivot;
+++		_tweened = tweened;
+++		_ease = ease;
+++		_alpha = alpha;
+++		if (skew == null)
+++			_skew = new Point(0, 0);
+++		else
+++			_skew = skew;
+++	}
+++	
+++	public function clone():Keyframe
+++	{
+++		return new Keyframe(_duration,_ref,_location,_scale,_pivot,_tweened,_ease,_alpha,_skew);
+++	}
+++	
+++	public function back():Bool 
+++	{
+++		if (_index > 0)
+++			_index--;
+++		
+++		return (_index > 0);
+++	}
+++	
+++	public function advance():Bool
+++	{
+++		if (_index < _duration)
+++			_index++;
+++
+++		return (_index < _duration);
+++	}
+++	
+++	public function reset():Void
+++	{
+++		_index = 0;
+++	}
+++	
+++	public function internalIndex():Int 
+++	{
+++		return _index;
+++	}
+++	
+++	public function getRef():String
+++	{
+++		return _ref;
+++	}
+++	
+++	public function getDuration():Int 
+++	{
+++		return _duration;
+++	}
+++	
+++	public function getLocation():Point 
+++	{
+++		return _location;
+++	}
+++	
+++	public function getSkew():Point
+++	{
+++		return _skew;
+++	}
+++	
+++	public function getScale():Point 
+++	{
+++		return _scale;
+++	}
+++	
+++	public function getPivot():Point
+++	{
+++		return _pivot;
+++	}
+++	
+++	public function getTweened():Bool
+++	{
+++		return _tweened;
+++	}
+++	
+++	public function getEase():Float
+++	{
+++		return _ease;
+++	}
+++	
+++	public function getAlpha():Float
+++	{
+++		return _alpha;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/Layer.hx
++===================================================================
++--- michaelgreenhut/openflump/Layer.hx	(revision 0)
+++++ michaelgreenhut/openflump/Layer.hx	(working copy)
++@@ -0,0 +1,300 @@
+++package com.michaelgreenhut.openflump ;
+++import openfl.display.Bitmap;
+++import openfl.display.BitmapData;
+++import openfl.display.Sprite;
+++import openfl.display.DisplayObjectContainer;
+++import flash.geom.Matrix;
+++import flash.geom.Point;
+++import flash.geom.Transform;
+++import flash.Lib;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class Layer
+++{
+++
+++	private var _index:Int = 0;
+++	private var _keyframes:Array<Keyframe>;
+++	private var _currentTexture:String;
+++	private var _previousTexture:String;
+++	private var _currentLocation:Point;
+++	private var _currentScale:Point;
+++	private var _currentPivot:Point;
+++	private var _currentSkew:Point;
+++	private var _currentAlpha:Float = 1;
+++	private var _image:DisplayObjectContainer;
+++	private var _length:Int = 0;
+++	
+++	public var name:String;
+++	public var visible:Bool = true;
+++	private var _containsImage:String;
+++	private var _destinationIndex:Int;
+++	private var _preTweenIndex:Int = 0;
+++	private var _originalMatrix:Matrix;
+++	public function new() 
+++	{
+++		_keyframes = new Array<Keyframe>();
+++		_preTweenIndex = _index;
+++		_image = new Sprite();
+++	}
+++	
+++	public function addKeyframe(kf:Keyframe):Void
+++	{
+++		_keyframes.push(kf);
+++		_length += kf.getDuration();
+++	
+++		if (kf.getRef() != null)
+++			_containsImage = kf.getRef();
+++	}
+++	
+++	public function keyFrames():Array<Keyframe>
+++	{
+++		return _keyframes;
+++	}
+++	
+++	public function back():Bool 
+++	{    
+++		if (_index >= 0)
+++		{
+++			if (!_keyframes[_index].back())
+++			{
+++				if (_index > 0)
+++				{
+++					_index--;
+++					return true;
+++				}
+++				else
+++					return false;
+++			}
+++			
+++			return true;
+++		}
+++		
+++		return false;
+++	}
+++	
+++	public function advance():Bool
+++	{
+++		if (_index < _keyframes.length)
+++		{
+++			if (!_keyframes[_index].advance())
+++			{
+++				if (_index < _keyframes.length - 1)
+++				{
+++					_index++;
+++					{
+++						return true;  //if the current keyframe is at the end, and there are more to go
+++					}
+++				}
+++				else 
+++				{
+++					return false;  //if the current keyframe is at the end, and there are no more to go.
+++				}
+++			}
+++			return true;  //if the current keyframe isn't at the end, and there are more to go
+++		}
+++		return false;
+++	}
+++	
+++	public function process():Void 
+++	{
+++		if (_index < 0 || _index >= _keyframes.length)
+++			return;
+++		if (_keyframes[_index].getLocation() != null)
+++		{
+++			populateCurrentValues(_index);
+++			
+++			var textureSprite:Sprite = FlumpTextures.get().getTextureByName(_currentTexture);
+++			
+++			if (textureSprite != null)
+++			{
+++				var originalbm:Bitmap = cast(textureSprite.getChildAt(0), Bitmap);
+++				setImage(originalbm.bitmapData.clone());
+++			}
+++			else 
+++			{
+++				 //it must be a flump movie  or flipbook, and we don't need to call setImage at all.
+++                if (Type.getClass(_image) != FlumpMovie)
+++                    _image = FlumpParser.get().getMovieByName(_currentTexture).clone();
+++
+++                if (!cast(_image, FlumpMovie).nextFrame())
+++                    cast(_image, FlumpMovie).gotoStart();  //this loops the internal flipbook
+++			}
+++			
+++			if (_image != null)
+++			{
+++				if (_keyframes[_index].getTweened()) //Stop-gap code to handle tweens
+++				{  
+++				
+++					_destinationIndex = _index + 1;
+++					_preTweenIndex = _index;
+++					var nextLoc:Point = _keyframes[_destinationIndex].getLocation().clone();  
+++					var nextScale:Point = _keyframes[_destinationIndex].getScale().clone();
+++					var nextPivot:Point = _keyframes[_destinationIndex].getPivot().clone();
+++					var nextAlpha:Float = _keyframes[_destinationIndex].getAlpha();
+++					var nextSkew:Point = _keyframes[_destinationIndex].getSkew().clone();
+++					_keyframes[_index].internalIndex();
+++					var multiplier:Float = _keyframes[_preTweenIndex].internalIndex() /_keyframes[_preTweenIndex].getDuration();
+++				
+++					_currentAlpha = _keyframes[_preTweenIndex].getAlpha() + (nextAlpha - _keyframes[_preTweenIndex].getAlpha()) * multiplier;
+++					_currentScale.x = _keyframes[_preTweenIndex].getScale().x + (nextScale.x - _keyframes[_preTweenIndex].getScale().x) * multiplier;
+++					_currentScale.y = _keyframes[_preTweenIndex].getScale().y + (nextScale.y - _keyframes[_preTweenIndex].getScale().y) * multiplier;
+++					_currentLocation.x = _keyframes[_index].getLocation().x + (nextLoc.x - _keyframes[_preTweenIndex].getLocation().x) * multiplier;
+++				
+++					_currentLocation.y = _keyframes[_index].getLocation().y + (nextLoc.y - _keyframes[_preTweenIndex].getLocation().y) * multiplier;
+++					
+++					_currentPivot.x = _keyframes[_index].getPivot().x + (nextPivot.x - _keyframes[_preTweenIndex].getPivot().x) * multiplier;
+++					_currentPivot.y = _keyframes[_index].getPivot().y + (nextPivot.y - _keyframes[_preTweenIndex].getPivot().y) * multiplier;
+++					_currentPivot.x *= _currentScale.x;
+++					_currentPivot.y *= _currentScale.y;
+++					_currentSkew.x = _keyframes[_index].getSkew().x + (nextSkew.x - _keyframes[_preTweenIndex].getSkew().x) * multiplier;
+++					_currentSkew.y = _keyframes[_index].getSkew().y + (nextSkew.y - _keyframes[_preTweenIndex].getSkew().y) * multiplier;
+++				
+++				}
+++				_image.scaleX = _currentScale.x;
+++				_image.scaleY = _currentScale.y;
+++				
+++				_image.x = _currentLocation.x;
+++				_image.y = _currentLocation.y;
+++				if (_image.numChildren > 0)
+++				{
+++					_image.getChildAt(0).x = -_currentPivot.x;
+++					_image.getChildAt(0).y = -_currentPivot.y;
+++				}
+++				
+++				//if (_currentSkew.x != 0 || _currentSkew.y != 0)
+++				{
+++					_image.rotation = _currentSkew.x * 180 / Math.PI;
+++				}
+++				
+++				_image.visible = visible;
+++				_image.alpha = _currentAlpha;
+++				
+++			}
+++			//else 
+++			//	trace("NON TWEEN", this.name, "keyframe ", _index);
+++		}
+++		else // _keyframes[_index].getLocation() is never == null, so this "else" will never be executed
+++		{
+++			if (_image != null && _image != {})
+++				_image.visible = false; 
+++			_currentLocation = null;
+++			_currentTexture = null;
+++			_currentScale = null;
+++			_currentPivot = null;
+++		}
+++	}
+++	
+++	private function populateCurrentValues(index:Int):Void 
+++	{
+++		_previousTexture = _currentTexture;
+++		_currentTexture = _keyframes[index].getRef();
+++		
+++		_currentScale = _keyframes[index].getScale().clone();
+++		_currentLocation = _keyframes[index].getLocation().clone();
+++		_currentPivot = _keyframes[index].getPivot().clone();
+++		_currentPivot.x *= _currentScale.x;
+++		_currentPivot.y *= _currentScale.y;
+++		_currentAlpha = _keyframes[index].getAlpha();
+++		_currentSkew = _keyframes[index].getSkew().clone();
+++	}
+++	
+++	public function isShown():Bool
+++	{
+++		return _image.visible;
+++	}
+++	
+++	public function setImage(bd:BitmapData):Void 
+++	{
+++		/*var bm:Bitmap = new Bitmap(bd);
+++		_image = new Sprite();
+++		_image.addChild(bm);
+++		_originalMatrix = _image.transform.matrix.clone();*/
+++		
+++		if (_currentTexture != _previousTexture) {
+++			var bm:Bitmap = new Bitmap(bd);
+++			if (_image.numChildren > 0 && _image.getChildAt(0) != null) (_image.removeChildAt(0));
+++			_image.addChild(bm);
+++			_originalMatrix = _image.transform.matrix.clone();
+++		}
+++	}
+++	
+++	public function setMovie(mv:FlumpMovie)
+++	{
+++		_image = mv;
+++	}
+++	
+++	public function getImage():DisplayObjectContainer
+++	{
+++		return _image;
+++	}
+++	
+++	public function getMovie():FlumpMovie
+++	{
+++		var mv:FlumpMovie = cast(_image, FlumpMovie);
+++		
+++		return mv;
+++	}
+++	
+++	public function hasImageNamed():String
+++	{
+++		return _containsImage;
+++	}
+++	
+++	public function reset():Void 
+++	{
+++		goto(0);
+++	}
+++	
+++	/*
+++	 *  Goes to absolute frame value. 
+++	 * 
+++	 */
+++	public function goto(internalIndex:Int):Void 
+++	{
+++		_index = 0;	
+++	
+++		//var count:Int = 0;
+++		for (i in 0..._keyframes.length)
+++		{	
+++			_keyframes[i].reset();
+++		}
+++		
+++		while(_index < _keyframes.length )
+++		{
+++			if (_index/*count*/ == internalIndex)
+++			{
+++				break;
+++			}
+++			if (!_keyframes[_index].advance())
+++			{
+++				_index++;	
+++			}	
+++			//count++;
+++			
+++		}
+++	}
+++	
+++	public function clone():Layer
+++	{
+++		var layer:Layer = new Layer();
+++		for (i in 0..._keyframes.length)
+++		{
+++			layer.addKeyframe(_keyframes[i].clone());
+++		}
+++		return layer;
+++	}
+++	
+++	public function getFrame():Int 
+++	{
+++		return _index;
+++	}
+++	
+++	public function getLength():Int 
+++	{
+++		return _length;
+++	}
+++	
+++}
++\ No newline at end of file
++Index: michaelgreenhut/openflump/MovieManager.hx
++===================================================================
++--- michaelgreenhut/openflump/MovieManager.hx	(revision 0)
+++++ michaelgreenhut/openflump/MovieManager.hx	(working copy)
++@@ -0,0 +1,71 @@
+++package com.michaelgreenhut.openflump;
+++
+++/**
+++ * ...
+++ * @author Michael Greenhut
+++ */
+++class MovieManager
+++{
+++
+++	private var _motionFunctions:Array<Void->Bool> ;
+++	private static var _movieManager:MovieManager;
+++	
+++	public function new(mmkey:MMKey) 
+++	{
+++		_motionFunctions = new Array<Void->Bool>();
+++	}
+++	
+++	public static function get():MovieManager
+++	{
+++		if (_movieManager == null)
+++			_movieManager = new MovieManager(new MMKey());
+++			
+++		return _movieManager;
+++	}
+++	
+++	/*
+++	 * These are for collections of two SPECIFIC functions only, nextFrame or prevFrame.  The idea is that by using the 
+++	 * MovieManager and the animateMovies function, you only have to rely on a single enterFrame loop to process multiple movies. 
+++	 * This allows you to pause/resume them all very easily and in sync, and it saves you from ODing on enterFrame functions.
+++	 * 
+++	 * */
+++	public function addAnimationFunction(animationFunc:Void->Bool):Void 
+++	{
+++		Type.getClass(animationFunc);
+++		_motionFunctions.push(animationFunc);
+++	}
+++	
+++	/*
+++	 * Put a call to this in a single enterFrame function.  Stop the enterFrame function when you want to pause all the 
+++	 * movies involved.
+++	 * 
+++	 * */
+++	public function animateMovies():Void 
+++	{
+++		if (_motionFunctions.length == 0)
+++			return;
+++		trace("num", _motionFunctions.length);
+++		var numFuncs:Int = -1 * (_motionFunctions.length-1);
+++		
+++		for (i in numFuncs...1)
+++		{
+++			trace("eye", i);
+++			var fn:Void->Bool = _motionFunctions[ -i];
+++			trace(Reflect.isFunction(fn));
+++			var moved:Bool = fn();//Reflect.callMethod(FlumpMovie, _motionFunctions[ -i], []);
+++			if (!moved)   //if this movie cannot animate any further in its given direction, remove it.
+++			{
+++				_motionFunctions.splice( -i, 1);
+++			}
+++		}
+++	}
+++	
+++}
+++
+++class MMKey
+++{
+++	public function new()
+++	{
+++		
+++	}
+++}
++\ No newline at end of file

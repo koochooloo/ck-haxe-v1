@@ -1,0 +1,83 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_answer_default",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/9patch/9patch-DefaultAnswer",
+                "scale" : [ 4.6, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_answer_wrong",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/9patch/9patch-WrongAnswer",
+                "scale" : [ 4.6, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_answer_correct",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/9patch/9patch-CorrectAnswer",
+                "scale" : [ 4.6, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_answer",
+            "priority" : 10,
+            "inheritable" : { 
+                "position" : [ 35, 9 ],
+                "loadParams" : false,
+                "color" : [ 14, 9, 4 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:48",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 520, 120 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_correct_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/CorrectAnswer",
+                "position" : [ 1, 46 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_wrong_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/WrongAnswer",
+                "position" : [ 1, 46 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

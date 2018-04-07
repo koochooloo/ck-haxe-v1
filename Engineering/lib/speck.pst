@@ -1,0 +1,10 @@
+<GameProject version="2.0">
+  <Folders>
+    <Folder path=".\2d" contentType="Sprite" />
+    <Folder path=".\layouts" contentType="UI" />
+    <Folder path=".\fonts" contentType="Font" />
+    <Folder path=".\strings" contentType="String" />
+  </Folders>
+  <Files />
+  <Options />
+</GameProject>

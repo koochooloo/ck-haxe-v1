@@ -1,0 +1,77 @@
+Index: JsonMenuPlugIn.hx
+===================================================================
+--- JsonMenuPlugIn.hx	(revision 811)
++++ JsonMenuPlugIn.hx	(working copy)
+@@ -28,6 +28,7 @@
+ import haxe.Json;
+ import openfl.Assets;
+ import openfl.geom.Point;
++import openfl.text.TextField;
+ 
+ using com.firstplayable.hxlib.StdX;
+ using Std;
+@@ -122,7 +123,7 @@
+             var obj:DisplayObject = createOneOfType( curMeta, m_makerDir.getMakerFunc( objectType ), rOwner );
+ 			
+ 			// If we are making a panel, make the children of the panel now
+-			if( objectType == "panel" || objectType == "borderPanel" )
++			if ( objectType == "panel" || objectType == "borderPanel" )
+ 			{
+ 				if ( obj.is( DisplayObjectContainer ))
+ 				{
+@@ -134,6 +135,11 @@
+ 					addObjectsToMenu( doc );
+ 				}
+ 			}
++			else if ( objectType == "button" && obj.is( GraphicButton ) )
++			{
++				var btnAsDoc:DisplayObjectContainer = obj.as( DisplayObjectContainer );
++				startProduction( curMeta, "label", btnAsDoc );
++			}
+         }
+     }
+     
+@@ -182,6 +188,13 @@
+ 		{
+ 			addObjectToRepositionList( curMeta, curProduct );
+ 		}
++		
++		// Set visibility
++        var visible:Dynamic = getValueRecursively( "visible", curMeta );
++        if ( visible.string() == "false" )
++        {
++            curProduct.visible = false;
++        }
+         
+         // If we have a button, have it use the menu's handler
+         if ( curProduct.is( GraphicButton ) )
+@@ -190,6 +203,15 @@
+             btn.onHit = m_rMenu.onButtonHit;
+             m_rMenu.addButton( btn );
+         }
++		// If we have a TextField, check if it belongs to a button and parent appropriately
++		else if ( curProduct.is( TextField )  &&  rOwner.is( GraphicButton ) )
++		{
++			var parentAsBtn:GraphicButton = rOwner.as( GraphicButton );
++			parentAsBtn.label = cast curProduct;
++			
++			// EARLY RETURN -- we just parented; don't add to bucket
++			return;
++		}
+         
+         // Add to a priority bucket
+         var priority:Int = getValueRecursively( "priority", curMeta );
+@@ -198,13 +220,6 @@
+             priority = 0;
+         }
+         addObjectToPriorityList( curProduct, priority, rOwner );
+-        
+-        // Set visibility
+-        var visible:Dynamic = getValueRecursively( "visible", curMeta );
+-        if ( visible.string() == "false" )
+-        {
+-            curProduct.visible = false;
+-        }
+     }
+     
+     //-------------------------------------------------------------------------------------

@@ -1,0 +1,447 @@
+{
+   "Tags": [
+      "delete__",
+      "locked__",
+      "audio__",
+      "ui__",
+      "cheats__",
+      "debug",
+      "save",
+      "bounds",
+      "audio",
+      "globe",
+      "passport",
+      "database",
+      "student_id_menu"
+   ],
+   "Variables": [
+      {
+         "name": "DEBUG_TUNABLES",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "debug"
+         ]
+      },
+      {
+         "name": "DEBUG_SAVE_PROFILE",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "debug",
+            "save"
+         ]
+      },
+      {
+         "name": "DRAW_BOUNDS_BOX",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "debug",
+            "bounds",
+            "ui__"
+         ]
+      },
+      {
+         "name": "WEBAUDIO_BGM_VOLUME",
+         "type": "Float",
+         "value": ".15",
+         "tags": [
+            "debug",
+            "audio__"
+         ]
+      },
+      {
+         "name": "SHOW_STATE_INFO",
+         "type": "Bool",
+         "value": "true",
+         "tags": [
+            "debug",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_IDLE",
+         "type": "Bool",
+         "value": "true",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_ROTATION_X",
+         "type": "Float",
+         "value": "0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_ROTATION_Y",
+         "type": "Float",
+         "value": "0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_ROTATION_RATIO",
+         "type": "Float",
+         "value": ".4",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_ROTATION_EPSILON",
+         "type": "Float",
+         "value": "5",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_SWIPE_TIME_EPSILON",
+         "type": "Float",
+         "value": "0.4",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_SWIPE_SPEED_EPSILON",
+         "type": "Float",
+         "value": "40",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "GLOBE_SWIPE_DECAY",
+         "type": "Float",
+         "value": "0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "SWIPE_DECAY_RATIO",
+         "type": "Float",
+         "value": "0.96",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "SWIPE_SPEED_RATIO",
+         "type": "Float",
+         "value": "0.2",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_COLOR",
+         "type": "Int",
+         "value": "0x5C5C5C",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_HIGHLIGHT_COLOR",
+         "type": "Int",
+         "value": "0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_THICKNESS",
+         "type": "Float",
+         "value": "1.0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_HIGHLIGHT_THICKNESS",
+         "type": "Float",
+         "value": "2.0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_RADIUS",
+         "type": "Float",
+         "value": "1.0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_HIGHLIGHT_RADIUS",
+         "type": "Float",
+         "value": "1",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "BORDER_SMOOTHING",
+         "type": "Float",
+         "value": "0.25",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "DEBUG_SMOOTHING",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "MAX_ZOOM",
+         "type": "Percent",
+         "value": "50",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "ZOOM",
+         "type": "Percent",
+         "value": "0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_SCALE",
+         "type": "Float",
+         "value": "0.3",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_H_BORDER",
+         "type": "Float",
+         "value": "8",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_V_BORDER",
+         "type": "Float",
+         "value": "8",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_H_OFFSET",
+         "type": "Float",
+         "value": "0",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_V_OFFSET",
+         "type": "Float",
+         "value": "-16",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_Z_CUTOFF",
+         "type": "Float",
+         "value": "-460",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_BACKING_VISIBLE",
+         "type": "Bool",
+         "value": "true",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_BACKING_ALPHA",
+         "type": "Float",
+         "value": "0.4",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_FONT",
+         "type": "String",
+         "value": "CarterOne",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "LABEL_FONT_COLOR",
+         "type": "Int",
+         "value": "0x000000",
+         "tags": [
+            "globe",
+            "ui__"
+         ]
+      },
+      {
+         "name": "STAMP_FADE_TIME",
+         "type": "Seconds",
+         "value": "0.1",
+         "tags": [
+            "passport",
+            "ui__"
+         ]
+      },
+      {
+         "name": "STAMPER_DROP_FRAMES",
+         "type": "Int",
+         "value": "12",
+         "tags": [
+            "passport",
+            "ui__"
+         ]
+      },
+      {
+         "name": "STAMPER_RAISE_FRAMES",
+         "type": "Int",
+         "value": "11",
+         "tags": [
+            "passport",
+            "ui__"
+         ]
+      },
+      {
+         "name": "STAMP_APPEAR_TIME",
+         "type": "Seconds",
+         "value": "0.4",
+         "tags": [
+            "passport",
+            "ui__"
+         ]
+      },
+      {
+         "name": "STAMP_DROP_HEIGHT",
+         "type": "Float",
+         "value": "640",
+         "tags": [
+            "passport",
+            "ui__"
+         ]
+      },
+      {
+         "name": "USE_PARTIAL_RECIPE_LIST",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "database"
+         ]
+      },
+      {
+         "name": "DEFAULT_PAGE_SIZE",
+         "type": "Int",
+         "value": "100",
+         "tags": [
+            "database"
+         ]
+      },
+      {
+         "name": "DEBUG_DATABASE",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "database",
+            "debug"
+         ]
+      },
+      {
+         "name": "PADDING_BETWEEN_ROWS",
+         "type": "Float",
+         "value": "40",
+         "tags": [
+            "student_id_menu"
+         ]
+      },
+      {
+         "name": "SHOW_TOGGLE_FLOW_BTN",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "ui__",
+            "debug"
+         ]
+      },
+      {
+         "name": "USE_DATABASE_RESOURCES",
+         "type": "Bool",
+         "value": "true",
+         "tags": [
+            "database",
+            "debug"
+         ]
+      },
+      {
+         "name": "DEBUG_DATABASE_RESOURCES",
+         "type": "Bool",
+         "value": "false",
+         "tags": [
+            "database",
+            "debug"
+         ]
+      },
+      {
+         "name": "PRELOAD_ASSETS",
+         "type": "Bool",
+         "value": "true",
+         "tags": [
+            "database"
+         ]
+      }
+   ]
+}

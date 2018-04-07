@@ -1,0 +1,94 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_check",
+            "record" : true,
+            "priority" : 7,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_check",
+                "position" : [ 0, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "scale" : [ 0.75, 0.75 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_about",
+            "record" : true,
+            "priority" : 3,
+            "text" : "ABOUT",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 380, 162 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 580, 480 ]
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_about",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+                "position" : [ -361, -284 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 2.7, 2.35 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_about_top",
+            "record" : true,
+            "priority" : 9,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanelTop",
+                "position" : [ -361, -284 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 2.7, 2.35 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_header_ribbon",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/headers/RibbonBig",
+                "position" : [ 683, 165 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_header",
+            "priority" : 21,
+            "inheritable" : { 
+                "resource" : "2d/UI/headers/RibbonBig_About",
+                "position" : [ 683, 110 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

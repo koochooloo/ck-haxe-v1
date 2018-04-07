@@ -1,0 +1,127 @@
+/**
+ * The Fiscal Ship + fiscalship.org
+ * Admin interface styling.
+ * 
+ * Copyright 2016, Woodrow Wilson International Center For Scholars
+ */
+/**
+ * The Fiscal Ship + fiscalship.org
+ * A new game from Brookings and the Wilson Center challenges 
+ * you to reduce the national debt and fix the federal budget.
+ * 
+ * Copyright 2016, Woodrow Wilson International Center For Scholars
+ */
+/* line 18, admin.scss */
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 200;
+  background-color: #fff;
+  color: #000;
+  margin: 20px;
+}
+/* line 26, admin.scss */
+body a:link {
+  color: #0a5788;
+  font-weight: 600;
+  text-decoration: none;
+}
+/* line 32, admin.scss */
+body a:visited {
+  color: #0a5788;
+}
+/* line 36, admin.scss */
+body a:hover {
+  color: #3295b6;
+  text-decoration: none;
+}
+
+/* line 43, admin.scss */
+h1 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 2em;
+  font-style: italic;
+  font-weight: 800;
+  color: #0a5788;
+}
+
+/* line 49, admin.scss */
+h2 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.5em;
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* line 53, admin.scss */
+h3 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* line 58, admin.scss */
+p.indent {
+  display: inline-block;
+  margin-left: 20px;
+  width: 100%;
+}
+
+/* line 65, admin.scss */
+pre {
+  font-size: 0.7em;
+  tab-size: 4;
+}
+
+/* line 70, admin.scss */
+table {
+  border-collapse: collapse;
+}
+/* line 74, admin.scss */
+table tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+/* line 78, admin.scss */
+table tr:hover {
+  background-color: #dfe7e9;
+}
+/* line 82, admin.scss */
+table tr.toggle {
+  display: none;
+}
+/* line 87, admin.scss */
+table, table th, table td {
+  border: 1px solid #ddd;
+}
+/* line 91, admin.scss */
+table th, table td {
+  padding: 4px;
+  text-align: center;
+}
+/* line 96, admin.scss */
+table th {
+  background-color: #3295b6;
+  color: #fff;
+}
+/* line 102, admin.scss */
+table.wide th, table.wide td {
+  padding: 4px 16px;
+}
+
+/* line 108, admin.scss */
+.btn-form {
+  height: 60px;
+}
+
+/* line 112, admin.scss */
+.error {
+  font-weight: bold;
+  color: #aa3311;
+}
+
+/* line 117, admin.scss */
+.important {
+  color: #3295b6;
+}

@@ -1,0 +1,1904 @@
+Index: trunk/Engineering/assets/layouts/CountryMenu.json
+===================================================================
+--- trunk/Engineering/assets/layouts/CountryMenu.json	(revision 808)
++++ trunk/Engineering/assets/layouts/CountryMenu.json	(working copy)
+@@ -27,7 +27,7 @@
+             "record" : true,
+             "priority" : 1,
+             "inheritable" : { 
+-                "position" : [ 148, 168 ],
++                "position" : [ 148, 136 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -37,11 +37,22 @@
+                 "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "2d/Buttons/btn_country",
+-                    "position" : [ 63, 61 ],
++                    "position" : [ 76, 85 ],
+                     "visible" : false,
+                     "loadParams" : true
+                 }
+             }, { 
++                "name" : "btn_country2",
++                "record" : true,
++                "id" : 2,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "2d/Buttons/btn_country",
++                    "position" : [ 76, 165 ],
++                    "visible" : false,
++                    "loadParams" : true
++                }
++            }, { 
+                 "name" : "countriesQuit",
+                 "record" : true,
+                 "id" : 5,
+@@ -48,7 +59,7 @@
+                 "priority" : 9,
+                 "inheritable" : { 
+                     "resource" : "2d/Buttons/btn_x",
+-                    "position" : [ 312, -15 ],
++                    "position" : [ 325, 9 ],
+                     "loadParams" : true
+                 }
+             } ],
+@@ -58,7 +69,7 @@
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 120, 30 ],
++                    "position" : [ 133, 54 ],
+                     "visible" : false,
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+@@ -68,6 +79,21 @@
+                     "wrapOverflow" : true
+                 }
+             }, { 
++                "name" : "countryName2",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 133, 134 ],
++                    "visible" : false,
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            }, { 
+                 "name" : "lbl_cSearch",
+                 "record" : true,
+                 "priority" : 11,
+@@ -74,7 +100,7 @@
+                 "text" : "SEARCH",
+                 "stringTable" : "GameStrings",
+                 "inheritable" : { 
+-                    "position" : [ 38, -110 ],
++                    "position" : [ 51, -86 ],
+                     "touchable" : true,
+                     "loadParams" : false,
+                     "color" : [ 20, 20, 20 ],
+@@ -88,7 +114,7 @@
+                 "priority" : 3,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+-                    "position" : [ -11, -24 ],
++                    "position" : [ 2, 0 ],
+                     "scale" : [ 1.3, 1.9 ],
+                     "loadParams" : true
+                 }
+@@ -98,7 +124,7 @@
+                 "priority" : 5,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+-                    "position" : [ 282, 30 ],
++                    "position" : [ 295, 54 ],
+                     "scale" : [ 1, 3.1 ],
+                     "loadParams" : true
+                 }
+@@ -108,7 +134,7 @@
+                 "priority" : 8,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/scrollHandle",
+-                    "position" : [ 285, 72 ],
++                    "position" : [ 298, 96 ],
+                     "loadParams" : true
+                 }
+             }, { 
+@@ -117,49 +143,80 @@
+                 "priority" : 10,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/9patch/9patch-TextInputField_default",
+-                    "position" : [ -11, -118 ],
++                    "position" : [ 2, -94 ],
+                     "scale" : [ 3.3, 1 ],
+                     "loadParams" : true
+                 }
+             } ]
+         }, { 
+-            "name" : "group_country2",
++            "name" : "grp_country3",
+             "record" : true,
+-            "priority" : 4,
++            "priority" : 6,
+             "inheritable" : { 
+-                "position" : [ 165, 112 ],
+-                "visible" : false,
++                "position" : [ 173, 189 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+-                "name" : "btn_country2",
++                "name" : "btn_country3",
+                 "record" : true,
+-                "id" : 2,
+-                "priority" : 1,
++                "id" : 13,
++                "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "2d/Buttons/btn_country",
+-                    "position" : [ 110, 175 ],
+-                    "visible" : false,
++                    "position" : [ 51, 32 ],
+                     "loadParams" : true
+                 }
+             } ],
+             "label" : [ { 
+-                "name" : "countryName2",
++                "name" : "countryName3",
+                 "record" : true,
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 170, 140 ],
+-                    "visible" : false,
++                    "position" : [ 108, 1 ],
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+                     "font" : "/fonts/CarterOne.ttf:18",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 165, 60 ],
++                    "size" : [ 150, 60 ],
+                     "wrapOverflow" : true
+                 }
+             } ]
+         }, { 
++            "name" : "grp_country4",
++            "record" : true,
++            "priority" : 6,
++            "inheritable" : { 
++                "position" : [ 173, 269 ],
++                "loadParams" : false
++            },
++            "button" : [ { 
++                "name" : "btn_country4",
++                "record" : true,
++                "id" : 14,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "2d/Buttons/btn_country",
++                    "position" : [ 51, 32 ],
++                    "loadParams" : true
++                }
++            } ],
++            "label" : [ { 
++                "name" : "countryName4",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 108, 1 ],
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            } ]
++        }, { 
+             "name" : "popup_about",
+             "record" : true,
+             "priority" : 8,
+@@ -241,6 +298,16 @@
+                 "visible" : false,
+                 "loadParams" : true
+             }
++        }, { 
++            "name" : "spr_scrollBounds",
++            "record" : true,
++            "inheritable" : { 
++                "resource" : "2d/UI/WhitePixel",
++                "position" : [ 166, 175 ],
++                "scale" : [ 300, 430 ],
++                "visible" : false,
++                "loadParams" : true
++            }
+         } ]
+     }
+ }
+\ No newline at end of file
+Index: trunk/Engineering/lib/layouts/Countries Substates/CountryMenu.json
+===================================================================
+--- trunk/Engineering/lib/layouts/Countries Substates/CountryMenu.json	(revision 808)
++++ trunk/Engineering/lib/layouts/Countries Substates/CountryMenu.json	(working copy)
+@@ -27,7 +27,7 @@
+             "record" : true,
+             "priority" : 1,
+             "inheritable" : { 
+-                "position" : [ 148, 168 ],
++                "position" : [ 148, 136 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -37,11 +37,22 @@
+                 "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "Buttons/btn_country",
+-                    "position" : [ 63, 61 ],
++                    "position" : [ 76, 85 ],
+                     "visible" : false,
+                     "loadParams" : true
+                 }
+             }, { 
++                "name" : "btn_country2",
++                "record" : true,
++                "id" : 2,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "Buttons/btn_country",
++                    "position" : [ 76, 165 ],
++                    "visible" : false,
++                    "loadParams" : true
++                }
++            }, { 
+                 "name" : "countriesQuit",
+                 "record" : true,
+                 "id" : 5,
+@@ -48,7 +59,7 @@
+                 "priority" : 9,
+                 "inheritable" : { 
+                     "resource" : "Buttons/btn_x",
+-                    "position" : [ 312, -15 ],
++                    "position" : [ 325, 9 ],
+                     "loadParams" : true
+                 }
+             } ],
+@@ -58,7 +69,7 @@
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 120, 30 ],
++                    "position" : [ 133, 54 ],
+                     "visible" : false,
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+@@ -68,6 +79,21 @@
+                     "wrapOverflow" : true
+                 }
+             }, { 
++                "name" : "countryName2",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 133, 134 ],
++                    "visible" : false,
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            }, { 
+                 "name" : "lbl_cSearch",
+                 "record" : true,
+                 "priority" : 11,
+@@ -74,7 +100,7 @@
+                 "text" : "SEARCH",
+                 "stringTable" : "GameStrings",
+                 "inheritable" : { 
+-                    "position" : [ 38, -110 ],
++                    "position" : [ 51, -86 ],
+                     "touchable" : true,
+                     "loadParams" : false,
+                     "color" : [ 20, 20, 20 ],
+@@ -88,7 +114,7 @@
+                 "priority" : 3,
+                 "inheritable" : { 
+                     "resource" : "UI/9patch/9patch-DefaultPanel",
+-                    "position" : [ -11, -24 ],
++                    "position" : [ 2, 0 ],
+                     "scale" : [ 1.3, 1.9 ],
+                     "loadParams" : true
+                 }
+@@ -98,7 +124,7 @@
+                 "priority" : 5,
+                 "inheritable" : { 
+                     "resource" : "UI/9patch/9patch-ScrollBarBacking",
+-                    "position" : [ 282, 30 ],
++                    "position" : [ 295, 54 ],
+                     "scale" : [ 1, 3.1 ],
+                     "loadParams" : true
+                 }
+@@ -108,7 +134,7 @@
+                 "priority" : 8,
+                 "inheritable" : { 
+                     "resource" : "UI/scrollHandle",
+-                    "position" : [ 285, 72 ],
++                    "position" : [ 298, 96 ],
+                     "loadParams" : true
+                 }
+             }, { 
+@@ -117,49 +143,80 @@
+                 "priority" : 10,
+                 "inheritable" : { 
+                     "resource" : "UI/9patch/9patch-TextInputField_default",
+-                    "position" : [ -11, -118 ],
++                    "position" : [ 2, -94 ],
+                     "scale" : [ 3.3, 1 ],
+                     "loadParams" : true
+                 }
+             } ]
+         }, { 
+-            "name" : "group_country2",
++            "name" : "grp_country3",
+             "record" : true,
+-            "priority" : 4,
++            "priority" : 6,
+             "inheritable" : { 
+-                "position" : [ 165, 112 ],
+-                "visible" : false,
++                "position" : [ 173, 189 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+-                "name" : "btn_country2",
++                "name" : "btn_country3",
+                 "record" : true,
+-                "id" : 2,
+-                "priority" : 1,
++                "id" : 13,
++                "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "Buttons/btn_country",
+-                    "position" : [ 110, 175 ],
+-                    "visible" : false,
++                    "position" : [ 51, 32 ],
+                     "loadParams" : true
+                 }
+             } ],
+             "label" : [ { 
+-                "name" : "countryName2",
++                "name" : "countryName3",
+                 "record" : true,
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 170, 140 ],
+-                    "visible" : false,
++                    "position" : [ 108, 1 ],
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+                     "font" : "/fonts/CarterOne.ttf:18",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 165, 60 ],
++                    "size" : [ 150, 60 ],
+                     "wrapOverflow" : true
+                 }
+             } ]
+         }, { 
++            "name" : "grp_country4",
++            "record" : true,
++            "priority" : 6,
++            "inheritable" : { 
++                "position" : [ 173, 269 ],
++                "loadParams" : false
++            },
++            "button" : [ { 
++                "name" : "btn_country4",
++                "record" : true,
++                "id" : 14,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "Buttons/btn_country",
++                    "position" : [ 51, 32 ],
++                    "loadParams" : true
++                }
++            } ],
++            "label" : [ { 
++                "name" : "countryName4",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 108, 1 ],
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            } ]
++        }, { 
+             "name" : "popup_about",
+             "record" : true,
+             "priority" : 8,
+@@ -241,6 +298,16 @@
+                 "visible" : false,
+                 "loadParams" : true
+             }
++        }, { 
++            "name" : "spr_scrollBounds",
++            "record" : true,
++            "inheritable" : { 
++                "resource" : "UI/WhitePixel",
++                "position" : [ 166, 175 ],
++                "scale" : [ 300, 430 ],
++                "visible" : false,
++                "loadParams" : true
++            }
+         } ]
+     }
+ }
+\ No newline at end of file
+Index: trunk/Engineering/src/game/DataManager.hx
+===================================================================
+--- trunk/Engineering/src/game/DataManager.hx	(revision 808)
++++ trunk/Engineering/src/game/DataManager.hx	(working copy)
+@@ -11,10 +11,660 @@
+ // EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+ ///////////////////////////////////////////////////////////////////////////
+ 
++ #if (debug || build_cheats)
++ //
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
+ 
++
+ package game;
+ import com.firstplayable.hxlib.Debug;
+ import game.DataManager.ContentData;
++import game.def.RecipeTypes;
++import game.events.DataLoadedEvent;
++import haxe.Json;
++import openfl.utils.AssetType;
++import com.firstplayable.hxlib.loader.ResMan;
++import com.firstplayable.hxlib.utils.json.JsonObjectFactory;
++//import com.firstplayable.hxlib.loader.ResContext;
++
++/*
++ * Handles game content supplied from the back-end. 
++ * */
++
++ // Type definitions for json parsing. Each table is represented as { rows: [ ... ] }
++ typedef ContentData = { var rows : Array<Dynamic>; };
++ 
++class DataManager
++{
++	public var allRecipes(default, null):Map<String, Recipe>; // Lists recipes, keyed by recipe name
++	public var allCountries(default, null):Map<String, Country>; // Lists countries, keyed by country name
++	public var allIngredients(default, null):Map<String, Ingredient>; // Lists ingredients, keyed by ingredient name
++	public var allergens(default, null):Array<Ingredient>; // List of allergens currently flagged by user.
++	public var favorites(default, null):Array<Recipe>; // List of recipes that have been marked "favorites", to appear in favorites menu.
++	public var mathQuestions(default, null):Array< MultipleChoiceQuestion >;
++	
++	public function new()
++	{
++		this.allRecipes = new Map();
++		this.allCountries = new Map();
++		this.allIngredients = new Map();
++		this.allergens = new Array();
++		this.favorites = new Array();
++		this.mathQuestions = new Array();
++	}
++	
++	public function init():EnumValue
++	{
++		// Load JSON data. On completion, members will be populated with game content.
++		loadJson(); 
++		
++		return null; // TODO - success/failure error enum
++	}
++
++	public function setDataFromSave( savedAllergens:Array< String >, savedFavorites:Array< String > ):Void
++	{
++		if ( savedAllergens != null )	
++		{
++			for ( ingredientName in savedAllergens )
++			{
++				trace( ingredientName );
++				var i:Ingredient = allIngredients.get( ingredientName );
++				allergens.push( i );
++			}
++		}
++		if ( savedFavorites != null )	
++		{
++			for ( recipeName in savedFavorites )
++			{
++				trace( recipeName );
++				var r:Recipe = allRecipes.get( recipeName );
++				favorites.push( r );
++			}
++		}
++	}
++	
++	// Returns true if item was successfully added (array length increases)
++	public function addAllergen(i:Ingredient):Bool
++	{
++		var len:Int = this.allergens.length;
++		var newlen:Int = this.allergens.push(i);
++		var added:Bool = len < newlen;
++		i.setAllergen( true );
++		
++		if ( added )
++		{
++			SpeckGlobals.saveProfile.setSavedAllergens( allergens );
++		}
++		
++		return added;
++	}
++	
++	// Returns true if item was removed (array length decreases)
++	public function removeAllergen(i:Ingredient):Bool
++	{
++		var removed:Bool = false;
++		
++		for ( allergen in allergens )
++		{
++			if ( i.name == allergen.name )
++			{
++				removed = true;
++				allergens.remove( allergen );
++				break;
++			}
++		}
++		
++		if ( removed )
++		{
++			SpeckGlobals.saveProfile.setSavedAllergens( allergens );
++		}
++		
++		return removed;
++	}
++	
++	public function addFavorite( r:Recipe ):Bool
++	{
++		var len:Int = favorites.length;
++		var newLen:Int = favorites.push( r );
++		var added:Bool = len < newLen;
++		
++		if ( added )
++		{
++			SpeckGlobals.saveProfile.setSavedFavorites( favorites );
++		}
++		
++		return added; 
++	}
++	
++	public function removeFavorite( r:Recipe ):Bool
++	{
++		var removed:Bool = false;
++		
++		for ( fav in favorites )
++		{
++			if ( r.name == fav.name )
++			{
++				removed = true;
++				favorites.remove( fav );
++				break;
++			}
++		}
++		
++		if ( removed ) 
++		{
++			SpeckGlobals.saveProfile.setSavedFavorites( favorites );
++		}
++		
++		return removed;
++	}
++	
++	public function hasFavorite( r:Recipe ):Bool
++	{
++		for ( fav in favorites )
++		{
++			if ( r.name == fav.name )
++			{
++				return true;
++			}
++		}
++		
++		return false;
++	}
++	
++	public function hasAllergen( i:Ingredient ):Bool
++	{
++		for ( allergen in allergens )
++		{
++			if ( i.name == allergen.name )
++			{
++				return true;
++			}
++		}
++		
++		return false;
++	}
++	
++	// ----------------------------------------------------------------
++	// JSON RUNTIME CONTENT PARSING (TODO - REMOVE WHEN BACKEND SET UP) 
++	// ----------------------------------------------------------------
++	// Countries:  Line 116
++	// Ingredients: Line 214
++	// Recipes: 236
++	// ----------------------------------------------------------------
++	
++	// Callback for loadJson(); parses data once everything's been loaded to the network. 
++	private function onLoadComplete():Void
++	{
++		// Parse data
++		getAllIngredients();
++		getAllRecipes();
++		getAllCountries();
++		getMathQuestions();
++		
++		// Load save using new data
++		SpeckGlobals.saveProfile.get();
++		
++		trace("load complete");
++		// Let others know we've finished
++		//SpeckGlobals.event.dispatchEvent(new DataLoadedEvent());
++	}
++		
++	// To populate this.allCountries Combines country table data with other subtables.
++	// All country table schema: [Key, <unused>, <unused>, Population, Capital, Code, Cover image, Flag image, Languages, Name, Wish]
++	private function getAllCountries():Map<String, Country>
++	{
++		// Grab relevant JSON data
++			// All countries
++		var countryText = ResMan.instance.getText("AllCountries");
++		var countryData:ContentData = haxe.Json.parse(countryText);
++		//Debug.dump( Type.typeof( countryData ) );
++		
++			// Country charities/social issues (for "Did You Know?")
++		var charityText = ResMan.instance.getText("CountryCharity");
++		var charityData:ContentData = Json.parse(charityText);
++		//Debug.dump( Type.typeof( charityData ) );
++		
++			// Country Facts
++		var factText = ResMan.instance.getText("CountryFact");
++		var factData:ContentData = Json.parse(factText);
++		//Debug.dump( Type.typeof( factData ) );
++		
++			// Country Recipe
++		var recipeText = ResMan.instance.getText("CountryRecipe");
++		var recipeData:ContentData = Json.parse(recipeText);
++		//Debug.dump( Type.typeof( recipeData ) );
++		
++		for (rowIdx in 0...countryData.rows.length)
++		{
++			var row:Array<Dynamic> = countryData.rows[rowIdx];
++			
++			var name:String = row[9];
++			var population:Int = row[3];
++			var capital:String = row[4];
++			var code:String = row[5];
++			var cover:String = row[6];
++			var flag:String = row[7]; 
++			var music:String = ""; // TODO
++			var language:String = row[8];
++			var wish:String = row[10];
++			var socialIssues:Array<SocialIssue> = getCountryIssues(name, charityData);
++			var facts:Array<String> = getCountryFacts(name, factData);
++			var recipes:Array<Recipe> = getCountryRecipes(name, recipeData);
++				/**
++	 * Constructor for the game logic version of a Country.
++	 * @param	id
++	 * @param	name
++	 * @param	socialIssues
++	 * @param	population
++	 * @param	capital
++	 * @param	code
++	 * @param	coverImage
++	 * @param	flagImage
++	 * @param	wish
++	 * @param	recipes
++	 * @param	facts
++	 * @param	music
++	 * @param	greetingAudio
++	 * @param	mealAudio
++	 */
++			var c:Country = new Country(1, name, socialIssues, population, capital, code, cover, flag, wish, recipes, facts, null, null, null);
++			allCountries.set(name, c);
++			//trace("Country added: " + c.name);
++		}
++		
++		return allCountries;
++	}
++	
++	// Gets social issues for a given country. 
++	// Country charity table schema: [Country name, Country ID, Social issue description, Charity URL]
++	private function getCountryIssues(name:String, charityData:ContentData):Array<SocialIssue>
++	{
++		var issues:Array<SocialIssue> = new Array();
++		
++		for (rowIdx in 0...charityData.rows.length)
++		{
++			var row:Array<Dynamic> = charityData.rows[rowIdx];
++			if (name == row[0])
++			{
++				var s = new SocialIssue(row[2], row[3]);
++				issues.push(s);
++			}
++		}
++		
++		return issues; 
++	}
++	
++	// Gets facts for a given country. 
++	// Country facts table schema: [Country ID, Country name, Fact ID, Fact]
++	private function getCountryFacts(name:String, factData:ContentData):Array<String>
++	{
++		var facts:Array<String> = new Array();
++		
++		for (rowIdx in 0...factData.rows.length)
++		{
++			var row:Array<Dynamic> = factData.rows[rowIdx];
++			if (row[1] == name)
++			{
++				facts.push(row[3]);
++			}
++		}
++		
++		return facts;
++	}
++	
++	// Get a list of recipes attributed to a given country.
++	// Country recipe schema: [CountryID, Country name, Recipe ID, Recipe name]
++	private function getCountryRecipes(name:String, recipeData:ContentData):Array<Recipe>
++	{
++		var recipes:Array<Recipe> = new Array();
++		
++		for (rowIdx in 0...recipeData.rows.length)
++		{
++			var row:Array<Dynamic> = recipeData.rows[rowIdx];
++			if (row[1] == name)
++			{
++				recipes.push(allRecipes.get(row[3]));
++			}
++		}
++		
++		return recipes;
++	}
++	
++	// Creates ingredient objects from data. Returns lookup map from ingredient name -> object (globally accesible ingredients list)
++	// Ingredient row vals: [name, spotlight]
++	private function getAllIngredients():Map<String, Ingredient>
++	{
++		var ingredientText = ResMan.instance.getText("AllIngredients");
++		var ingredientData:ContentData = haxe.Json.parse(ingredientText);
++		var ingredients:Map<String, Ingredient> = new Map();
++		
++		for (rowIdx in 0...ingredientData.rows.length)
++		{
++			var row:Array<Dynamic> = ingredientData.rows[rowIdx];
++
++			var name:String = row[4];
++			var spotlight:String = row[5]; 
++			var i:Ingredient = new Ingredient(name, spotlight);
++			//trace("Added ingredient: " + i.name);
++			
++			allIngredients.set(i.name, i);
++			//trace(allIngredients.get(i.name) + " added to allIngredients map.");
++		}
++		
++		return allIngredients;
++	}
++	
++	// To populate this.allRecipes. Combines recipe table data with other subtables.
++	// Recipe table data: [Key, <unknown>, <unknown>, Country ID (recipes), Type, User (unused), Name, Presentation, Prep time, Country ID (Country), CountryName]
++	private function getAllRecipes():Map<String, Recipe>
++	{
++		// Grab relevant JSON data
++			// Steps 
++		var stepsText = ResMan.instance.getText("RecipeSteps");
++		var stepsData:ContentData = haxe.Json.parse(stepsText);
++		
++			// Tools
++		var allTools:Map<String, Tool> = getAllTools();
++		var toolText = ResMan.instance.getText("RecipeTools");
++		var toolData:ContentData = Json.parse(toolText);
++		
++			// Types
++		var typesText = ResMan.instance.getText("RecipeTypes");
++		var typesData:ContentData = Json.parse(typesText);
++		
++			// Ingredients
++		var ingredientsText = ResMan.instance.getText("RecipeIngredients");
++		var ingredientsData:ContentData = Json.parse(ingredientsText);
++			
++			// Image
++		var imageText = ResMan.instance.getText("RecipeImage");
++		var imageData:ContentData = Json.parse(imageText);
++		
++			// All recipes 
++		var recipeText = ResMan.instance.getText("AllRecipes");
++		var recipeData:ContentData = Json.parse(recipeText);
++		
++		// Format data into recipe objects
++		for (rowIdx in 0...recipeData.rows.length)
++		{
++			var row:Array<Dynamic> = recipeData.rows[rowIdx];
++
++			var name:String = row[6];
++			if (name != null) 
++			{
++				var presentation:String = row[7];
++				var tools:Array<Tool> = getRecipeTools(name, allTools, toolData);
++				var ingredients:Array<Ingredient> = getRecipeIngredients(name, ingredientsData);
++				var types:Array<RecipeTypes> = getRecipeTypes(name, typesData);
++				var steps:Array<Step> = getRecipeSteps(name, stepsData);
++				var image:String = getRecipeImage(name, imageData);
++				var country:String = row[10];
++				var r = new Recipe(1, name, presentation, country, image, ingredients, tools, steps, types);
++
++				allRecipes.set(name, r);
++				//trace("Recipe added to allrecipes: " + allRecipes.get(r.name));
++				
++			}
++		}
++		
++		return allRecipes;
++	}
++	
++	// Creates tool objects from data. Returns lookup map from toolname -> tool object. 
++	// Tool row vals: [Key, <unused/null>, <unused/null>, Name, URL]
++	private function getAllTools():Map<String, Tool>
++	{
++		var toolText = ResMan.instance.getText("AllTools");
++		var toolData:ContentData = haxe.Json.parse(toolText);
++		var tools:Map<String, Tool> = new Map();
++		
++		for (rowIdx in 0...toolData.rows.length)
++		{
++			var row:Array<Dynamic> = toolData.rows[rowIdx];
++
++			// Grab name [3] and URL [4]
++			var t:Tool = new Tool(row[3], row[4]);
++			
++			// Add to map so we can quickly grab them for recipe creation.
++			tools.set(t.name, t);
++		}
++		
++		return tools;
++	}
++	
++	// Gets ingredients for a given recipe, with measurements.
++	// Recipe + Ingredients + Unit table schema: [Recipename, Ingredientname, Amount, UnitID, Unitname]
++	private function getRecipeIngredients(name:String, data:ContentData):Array<Ingredient>
++	{
++		var ingredients:Array<Ingredient> = new Array();
++		
++		for (rowIdx in 0...data.rows.length)
++		{
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			var rname = row[0];
++			if (rname == name)
++			{
++				var iname:String = row[1];
++				var amount:Float = row[2];
++				var Unit:String = row[4]; 
++				var i:Ingredient = allIngredients.get(iname);
++				var recipeIngredient:Ingredient = new Ingredient(i.name, i.spotlight, amount, Unit);
++				
++				ingredients.push(recipeIngredient);
++			}
++		}
++		
++		return ingredients;
++	}
++	
++	// Grabs recipe image URL. 
++	// Recipe image schema: [RecipeID, Recipe name, Recipe Presentation, Image URL]
++	private function getRecipeImage(name:String, data:ContentData):String
++	{		
++		var url:String = null;
++		
++		for (rowIdx in 0...data.rows.length)
++		{
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			if (row[1] == name)
++			{
++				url = row[3];
++			}
++		}
++		
++		return url;
++	}
++	
++	// Returns array of tools used for a given recipe
++	// Recipe tools schema: [Recipe name, Tool name]
++	private function getRecipeTools(name:String, tools:Map<String, Tool>, data:ContentData):Array<Tool> 
++	{	
++		var recipeTools:Array<Tool> = new Array();
++		
++		for (rowIdx in 0...data.rows.length)
++		{
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			if (row[0] == name)
++			{
++				recipeTools.push(tools.get(row[1]));
++			}
++		}
++		
++		return recipeTools;
++	}
++	
++	// Returns array of recipe types for a given recipe.
++	// Recipe types schema: [Recipe id, Recipe name, Type name, Type ID]
++	private function getRecipeTypes(name:String, data:ContentData):Array<RecipeTypes>
++	{
++		var types:Array<RecipeTypes> = new Array();
++		
++		for (rowIdx in 0...data.rows.length)
++		{
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			if (row[1] == name)
++			{
++				var typeId:Int = row[3];
++				var typeEnum:RecipeTypes = Type.createEnumIndex( RecipeTypes, (typeId - 1) );
++				types.push(typeEnum);
++			}
++		}
++		
++		return types;
++	}
++
++	// Creates step objects for a specific recipe from data. Returns lookup from recipe name -> step array.
++	// Recipe/Step row vals: [Recipe ID, Recipe Name, Step ID, Step order, Step type, Step instruction]
++	private function getRecipeSteps(name:String, data:ContentData):Array<Step>
++	{
++		//var recipeSteps:Map< String, Array<Step> > = new Map();
++		//var recipeName:String;
++				
++		var steps:Array<Step> = new Array();
++		
++		// Iterate through table linking recipes & recipe steps
++		for (rowIdx in 0...data.rows.length)
++		{
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			var order:Int;
++			var type:Null<Int> = row[4];
++			var dName:String = row[1]; // Recipe name associated with this step data.
++			
++			// If it's a step for our recipe, add it to the list. 
++			if (dName == name)
++			{
++				// Make a step object. If order is null. use step array index. 
++				if (row[3] == null) 
++				{
++					order = steps.length - 1;
++				} 
++				else 
++				{
++					order = row[3];
++				}
++				var s:Step = new Step(order, type, row[5]);
++				steps.push(s);
++			}
++		}
++		
++		return steps;
++	}
++	
++	// TODO - load/parse database content
++	private function getMathQuestions():Array< MultipleChoiceQuestion >
++	{
++		var q1:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We have prepared 5 portions of food and we will share 4 portions with our friends. How many portions will we have left?",
++										  "5 - 4 = ?",
++										  [ "4", "9", "10" ],
++										  "1" );
++		var q2:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We will share our food with 4 boys and 3 girls. How many kids are we going to share with?",
++										  "4 + 3 = ?",
++										  [ "3", "4", "8" ],
++										  "7" );
++		var q3:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We are 5 friends who each want to eat 2 pieces of a delicious fruit, how many pieces of fruit do we have in total?",
++										  "5 * 2 = ?",
++										  [ "2", "3", "5" ],
++										  "10" );
++		var q4:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We are 3 friends who each want to eat 4 pieces of a delicious fruit, how many pieces of fruit do we have in total?",
++										  "3 * 4 = ?",
++										  [ "9", "7", "10" ],
++										  "12" );
++		var q5:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We have prepared 9 portions of food and we will share 2 portions with our friends. How many portions will we have left?",
++										  "9 - 2 = ?",
++										  [ "5", "4", "10" ],
++										  "7" );
++		mathQuestions.push(q1);
++		mathQuestions.push(q2);
++		mathQuestions.push(q3);
++		mathQuestions.push(q4);
++		mathQuestions.push(q5);
++		
++		return mathQuestions;
++	}
++	
++	// Gets JSON data to later parse; from set of exported database queries in assets/data
++	// TODO: HACKY. Remove once we get back-end hookup
++	private function loadJson():Void
++	{
++		var libname:String = "GAMECONTENT";
++		var rc:ResContext;
++ 		
++		// All Countries
++		rc = {src: "data/AllCountries.json", rename: "AllCountries"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// All Ingredients
++		rc = {src: "data/AllIngredients.json", rename: "AllIngredients"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// All Recipes 
++		rc = {src: "data/AllRecipesCountry.json", rename: "AllRecipes"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// All Tools 
++		rc = {src: "data/AllTools.json", rename: "AllTools"};
++		ResMan.instance.addRes(libname, rc);
++
++		// Country charities
++		rc = {src: "data/CountryCharity.json", rename: "CountryCharity"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Country facts
++		rc = {src: "data/CountryFact.json", rename: "CountryFact"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Country recipes
++		rc = {src: "data/CountryRecipe.json", rename: "CountryRecipe"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe images
++		rc = {src: "data/RecipeImage.json", rename: "RecipeImage"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe ingredients
++		rc = {src: "data/RecipeIngredientUnit.json", rename: "RecipeIngredients"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe steps
++		rc = {src: "data/RecipeSteps.json", rename: "RecipeSteps"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe tools
++		rc = {src: "data/RecipeTools.json", rename: "RecipeTools"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe types 
++		rc = {src: "data/RecipeTypes.json", rename: "RecipeTypes"};
++		ResMan.instance.addRes(libname, rc);
++		
++		ResMan.instance.load(libname, onLoadComplete);
++	}
++}
++ #end
++ #if (!debug)
++ package game;
++import com.firstplayable.hxlib.Debug;
++import game.DataManager.ContentData;
+ import game.Step.StepTypes;
+ import game.def.RecipeTypes;
+ import game.def.GradeDefs;
+@@ -769,4 +1419,5 @@
+ 	{
+ 		return option.value;
+ 	}
+-}
+\ No newline at end of file
++}	
++	#end
+Index: trunk/Engineering/src/game/states/SplashState.hx
+===================================================================
+--- trunk/Engineering/src/game/states/SplashState.hx	(revision 808)
++++ trunk/Engineering/src/game/states/SplashState.hx	(working copy)
+@@ -129,10 +129,13 @@
+ 		//================================================
+ 		//Populate remote CMS database data
+ 		//================================================
+-		if ( URLUtils.didProvideAssessment() || URLUtils.didProvideAdmin() )
++		if ( true || URLUtils.didProvideAssessment() || URLUtils.didProvideAdmin() )
+ 		{
++			trace( "skipping to post db init" );
+ 			// We are not loading the database in these views; skip this stage
+ 			postDatabaseInitialization();
++			
++			//initializationComplete();
+ 		}
+ 		else
+ 		{
+@@ -140,7 +143,6 @@
+ 			SpeckGlobals.event.addEventListener( DataLoadedEvent.DATABASE_DATA_LOADED, postDatabaseInitialization );
+ 			DatabaseInterface.initFromBackend();
+ 		}
+-
+ 	}
+ 	
+ 	private function downloadDatabaseProgress(?e:DataLoadedEvent):Void
+@@ -150,26 +152,27 @@
+ 	
+ 	private function postDatabaseInitialization(?e:DataLoadedEvent):Void
+ 	{
+-		SpeckGlobals.event.removeEventListener( DataLoadedEvent.DATABASE_DATA_LOADED, downloadDatabaseProgress );
+-		SpeckGlobals.event.removeEventListener( DataLoadedEvent.DATABASE_DATA_LOADED, postDatabaseInitialization );
++		//SpeckGlobals.event.removeEventListener( DataLoadedEvent.DATABASE_DATA_LOADED, downloadDatabaseProgress );
++		//SpeckGlobals.event.removeEventListener( DataLoadedEvent.DATABASE_DATA_LOADED, postDatabaseInitialization );
+ 		
+ 		//================================================
+ 		//Populate local CMS data
+ 		//================================================
+-		SpeckGlobals.event.addEventListener( DataLoadedEvent.DATA_LOADED, initializationComplete );
++		//SpeckGlobals.event.addEventListener( DataLoadedEvent.DATA_LOADED, initializationComplete );
+ 		SpeckGlobals.initManagers();
+-		
+-		MP.sendEvent("Arrive", "Loaded");
++		initializationComplete();
++		//MP.sendEvent("Arrive", "Loaded");
+ 	}
+ 	
+ 	private function initializationComplete( ?e:DataLoadedEvent ):Void
+ 	{
+-		SpeckGlobals.event.removeEventListener( DataLoadedEvent.DATA_LOADED, initializationComplete );
++		trace( "init complete" );
++		//SpeckGlobals.event.removeEventListener( DataLoadedEvent.DATA_LOADED, initializationComplete );
+ 		
+ 		//==========================================
+ 		// Init Debug
+ 		//==========================================	
+-		#if (debug || build_cheats)
++		/*#if (debug || build_cheats)
+ 		if (SpeckGlobals.debugMenu == null)
+ 		{
+ 			SpeckGlobals.debugMenu = new TunablesMenu(600.0, 360.0);
+@@ -189,7 +192,7 @@
+ 		SpeckGlobals.cheatsMenu.y = 0;
+ 		SpeckGlobals.cheatsMenu.show();
+ 		SpeckGlobals.cheatsMenu.show(false);
+-		#end
++		#end*/
+ 		
+ 		//==========================================
+ 		// Init UI
+@@ -199,14 +202,16 @@
+ 		//==========================================
+ 		// Indicate loading is complete
+ 		//==========================================
+-		m_splashMenu.onLoadProgress(1);
++		//m_splashMenu.onLoadProgress(1);
+ 		
+-		var id:Option<String> = URLUtils.getTeacherId();
+-		StateManager.setState(GameState.LOAD_QUESTION_AUDIO, {args: [id]});
++		//var id:Option<String> = URLUtils.getTeacherId();
++		//StateManager.setState(GameState.LOAD_QUESTION_AUDIO, {args: [id]});
++		StateManager.setState( GameState.GLOBE );
+ 	}
+ 	
+ 	private function showMenu():Void
+ 	{
++		trace("show menu");
+ 		GameDisplay.clearLayer( LayerName.PRIMARY );
+ 		
+ 		if ( m_splashMenu == null )
+Index: trunk/Engineering/src/game/ui/HudMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/HudMenu.hx	(revision 808)
++++ trunk/Engineering/src/game/ui/HudMenu.hx	(working copy)
+@@ -151,7 +151,7 @@
+ 		m_backStack = new Array();
+ 		
+ 		#if (debug || build_cheats)
+-		initDebugInfo();
++		//initDebugInfo();
+ 		#end
+ 		
+ 		for (child in __children)
+@@ -178,7 +178,7 @@
+ 		toggleButtonEnabled( 10, false ); // Favorites
+ 		
+ 		// TEMPORARY - DISABLE ALLERGENS BUTTON
+-		toggleButtonEnabled( HudButtonIDs.ALLERGENS.getIndex() , false );
++		//toggleButtonEnabled( HudButtonIDs.ALLERGENS.getIndex() , false );
+ 		
+ 		// All favorites states for the hud star should be opaque
+ 		var fav:GraphicButton = getButtonById( 2 );
+Index: trunk/Engineering/src/game/ui/states/CountryMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/states/CountryMenu.hx	(revision 809)
++++ trunk/Engineering/src/game/ui/states/CountryMenu.hx	(working copy)
+@@ -27,6 +27,7 @@
+ import game.net.NetAssets;
+ import game.ui.ScrollingManager;
+ import game.ui.SpeckMenu;
++import game.ui.VirtualScrollingMenu;
+ import game.utils.URLUtils;
+ import haxe.ds.Option;
+ import openfl.display.Bitmap;
+@@ -90,6 +91,36 @@
+ 		// Grab country list menu container from paist
+ 		m_countryListPanel = cast getChildByName( "group_countryPanel" );
+ 		
++		var refGroup1:DisplayObjectContainer = cast getChildByName( "grp_country3" );
++		var refGroup2:DisplayObjectContainer = cast getChildByName( "grp_country4" );
++		trace( refGroup1.y + " " + refGroup2.y );
++		var scrollBounds:OPSprite = cast getChildByName( "spr_scrollBounds" );
++		var m_scrollMenu:VirtualScrollingMenu = new VirtualScrollingMenu( scrollBounds, Orientation.VERTICAL, refGroup1, refGroup2 );
++		
++		trace( DemoDefs.DEMOCOUNTRIES );
++		for ( country in SpeckGlobals.dataManager.allCountries )
++		{
++			if ( DemoDefs.DEMOCOUNTRIES.indexOf( country.name ) >= 0 )
++			{
++				trace( country.name );
++				var countryFileName:String = StringTools.replace(country.name, " ", "_"); 
++				var buttonImgPath:String = "2d/UI/countries/flag_" + countryFileName;
++				var loadingImgPath:String = "2d/UI/countries/flag_loading";
++				
++				if ( ResMan.instance.getImageUnsafe( buttonImgPath ) != null )
++				{
++					m_scrollMenu.addData( null, buttonImgPath, null, country.name );
++				}
++				else
++				{
++					m_scrollMenu.addData( null, loadingImgPath, null, country.name );
++				}
++			}
++
++		}
++		m_scrollMenu.init();
++		this.addChild( m_scrollMenu );
++		/*
+ 		// Set up the scrolling menu 
+ 		var scrollBorder:DisplayObjectContainer = cast getChildByName( "scroll_bounds" );
+ 		m_scrollMenu = new ScrollingManager( scrollBorder.x, scrollBorder.y, SCROLLWIDTH, SCROLLHEIGHT, m_countryListPanel, "vertical", DISPLAYNUM );
+@@ -97,7 +128,7 @@
+ 		m_countryListPanel.addChild( m_scrollMenu );
+ 		
+ 		// Enable search bar 
+-		var searchBar:OPSprite = cast getChildByName( "ui_cSearch" );
++		/*var searchBar:OPSprite = cast getChildByName( "ui_cSearch" );
+ 		var searchText:TextField = cast getChildByName( "lbl_cSearch" );
+ 		
+ 		DEFAULT_SEARCH = searchText.text;
+@@ -106,11 +137,11 @@
+ 		searchText.addEventListener( Event.CHANGE, onTextUpdate );
+ 		searchText.addEventListener( FocusEvent.FOCUS_IN, onFocusIn );
+ 		searchText.addEventListener( FocusEvent.FOCUS_OUT, onFocusOut );
+-
++	
+ 		sortCountries();
+ 		buildCountryList( DEFAULT_SEARCH );
+-		
+-		m_scrollMenu.init();
++	*/	
++		//m_scrollMenu.init();
+ 	}
+ 	
+ 	// Sort countries in the list based on availability
+@@ -170,7 +201,6 @@
+ 		}
+ 		else if ( caller.name == "btn_check" ) // Chef K popup check button: progress to country flow
+ 		{
+-				
+ 			var popupPanel:DisplayObjectContainer = cast getChildByName( "popup_about" );
+ 			SpeckGlobals.hud.toggleSubMenu( popupPanel, false ); // Hide chef
+ 			SpeckGlobals.hud.toggleSubMenu( m_countryListPanel, true ); // Show country list so it fades in next time we access this parent menu
+@@ -181,6 +211,7 @@
+ 		}
+ 		else  // Country flag button - show & edit popup with selected data
+ 		{
++			/*
+ 			// Get the country from the button name 
+ 			var country:Country = SpeckGlobals.dataManager.allCountries.get( caller.name );
+ 			
+@@ -199,10 +230,10 @@
+ 			
+ 			WebAudio.instance.play( "SFX/country1_click" );
+ 			
+-			return;
++			return;*/
+ 		}
+ 		
+-		WebAudio.instance.play( "SFX/button_click" ); 
++		WebAudio.instance.play( "SFX/button_click" );
+ 	}
+ 	
+ 	//=============================================
+@@ -211,7 +242,7 @@
+ 	
+ 	private function buildCountryList( filter:String ):Void
+ 	{
+-		m_scrollMenu.clear(); 
++		//m_scrollMenu.clear(); 
+ 		m_offset = POSITION_OFFSET;
+ 		
+ 		// Create country buttons/labels for available countries
+@@ -278,6 +309,11 @@
+ 			return true;
+ 		}
+ 		
++		if ( DemoDefs.DEMOCOUNTRIES.indexOf( country.name ) > 0 )
++		{
++			return true;
++		}
++		
+ 		// Check if there is question data for the country (pilot flow)
+ 		var hasQuestions:Bool;
+ 		if ( FlowController.currentMode == FlowMode.PILOT )
+@@ -365,7 +401,8 @@
+ 	
+ 	// Create/refresh scrolling list items
+ 	private function drawCountries( filter:String, list:Array< Country >, comingSoon:Bool ):Void
+-	{		
++	{	
++		/*
+ 		// Get paist reference
+ 		var button:GraphicButton = cast m_countryListPanel.getChildByName( "btn_country1" );
+ 		var label:TextField = cast m_countryListPanel.getChildByName( "countryName1" );
+@@ -477,6 +514,7 @@
+ 		}
+ 		
+ 		showMasks();
++		*/
+ 	}
+ 	
+ 	private function showMasks():Void
+Index: trunk/Engineering/src/game/ui/states/MainMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/states/MainMenu.hx	(revision 808)
++++ trunk/Engineering/src/game/ui/states/MainMenu.hx	(working copy)
+@@ -371,7 +371,7 @@
+ 		}
+ 		else
+ 		{
+-			Debug.log( "Logic error: Sphere rotate, but also had started a timeout to rotate, resetting timeout..." );
++			//Debug.log( "Logic error: Sphere rotate, but also had started a timeout to rotate, resetting timeout..." );
+ 			_sphereTimeoutStart = null;
+ 		}
+ 	}
+@@ -403,7 +403,6 @@
+ 	private function onMouseDown(e:MouseEvent):Void
+ 	{
+ 		startTouchPoint = new Point(e.stageX, e.stageY);
+-
+ 	}
+ 	
+ 	private function onMouseMove(e:MouseEvent):Void
+Index: trunk/Engineering/src/game/ui/VirtualScrollingItem.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(revision 810)
++++ trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(working copy)
+@@ -15,6 +15,7 @@
+ import away3d.library.assets.BitmapDataAsset;
+ import com.firstplayable.hxlib.display.GraphicButton;
+ import com.firstplayable.hxlib.display.OPSprite;
++import com.firstplayable.hxlib.loader.ResMan;
+ import openfl.display.Bitmap;
+ import openfl.display.DisplayObject;
+ import openfl.display.DisplayObjectContainer;
+@@ -103,7 +104,95 @@
+ 		}
+ 	}
+ 	
++	// ========================================
++	// Data management
++	// ========================================
++	public function updateData( data:ScrollingData )
++	{
++		switch ( data.imgSrc )
++		{
++			case Some( src ): setImage( src );
++			case None: //
++		}
++		switch ( data.label )
++		{
++			case Some( text ): setText( text );
++			case None: //
++		}
++		switch ( data.primaryButtonSrc )
++		{
++			case Some( src ): setPrimaryButton( src );
++			case None: //
++		}
++		switch ( data.secondaryButtonSrc )
++		{
++			case Some( src ): setSecondaryButton( src );
++			case None: //
++		}
++	}
+ 	
++	/**
++	 * Changes an image object in display list. 
++	 * Functonality assumes one image in display list, and a small display list.
++	 * Naiive - TODO database integration
++	 */
++	private function setImage( src:String ):Void
++	{
++		var bitmap:Bitmap = ResMan.instance.getImage( src );
++		
++		for ( child in group.__children )
++		{	
++			if ( Std.is( child, GraphicButton ) ) // Graphic button inherits from OPSprite, but we want exclusively sprite objects
++			{
++				return;
++			}
++			else if ( Std.is( child, OPSprite ) )
++			{
++				var sprite:OPSprite = cast child;
++				sprite.changeImage( bitmap );
++				return;
++			}
++		}
++	}
++	
++	/**
++	 * Changes a text object in the display list.
++	 * Functonality assumes one image in display list, and a small display list.
++	 * Naiive - TODO database integration
++	 */
++	private function setText( text:String ):Void
++	{	
++		for ( child in group.__children )
++		{	
++			if ( Std.is( child, TextField ) )
++			{
++				var label:TextField = cast child;
++				var refX = label.x;
++				var refY = label.y;
++				label.text = text + " " + debugName;
++				label.x = refX;
++				label.y = refY;
++			}
++		}
++	}
++	
++	private function setPrimaryButton( src:String ):Void
++	{
++		var button:GraphicButton = m_buttons[0];
++		var refWidth:Float= button.width;
++		var refHeight:Float = button.height;
++		var bitmap:Bitmap = ResMan.instance.getImage( src );
++		button.changeImage( bitmap );
++		button.width = refWidth;
++		button.height = refHeight;	
++	}
++	
++	private function setSecondaryButton( src:String ):Void
++	{
++		var bitmap:Bitmap = ResMan.instance.getImage( src );
++		m_buttons[1].changeImage( bitmap );
++	}
++	
+ 	// ========================================
+ 	// Scrolling functionality
+ 	// ========================================
+Index: trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(revision 810)
++++ trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -12,7 +12,9 @@
+ ///////////////////////////////////////////////////////////////////////////
+ 
+ package game.ui;
++import com.firstplayable.hxlib.Debug;
+ import com.firstplayable.hxlib.display.OPSprite;
++import game.ui.VirtualScrollingMenu.ScrollingData;
+ import haxe.ds.Option;
+ import openfl.display.DisplayObjectContainer;
+ import openfl.events.Event;
+@@ -29,17 +31,17 @@
+  */
+ class ScrollingData
+ {
+-	public var m_imgSrc(default, null):Option< String >; // bitmap src URL
+-	public var m_primaryButtonSrc(default, null):Option< String >; // bitmap src URL
+-	public var m_secondaryButtonSrc(default, null):Option< String >; // bitmap src URL
+-	public var m_label(default, null):Option< String >;  // text used to populate scrolling item label
++	public var imgSrc(default, null):Option< String >; // bitmap src URL
++	public var primaryButtonSrc(default, null):Option< String >; // bitmap src URL
++	public var secondaryButtonSrc(default, null):Option< String >; // bitmap src URL
++	public var label(default, null):Option< String >;  // text used to populate scrolling item label
+ 	
+-	public function new( imgSrc:String, pBtnSrc:String, sBtnSrc:String, lbl:String )
++	public function new( ?img:String, ?pBtn:String, ?sBtn:String, ?lbl:String )
+ 	{
+-		m_imgSrc = Some( imgSrc );
+-		m_primaryButtonSrc = Some( pBtnSrc );
+-		m_secondaryButtonSrc = Some( sBtnSrc );
+-		m_label = Some( lbl );
++		imgSrc = (img != null) ? Some(img):None;
++		primaryButtonSrc = (pBtn != null) ? Some(pBtn):None;
++		secondaryButtonSrc = (sBtn != null) ? Some(sBtn):None;
++		label = (lbl != null) ? Some(lbl):None;
+ 	}
+ }
+ 
+@@ -81,7 +83,7 @@
+ 	private var m_dataset:Array< ScrollingData >; // An array of data used to edit VirtualScrollingItems, traversed during scrolling
+ 	private var m_scrollingItems:Array< VirtualScrollingItem >; // An array of the scrolling display object groups
+ 	private var m_visibleItems:Int; // Number of items visible at one time in the scrolling list
+-	private var m_userPos:Int; // Position of user in the scrolling list. Refers to the top item in the list
++	private var m_userPos:Int; // Position of user in the scrolling list. Refers to the first visible item in the list
+ 	private var m_startPos:Float; // Pixels - Where items looped to the upper scroll position will be placed (top/leftmost pos of the scrollbounds)
+ 	private var m_endPos:Float;  // Pixels - Where items looped to the lower scroll position will be placed (bottom / rightmost pos of the scrollbonds)
+ 	private var m_upperScrollLimit:Float; // Pixels - Top of the scroll bounds, used for max scroll testing
+@@ -125,6 +127,7 @@
+ 		m_velocity = 0;
+ 		m_distance = 0;
+ 		m_isTweening = false;
++		m_userPos = 0;
+ 		
+ 		// Use bounding sprite to determine scroll limits
+ 		switch ( orientation )
+@@ -164,11 +167,6 @@
+ 		// - List of scrolling items
+ 		// ---------------------------------------------------
+ 		addRef( refGroup1, refGroup2 );
+-		
+-		// ---------------------------------------------------
+-		// Add event listeners
+-		// ---------------------------------------------------
+-		start();
+ 	}
+ 	
+ 	/**
+@@ -198,7 +196,7 @@
+ 		}
+ 		
+ 		// Set start/end position of the out of bounds items using scroll limits and item size
+-		m_startPos = m_upperScrollLimit - m_itemSpacing;
++		m_startPos = m_upperScrollLimit;
+ 		m_endPos   = m_lowerScrollLimit + m_itemSpacing;
+ 		
+ 		// Adjust ref group to sit at the startpos
+@@ -245,9 +243,18 @@
+ 	}
+ 	
+ 	/**
++	 *  To be called after adding data to scrolling menu.
++	 *  Adds event listeners and populates data onto first batch of objects.
++	 */
++	public function init()
++	{
++		initData();
++		start();
++	}
++	/**
+ 	 *  Add event listeners
+ 	 */
+-	public function start()
++	private  function start()
+ 	{
+ 		// Add listeners to menu
+ 		this.addEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
+@@ -260,28 +267,70 @@
+ 		m_scrollArea.addEventListener( Event.ENTER_FRAME, onFrame );
+ 	}
+ 	
++	/**
++	 *  Set up data for first batch of visible items
++	 */
++	private function initData()
++	{
++		if ( m_dataset.length == 0 )
++		{
++			Debug.log( "No data provided for scrolling items.");
++			return;
++		}
++		
++		for ( i in 0...m_scrollingItems.length) // Populate items idx 1->length with data starting at idx 0. Item 0 is above field of view.
++		{
++			m_scrollingItems[i].updateData( m_dataset[i] );
++		}
++	}
++	
+ 	// ===================================
+-	// Object positioning helper functions
++	// Data management functions
+ 	// ===================================
+ 	
+ 	/**
+-	 * 
++	 * Adds data to virtual scrolling menu, to be populated onto objects
+ 	 */
+-	private function atUpperScrollLimit():Void
++	public function addData( imgSrc:String, pBtnSrc:String, sBtnSrc:String, lbl:String )
+ 	{
+-		
++		var data:ScrollingData = new ScrollingData( imgSrc, pBtnSrc, sBtnSrc, lbl );
++		m_dataset.push( data );
+ 	}
++
++	/**
++	 * Returns true if user is at the start of the data list 
++	 */
++	private function atUpperScrollLimit():Bool
++	{
++		return (m_userPos < 0 );
++	}
+ 	
+-	private function atLowerScrollLimit():Void
++	/**
++	 *  Returns true if user is ( m_visibleItems ) away from the end of the data list.
++	 */
++	private function atLowerScrollLimit():Bool
+ 	{
++		var lastDataPos:Int = m_dataset.length;
++		return ( m_userPos >= (lastDataPos - m_visibleItems ) );
++	}
+ 	
++	private function scrollingAtLimit( dir:Direction ):Bool
++	{
++		return ( dir == BACKWARD && atLowerScrollLimit() || dir == FORWARD && atUpperScrollLimit() );
+ 	}
+ 	
++	// ===================================
++	// Object positioning helper functions
++	// ===================================
++	
+ 	/**
+ 	 * Checks if list & repopulates a scrolling item at the top or bottom as needed
+ 	 */
+ 	private function handleVirtualReposition( dir:Direction ):Void 
+ 	{
++		var newItem:VirtualScrollingItem = null;
++		var dataIdx:Int = 0;
++		
+ 		switch( dir )
+ 		{
+ 			case BACKWARD:
+@@ -288,7 +337,9 @@
+ 			{
+ 				if ( scrolledPastEnd() )
+ 				{
+-					repositionAtEnd();
++					newItem = repositionAtEnd();
++					m_userPos++;
++					dataIdx = m_userPos + m_visibleItems;
+ 				}
+ 			}
+ 			case FORWARD:
+@@ -295,10 +346,22 @@
+ 			{
+ 				if ( scrolledPastStart() )
+ 				{
+-					repositionAtStart();
++					newItem = repositionAtStart();
++					m_userPos--;
++					dataIdx = m_userPos;
++
+ 				}
+ 			}
+ 		}
++		
++		// If we added a new item at the top or bottom and there is data to populate it,
++		// update its data.
++		if ( newItem != null && ( dataIdx <= m_dataset.length - 1 ) && ( dataIdx >= 0 ) )
++		{
++			trace( m_userPos );
++			trace( m_dataset[dataIdx] );
++			newItem.updateData( m_dataset[dataIdx] );
++		}
+ 	}
+ 	
+ 	/**
+@@ -323,8 +386,9 @@
+ 	
+ 	/**
+ 	 * Take the last item of the list and place it at the top
++	 * Returns reference to this item for data updating.
+ 	 * */
+-	private function repositionAtStart()
++	private function repositionAtStart():VirtualScrollingItem
+ 	{
+ 		var lastItem:VirtualScrollingItem = m_scrollingItems.pop();
+ 		var firstItem:VirtualScrollingItem = m_scrollingItems[ 0 ];
+@@ -332,12 +396,15 @@
+ 		var firstItemPos:Float = firstItem.pos( m_orientation ) - m_itemSpacing;
+ 		lastItem.setPosition( firstItemPos, m_orientation );
+ 		m_scrollingItems.insert( 0, lastItem );
++		
++		return lastItem;
+ 	}
+ 	
+ 	/**
+ 	 * Take the first item of the list and place it at the bottom
++	 * Returns reference to this item for data updating.
+ 	 * */
+-	private function repositionAtEnd()
++	private function repositionAtEnd():VirtualScrollingItem
+ 	{
+ 		var firstItem:VirtualScrollingItem = m_scrollingItems.shift();
+ 		var lastItem:VirtualScrollingItem = m_scrollingItems[ m_scrollingItems.length - 1 ];
+@@ -345,6 +412,8 @@
+ 		var lastItemPos:Float = lastItem.pos( m_orientation ) + m_itemSpacing;
+ 		firstItem.setPosition( lastItemPos, m_orientation );
+ 		m_scrollingItems.insert( m_scrollingItems.length, firstItem );
++		
++		return firstItem; 
+ 	}
+ 	
+ 	/**
+@@ -406,7 +475,6 @@
+ 			m_direction = getDirection( distance );
+ 			initTween( distance );
+ 		}
+-
+ 	}
+ 	
+ 	private function onMouseDown( e:MouseEvent ):Void
+@@ -433,7 +501,7 @@
+ 		}
+ 		
+ 		// ---------------------------------------------------
+-		// Pan items with the mouse drag
++		// Set up data for panning
+ 		// ---------------------------------------------------
+ 		var pos:Float = switch ( m_orientation )
+ 		{
+@@ -444,16 +512,24 @@
+ 		var distance:Float = pos - m_overPos;
+ 		m_overPos = pos;
+ 		
+-		for ( item in m_scrollingItems )
++		m_direction = getDirection( distance );
++		
++		
++		// ----------------------------------------------------------
++		// Early return if we are scrolling towards respective limits
++		// ----------------------------------------------------------
++		if ( scrollingAtLimit( m_direction ) )
+ 		{
+-			item.incrementPosition( distance, m_orientation );
++			return;
+ 		}
+ 		
+ 		// ---------------------------------------------------
+-		// Add item to top/bottom depending on direction
+-		// to maintain illusion of infinite scroll
++		// Pan items with the mouse drag
+ 		// ---------------------------------------------------
+-		m_direction = getDirection( distance );
++		for ( item in m_scrollingItems )
++		{
++			item.incrementPosition( distance, m_orientation );
++		}
+ 	}
+ 	
+ 	private function onMouseOut( e:MouseEvent ):Void
+@@ -474,6 +550,12 @@
+ 		// ---------------------------------------------------
+ 		// Tween items (if applicable)
+ 		// ---------------------------------------------------
++		if ( scrollingAtLimit( m_direction ) )
++		{
++			m_isTweening = false; // Halt tweening if at respective limits
++			return; // Do not attempt to add new items if at limits (skips handleVirtualReposition)
++		}
++		
+ 		if ( m_isTweening )
+ 		{	
+ 			if ( (m_drag < 0 && m_velocity <= 0) || (m_drag > 0 && m_velocity >= 0) )
+@@ -484,7 +566,6 @@
+ 			{
+ 				for ( item in m_scrollingItems )
+ 				{
+-					trace( item.debugName );
+ 					tweenItem( item );
+ 				}
+ 				
+@@ -503,7 +584,8 @@
+ 	}
+ 
+ 	/**
+-	 * Moves objects with momentum
++	 * Tween moves objects with momentum. Tweening occurs in onFrame, and this function
++	 * sets the environment up for tweening. 
+ 	 */
+ 	private function initTween( distance:Float ):Void
+ 	{
+@@ -512,8 +594,10 @@
+ 			return;
+ 		}
+ 		
++		// Get velocity
+ 		m_velocity = distance / m_swipeTime / VELOCITY_DAMPING ;
+ 		
++		// Set drag opposite velocity
+ 		if ( m_velocity > 0 )
+ 		{
+ 			m_drag = DRAG * (-1);
+@@ -523,9 +607,13 @@
+ 			m_drag = DRAG;
+ 		}
+ 		
++		// Set isTweening to true so onFrame can start moving objects
+ 		m_isTweening = true;
+ 	}
+ 	
++	/**
++	 * Used in onFrame callback to move items wiht momentum
++	 */ 
+ 	private function tweenItem( item:VirtualScrollingItem ):Void
+ 	{
+ 		item.incrementPosition( m_velocity, m_orientation );
+Index: trunk/Engineering/src/SpeckGlobals.hx
+===================================================================
+--- trunk/Engineering/src/SpeckGlobals.hx	(revision 808)
++++ trunk/Engineering/src/SpeckGlobals.hx	(working copy)
+@@ -98,14 +98,14 @@
+ 		dataManager.init();
+ 		ms_initiedManagers = true;
+ 		
+-		
++		trace( "init managers" );
+ 		// Initialize the required parameters
+ 		
+-		MP.init(ANALYTICS_TRACKING_ID, PlayerProfile.state.m_uuid );
++		//MP.init(ANALYTICS_TRACKING_ID, PlayerProfile.state.m_uuid );
+ 		
+ 		// Initialize App Tracking parameters
+-		var v:Version = new Version();
+-		MP.appInfo(ANALYTICS_APP_NAME, v.buildType, v.buildNum);
++		//var v:Version = new Version();
++		//MP.appInfo(ANALYTICS_APP_NAME, v.buildType, v.buildNum);
+ 		
+ 	}
+ 	
+@@ -112,15 +112,16 @@
+ 	private static var ms_initedUI:Bool = false;
+ 	public static function initUI():Void
+ 	{
+-		if (ms_initedUI)
+-		{
+-			return;
+-		}
++		trace( "init ui" );
++		//if (ms_initedUI)
++		//{
++		//	return;
++		//}
+ 		
+ 		hud = new HudMenu();
+-		hud.enable(SIMPLE);
++		//hud.enable(SIMPLE);
+ 		
+-		ms_initedUI = true;
++		//ms_initedUI = true;
+ 	}
+ 	
+ }

@@ -1,0 +1,1586 @@
+Index: trunk/Engineering/lib/layouts/RecipesMenu.json
+===================================================================
+--- trunk/Engineering/lib/layouts/RecipesMenu.json	(revision 829)
++++ trunk/Engineering/lib/layouts/RecipesMenu.json	(working copy)
+@@ -159,6 +159,7 @@
+             "priority" : 4,
+             "inheritable" : { 
+                 "position" : [ 974, 168 ],
++                "visible" : false,
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -253,6 +254,7 @@
+             "priority" : 4,
+             "inheritable" : { 
+                 "position" : [ 722, 432 ],
++                "visible" : false,
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -300,6 +302,7 @@
+             "priority" : 4,
+             "inheritable" : { 
+                 "position" : [ 974, 432 ],
++                "visible" : false,
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -567,6 +570,16 @@
+                 "loadParams" : true
+             }
+         }, { 
++            "name" : "spr_scrollBounds",
++            "record" : true,
++            "inheritable" : { 
++                "resource" : "UI/WhitePixel",
++                "position" : [ 464, 154 ],
++                "scale" : [ 850, 550 ],
++                "visible" : false,
++                "loadParams" : true
++            }
++        }, { 
+             "name" : "ui_cSearch",
+             "record" : true,
+             "priority" : 10,
+Index: trunk/Engineering/src/game/Country.hx
+===================================================================
+--- trunk/Engineering/src/game/Country.hx	(revision 829)
++++ trunk/Engineering/src/game/Country.hx	(working copy)
+@@ -14,12 +14,9 @@
+ package game;
+ import game.SocialIssue;
+ 
+-/**
+- * Class that holds the data tied to specific countries that we need for game logic.
+- */
++
+ class Country
+ {
+-	public var id(default, null):Int;
+ 	public var name(default, null):String; 
+ 	public var socialIssues(default, null):Array<SocialIssue>; // Description & charity for relevant social issues in the country/
+ 	public var population(default, null):Int; 
+@@ -27,46 +24,17 @@
+ 	public var code(default, null):String; // Country code
+ 	public var coverImage(default, null):String; // Image used in an informational color page (URL)
+ 	public var flagImage(default, null):String; // Image used in flag game, country list (URL)
++	public var languages(default, null):String;
+ 	public var wish(default, null):String; // Phrase said when serving a meal; "Enjoy your meal!" etc. Displayed in Recipe Serving page.
+ 	public var recipes(default, null):Array<Recipe>; // List of recipes attributed to this country.
++	public var music(default, null):String; // Music to play in country page, country recipe pages. (URL)
+ 	public var facts(default, null):Array<String>;
+-	public var music(default, null):String; // Music to play in country page, country recipe pages. (URL)
+-	public var greetingAudio(default, null):String;  // URL of the "greeting" audio for this country
+-	public var mealAudio(default, null):String;  // URL of the "bon apetite" audio for this country
++	public var mealAudio:String = null;
++	public var greetingAudio:String = null;
++	public var id = 1;
+ 	
+-	/**
+-	 * Constructor for the game logic version of a Country.
+-	 * @param	id
+-	 * @param	name
+-	 * @param	socialIssues
+-	 * @param	population
+-	 * @param	capital
+-	 * @param	code
+-	 * @param	coverImage
+-	 * @param	flagImage
+-	 * @param	wish
+-	 * @param	recipes
+-	 * @param	facts
+-	 * @param	music
+-	 * @param	greetingAudio
+-	 * @param	mealAudio
+-	 */
+-	public function new(id:Int, 
+-		name:String, 
+-		socialIssues:Array<SocialIssue>, 
+-		population:Int, 
+-		capital:String, 
+-		code:String, 
+-		coverImage:String, 
+-		flagImage:String, 
+-		wish:String, 
+-		recipes:Array<Recipe>, 
+-		facts:Array<String>,
+-		music:String, 
+-		greetingAudio:String,
+-		mealAudio:String)
++	public function new(name, socialIssues, population, capital, code, coverImage, flagImage, languages, wish, recipes, music, facts)
+ 	{
+-		this.id = id;
+ 		this.name = name;
+ 		this.socialIssues = socialIssues;
+ 		this.population = population;
+@@ -74,12 +42,11 @@
+ 		this.code = code;
+ 		this.coverImage = coverImage;
+ 		this.flagImage = flagImage;
++		this.languages = languages;
+ 		this.wish = wish;
+ 		this.recipes = recipes;
+ 		this.music = music;
+ 		this.facts = facts;
+-		this.greetingAudio = greetingAudio;
+-		this.mealAudio = mealAudio;
+ 	}
+ 	
+ 	public static function sort( a:Country, b:Country ):Int
+Index: trunk/Engineering/src/game/DataManager.hx
+===================================================================
+--- trunk/Engineering/src/game/DataManager.hx	(revision 829)
++++ trunk/Engineering/src/game/DataManager.hx	(working copy)
+@@ -15,22 +15,10 @@
+ package game;
+ import com.firstplayable.hxlib.Debug;
+ import game.DataManager.ContentData;
+-import game.Step.StepTypes;
+ import game.def.RecipeTypes;
+ import game.def.GradeDefs;
+ import game.def.GradeDefs.PlayerGrade;
+ import game.events.DataLoadedEvent;
+-import game.net.DatabaseInterface;
+-import game.net.schema.CountryAudioDef;
+-import game.net.schema.CountryDef;
+-import game.net.schema.DietaryPreferenceDef;
+-import game.net.schema.GameDef;
+-import game.net.schema.GameOptionDef;
+-import game.net.schema.IngredientDef;
+-import game.net.schema.MealTypeDef;
+-import game.net.schema.RecipeDef;
+-import game.net.schema.SocialIssueDef;
+-import game.net.schema.ToolDef;
+ import haxe.Json;
+ import openfl.utils.AssetType;
+ import com.firstplayable.hxlib.loader.ResMan;
+@@ -63,31 +51,11 @@
+ 		this.mathQuestions = new Array();
+ 	}
+ 	
+-	/**
+-	 * Inits the game logic data from data loaded from the database backend via DatabaseInterface
+-	 * @return
+-	 */
+ 	public function init():EnumValue
+ 	{
+-		// Parse data
+-		getAllIngredients();
+-		getAllRecipes();
+-		getAllCountries();
+-		getMathQuestions();
++		// Load JSON data. On completion, members will be populated with game content.
++		loadJson(); 
+ 		
+-		// Load save using new data
+-		SpeckGlobals.saveProfile.get();
+-		
+-		if (SpeckGlobals.saveProfile.gradeLevel == null)
+-		{
+-			//TODO: we will want this logic to happen in the login instead.
+-			//Here we just default to grade 1
+-			SpeckGlobals.saveProfile.setGradeLevel(GRADE_1);
+-		}
+-		
+-		// Let others know we've finished
+-		SpeckGlobals.event.dispatchEvent(new DataLoadedEvent());
+-		
+ 		return null; // TODO - success/failure error enum
+ 	}
+ 
+@@ -214,559 +182,460 @@
+ 		return false;
+ 	}
+ 	
+-	//===============================================================
+-	// Loads game data from the database backend
+-	//===============================================================
++	// ----------------------------------------------------------------
++	// JSON RUNTIME CONTENT PARSING (TODO - REMOVE WHEN BACKEND SET UP) 
++	// ----------------------------------------------------------------
++	// Countries:  Line 116
++	// Ingredients: Line 214
++	// Recipes: 236
++	// ----------------------------------------------------------------
+ 	
+-	/*
+-	 * Stitches together data from the database to create a map of the ingredients
+-	 * in a form used by the rest of the game.
+-	 * @return
+-	 */
+-	private function getAllIngredients():Map<String, Ingredient>
++	// Callback for loadJson(); parses data once everything's been loaded to the network. 
++	private function onLoadComplete():Void
+ 	{
+-		//TODO: this is a non-ideal way to do this.
+-		//When api is given support for returning ingredients directly
+-		//we can do this smarter.
+-		allIngredients = new Map<String, Ingredient>();
++		trace( "load complete" );
++		// Parse data
++		getAllIngredients();
++		getAllRecipes();
++		getAllCountries();
++		getMathQuestions();
+ 		
+-		var dbRecipes:Array<RecipeDef> = cast DatabaseInterface.ms_tableData[RECIPES];
+-		for (recipe in dbRecipes)
++		// Load save using new data
++		SpeckGlobals.saveProfile.get();
++		
++		if (SpeckGlobals.saveProfile.gradeLevel == null)
+ 		{
+-			var dbIngredients:Array<IngredientDef> = recipe.ingredients;
+-			for (ingredient in dbIngredients)
+-			{
+-				var name:String = ingredient.name;
+-				var spotlight:String = ingredient.tip; // Is this the data we want?
+-				//we are not using units or amounts here since they are baked into the title.
+-				var newIngredient:Ingredient = new Ingredient(name, spotlight);
+-				allIngredients.set(newIngredient.name, newIngredient);
+-			}
++			//TODO: we will want this logic to happen in the login instead.
++			//Here we just default to grade 1
++			SpeckGlobals.saveProfile.setGradeLevel(GRADE_1);
+ 		}
+ 		
+-		return allIngredients;
++		// Let others know we've finished
++		SpeckGlobals.event.dispatchEvent(new DataLoadedEvent());
+ 	}
+-	
+-	/**
+-	 * Stitches together data from the database to create a map of the recipes
+-	 * in a form used by the rest of the game.
+-	 * @return
+-	 */
+-	private function getAllRecipes():Map<String, Recipe>
++		
++	// To populate this.allCountries Combines country table data with other subtables.
++	// All country table schema: [Key, <unused>, <unused>, Population, Capital, Code, Cover image, Flag image, Languages, Name, Wish]
++	private function getAllCountries():Map<String, Country>
+ 	{
+-		allRecipes = new Map<String, Recipe>();
++		// Grab relevant JSON data
++			// All countries
++		var countryText = ResMan.instance.getText("AllCountries");
++		var countryData:ContentData = haxe.Json.parse(countryText);
++		//Debug.dump( Type.typeof( countryData ) );
+ 		
+-		var countriesByID:Map<Int, CountryDef> = new Map<Int, CountryDef>();
+-		var dbCountries:Array<CountryDef> = cast DatabaseInterface.ms_tableData[COUNTRIES];
+-		for (country in dbCountries)
+-		{
+-			countriesByID[country.id] = country;
+-		}
++			// Country charities/social issues (for "Did You Know?")
++		var charityText = ResMan.instance.getText("CountryCharity");
++		var charityData:ContentData = Json.parse(charityText);
++		//Debug.dump( Type.typeof( charityData ) );
+ 		
+-		var dbRecipes:Array<RecipeDef> = cast DatabaseInterface.ms_tableData[RECIPES];
+-		for (recipe in dbRecipes)
++			// Country Facts
++		var factText = ResMan.instance.getText("CountryFact");
++		var factData:ContentData = Json.parse(factText);
++		//Debug.dump( Type.typeof( factData ) );
++		
++			// Country Recipe
++		var recipeText = ResMan.instance.getText("CountryRecipe");
++		var recipeData:ContentData = Json.parse(recipeText);
++		//Debug.dump( Type.typeof( recipeData ) );
++		
++		for (rowIdx in 0...countryData.rows.length)
+ 		{
+-			var name:String = recipe.name;
+-			if (name != null)
+-			{
+-				var id:Int = recipe.id;
+-				
+-				var presentation:String = recipe.presentation;
+-				var tools:Array<Tool> = getToolDataFromRecipe(recipe);
+-				
+-				var ingredients:Array<Ingredient> = getIngredientsFromRecipe(recipe);
+-				
+-				var types:Array<RecipeTypes> = getRecipeTypesFromRecipe(recipe);
+-				if (types == null)
+-				{
+-					Debug.log("unsupported recipe types in recipe #" + id + ": " + name);
+-					//don't include this recipe
+-					continue;
+-				}
+-				
+-				var steps:Array<Step> = getStepsFromRecipe(recipe);
+-				
+-				var dbImages:Array<String> = getImagesFromRecipe(recipe);
+-				var image:String = "";
+-				if (dbImages.length > 0)
+-				{
+-					image = dbImages[0];
+-				}
+-				if (!countriesByID.exists(recipe.country_id))
+-				{
+-					Debug.log("no country with ID: " + recipe.country_id);
+-					continue;
+-				}
+-				var country:String = countriesByID[recipe.country_id].name;
+-				
+-				var r = new Recipe(id, name, presentation, country, image, ingredients, tools, steps, types);
+-				allRecipes.set(name, r);
+-			}
++			var row:Array<Dynamic> = countryData.rows[rowIdx];
+ 			
++			var name:String = row[9];
++			var population:Int = row[3];
++			var capital:String = row[4];
++			var code:String = row[5];
++			var cover:String = row[6];
++			var flag:String = row[7]; 
++			var music:String = ""; // TODO
++			var language:String = row[8];
++			var wish:String = row[10];
++			var socialIssues:Array<SocialIssue> = getCountryIssues(name, charityData);
++			var facts:Array<String> = getCountryFacts(name, factData);
++			var recipes:Array<Recipe> = getCountryRecipes(name, recipeData);
++			
++			var c:Country = new Country(name, socialIssues, population, capital, code, cover, flag, language, wish, recipes, music, facts);
++			allCountries.set(name, c);
++			// trace("Country added: " + c);
+ 		}
+ 		
+-		return allRecipes;
++		return allCountries;
+ 	}
+ 	
+-	/**
+-	 * Gets the game logic version of the recipe ingredients from the database
+-	 * PRE: assumes that allIngredients has been populated.
+-	 * @param	recipe
+-	 * @return
+-	 */
+-	private function getIngredientsFromRecipe(recipe:RecipeDef):Array<Ingredient>
++	// Gets social issues for a given country. 
++	// Country charity table schema: [Country name, Country ID, Social issue description, Charity URL]
++	private function getCountryIssues(name:String, charityData:ContentData):Array<SocialIssue>
+ 	{
+-		var ingredients:Array<Ingredient> = [];
+-		for (ingredient in recipe.ingredients)
++		var issues:Array<SocialIssue> = new Array();
++		
++		for (rowIdx in 0...charityData.rows.length)
+ 		{
+-			var nextIngredient:Ingredient = allIngredients.get(ingredient.name);
+-			if (nextIngredient == null)
++			var row:Array<Dynamic> = charityData.rows[rowIdx];
++			if (name == row[0])
+ 			{
+-				Debug.warn("somehow ingredient didn't exist in allInredients: " + ingredient.name);
+-				continue;
++				var s = new SocialIssue(row[2], row[3]);
++				issues.push(s);
+ 			}
+-			
+-			ingredients.push(nextIngredient);
+ 		}
+ 		
+-		return ingredients;
++		return issues; 
+ 	}
+ 	
+-	/**
+-	 * Gets the game logic version of the recipe types from the database
+-	 * @param	recipe
+-	 * @return
+-	 */
+-	private function getRecipeTypesFromRecipe(recipe:RecipeDef):Array<RecipeTypes>
++	// Gets facts for a given country. 
++	// Country facts table schema: [Country ID, Country name, Fact ID, Fact]
++	private function getCountryFacts(name:String, factData:ContentData):Array<String>
+ 	{
+-		var types:Array<RecipeTypes> = [];
++		var facts:Array<String> = new Array();
+ 		
+-		//Gets types from dietary_preferences
+-		for (preference in recipe.dietary_preferences)
++		for (rowIdx in 0...factData.rows.length)
+ 		{
+-			var nextType:RecipeTypes = translateRecipeTypeFromDietaryPreference(preference);
+-			if (nextType == null)
++			var row:Array<Dynamic> = factData.rows[rowIdx];
++			if (row[1] == name)
+ 			{
+-				//Missing a dietary preference is not dangerous if it's on a recipe
+-				//since dietary preferences are always the absence of something
+-				//never the presence of something
+-				continue;
++				facts.push(row[3]);
+ 			}
+-			types.push(nextType);
+ 		}
+ 		
+-		//Gets types from meal_types
+-		for (mealType in recipe.meal_types)
++		return facts;
++	}
++	
++	// Get a list of recipes attributed to a given country.
++	// Country recipe schema: [CountryID, Country name, Recipe ID, Recipe name]
++	private function getCountryRecipes(name:String, recipeData:ContentData):Array<Recipe>
++	{
++		var recipes:Array<Recipe> = new Array();
++		
++		for (rowIdx in 0...recipeData.rows.length)
+ 		{
+-			var nextType:RecipeTypes = translateRecipeTypeFromMealType(mealType);
+-			if (nextType == null)
++			var row:Array<Dynamic> = recipeData.rows[rowIdx];
++			if (row[1] == name)
+ 			{
+-				continue;
++				recipes.push(allRecipes.get(row[3]));
+ 			}
+-			types.push(nextType);
+ 		}
+ 		
+-		return types;
++		return recipes;
+ 	}
+ 	
+-	/**
+-	 * Returns the game logic version of a recipe type from the database
+-	 * @param	type
+-	 * @return
+-	 */
+-	private function translateRecipeTypeFromMealType(type:MealTypeDef):RecipeTypes
++	// Creates ingredient objects from data. Returns lookup map from ingredient name -> object (globally accesible ingredients list)
++	// Ingredient row vals: [name, spotlight]
++	private function getAllIngredients():Map<String, Ingredient>
+ 	{
+-		var name:String = type.name;
++		var ingredientText = ResMan.instance.getText("AllIngredients");
++		var ingredientData:ContentData = haxe.Json.parse(ingredientText);
++		var ingredients:Map<String, Ingredient> = new Map();
+ 		
+-		if (name == "Appetizer")
++		for (rowIdx in 0...ingredientData.rows.length)
+ 		{
+-			return APPETIZERS;
++			var row:Array<Dynamic> = ingredientData.rows[rowIdx];
++
++			var name:String = row[4];
++			var spotlight:String = row[5]; 
++			var i:Ingredient = new Ingredient(name, spotlight);
++			//trace("Added ingredient: " + i.name);
++			
++			allIngredients.set(i.name, i);
++			//trace(allIngredients.get(i.name) + " added to allIngredients map.");
+ 		}
+ 		
+-		if (name == "Breakfast")
+-		{
+-			return BREAKFAST;
+-		}
+-		
+-		if (name == "Main Course")
+-		{
+-			return MAINCOURSE;
+-		}
+-		
+-		if (name == "Dessert")
+-		{
+-			return DESSERT;
+-		}
+-		
+-		Debug.log("unhandled meal type: " + name);
+-		return null;
++		return allIngredients;
+ 	}
+ 	
+-	/**
+-	 * Returns the game logic version of a recipe type from the database
+-	 * @param	type
+-	 * @return
+-	 */
+-	private function translateRecipeTypeFromDietaryPreference(type:DietaryPreferenceDef):RecipeTypes
++	// To populate this.allRecipes. Combines recipe table data with other subtables.
++	// Recipe table data: [Key, <unknown>, <unknown>, Country ID (recipes), Type, User (unused), Name, Presentation, Prep time, Country ID (Country), CountryName]
++	private function getAllRecipes():Map<String, Recipe>
+ 	{
+-		var name:String = type.name;
+-
+-		if (name == "Vegetarian")
+-		{
+-			return VEGETARIAN;
+-		}
++		// Grab relevant JSON data
++			// Steps 
++		var stepsText = ResMan.instance.getText("RecipeSteps");
++		var stepsData:ContentData = haxe.Json.parse(stepsText);
+ 		
+-		if (name == "Dairy Free")
+-		{
+-			return DAIRYFREE;
+-		}
++			// Tools
++		var allTools:Map<String, Tool> = getAllTools();
++		var toolText = ResMan.instance.getText("RecipeTools");
++		var toolData:ContentData = Json.parse(toolText);
+ 		
+-		if (name == "Gluten Free")
++			// Types
++		var typesText = ResMan.instance.getText("RecipeTypes");
++		var typesData:ContentData = Json.parse(typesText);
++		
++			// Ingredients
++		var ingredientsText = ResMan.instance.getText("RecipeIngredients");
++		var ingredientsData:ContentData = Json.parse(ingredientsText);
++			
++			// Image
++		var imageText = ResMan.instance.getText("RecipeImage");
++		var imageData:ContentData = Json.parse(imageText);
++		
++			// All recipes 
++		var recipeText = ResMan.instance.getText("AllRecipes");
++		var recipeData:ContentData = Json.parse(recipeText);
++		
++		// Format data into recipe objects
++		for (rowIdx in 0...recipeData.rows.length)
+ 		{
+-			return GLUTENFREE;
++			var row:Array<Dynamic> = recipeData.rows[rowIdx];
++
++			var name:String = row[6];
++			if (name != null) 
++			{
++				var presentation:String = row[7];
++				var tools:Array<Tool> = getRecipeTools(name, allTools, toolData);
++				var ingredients:Array<Ingredient> = getRecipeIngredients(name, ingredientsData);
++				var types:Array<RecipeTypes> = getRecipeTypes(name, typesData);
++				var steps:Array<Step> = getRecipeSteps(name, stepsData);
++				var image:String = getRecipeImage(name, imageData);
++				var country:String = row[10];
++				var r = new Recipe(name, presentation, country, image, ingredients, tools, steps, types);
++
++				allRecipes.set(name, r);
++				//trace("Recipe added to allrecipes: " + allRecipes.get(r.name));
++				
++			}
+ 		}
+ 		
+-		Debug.log("unhandled dietary preference: " + name);
+-		return null;
++		return allRecipes;
+ 	}
+ 	
+-	/**
+-	 * Gets game logic versions of the recipe steps from the database
+-	 * @param	recipe
+-	 * @return
+-	 */
+-	private function getStepsFromRecipe(recipe:RecipeDef):Array<Step>
++	// Creates tool objects from data. Returns lookup map from toolname -> tool object. 
++	// Tool row vals: [Key, <unused/null>, <unused/null>, Name, URL]
++	private function getAllTools():Map<String, Tool>
+ 	{
+-		var steps:Array<Step> = [];
++		var toolText = ResMan.instance.getText("AllTools");
++		var toolData:ContentData = haxe.Json.parse(toolText);
++		var tools:Map<String, Tool> = new Map();
+ 		
+-		for (step in recipe.steps)
++		for (rowIdx in 0...toolData.rows.length)
+ 		{
+-			var stepNumber:Int = steps.length;
+-			var stepType:StepTypes = translateStepTypeFromDatabase(step.type);
+-			var instruction:String = step.text;
+-			var nextStep:Step = new Step(stepNumber, stepType.getIndex(), instruction);
+-			steps.push(nextStep);
++			var row:Array<Dynamic> = toolData.rows[rowIdx];
++
++			// Grab name [3] and URL [4]
++			var t:Tool = new Tool(row[3], row[4]);
++			
++			// Add to map so we can quickly grab them for recipe creation.
++			tools.set(t.name, t);
+ 		}
+ 		
+-		return steps;
++		return tools;
+ 	}
+ 	
+-	/**
+-	 * Returns the game logic version of a recipe step type from the database
+-	 * @param	type
+-	 * @return
+-	 */
+-	private function translateStepTypeFromDatabase(type:String):StepTypes
++	// Gets ingredients for a given recipe, with measurements.
++	// Recipe + Ingredients + Unit table schema: [Recipename, Ingredientname, Amount, UnitID, Unitname]
++	private function getRecipeIngredients(name:String, data:ContentData):Array<Ingredient>
+ 	{
+-		if (type == "Little chef")
++		var ingredients:Array<Ingredient> = new Array();
++		
++		for (rowIdx in 0...data.rows.length)
+ 		{
+-			return LITTLECHEF;
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			var rname = row[0];
++			if (rname == name)
++			{
++				var iname:String = row[1];
++				var amount:Float = row[2];
++				var Unit:String = row[4]; 
++				var i:Ingredient = allIngredients.get(iname);
++				var recipeIngredient:Ingredient = new Ingredient(i.name, i.spotlight, amount, Unit);
++				
++				ingredients.push(recipeIngredient);
++			}
+ 		}
+-		else
+-		{
+-			//Default to big chef if not little chef
+-			//Safer to make an adult to the step.
+-			return BIGCHEF;
+-		}
++		
++		return ingredients;
+ 	}
+ 	
+-	/**
+-	 * Gets game logic versions of the recipe images from the database
+-	 * @param	recipe
+-	 * @return
+-	 */
+-	private function getImagesFromRecipe(recipe:RecipeDef):Array<String>
+-	{
+-		var images:Array<String> = [];
+-		for (image in recipe.images)
++	// Grabs recipe image URL. 
++	// Recipe image schema: [RecipeID, Recipe name, Recipe Presentation, Image URL]
++	private function getRecipeImage(name:String, data:ContentData):String
++	{		
++		var url:String = null;
++		
++		for (rowIdx in 0...data.rows.length)
+ 		{
+-			var newImage:String = image.image;
+-			images.push(newImage);
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			if (row[1] == name)
++			{
++				url = row[3];
++			}
+ 		}
+ 		
+-		return images;
++		return url;
+ 	}
+ 	
+-	/**
+-	 * Gets game logic versions of the tools used by a recipe
+-	 * @return
+-	 */
+-	private function getToolDataFromRecipe(recipe:RecipeDef):Array<Tool>
+-	{
+-		var tools:Array<Tool> = [];
+-		for (tool in recipe.tools)
++	// Returns array of tools used for a given recipe
++	// Recipe tools schema: [Recipe name, Tool name]
++	private function getRecipeTools(name:String, tools:Map<String, Tool>, data:ContentData):Array<Tool> 
++	{	
++		var recipeTools:Array<Tool> = new Array();
++		
++		for (rowIdx in 0...data.rows.length)
+ 		{
+-			var newTool:Tool = translateToolFromDatabase(tool);
+-			tools.push(newTool);
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			if (row[0] == name)
++			{
++				recipeTools.push(tools.get(row[1]));
++			}
+ 		}
+ 		
+-		return tools;
++		return recipeTools;
+ 	}
+-	/**
+-	 * Creates a game logic version of a social issue from a backend database version
+-	 * @param	issue
+-	 * @return
+-	 */
+-	private function translateToolFromDatabase(tool:ToolDef):Tool
++	
++	// Returns array of recipe types for a given recipe.
++	// Recipe types schema: [Recipe id, Recipe name, Type name, Type ID]
++	private function getRecipeTypes(name:String, data:ContentData):Array<RecipeTypes>
+ 	{
+-		var name:String = tool.name;
+-		var url:String = tool.url;
+-		return new Tool(name, url);
+-	}
++		var types:Array<RecipeTypes> = new Array();
+ 		
+-	/**
+-	 * Stitches together data from the database to create a map of the countries
+-	 * in a form used by the rest of the game.
+-	 * @return
+-	 */
+-	private function getAllCountries():Map<String, Country>
+-	{
+-		allCountries = new Map<String, Country>();
+-		
+-		//===========================================================
+-		// Map of what audios each country has, which will be used to
+-		// generate game logic country objects.
+-		//===========================================================
+-		var audiosByCountryId:Map<Int, Array<CountryAudioDef>> = new Map < Int, Array<CountryAudioDef>>();
+-		var databaseAudios:Array<CountryAudioDef> = cast DatabaseInterface.ms_tableData[COUNTRY_AUDIOS];
+-		for (audio in databaseAudios)
++		for (rowIdx in 0...data.rows.length)
+ 		{
+-			if (!audiosByCountryId.exists(audio.country_id))
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			if (row[1] == name)
+ 			{
+-				audiosByCountryId[audio.country_id] = [];
++				var typeId:Int = row[3];
++				var typeEnum:RecipeTypes = Type.createEnumIndex( RecipeTypes, (typeId - 1) );
++				types.push(typeEnum);
+ 			}
+-			audiosByCountryId[audio.country_id].push(audio);
+ 		}
+ 		
+-		//===========================================================
+-		// Map of what recipes each country has, which will be used to
+-		// generate game logic country objects.
+-		//===========================================================
+-		var recipesByCountryId:Map<Int, Array<RecipeDef>> = new Map<Int, Array<RecipeDef>>();
+-		var databaseRecipes:Array<RecipeDef> = cast DatabaseInterface.ms_tableData[RECIPES];
+-		for (recipe in databaseRecipes)
+-		{
+-			if (!recipesByCountryId.exists(recipe.country_id))
+-			{
+-				recipesByCountryId[recipe.country_id] = [];
+-			}
+-			recipesByCountryId[recipe.country_id].push(recipe);
+-		}
++		return types;
++	}
++
++	// Creates step objects for a specific recipe from data. Returns lookup from recipe name -> step array.
++	// Recipe/Step row vals: [Recipe ID, Recipe Name, Step ID, Step order, Step type, Step instruction]
++	private function getRecipeSteps(name:String, data:ContentData):Array<Step>
++	{
++		//var recipeSteps:Map< String, Array<Step> > = new Map();
++		//var recipeName:String;
++				
++		var steps:Array<Step> = new Array();
+ 		
+-		//===========================================================
+-		// Generate game logic country objects.
+-		//===========================================================
+-		var databaseCountries:Array<CountryDef> = cast DatabaseInterface.ms_tableData[COUNTRIES]; 
+-		for (country in databaseCountries)
++		// Iterate through table linking recipes & recipe steps
++		for (rowIdx in 0...data.rows.length)
+ 		{
+-			//========================================
+-			// Pull together general country data
+-			//========================================
+-			var id:Int = country.id;
+-			var name:String = country.name;
+-			var population:Int = country.population;
+-			var capital:String = country.capital;
+-			var code:String = country.code;
+-			var cover:String = country.country_image;
+-			var flag:String = country.country_flag;
+-			var wish:String = country.salutation;
++			var row:Array<Dynamic> = data.rows[rowIdx];
++
++			var order:Int;
++			var type:Null<Int> = row[4];
++			var dName:String = row[1]; // Recipe name associated with this step data.
+ 			
+-			var socialIssues:Array<SocialIssue> = getSocialIssuesFromCountry(country);
+-			var facts:Array<String> = getFactsFromCountry(country);
+-			
+-			var countryRecipes:Array<RecipeDef> = recipesByCountryId.get(id);
+-			var recipes:Array<Recipe> = [];
+-			
+-			//Not all countries will have recipes!
+-			if (countryRecipes != null)
++			// If it's a step for our recipe, add it to the list. 
++			if (dName == name)
+ 			{
+-				for (dbRecipe in countryRecipes)
++				// Make a step object. If order is null. use step array index. 
++				if (row[3] == null) 
+ 				{
+-					var newRecipe:Recipe = translateRecipeFromDatabase(dbRecipe);
+-					if (newRecipe == null)
+-					{
+-						//somehow this failed...
+-						//don't add the recipe
+-						continue;
+-					}
+-					recipes.push(newRecipe);
+-				}
+-			}
+-			
+-			//========================================
+-			// Pull together audio data
+-			//========================================
+-			var music:String = null;
+-			var greeting:String = null;
+-			var mealAudio:String = null;
+-			
+-			var allAudio:Array<CountryAudioDef> = audiosByCountryId.get(id);
+-			if (allAudio != null)
+-			{
+-				//The audio schema is really weird.
+-				//From what I can determine, audio info for countries is held
+-				//separately in "country_audios" for some reason.
+-				
+-				//In the actual database, entries say which country they are the "greeting" audio for
+-				//and also which country they are the "bon apetite" audio for.
+-				//There seems to be no column for if they are "music" for a country.
+-				
+-				//There is another table called "musics" in the database.
+-				//this just seems to be a list of files, with no way to figure out what they'e supposed to be.
+-				//It is also empty.
+-				
+-				//Unfortunately, we can't even use all the country audio info, because the api only returns
+-				//which country a given element belongs to, not what type of audio it is.
+-				//For now we will just arbitrarily map the first sound as the music, the second as greeting,
+-				
+-				//TODO: FIX THIS when it's possible.
+-				if (allAudio.length > 0)
++					order = steps.length - 1;
++				} 
++				else 
+ 				{
+-					music = allAudio[0].file;
++					order = row[3];
+ 				}
+-				if (allAudio.length > 1)
+-				{
+-					greeting = allAudio[1].file;
+-				}
+-				if (allAudio.length > 2)
+-				{
+-					mealAudio = allAudio[2].file;
+-				}
++				var s:Step = new Step(order, type, row[5]);
++				steps.push(s);
+ 			}
+-
+-			//========================================
+-			// Create the Country object
+-			//========================================
+-			var c:Country = new Country(id, name, socialIssues, population, capital, code, cover, flag, wish, recipes, facts, 
+-				music, greeting, mealAudio);
+-			allCountries.set(name, c);
+ 		}
+ 		
+-		return allCountries;
++		return steps;
+ 	}
+ 	
+-	/**
+-	 * Creates game logic versions of Social Issues from the backend database version
+-	 * @param	country
+-	 * @return
+-	 */
+-	private function getSocialIssuesFromCountry(country:CountryDef):Array<SocialIssue>
++	// TODO - load/parse database content
++	private function getMathQuestions():Array< MultipleChoiceQuestion >
+ 	{
+-		var issues:Array<SocialIssue> = [];
+-		for (issue in country.social_issues)
+-		{
+-			var newIssue:SocialIssue = translateSocialIssueFromDatabase(issue);
+-			issues.push(newIssue);
+-		}
++		var q1:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We have prepared 5 portions of food and we will share 4 portions with our friends. How many portions will we have left?",
++										  "5 - 4 = ?",
++										  [ "4", "9", "10" ],
++										  "1" );
++		var q2:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We will share our food with 4 boys and 3 girls. How many kids are we going to share with?",
++										  "4 + 3 = ?",
++										  [ "3", "4", "8" ],
++										  "7" );
++		var q3:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We are 5 friends who each want to eat 2 pieces of a delicious fruit, how many pieces of fruit do we have in total?",
++										  "5 * 2 = ?",
++										  [ "2", "3", "5" ],
++										  "10" );
++		var q4:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We are 3 friends who each want to eat 4 pieces of a delicious fruit, how many pieces of fruit do we have in total?",
++										  "3 * 4 = ?",
++										  [ "9", "7", "10" ],
++										  "12" );
++		var q5:MultipleChoiceQuestion 
++			= new MultipleChoiceQuestion( "We have prepared 9 portions of food and we will share 2 portions with our friends. How many portions will we have left?",
++										  "9 - 2 = ?",
++										  [ "5", "4", "10" ],
++										  "7" );
++		mathQuestions.push(q1);
++		mathQuestions.push(q2);
++		mathQuestions.push(q3);
++		mathQuestions.push(q4);
++		mathQuestions.push(q5);
+ 		
+-		return issues;
++		return mathQuestions;
+ 	}
+ 	
+-	/**
+-	 * Creates a game logic version of a social issue from a backend database version
+-	 * @param	issue
+-	 * @return
+-	 */
+-	private function translateSocialIssueFromDatabase(issue:SocialIssueDef):SocialIssue
++	// Gets JSON data to later parse; from set of exported database queries in assets/data
++	// TODO: HACKY. Remove once we get back-end hookup
++	private function loadJson():Void
+ 	{
+-		var description:String = issue.issue;
+-		var url:String = issue.url;
+-		return new SocialIssue(description, url);
+-	}
+-	
+-	/**
+-	 * Creates game logic versions of Country Facts from the backend database version
+-	 * @param	country
+-	 * @return
+-	 */
+-	private function getFactsFromCountry(country:CountryDef):Array<String>
+-	{
+-		var facts:Array<String> = [];
+-		for (fact in country.fact)
+-		{
+-			var newFact:String = fact.name;
+-			facts.push(newFact);
+-		}
++		var libname:String = "GAMECONTENT";
++		var rc:ResContext;
++ 		
++		// All Countries
++		rc = {src: "data/AllCountries.json", rename: "AllCountries"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		return facts;
+-	}
+-	
+-	/**
+-	 * Creates game logic versions of a Recipe from the backend database version
+-	 * @param	country
+-	 * @return
+-	 */
+-	private function translateRecipeFromDatabase(recipe:RecipeDef):Recipe
+-	{
+-		var receipeName:String = recipe.name;
+-		var foundRecipe:Recipe = allRecipes.get(recipe.name);
+-		if (foundRecipe == null)
+-		{
+-			Debug.log("recipe not found in allRecipes: " + recipe.name);
+-		}
++		// All Ingredients
++		rc = {src: "data/AllIngredients.json", rename: "AllIngredients"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		return foundRecipe;
+-	}
+-	
+-	/**
+-	 * Stitches together data from the database to create a map of the math questions
+-	 * in a form used by the rest of the game.
+-	 * @return
+-	 */
+-	private function getMathQuestions():Array< MultipleChoiceQuestion >
+-	{
+-		mathQuestions = new Array<MultipleChoiceQuestion>();
++		// All Recipes 
++		rc = {src: "data/AllRecipesCountry.json", rename: "AllRecipes"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		var dbQuestions:Array<GameDef> = cast DatabaseInterface.ms_tableData[GAMES];
+-		for (question in dbQuestions)
+-		{
+-			if (question.type != "math")
+-			{
+-				continue;
+-			}
+-			
+-			var nextQuestion:MultipleChoiceQuestion = getMultipleChoiceQuestionFromDatabase(question);
+-			mathQuestions.push(nextQuestion);
+-		}
++		// All Tools 
++		rc = {src: "data/AllTools.json", rename: "AllTools"};
++		ResMan.instance.addRes(libname, rc);
++
++		// Country charities
++		rc = {src: "data/CountryCharity.json", rename: "CountryCharity"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		return mathQuestions;
+-	}
+-	
+-	/**
+-	 * Creates game logic versions of a MultipleChoiceQuestion from the backend database version
+-	 * @param	question
+-	 */
+-	private function getMultipleChoiceQuestionFromDatabase(question:GameDef):MultipleChoiceQuestion
+-	{
+-		var wordedProblem:String = question.worded_question;
+-		var mathProblem:String = question.question;
++		// Country facts
++		rc = {src: "data/CountryFact.json", rename: "CountryFact"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		var correctOption:String = translateMultipleChoiceOptionFromDatabase(question.correct_option);
++		// Country recipes
++		rc = {src: "data/CountryRecipe.json", rename: "CountryRecipe"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		var wrongOptions:Array<String> = [];
+-		for (option in question.options)
+-		{
+-			//don't include the correct option
+-			if (option.id == question.correct_option.id)
+-			{
+-				continue;
+-			}
+-			
+-			var nextOption:String = translateMultipleChoiceOptionFromDatabase(option);
+-			wrongOptions.push(nextOption);
+-		}
++		// Recipe images
++		rc = {src: "data/RecipeImage.json", rename: "RecipeImage"};
++		ResMan.instance.addRes(libname, rc);
+ 		
+-		var question:MultipleChoiceQuestion = new MultipleChoiceQuestion(wordedProblem, mathProblem, wrongOptions, correctOption);
+-		return question;
++		// Recipe ingredients
++		rc = {src: "data/RecipeIngredientUnit.json", rename: "RecipeIngredients"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe steps
++		rc = {src: "data/RecipeSteps.json", rename: "RecipeSteps"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe tools
++		rc = {src: "data/RecipeTools.json", rename: "RecipeTools"};
++		ResMan.instance.addRes(libname, rc);
++		
++		// Recipe types 
++		rc = {src: "data/RecipeTypes.json", rename: "RecipeTypes"};
++		ResMan.instance.addRes(libname, rc);
++		
++		ResMan.instance.load(libname, onLoadComplete);
+ 	}
+-	
+-	/**
+-	 * Creates game logic versions of a multiple choice option from the backend database version
+-	 * @param	country
+-	 * @return
+-	 */
+-	private function translateMultipleChoiceOptionFromDatabase(option:GameOptionDef):String
+-	{
+-		return option.value;
+-	}
+ }
+\ No newline at end of file
+Index: trunk/Engineering/src/game/net/NetAssetLoader.hx
+===================================================================
+--- trunk/Engineering/src/game/net/NetAssetLoader.hx	(revision 829)
++++ trunk/Engineering/src/game/net/NetAssetLoader.hx	(working copy)
+@@ -237,7 +237,7 @@
+ 	 */
+ 	private function onIOError(e:IOErrorEvent):Void
+ 	{
+-		Debug.warn("IO Error: " + e);
++		//Debug.warn("IO Error: " + e);
+         handleFailure();
+ 	}
+ 	
+Index: trunk/Engineering/src/game/Recipe.hx
+===================================================================
+--- trunk/Engineering/src/game/Recipe.hx	(revision 829)
++++ trunk/Engineering/src/game/Recipe.hx	(working copy)
+@@ -16,7 +16,6 @@
+ 
+ class Recipe
+ {
+-	public var id(default, null):Int; //database id of recipe
+ 	public var name(default, null):String; // Name of recipe
+ 	public var presentation(default, null):String; // Serving instructions for the dish
+ 	public var country(default, null):String; // Country of origin
+@@ -26,9 +25,8 @@
+ 	public var steps(default, null):Array<Step>; // List of step-by-step preparation instructions
+ 	public var types(default, null):Array<RecipeTypes>; // Type/s of dish for menu and search filtering (see def.RecipeTypes)
+ 	
+-	public function new(id:Int, name:String, presentation:String, country:String, image:String, ingredients:Array<Ingredient>, tools:Array<Tool>, steps:Array<Step>, types:Array<RecipeTypes>) 
++	public function new(name:String, presentation:String, country:String, image:String, ingredients:Array<Ingredient>, tools:Array<Tool>, steps:Array<Step>, types:Array<RecipeTypes>) 
+ 	{
+-		this.id = id;
+ 		this.name = name;
+ 		this.presentation = presentation;
+ 		this.country = country;
+@@ -75,6 +73,7 @@
+ 	// Returns true if recipe contains an allergen ingredient.
+ 	public function hasAllergen(allergens:Array<Ingredient>):Bool
+ 	{
++		trace( allergens );
+ 		for (i in allergens)
+ 		{
+ 			if (hasIngredient(i))
+Index: trunk/Engineering/src/game/states/SplashState.hx
+===================================================================
+--- trunk/Engineering/src/game/states/SplashState.hx	(revision 829)
++++ trunk/Engineering/src/game/states/SplashState.hx	(working copy)
+@@ -131,7 +131,7 @@
+ 		//================================================
+ 		//Populate remote CMS database data
+ 		//================================================
+-		if ( URLUtils.didProvideAssessment() || URLUtils.didProvideAdmin() )
++		if ( true )//URLUtils.didProvideAssessment() || URLUtils.didProvideAdmin() )
+ 		{
+ 			// We are not loading the database in these views; skip this stage
+ 			postDatabaseInitialization();
+@@ -223,9 +223,11 @@
+ 		// Indicate loading is complete
+ 		//==========================================
+ 		m_splashMenu.onLoadProgress(1);
+-		
+-		var id:Option<String> = URLUtils.getTeacherId();
+-		StateManager.setState(GameState.TEACHER_ID_LOGIN,  {args: [id]});
++		
++		//var id:Option<String> = URLUtils.getTeacherId();
++		//StateManager.setState(GameState.TEACHER_ID_LOGIN,  {args: [id]});
++		
++		StateManager.setState( GameState.RECIPES, {args:[]});
+ 	}
+ 	
+ 	private function showMenu():Void
+Index: trunk/Engineering/src/game/ui/HudMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/HudMenu.hx	(revision 830)
++++ trunk/Engineering/src/game/ui/HudMenu.hx	(working copy)
+@@ -733,6 +733,7 @@
+ 	
+ 	private function onMouseMove(e:MouseEvent):Void
+ 	{
++		/*
+ 		if (!m_zooming)
+ 		{
+ 			return;
+@@ -775,10 +776,12 @@
+ 		//throw zoom event
+ 		var zoomRatio:Float = -zoomY / effectiveHeight;
+ 		SpeckGlobals.event.dispatchEvent(new ZoomEvent(zoomRatio));
++		*/
+ 	}
+ 	
+ 	public function resetZoomButton():Void
+ 	{
++		/*
+ 		var fullPanel:DisplayObject = getChildByName("pnl_fullHud");
+ 		var zoomButton:GraphicButton = getButtonById(ZOOM.getIndex());
+ 		var buttonBounds:Rectangle = zoomButton.getBounds(fullPanel);
+@@ -787,26 +790,27 @@
+ 		var effectiveBottom = zoomBounds.bottom - (buttonBounds.height / 2);
+ 		
+ 		zoomButton.y = effectiveBottom; 
++		*/
+ 	}
+ 	
+ 	override public function onButtonDown( ?caller:GraphicButton ):Void
+ 	{
+ 		super.onButtonDown(caller);
+-		
++		/*
+ 		if (caller.id == ZOOM.getIndex())
+ 		{
+ 			m_zooming = true;
+-		}
++		}*/
+ 	}
+ 	
+ 	override public function onButtonUp( ?caller:GraphicButton ):Void
+ 	{
+ 		super.onButtonUp(caller);
+-		
++		/*
+ 		if (caller.id == ZOOM.getIndex())
+ 		{
+ 			m_zooming = false;
+ 			m_zoomYStart = null;
+-		}
++		}*/
+ 	}
+ }
+\ No newline at end of file
+Index: trunk/Engineering/src/game/ui/MultidimensionalScrollingMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/MultidimensionalScrollingMenu.hx	(revision 832)
++++ trunk/Engineering/src/game/ui/MultidimensionalScrollingMenu.hx	(working copy)
+@@ -42,10 +42,7 @@
+ 	private var m_visibleRows:Int;
+ 	private var m_rowSpacing:Float;
+ 	
+-	private var m_colPos:Null<Float>;
+-	private var m_rowPos:Null<Float>;
+ 	
+-	
+ 	/**
+ 	 * @param	centerRef - top left object in a scrolling gred
+ 	 * @param	bottomRef - object directly below center ref 
+@@ -133,26 +130,26 @@
+ 		{	
+ 			case Orientation.HORIZONTAL:
+ 			{
+-				numCols+= 1; // Since we are adding new columns when scrolling, place an extra set out of view
+-				var initXPos:Float = centerRef.x;
++				var initXPos:Float = centerRef.x; 
+ 				var initYPos:Float = centerRef.y;
+ 				rowOffset = initYPos;
+ 				colOffset = initXPos;
++				
+ 				for ( col in 0...numCols )
+ 				{
+ 					rowOffset = initYPos;
+-					
+-					for ( row in 0...numRows)
++
++					for ( row in 0...numRows )
+ 					{
+ 						var item:VirtualScrollingItem = new VirtualScrollingItem( centerRef, count );
+ 						item.addMask( m_scrollArea );
+ 						item.setCoordinates( colOffset, rowOffset );
+ 						m_scrollingItems.push( item );
+-						
++
+ 						rowOffset += m_rowSpacing;
+ 						count++; // Temp - debugging
+ 					}
+-
++					
+ 					colOffset += m_colSpacing;
+ 				}
+ 			}
+@@ -164,7 +161,7 @@
+ 				rowOffset = initYPos;
+ 				colOffset = initXPos;
+ 				for ( row in 0...numRows)
+-				{	
++				{
+ 					colOffset = initXPos;
+ 					
+ 					for ( col in 0...numCols )
+Index: trunk/Engineering/src/game/ui/states/RecipesMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/states/RecipesMenu.hx	(revision 829)
++++ trunk/Engineering/src/game/ui/states/RecipesMenu.hx	(working copy)
+@@ -19,6 +19,8 @@
+ import com.firstplayable.hxlib.display.OPSprite;
+ import com.firstplayable.hxlib.loader.ResMan;
+ import com.firstplayable.hxlib.state.IGameState.GameStateParams;
++import format.pdf.Filter;
++import format.swf.Data.FontLayoutData;
+ import game.Country;
+ import game.Recipe;
+ import game.controllers.FlowController;
+@@ -25,7 +27,8 @@
+ import game.def.GameState;
+ import game.def.RecipeTypes;
+ import game.net.NetAssets;
+-import game.ui.ScrollingManager;
++import game.ui.MultidimensionalScrollingMenu;
++import game.ui.VirtualScrollingMenu.Orientation;
+ import game.ui.SpeckMenu;
+ import openfl.display.Bitmap;
+ import openfl.display.DisplayObject;
+@@ -55,47 +58,35 @@
+ 
+ class RecipesMenu extends SpeckMenu
+ {
+-	// ------ Static tunable vars:
+-	// TODO - callback to pull from paist bounding box
+-	private static inline var SCROLLWIDTH:Float = 900;
+-	private static inline var SCROLLHEIGHT:Float = 600;
+-	private static inline var DISPLAYNUM:Int = 6;
+-	private static inline var CATEGORYNUM:Int = 7;
+-	
+ 	// ------ Member vars:
+-	private var m_scrollMenu:ScrollingManager;
++	private var m_scrollMenu:MultidimensionalScrollingMenu;
+ 	private var m_categories:Array< RecipeTypes >;
+ 	private var m_paistGroups:Array< RecipeGroup >;
+ 	private var m_categoryUp:Bitmap;
+ 	private var m_categoryDown:Bitmap;
+ 	private var m_searchTerms:TextField;
+-	
+-	//  Indices of left and rightmost rendered objects 
+-	private var m_renderRight:Int; 
+-	private var m_renderLeft:Int;
+-	
+-	//	Keeps track of persistent up/down toggle for category buttons.
++	private static var DEFAULT_SEARCH:String;
++
++	//	toggledStates: Keeps track of persistent up/down toggle for category buttons.
+ 	//		Down state = toggled = true. 
+ 	//		Up state = untoggled = false. 
+ 	private var m_toggledStates:Map< String, Bool >;
+-	
+-	private var DEMORECIPES:Array< String > = [ "Coconut Rice", "Filipino Noodles", "Green Garam Sprouts Salad", "Peachy Panzanella Salad", "Persian Meat Balls", "Potato Pancake", "Spring Rolls", "Tuna Sandwiches", "Tomato and Olive Penne", "Whole Wheat Crepes"];    
+-	private static var DEFAULT_SEARCH:String;
+-	
++
+ 	public function new( ?p:GameStateParams) 
+ 	{
+ 		super( "RecipesMenu" );
+ 		
++		// ----------------------------------------------------
+ 		// Initialize members
++		// ----------------------------------------------------
+ 		m_toggledStates = new Map();
+ 		m_categories = new Array();
+-		m_paistGroups = getPaistReference();
+-		m_renderLeft = 0;
+-		m_renderRight = DISPLAYNUM;
+ 		m_categoryUp = ResMan.instance.getImage( "2d/Buttons/btn_recipeCategory_up" );
+ 		m_categoryDown = ResMan.instance.getImage( "2d/Buttons/btn_recipeCategory_down" );
+ 		
+-		// If this menu has been given GameStateParams, we came here from a Country menu
++		// ----------------------------------------------------
++		// Set country title, if necessary
++		// ----------------------------------------------------
+ 		if ( FlowController.currentPath == FlowPath.CONSUMER_COUNTRY )
+ 		{
+ 			// Set menu title
+@@ -103,20 +94,20 @@
+ 			title.text = FlowController.data.selectedCountry.name;
+ 		}
+ 		
+-		// Initialize states for all category buttons.
+-		// 		There are seven categories, ID starting from 0. 
+-		//		All button start out untoggled (up, false)
+-		for (n in 0...CATEGORYNUM) 
++		// ----------------------------------------------------
++		// Initialize states for all category buttons
++		// ----------------------------------------------------
++		// 	There are seven categories, ID starting from 0. 
++		//	All button start out untoggled (up, false)
++		for (n in 0...8) 
+ 		{
+ 			var name:String = getButtonById( n ).name;
+ 			m_toggledStates.set( name, false ); 
+ 		}
+ 		
+-		// Create Scroll menu
+-		var scrollBounds:DisplayObjectContainer = cast getChildByName( "scroll_border" );
+-		m_scrollMenu = new ScrollingManager( scrollBounds.x, scrollBounds.y, SCROLLWIDTH, SCROLLHEIGHT, this, "horizontal", DISPLAYNUM );
+-		
++		// ----------------------------------------------------
+ 		// Initialize search bar 
++		// ----------------------------------------------------
+ 		m_searchTerms = cast getChildByName( "lbl_rSearch" );
+ 		if ( DEFAULT_SEARCH == null ) 		
+ 			DEFAULT_SEARCH = m_searchTerms.text;
+@@ -126,18 +117,25 @@
+ 		m_searchTerms.addEventListener( FocusEvent.FOCUS_IN, onFocusIn );
+ 		m_searchTerms.addEventListener( FocusEvent.FOCUS_OUT, onFocusOut );
+ 		
+-		// Initialize recipe buttons & add them to the scroll menu.
+-		drawRecipes();
++		// ----------------------------------------------------
++		// Create & initialize scroll menu
++		// ----------------------------------------------------
++		var scrollBounds:OPSprite = cast getChildByName( "spr_scrollBounds" );
++		var centerRef:DisplayObjectContainer = cast getChildByName( "group_recipe0" );
++		var rightRef:DisplayObjectContainer = cast getChildByName( "group_recipe1" );
++		var bottomRef:DisplayObjectContainer = cast getChildByName( "group_recipe3" );
++		m_scrollMenu = new MultidimensionalScrollingMenu( scrollBounds, HORIZONTAL, centerRef, bottomRef, rightRef );
+ 		
+-		// Initialize scroll menu
++		//addRecipeData();
++		this.addChild( m_scrollMenu );
+ 		m_scrollMenu.init();
+-		this.addChild( m_scrollMenu );
++	
+ 	}
+ 	
+ 	override public function onButtonHit( ?caller:GraphicButton ):Void 
+ 	{
+ 		super.onButtonHit( caller );
+-		
++		/*
+ 		// Button naming convention: btn_(type)(number)
+ 		var name:String = caller.name;
+ 		var type:String = name.substring(4, name.length - 1);
+@@ -203,9 +201,47 @@
+ 		}
+ 		
+ 		WebAudio.instance.play( "SFX/button_click" );	
++*/
++	}
++	
++	private function addRecipeData()
++	{
++		// Get search filter
++		var filter:String = m_searchTerms.text;
++		
++		// Clear scroll list - TODO
++		//m_scrollMenu.clear();
++		
++		for ( recipe in SpeckGlobals.dataManager.allRecipes )
++		{
++			if ( isDisplayable( recipe, filter ) )
++			{
++				// ----------------------------------------------------
++				// Get recipe text
++				// ----------------------------------------------------
++				var label:String = recipe.name;
++		
++				// ----------------------------------------------------
++				// Get button base
++				// ----------------------------------------------------
++				var baseButtonImg:Bitmap = ResMan.instance.getImage( "2d/Buttons/btn_recipe_up" );
++				var baseButton:GraphicButton = new GraphicButton( baseButtonImg, baseButtonImg, baseButtonImg, baseButtonImg, null, onButtonHit );
+ 
++				// ----------------------------------------------------
++				// Setup initial recipe image - TODO - DATABASE 
++				// ----------------------------------------------------
++				// Get image
++				var recipeImgSrc:String = "2d/UI/recipes/placeholder";
++				
++				m_scrollMenu.addData( recipeImgSrc, baseButtonImg, null, label );
++			}
++		}
+ 	}
+ 	
++	private function triggerRecipeLoad()
++	{
++	}
++	
+ 	// Flips the boolean for a given category button
+ 	private function toggleCategory( buttonName ):Bool
+ 	{
+@@ -214,28 +250,10 @@
+ 		return m_toggledStates.get( buttonName );
+ 	}
+ 	
+-	private function getPaistReference():Array< RecipeGroup >
+-	{
+-		// Get paist reference
+-		var paistGroups:Array< RecipeGroup > = new Array();
+-		
+-		for ( n in 0...DISPLAYNUM )
+-		{
+-			var panel:DisplayObjectContainer = cast getChildByName( "group_recipe" + n );
+-			var button:GraphicButton = cast panel.getChildByName( "btn_recipe" + n );
+-			var label:TextField = cast panel.getChildByName( "lbl_Name" + n);
+-			var image:OPSprite = cast panel.getChildByName( "image" + n);
+-			paistGroups.push( { panel: panel, button: button, label: label, image: image } );
+-			
+-			panel.visible = false; // Hide layout items
+-		}
+-		
+-		return paistGroups;
+-	}
+-	
+ 	// Creates a masterlist of recipe buttons and adds them to the scroll menu
+ 	private function drawRecipes():Void
+ 	{
++		/*
+ 		// Get search filter
+ 		var filter:String = m_searchTerms.text;
+ 		
+@@ -400,13 +418,34 @@
+ 		}
+ 		
+ 		showMask();
++		*/
+ 	}
+ 	
+-	private function showMask():Void
++	/**
++	 * Checks recipe name against the search filter, recipe ingredients against the allergens list,
++	 * 		and recipe meal types against the category filters.
++	 */
++	private function isDisplayable( recipe:Recipe, filter:String ):Bool
+ 	{
+-		m_scrollMenu.reparent();
++		var isCountryRecipe:Bool = true;
++		if ( FlowController.currentPath == FlowPath.CONSUMER_COUNTRY )
++		{
++			if ( FlowController.data.selectedCountry.name != recipe.country )
++			{
++				isCountryRecipe = false;
++			}
++		}
++			
++		var hasFilter:Bool = ( filter == DEFAULT_SEARCH ) || ( recipe.name.toLowerCase().indexOf( filter.toLowerCase() ) >= 0 ); 
++		
++		return ( isCountryRecipe && hasFilter && recipe.isViable( m_categories ) );
+ 	}
+ 	
++	
++	// ===================================
++	// Search/text management functions
++	// ===================================
++	
+ 	private function onTextUpdate( e:Event ):Void 
+ 	{
+ 		drawRecipes();
+Index: trunk/Engineering/src/game/ui/VirtualScrollingItem.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(revision 832)
++++ trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(working copy)
+@@ -149,8 +149,9 @@
+ 	 */
+ 	private function setImage( src:String ):Void
+ 	{
++		trace( "setting image " + src );
+ 		var bitmap:Bitmap = ResMan.instance.getImage( src );
+-		m_image.changeImage( bitmap );
++		//m_image.changeImage( bitmap );
+ 	}
+ 	
+ 	/**
+@@ -391,8 +392,9 @@
+ 		newSprite.name = ref.name; 
+ 		
+ 		m_image = newSprite;
+-		group.addChild( newSprite );
++		group.addChildAt( newSprite, group.numChildren );
+ 		
++		trace( newSprite.width + " " + newSprite.height );
+ 		return m_image;
+ 	}
+ 	
+Index: trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(revision 832)
++++ trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -291,8 +291,8 @@
+ 		// Hide scroll bar if it is not needed
+ 		if ( m_visibleItems >= m_dataset.length )
+ 		{
+-			m_scrollBar.visible = false;
+-			m_scrollTrack.visible = false;
++			//m_scrollBar.visible = false;
++			//m_scrollTrack.visible = false;
+ 		}
+ 		
+ 		this.parent.addChild( m_scrollArea );

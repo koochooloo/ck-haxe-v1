@@ -1,0 +1,25 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "spriteObject" : [ { 
+            "name" : "spr_chart",
+            "inheritable" : { 
+                "position" : [ 432, 280 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

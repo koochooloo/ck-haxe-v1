@@ -1,0 +1,93 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "ref_answer_default",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/9patch/9patch-DefaultAnswer",
+                "scale" : [ 4.6, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_answer_wrong",
+            "record" : true,
+            "id" : 2,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/9patch/9patch-WrongAnswer",
+                "scale" : [ 4.6, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_answer_correct",
+            "record" : true,
+            "id" : 2,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/9patch/9patch-CorrectAnswer",
+                "scale" : [ 4.6, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_answer",
+            "priority" : 10,
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 35, 10 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 520, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_correct_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/CorrectAnswer",
+                "position" : [ 1, 46 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_wrong_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WrongAnswer",
+                "position" : [ 1, 46 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

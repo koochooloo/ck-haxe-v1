@@ -1,0 +1,1 @@
+C:\Python27\Scripts\pip.exe install twisted autobahn watchdog

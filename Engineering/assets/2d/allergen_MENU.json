@@ -1,0 +1,1 @@
+{"animations":{"2d/UI/headers/RibbonBig_Allergens":{"frames":[0],"params":{"bounds":{"-1":[{"height":44,"name":"bounds","type":"box","width":186,"x":0,"y":0}]},"center":{"-1":[{"name":"center","type":"vector","x":93,"y":43}]}}}},"frames":[[0,0,186,44,0,0,0]],"images":["allergen_MENU.png"]}

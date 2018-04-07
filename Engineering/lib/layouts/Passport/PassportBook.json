@@ -1,0 +1,119 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "spriteObject" : [ { 
+            "name" : "ref_passport",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/passport/PassportBook",
+                "positionRelative" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_0",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ -233, -386 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_1",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ -84, -386 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_2",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ -233, -246 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_3",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ -84, -246 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_4",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ -233, -108 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_5",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ -84, -108 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_6",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ 85, -386 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_7",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ 234, -386 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_8",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ 85, -246 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_stamp_9",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "position" : [ 234, -246 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

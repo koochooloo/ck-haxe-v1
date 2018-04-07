@@ -1,0 +1,1143 @@
+Index: Engineering/assets/layouts/AllergiesMenu.json
+===================================================================
+--- Engineering/assets/layouts/AllergiesMenu.json	(revision 973)
++++ Engineering/assets/layouts/AllergiesMenu.json	(working copy)
+@@ -23,6 +23,16 @@
+             }
+         } ],
+         "button" : [ { 
++            "name" : "btn_scrollBar",
++            "record" : true,
++            "priority" : 9,
++            "inheritable" : { 
++                "resource" : "2d/UI/ZoomSliderHandle",
++                "position" : [ 967, 336 ],
++                "scale" : [ 0.4, 2 ],
++                "loadParams" : true
++            }
++        }, { 
+             "name" : "btn_confirm",
+             "record" : true,
+             "id" : 1,
+@@ -64,7 +74,7 @@
+             "record" : true,
+             "priority" : 10,
+             "inheritable" : { 
+-                "position" : [ 406, 333 ],
++                "position" : [ 366, 333 ],
+                 "visible" : false,
+                 "loadParams" : false
+             },
+@@ -100,7 +110,8 @@
+                     "color" : [ 10, 7, 4 ],
+                     "font" : "/fonts/CarterOne.ttf:30",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 470, 40 ]
++                    "size" : [ 470, 40 ],
++                    "clipOverflow" : true
+                 }
+             } ]
+         }, { 
+@@ -108,7 +119,7 @@
+             "record" : true,
+             "priority" : 10,
+             "inheritable" : { 
+-                "position" : [ 408, 280 ],
++                "position" : [ 368, 280 ],
+                 "visible" : false,
+                 "loadParams" : false
+             },
+@@ -134,7 +145,8 @@
+                     "color" : [ 10, 7, 4 ],
+                     "font" : "/fonts/CarterOne.ttf:30",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 470, 40 ]
++                    "size" : [ 470, 40 ],
++                    "clipOverflow" : true
+                 }
+             } ]
+         } ],
+@@ -150,8 +162,8 @@
+             "record" : true,
+             "inheritable" : { 
+                 "resource" : "2d/UI/WhitePixel",
+-                "position" : [ 388, 231 ],
+-                "scale" : [ 570, 440 ],
++                "position" : [ 356, 231 ],
++                "scale" : [ 600, 440 ],
+                 "visible" : false,
+                 "loadParams" : true
+             }
+@@ -175,20 +187,9 @@
+                 "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+                 "position" : [ 962, 246 ],
+                 "scale" : [ 1, 3.1 ],
+-                "visible" : false,
+                 "loadParams" : true
+             }
+         }, { 
+-            "name" : "scrollHandle",
+-            "record" : true,
+-            "priority" : 8,
+-            "inheritable" : { 
+-                "resource" : "2d/UI/scrollHandle",
+-                "position" : [ 965, 288 ],
+-                "visible" : false,
+-                "loadParams" : true
+-            }
+-        }, { 
+             "name" : "pnl_allergens_top",
+             "record" : true,
+             "priority" : 9,
+Index: Engineering/assets/layouts/CountryMenu.json
+===================================================================
+--- Engineering/assets/layouts/CountryMenu.json	(revision 973)
++++ Engineering/assets/layouts/CountryMenu.json	(working copy)
+@@ -54,6 +54,16 @@
+                     "position" : [ 515, 9 ],
+                     "loadParams" : true
+                 }
++            }, { 
++                "name" : "btn_scrollBar",
++                "record" : true,
++                "priority" : 9,
++                "inheritable" : { 
++                    "resource" : "2d/UI/ZoomSliderHandle",
++                    "position" : [ 516, 138 ],
++                    "scale" : [ 0.4, 2 ],
++                    "loadParams" : true
++                }
+             } ],
+             "label" : [ { 
+                 "name" : "countryName1",
+@@ -116,20 +126,9 @@
+                     "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+                     "position" : [ 510, 54 ],
+                     "scale" : [ 1, 3.1 ],
+-                    "visible" : false,
+                     "loadParams" : true
+                 }
+             }, { 
+-                "name" : "scrollHandle",
+-                "record" : true,
+-                "priority" : 8,
+-                "inheritable" : { 
+-                    "resource" : "2d/UI/scrollHandle",
+-                    "position" : [ 513, 96 ],
+-                    "visible" : false,
+-                    "loadParams" : true
+-                }
+-            }, { 
+                 "name" : "countryPanel_top",
+                 "record" : true,
+                 "priority" : 8,
+Index: Engineering/assets/layouts/RecipeIngredientsMenu.json
+===================================================================
+--- Engineering/assets/layouts/RecipeIngredientsMenu.json	(revision 975)
++++ Engineering/assets/layouts/RecipeIngredientsMenu.json	(working copy)
+@@ -72,6 +72,26 @@
+                 "loadParams" : true
+             }
+         }, { 
++            "name" : "btn_ingredientScrollBar",
++            "record" : true,
++            "priority" : 9,
++            "inheritable" : { 
++                "resource" : "2d/UI/ZoomSliderHandle",
++                "position" : [ 655, 272 ],
++                "scale" : [ 0.4, 2 ],
++                "loadParams" : true
++            }
++        }, { 
++            "name" : "btn_toolScrollBar",
++            "record" : true,
++            "priority" : 9,
++            "inheritable" : { 
++                "resource" : "2d/UI/ZoomSliderHandle",
++                "position" : [ 1039, 672 ],
++                "scale" : [ 0.3, 0.8 ],
++                "loadParams" : true
++            }
++        }, { 
+             "name" : "btn_favorite",
+             "record" : true,
+             "priority" : 20,
+@@ -135,7 +155,6 @@
+                     "textAlignment" : [ "left or top", "center" ],
+                     "size" : [ 380, 80 ],
+                     "spacing" : 2,
+-                    "wrapOverflow" : true,
+                     "clipOverflow" : true
+                 }
+             } ]
+@@ -204,7 +223,6 @@
+                     "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                     "textAlignment" : [ "left or top", "center" ],
+                     "size" : [ 270, 80 ],
+-                    "wrapOverflow" : true,
+                     "clipOverflow" : true
+                 }
+             } ]
+@@ -327,7 +345,6 @@
+                 "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+                 "position" : [ 1036, 637 ],
+                 "scale" : [ 1, 0.7 ],
+-                "visible" : false,
+                 "loadParams" : true
+             }
+         }, { 
+@@ -349,7 +366,6 @@
+                 "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+                 "position" : [ 650, 199 ],
+                 "scale" : [ 1, 2.85 ],
+-                "visible" : false,
+                 "loadParams" : true
+             }
+         }, { 
+@@ -402,7 +418,7 @@
+             "inheritable" : { 
+                 "resource" : "2d/UI/WhitePixel",
+                 "position" : [ 230, 175 ],
+-                "scale" : [ 450, 375 ],
++                "scale" : [ 400, 375 ],
+                 "visible" : false,
+                 "loadParams" : true
+             }
+Index: Engineering/lib/layouts/Countries Substates/CountryMenu.json
+===================================================================
+--- Engineering/lib/layouts/Countries Substates/CountryMenu.json	(revision 973)
++++ Engineering/lib/layouts/Countries Substates/CountryMenu.json	(working copy)
+@@ -54,6 +54,16 @@
+                     "position" : [ 515, 9 ],
+                     "loadParams" : true
+                 }
++            }, { 
++                "name" : "btn_scrollBar",
++                "record" : true,
++                "priority" : 9,
++                "inheritable" : { 
++                    "resource" : "UI/ZoomSliderHandle",
++                    "position" : [ 516, 138 ],
++                    "scale" : [ 0.4, 2 ],
++                    "loadParams" : true
++                }
+             } ],
+             "label" : [ { 
+                 "name" : "countryName1",
+@@ -116,20 +126,9 @@
+                     "resource" : "UI/9patch/9patch-ScrollBarBacking",
+                     "position" : [ 510, 54 ],
+                     "scale" : [ 1, 3.1 ],
+-                    "visible" : false,
+                     "loadParams" : true
+                 }
+             }, { 
+-                "name" : "scrollHandle",
+-                "record" : true,
+-                "priority" : 8,
+-                "inheritable" : { 
+-                    "resource" : "UI/scrollHandle",
+-                    "position" : [ 513, 96 ],
+-                    "visible" : false,
+-                    "loadParams" : true
+-                }
+-            }, { 
+                 "name" : "countryPanel_top",
+                 "record" : true,
+                 "priority" : 8,
+Index: Engineering/lib/layouts/Recipe Substates/RecipeIngredientsMenu.json
+===================================================================
+--- Engineering/lib/layouts/Recipe Substates/RecipeIngredientsMenu.json	(revision 975)
++++ Engineering/lib/layouts/Recipe Substates/RecipeIngredientsMenu.json	(working copy)
+@@ -72,6 +72,26 @@
+                 "loadParams" : true
+             }
+         }, { 
++            "name" : "btn_ingredientScrollBar",
++            "record" : true,
++            "priority" : 9,
++            "inheritable" : { 
++                "resource" : "UI/ZoomSliderHandle",
++                "position" : [ 655, 272 ],
++                "scale" : [ 0.4, 2 ],
++                "loadParams" : true
++            }
++        }, { 
++            "name" : "btn_toolScrollBar",
++            "record" : true,
++            "priority" : 9,
++            "inheritable" : { 
++                "resource" : "UI/ZoomSliderHandle",
++                "position" : [ 1039, 672 ],
++                "scale" : [ 0.3, 0.8 ],
++                "loadParams" : true
++            }
++        }, { 
+             "name" : "btn_favorite",
+             "record" : true,
+             "priority" : 20,
+@@ -135,7 +155,6 @@
+                     "textAlignment" : [ "left or top", "center" ],
+                     "size" : [ 380, 80 ],
+                     "spacing" : 2,
+-                    "wrapOverflow" : true,
+                     "clipOverflow" : true
+                 }
+             } ]
+@@ -204,7 +223,6 @@
+                     "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                     "textAlignment" : [ "left or top", "center" ],
+                     "size" : [ 270, 80 ],
+-                    "wrapOverflow" : true,
+                     "clipOverflow" : true
+                 }
+             } ]
+@@ -327,7 +345,6 @@
+                 "resource" : "UI/9patch/9patch-ScrollBarBacking",
+                 "position" : [ 1036, 637 ],
+                 "scale" : [ 1, 0.7 ],
+-                "visible" : false,
+                 "loadParams" : true
+             }
+         }, { 
+@@ -349,7 +366,6 @@
+                 "resource" : "UI/9patch/9patch-ScrollBarBacking",
+                 "position" : [ 650, 199 ],
+                 "scale" : [ 1, 2.85 ],
+-                "visible" : false,
+                 "loadParams" : true
+             }
+         }, { 
+@@ -402,7 +418,7 @@
+             "inheritable" : { 
+                 "resource" : "UI/WhitePixel",
+                 "position" : [ 230, 175 ],
+-                "scale" : [ 450, 375 ],
++                "scale" : [ 400, 375 ],
+                 "visible" : false,
+                 "loadParams" : true
+             }
+Index: Engineering/lib/layouts/Settings SubStates/AllergiesMenu.json
+===================================================================
+--- Engineering/lib/layouts/Settings SubStates/AllergiesMenu.json	(revision 973)
++++ Engineering/lib/layouts/Settings SubStates/AllergiesMenu.json	(working copy)
+@@ -23,6 +23,16 @@
+             }
+         } ],
+         "button" : [ { 
++            "name" : "btn_scrollBar",
++            "record" : true,
++            "priority" : 9,
++            "inheritable" : { 
++                "resource" : "UI/ZoomSliderHandle",
++                "position" : [ 967, 336 ],
++                "scale" : [ 0.4, 2 ],
++                "loadParams" : true
++            }
++        }, { 
+             "name" : "btn_confirm",
+             "record" : true,
+             "id" : 1,
+@@ -64,7 +74,7 @@
+             "record" : true,
+             "priority" : 10,
+             "inheritable" : { 
+-                "position" : [ 406, 333 ],
++                "position" : [ 366, 333 ],
+                 "visible" : false,
+                 "loadParams" : false
+             },
+@@ -100,7 +110,8 @@
+                     "color" : [ 10, 7, 4 ],
+                     "font" : "/fonts/CarterOne.ttf:30",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 470, 40 ]
++                    "size" : [ 470, 40 ],
++                    "clipOverflow" : true
+                 }
+             } ]
+         }, { 
+@@ -108,7 +119,7 @@
+             "record" : true,
+             "priority" : 10,
+             "inheritable" : { 
+-                "position" : [ 408, 280 ],
++                "position" : [ 368, 280 ],
+                 "visible" : false,
+                 "loadParams" : false
+             },
+@@ -134,7 +145,8 @@
+                     "color" : [ 10, 7, 4 ],
+                     "font" : "/fonts/CarterOne.ttf:30",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 470, 40 ]
++                    "size" : [ 470, 40 ],
++                    "clipOverflow" : true
+                 }
+             } ]
+         } ],
+@@ -150,8 +162,8 @@
+             "record" : true,
+             "inheritable" : { 
+                 "resource" : "UI/WhitePixel",
+-                "position" : [ 388, 231 ],
+-                "scale" : [ 570, 440 ],
++                "position" : [ 356, 231 ],
++                "scale" : [ 600, 440 ],
+                 "visible" : false,
+                 "loadParams" : true
+             }
+@@ -175,20 +187,9 @@
+                 "resource" : "UI/9patch/9patch-ScrollBarBacking",
+                 "position" : [ 962, 246 ],
+                 "scale" : [ 1, 3.1 ],
+-                "visible" : false,
+                 "loadParams" : true
+             }
+         }, { 
+-            "name" : "scrollHandle",
+-            "record" : true,
+-            "priority" : 8,
+-            "inheritable" : { 
+-                "resource" : "UI/scrollHandle",
+-                "position" : [ 965, 288 ],
+-                "visible" : false,
+-                "loadParams" : true
+-            }
+-        }, { 
+             "name" : "pnl_allergens_top",
+             "record" : true,
+             "priority" : 9,
+Index: Engineering/src/game/ui/states/AllergiesMenu.hx
+===================================================================
+--- Engineering/src/game/ui/states/AllergiesMenu.hx	(revision 973)
++++ Engineering/src/game/ui/states/AllergiesMenu.hx	(working copy)
+@@ -68,7 +68,7 @@
+ 		var refGroup1:DisplayObjectContainer = cast getChildByName( "ingredient1" );
+ 		var refGroup2:DisplayObjectContainer = cast getChildByName( "ingredient2" );
+ 		var scrollBounds:OPSprite = cast getChildByName( "spr_scrollBounds" );
+-		var scrollBar:OPSprite = cast getChildByName( "scrollHandle" );
++		var scrollBar:GraphicButton = cast getChildByName( "btn_scrollBar" );
+ 		var scrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking" );
+ 		m_scrollMenu = new VirtualScrollingMenu( scrollBounds, Orientation.VERTICAL, refGroup1, refGroup2, scrollBar, scrollTrack );
+ 		
+@@ -86,6 +86,11 @@
+ 		
+ 		WebAudio.instance.play( "SFX/button_click" );	
+ 
++		if ( caller.name == "btn_scrollBar" )
++		{
++			return;
++		}
++		
+ 		if ( caller.name == "btn_confirm" )
+ 		{
+ 			// Go to confirmation screen
+@@ -132,7 +137,7 @@
+ 		
+ 		for (ingredient in SpeckGlobals.dataManager.allIngredients)
+ 		{
+-			var label:String = ingredient.name; 
++			var label:String = capitalize( ingredient.name ); 
+ 			var buttonImg:Bitmap = null;
+ 			
+ 			if ( SpeckGlobals.dataManager.hasAllergen( ingredient ) )
+Index: Engineering/src/game/ui/states/CountryMenu.hx
+===================================================================
+--- Engineering/src/game/ui/states/CountryMenu.hx	(revision 973)
++++ Engineering/src/game/ui/states/CountryMenu.hx	(working copy)
+@@ -115,7 +115,7 @@
+ 		var refGroup2:DisplayObjectContainer = getRefGroup( paistGroup2, 2 );
+ 		
+ 		var scrollBounds:OPSprite = cast getChildByName( "spr_scrollBounds" );
+-		var scrollBar:OPSprite = cast getChildByName( "scrollHandle" );
++		var scrollBar:GraphicButton = cast getChildByName( "btn_scrollBar" );
+ 		var scrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking" );
+ 		m_scrollMenu = new VirtualScrollingMenu( scrollBounds, Orientation.VERTICAL, refGroup1, refGroup2, scrollBar, scrollTrack  );
+ 	
+@@ -128,6 +128,11 @@
+ 	{
+ 		super.onButtonHit( caller );
+ 		
++		if ( caller.name == "btn_scrollBar" )
++		{
++			return;
++		}
++		
+ 		// Country list X button: return to main menu 
+ 		if ( caller.name == "countriesQuit" ) 
+ 		{
+@@ -415,8 +420,7 @@
+ 		}
+ 		
+ 		// Always sort "COMING SOON!" countries alphabetically
+-		m_comingSoonCountries.sort( Country.sortAlpha );			
+-
++		m_comingSoonCountries.sort( Country.sortAlpha );	
+ 	}
+ 	
+ 	/**
+@@ -496,5 +500,10 @@
+ 		
+ 		var quit:GraphicButton = cast m_countryListPanel.getChildByName( "countriesQuit" );
+ 		m_countryListPanel.addChildAt( quit, m_countryListPanel.numChildren );
++		
++		var scrollBar:GraphicButton = cast getChildByName( "btn_scrollBar" );
++		var scrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking" );
++		m_countryListPanel.addChildAt( scrollTrack, m_countryListPanel.numChildren );
++		m_countryListPanel.addChildAt( scrollBar, m_countryListPanel.numChildren );
+ 	}
+ }
+\ No newline at end of file
+Index: Engineering/src/game/ui/states/RecipeIngredientsMenu.hx
+===================================================================
+--- Engineering/src/game/ui/states/RecipeIngredientsMenu.hx	(revision 974)
++++ Engineering/src/game/ui/states/RecipeIngredientsMenu.hx	(working copy)
+@@ -94,7 +94,7 @@
+ 		// Set up the scrolling ingredients menu
+ 		// ---------------------------------------------------
+ 		var ingredientBounds:OPSprite = cast getChildByName( "spr_scrollBounds_ingredients" );
+-		var ingredientScrollBar:OPSprite = cast getChildByName( "handleIngredients" );
++		var ingredientScrollBar:GraphicButton = cast getChildByName( "btn_ingredientScrollBar" );
+ 		var ingredientScrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking_ingredients" );
+ 		var ingredientRef1:OPSprite = cast getChildByName( "group_ingredient1" );
+ 		var ingredientRef2:OPSprite = cast getChildByName( "group_ingredient2" );
+@@ -103,7 +103,7 @@
+ 		var ingredientRefButton:GraphicButton = cast ingredientRef1.getChildByName( "btn_ingredient1" );
+ 		ingredientRefButton.onHit = onIngredientHit;
+ 		
+-		m_ingredientsMenu = new VirtualScrollingMenu( ingredientBounds, Orientation.VERTICAL, ingredientRef1, ingredientRef2, ingredientScrollBar, ingredientScrollTrack );
++		m_ingredientsMenu = new VirtualScrollingMenu( ingredientBounds, Orientation.VERTICAL, ingredientRef1, ingredientRef2, ingredientScrollBar, ingredientScrollTrack);
+ 		
+ 		addIngredientData();
+ 		this.addChild( m_ingredientsMenu );
+@@ -113,7 +113,7 @@
+ 		// Set up the scrolling tools menu
+ 		// ---------------------------------------------------
+ 		var toolBounds:OPSprite = cast getChildByName( "spr_scrollBounds_tools" );
+-		var toolScrollBar:OPSprite = cast getChildByName( "handleTools" );
++		var toolScrollBar:GraphicButton = cast getChildByName( "btn_toolScrollBar" );
+ 		var toolScrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking_tools" );
+ 		var toolRef1:OPSprite = cast getChildByName( "group_tool1" );
+ 		var toolRef2:OPSprite = cast getChildByName( "group_tool2" );
+@@ -128,7 +128,7 @@
+ 		var toolRef1:OPSprite = cast getChildByName( "group_tool1" );
+ 		var refLabel:TextField = cast toolRef1.getChildByName( "lbl_tool1" );			
+ 		
+-		m_toolsMenu = new MultidimensionalScrollingMenu( toolBounds, Orientation.VERTICAL, toolRef1, toolRef3, toolRef2, toolScrollBar, toolScrollTrack );
++		m_toolsMenu = new MultidimensionalScrollingMenu( toolBounds, Orientation.VERTICAL, toolRef1, toolRef3, toolRef2, toolScrollBar, toolScrollTrack);
+ 		
+ 		addToolData();
+ 		this.addChild( m_toolsMenu );
+@@ -505,6 +505,15 @@
+ 		addChildAt( ingredRibbon, this.numChildren );
+ 		addChildAt( ingredText, this.numChildren );
+ 		
++		var ingredientScrollBar:GraphicButton = cast getChildByName( "btn_ingredientScrollBar" );
++		var ingredientScrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking_ingredients" );
++		var toolScrollBar:GraphicButton = cast getChildByName( "btn_toolScrollBar" );
++		var toolScrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking_tools" );
++		
++		addChildAt( ingredientScrollTrack, this.numChildren );
++		addChildAt( ingredientScrollBar, this.numChildren );
++		addChildAt( toolScrollTrack, this.numChildren );
++		addChildAt( toolScrollBar, this.numChildren );
+ 	}
+ 	
+ 	// ===================================
+Index: Engineering/src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- Engineering/src/game/ui/VirtualScrollingMenu.hx	(revision 973)
++++ Engineering/src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -13,14 +13,17 @@
+ 
+ package game.ui;
+ import com.firstplayable.hxlib.Debug;
++import com.firstplayable.hxlib.display.GraphicButton;
+ import com.firstplayable.hxlib.display.OPSprite;
+ import game.ui.VirtualScrollingMenu.ScrollingData;
+ import haxe.ds.Option;
+ import openfl.display.Bitmap;
++import openfl.display.DisplayObject;
+ import openfl.display.DisplayObjectContainer;
+ import openfl.events.Event;
+ import openfl.events.MouseEvent;
+ import openfl.display.Sprite;
++import openfl.geom.Point;
+ 
+ /**
+  * Describes label text, image src, button src(s) to be populated onto an existing set of display objects. 
+@@ -113,10 +116,15 @@
+ 	private static inline var SWIPE_THRESHOLD:Float = 10; // Number of pixels between mouse up/down events that articulates a swipe vs a pan/tap action
+ 	private static inline var VELOCITY_DAMPING:Float = 2; // Scales down swipe velocity; aesthetic
+ 	private var MAX_FRAME_DISTANCE:Float; // Max distance scrollable in one frame. Set to item size.
++	private var MAX_SCROLLBAR_FRAME_DISTANCE:Float;
+ 	
+ 	// Scroll UI (scroll bar/scroll track)
+-	private var m_scrollBar:OPSprite;
++	private var m_scrollBar:GraphicButton;
+ 	private var m_scrollTrack:OPSprite;
++	private var m_usingScrollBar:Bool = false;
++	private var m_lastScrollBarPos:Float = 0;
++	private var m_scrollBarSpace:Float;
++	private var m_listSpace:Float;
+ 	
+ 	/**
+ 	 * Setup requires: 
+@@ -127,7 +135,7 @@
+ 	 * @param scrollBounds - sprite used to define scroll area in paist
+ 	 * @param orientation  - vertical or horizontal
+ 	 */
+-	public function new( scrollBounds:OPSprite, orientation:Orientation, refGroup1:DisplayObjectContainer, refGroup2:DisplayObjectContainer, ?scrollBar:OPSprite, ?scrollTrack:OPSprite ) 
++	public function new( scrollBounds:OPSprite, orientation:Orientation, refGroup1:DisplayObjectContainer, refGroup2:DisplayObjectContainer, ?scrollBar:GraphicButton, ?scrollTrack:OPSprite ) 
+ 	{
+ 		super();
+ 		
+@@ -230,9 +238,6 @@
+ 		// Set start/end position of the out of bounds items using scroll limits and item size
+ 		m_endPos   = m_lowerScrollLimit + m_itemSpacing;
+ 		
+-		// Set max frame distance to respective item width or height
+-		MAX_FRAME_DISTANCE = m_itemSize;
+-		
+ 		// Adjust ref group to sit at the startpos
+ 		switch( m_orientation )
+ 		{
+@@ -297,18 +302,8 @@
+ 	{
+ 		initData();
+ 		start();
+-		
+-		// Hide scroll bar if it is not needed
+-		var haveScrollUI:Bool = m_scrollBar != null && m_scrollTrack != null;
+-		if ( haveScrollUI && (m_visibleItems >= m_dataset.length) )
+-		{
+-			m_scrollBar.visible = false;
+-			m_scrollTrack.visible = false;
+-		}
+-		
+-		trace( "adding scroll area to parent" );
+ 		this.parent.addChild( m_scrollArea );
+-		
++			
+ 		cleanUpItems();
+ 
+ 	}
+@@ -319,7 +314,57 @@
+ 	{
+ 		// Add listeners to menu
+ 		this.addEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
++		this.addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+ 		
++		addScrollListeners();
++		
++		// Hide scroll UI if there aren't enough items to scroll
++		if ( (m_visibleItems >= m_dataset.length) )
++		{
++			m_scrollBar.visible = false;
++			m_scrollTrack.visible = false;
++		}
++		else
++		{
++			setUpScrollUI();
++			
++			// Set max frame distance to respective item width or height
++			MAX_FRAME_DISTANCE = m_itemSize;
++			MAX_SCROLLBAR_FRAME_DISTANCE = deltaListToDeltaUI( MAX_FRAME_DISTANCE );
++			
++			// Add button press callback
++			m_scrollBar.onButtonDown = onScrollButtonHit;
++		}
++	}
++	
++	private function setUpScrollUI():Void
++	{
++		// Calculate top and bottom for scroll bar and scroll track sprites
++		// 		Scroll track top/bottom calc'd here are the effective top/bottom for the scroll bar. 
++		// 		That is, they take the bar sprite size/anchoring into account.
++		// NOTE: Scroll bar is anchored at the bottom center
++		var anchorOffset:Float = m_scrollBar.height;
++		var trackTop:Float = Math.floor( m_scrollTrack.y + anchorOffset );
++		var trackBottom:Float = Math.floor( m_scrollTrack.y + m_scrollTrack.height ); 
++		var barTop:Float = Math.floor( m_scrollBar.y - anchorOffset) ;
++		var barBottom:Float = Math.floor( m_scrollBar.y );
++		
++		// Amount of space the scrollbar has to move
++		m_scrollBarSpace = trackBottom - trackTop;
++		
++		// Amount of space the whole list of items has outside of the visible field
++		
++		m_listSpace = m_dataset.length * m_itemSize; // px
++		
++		trace( "====================================" );
++		trace( "\titem size: " + m_itemSize );
++		trace( "\tscroll bar space: " + m_scrollBarSpace );
++		trace( "\tlist size: " + m_listSpace );
++		trace( "====================================" );
++	}
++	
++	private function addScrollListeners():Void
++	{
+ 		// Add listeners to the scroll interaction sprite
+ 		m_scrollArea.addEventListener( MouseEvent.MOUSE_UP, onMouseUp ); 
+ 		m_scrollArea.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown ); 
+@@ -328,6 +373,29 @@
+ 		m_scrollArea.addEventListener( Event.ENTER_FRAME, onFrame );
+ 	}
+ 	
++	private function onAddedToStage( e:Event ):Void
++	{	
++		if ( haveScrollUI() )
++		{
++			addScrollUIListeners();
++		}
++	}
++	
++	private function addScrollUIListeners():Void
++	{
++		this.parent.stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
++		this.parent.stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
++		this.parent.stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );		
++	}
++	
++	private function haveScrollUI():Bool
++	{
++		var haveNullUI:Bool = m_scrollBar == null || m_scrollTrack == null;
++		var haveVisibleUI:Bool = m_scrollBar.visible && m_scrollArea.visible;
++		
++		return !haveNullUI && haveVisibleUI;
++	}
++	
+ 	/**
+ 	 *  Set up data for first batch of visible items
+ 	 */
+@@ -417,10 +485,7 @@
+ 	 * Checks if list & repopulates a scrolling item at the top or bottom as needed
+ 	 */
+ 	private function handleVirtualReposition( dir:Direction ):Void 
+-	{
+-		var newItem:VirtualScrollingItem = null;
+-		var dataIdx:Int = 0;
+-		
++	{	
+ 		// Early return if user is scrolling towards the end of the list
+ 		if ( scrollingAtLimit( m_direction ) )
+ 		{
+@@ -433,14 +498,7 @@
+ 			{
+ 				if ( scrolledOneItemBackward()) // only reposition items when a new one has come into view
+ 				{
+-					dataIdx = m_userPos + m_visibleItems + 1;
+-					
+-					if (( dataIdx < m_dataset.length ))
+-					{
+-						newItem = repositionAtEnd();
+-						newItem.updateData( m_dataset[dataIdx] );
+-						m_userPos++;
+-					}
++					moveItemToEnd();
+ 				}
+ 			}
+ 			case FORWARD:
+@@ -447,14 +505,7 @@
+ 			{
+ 				if ( scrolledOneItemForward() ) // only reposition items when a new one has come into view
+ 				{
+-					dataIdx = m_userPos - 1;
+-					
+-					if ( ( dataIdx >= 0 ) )
+-					{
+-						newItem = repositionAtStart();
+-						newItem.updateData( m_dataset[dataIdx] );
+-						m_userPos--;
+-					}
++					moveItemToStart();
+ 				}
+ 			}
+ 		}
+@@ -461,6 +512,58 @@
+ 	}
+ 	
+ 	/**
++	 * Checks if list & repopulates a scrolling item at the top or bottom as needed
++	 */
++	private function fastVirtualReposition( dir:Direction ):Void 
++	{	
++		// Early return if user is scrolling towards the end of the list
++		if ( scrollingAtLimit( m_direction ) )
++		{
++			return;
++		}
++		
++		switch( dir )
++		{
++			case BACKWARD:
++			{
++				moveItemToEnd();
++			}
++			case FORWARD:
++			{
++				moveItemToStart();
++			}
++		}
++	}
++	
++	private function moveItemToStart()
++	{
++		var newItem:VirtualScrollingItem = null;
++		var dataIdx:Int = 0;
++		dataIdx = m_userPos - 1;
++		
++		if ( ( dataIdx >= 0 ) )
++		{
++			newItem = repositionAtStart();
++			newItem.updateData( m_dataset[dataIdx] );
++			m_userPos--;
++		}
++	}
++	
++	private function moveItemToEnd()
++	{
++		var newItem:VirtualScrollingItem = null;
++		var dataIdx:Int = 0;
++		dataIdx = m_userPos + m_visibleItems + 1;
++		
++		if (( dataIdx < m_dataset.length ))
++		{
++			newItem = repositionAtEnd();
++			newItem.updateData( m_dataset[dataIdx] );
++			m_userPos++;
++		}
++	}
++	
++	/**
+ 	 * Returns true if the bottom left corner of the first item in the list is below (left of) the start pos.
+ 	 * Assumes top-left corner object anchoring.
+ 	 */
+@@ -568,7 +671,7 @@
+ 		{
+ 			return;
+ 		}
+-		
++				
+ 		m_isMouseDown = false;
+ 
+ 		var pos:Float = switch ( m_orientation )
+@@ -579,9 +682,9 @@
+ 		
+ 		var distance:Float = pos - m_downPos;
+ 		
+-		if ( distance > MAX_FRAME_DISTANCE )
++		if ( Math.abs( distance ) > MAX_FRAME_DISTANCE )
+ 		{
+-			distance = MAX_FRAME_DISTANCE;
++			distance = (distance >= 0) ? MAX_FRAME_DISTANCE : (MAX_FRAME_DISTANCE * -1);
+ 		}
+ 		
+ 		// ---------------------------------------------------
+@@ -622,6 +725,12 @@
+ 	
+ 	private function onMouseMove( e:MouseEvent ):Void
+ 	{
++		// Early return if scrolling using scrollbar
++		if ( m_usingScrollBar )
++		{
++			return;
++		}
++				
+ 		handleButtonOverState( e.localX, e.localY );
+ 		
+ 		// Only relevant if dragging; return if mouse is not down
+@@ -638,16 +747,26 @@
+ 			case HORIZONTAL: e.localX;
+ 			case VERTICAL: 	 e.localY;
+ 		}
++
++		var distance:Float = pos - m_overPos;
+ 		
+-		var distance:Float = pos - m_overPos;
+ 		if ( Math.abs( distance ) > MAX_FRAME_DISTANCE )
+ 		{
+-			if ( distance > 0 ) distance = MAX_FRAME_DISTANCE;
+-			else if ( distance < 0 ) distance = MAX_FRAME_DISTANCE * -1;
++			distance = (distance >= 0) ? MAX_FRAME_DISTANCE : (MAX_FRAME_DISTANCE * -1);
+ 		}
+ 		
+ 		m_overPos = pos;
+ 		
++		panItems( distance );
++		
++		// ---------------------------------------------------
++		// Update scroll bar pos. with panning items
++		// ---------------------------------------------------
++		repositionScrollBar( distance );
++	}
++	
++	private function panItems( distance:Float ):Void
++	{		
+ 		m_direction = getDirection( distance );
+ 		// ----------------------------------------------------------
+ 		// Early return if we are scrolling towards respective limits
+@@ -665,19 +784,22 @@
+ 			item.incrementPosition( distance, m_orientation );
+ 		}
+ 		
+-		// ---------------------------------------------------
+-		// Update scroll bar pos. with panning items
+-		// ---------------------------------------------------
+-		repositionScrollBar( distance );
++		handleVirtualReposition( m_direction );
+ 	}
+ 	
+ 	private function onMouseOut( e:MouseEvent ):Void
+ 	{
++		// Early return if scrolling using scrollbar
++		if ( m_usingScrollBar )
++		{
++			return;
++		}
++		
+ 		onMouseUp( e );
+ 	}
+ 	
+ 	private function onFrame( e:Event ):Void
+-	{		
++	{				
+ 		// ---------------------------------------------------
+ 		// Increment swipe time
+ 		// ---------------------------------------------------
+@@ -714,8 +836,18 @@
+ 				
+ 				m_velocity += m_drag;
+ 			}
++			
++			// ---------------------------------------------------
++			// Update new sprites above/below as the list moves,
++			//		as determined by sprite position
++			// ---------------------------------------------------
++			if ( m_direction != null )
++			{
++				handleVirtualReposition( m_direction );
++			}
+ 		}
+ 		
++		/*
+ 		// ---------------------------------------------------
+ 		// Update new sprites above/below as the list moves,
+ 		//		as determined by sprite position
+@@ -723,7 +855,7 @@
+ 		if ( m_direction != null )
+ 		{
+ 			handleVirtualReposition( m_direction );
+-		}
++		}*/
+ 	}
+ 
+ 	/**
+@@ -732,7 +864,7 @@
+ 	 */
+ 	private function initTween( distance:Float ):Void
+ 	{
+-		if ( m_swipeTime == 0 )
++		if ( m_swipeTime == 0 || m_usingScrollBar )
+ 		{
+ 			return;
+ 		}
+@@ -786,7 +918,7 @@
+ 	// Scroll bar handling
+ 	// ===================================
+ 	
+-	private function addScrollUI( scrollBar:OPSprite, scrollTrack:OPSprite ):Void
++	private function addScrollUI( scrollBar:GraphicButton, scrollTrack:OPSprite ):Void
+ 	{
+ 		if ( scrollBar == null || scrollTrack == null )
+ 		{
+@@ -798,6 +930,7 @@
+ 	}
+ 	
+ 	/**
++	 *  Repositions scroll bar when list is panned
+ 	 * 	NOTE: only works for vertical scrolling lists. 
+ 	 *	TODO - Functionality for horizontal menu scrollbars
+ 	 */
+@@ -804,7 +937,7 @@
+ 	private function repositionScrollBar( listScrollDistance:Float )
+ 	{
+ 		// Early return if no scrollbar 
+-		if ( m_scrollBar == null || m_scrollBar.visible == false )
++		if ( !haveScrollUI() || m_usingScrollBar )
+ 		{
+ 			return;
+ 		}
+@@ -812,37 +945,116 @@
+ 		// ---------------------------------------------------
+ 		// Calculate scroll bar movement 
+ 		// ---------------------------------------------------
++		var scrollBarDistance:Float = deltaListToDeltaUI( listScrollDistance );
+ 		
+-		// Calculate top and bottom for scroll bar and scroll track sprites
+-		// 		Scroll track top/bottom calc'd here are the effective top/bottom for the scroll bar. 
+-		// 		That is, they take the bar sprite size/anchoring into account.
+-		// NOTE: Scroll bar is anchored at the center
+-		var anchorOffset:Float = m_scrollBar.height / 2;
+-		var trackTop:Float = Math.floor( m_scrollTrack.y);
+-		var trackBottom:Float = Math.floor( m_scrollTrack.y + m_scrollTrack.height); 
+-		var barTop:Float = Math.floor( m_scrollBar.y - anchorOffset) ;
+-		var barBottom:Float = Math.floor( m_scrollBar.y + anchorOffset);
++		// ---------------------------------------------------
++		// Update scroll bar position
++		// ---------------------------------------------------
++		m_scrollBar.y += scrollBarDistance;
++	}
++	
++	/**
++	 * Translates list panning movement to scroll bar movement
++	 */
++	private function deltaListToDeltaUI( listScrollDistance:Float ):Float
++	{	
++		// Ratio between scrollbar movement space and total movement space
++		var movementRatio:Float = m_scrollBarSpace / m_listSpace; // px
+ 		
+-		// Amount of space the scrollbar has to move
+-		var scrollBarSpace:Float = trackBottom - trackTop;
++		// Amount the scrollbar moves is the amount scroll (dist) multiplied by the ratio between spaces.
++		// 		Sign is flipped so the scrollbar moves with the items (opposite dir) 
++		var scrollBarDistance:Float = listScrollDistance * movementRatio * -1 / VELOCITY_DAMPING;
+ 		
+-		// Amount of space the whole list of items has outside of the visible field
+-		
+-		var listSpace:Float = m_dataset.length * m_itemSize; // px
+-		
++		return scrollBarDistance;
++	}
++	
++	/**
++	 * Translates scroll bar movement to list panning movement
++	 */
++	private function deltaUIToDeltaList( UIScrollDistance:Float ):Float
++	{	
+ 		// Ratio between scrollbar movement space and total movement space
+-		var movementRatio:Float = scrollBarSpace / listSpace; // px
++		var movementRatio:Float = m_listSpace/ m_scrollBarSpace ; // px
+ 		
+ 		// Amount the scrollbar moves is the amount scroll (dist) multiplied by the ratio between spaces.
+ 		// 		Sign is flipped so the scrollbar moves with the items (opposite dir) 
+-		var scrollBarDistance:Float = listScrollDistance * movementRatio * -1 / VELOCITY_DAMPING;
++		var scrollBarDistance:Float = UIScrollDistance * movementRatio * -1;
+ 		
+-		// ---------------------------------------------------
+-		// Update scroll bar position
+-		// ---------------------------------------------------
+-		m_scrollBar.y += scrollBarDistance;
++		return scrollBarDistance;
+ 	}
+ 	
++	/**
++	 * Stage event listener to move the scroll UI with mouse
++	 */
++	private function onStageMouseMove( e:MouseEvent ):Void
++	{
++		// Early return if not dragging the scrollbar
++		if ( !m_usingScrollBar )
++		{
++			return;
++		}
++		
++		var deltaY:Float = e.stageY - m_lastScrollBarPos;
++		
++		// Early return if at scroll limits
++		var direction:Direction = getDirection( deltaY );
++		trace( direction );
++		switch( direction )
++		{
++			case Direction.FORWARD:
++			{
++				if ( atLowerScrollLimit() )
++				{
++					return;
++				}
++			}
++			case Direction.BACKWARD:
++			{
++				if ( atUpperScrollLimit() )
++				{
++					return;
++				}
++			}
++		}
++		
++		if ( Math.abs( deltaY ) > MAX_SCROLLBAR_FRAME_DISTANCE )
++		{
++			deltaY = ( deltaY >= 0) ? (MAX_SCROLLBAR_FRAME_DISTANCE * -1) : MAX_SCROLLBAR_FRAME_DISTANCE;
++		}
++		
++		var listDistance:Float = deltaUIToDeltaList( deltaY );
++		
++		m_scrollBar.y += deltaY;
++		panItems( listDistance );
++		m_lastScrollBarPos = e.stageY;
++	}
++	
++	/**
++	 * Stage event listener to init scroll UI drag
++	 */
++	private function onStageMouseDown( e:MouseEvent ):Void
++	{
++		if ( m_usingScrollBar )
++		{
++			m_lastScrollBarPos = e.stageY;
++			removeScrollListeners();
++		}
++	}
++	
++	/**
++	 * Stage event listener to end scroll UI drag
++	 */
++	private function onStageMouseUp( e:MouseEvent ):Void
++	{
++		m_usingScrollBar = false;
++		addScrollListeners();
++	}
++	
++	private function onScrollButtonHit( ?caller:GraphicButton )
++	{
++		m_usingScrollBar = true;
++	}
++	
+ 	// ===================================
+ 	// Cleanup/Exit handling
+ 	// ===================================
+@@ -855,12 +1067,14 @@
+ 	private function dispose():Void
+ 	{
+ 		removeScrollListeners();
++		//removeScrollUIListeners();
+ 		
+ 		// Clear menu
+ 		clearData();
+ 		
+ 		// Remove event listeners from menu
+-		this.removeEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
++		this.parent.removeEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
++		this.parent.removeEventListener( Event.ADDED, onAddedToStage );
+ 	}
+ 	
+ 	private function removeScrollListeners():Void
+@@ -873,6 +1087,17 @@
+ 		m_scrollArea.removeEventListener( Event.ENTER_FRAME, onFrame );
+ 	}
+ 	
++	private function removeScrollUIListeners()
++	{
++		// Remove listeners for the scroll bar
++		if ( this.parent != null && this.parent.stage != null )
++		{
++			this.parent.stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp ); 
++			this.parent.stage.removeEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown ); 
++			this.parent.stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
++		}
++	}
++	
+ 	/**
+ 	 * Clears scroll data for reinitialization. 
+ 	 */

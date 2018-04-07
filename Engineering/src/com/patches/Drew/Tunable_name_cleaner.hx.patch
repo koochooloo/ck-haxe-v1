@@ -1,0 +1,25 @@
+Index: tunableItems/TunableItem.hx
+===================================================================
+--- tunableItems/TunableItem.hx	(revision 1411)
++++ tunableItems/TunableItem.hx	(working copy)
+@@ -761,7 +761,10 @@
+ 			//Upper case the name
+ 			nameString = nameString.toUpperCase();
+ 
+-			//Replace the following characters with underscores
++			//Replace anything that isn't a letter, number, or underscore
++			//with underscores.
++			var regEx:EReg = ~/[^_A-Z0-9]/g;
++			nameString = regEx.replace(nameString, "_");
+ 		}
+ 		return nameString;
+ 	}
+@@ -770,7 +773,7 @@
+ 	 * The regex describing an acceptable tunable name
+ 	 * @return
+ 	 */
+-	public static var VARIABLE_NAME_REGEX:EReg = ~/^[A-Z]+(_[A-Z0-9]+)*$/i;
++	public static var VARIABLE_NAME_REGEX:EReg = ~/^[A-Z]+(_+[A-Z0-9]+)*$/i;
+ 	
+ 	/**
+ 	 * Returns whether the variable name is valid.

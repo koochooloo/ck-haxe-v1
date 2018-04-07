@@ -1,0 +1,1006 @@
+Index: trunk/Engineering/assets/layouts/RecipeIngredientsMenu.json
+===================================================================
+--- trunk/Engineering/assets/layouts/RecipeIngredientsMenu.json	(revision 826)
++++ trunk/Engineering/assets/layouts/RecipeIngredientsMenu.json	(working copy)
+@@ -358,6 +358,39 @@
+                     "wrapOverflow" : true
+                 }
+             } ]
++        }, { 
++            "name" : "group_tool3",
++            "record" : true,
++            "priority" : 10,
++            "inheritable" : { 
++                "position" : [ 328, 752 ],
++                "loadParams" : false
++            },
++            "button" : [ { 
++                "name" : "btn_tool3",
++                "record" : true,
++                "priority" : 3,
++                "inheritable" : { 
++                    "resource" : "2d/Buttons/btn_store",
++                    "position" : [ 31, 32 ],
++                    "loadParams" : true
++                }
++            } ],
++            "label" : [ { 
++                "name" : "lbl_tool3",
++                "record" : true,
++                "priority" : 10,
++                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
++                "inheritable" : { 
++                    "position" : [ 70, -1 ],
++                    "loadParams" : false,
++                    "color" : [ 1, 1, 1 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 270, 64 ],
++                    "wrapOverflow" : true
++                }
++            } ]
+         } ],
+         "spriteObject" : [ { 
+             "name" : "bg",
+Index: trunk/Engineering/lib/layouts/Recipe Substates/RecipeIngredientsMenu.json
+===================================================================
+--- trunk/Engineering/lib/layouts/Recipe Substates/RecipeIngredientsMenu.json	(revision 826)
++++ trunk/Engineering/lib/layouts/Recipe Substates/RecipeIngredientsMenu.json	(working copy)
+@@ -358,6 +358,39 @@
+                     "wrapOverflow" : true
+                 }
+             } ]
++        }, { 
++            "name" : "group_tool3",
++            "record" : true,
++            "priority" : 10,
++            "inheritable" : { 
++                "position" : [ 328, 752 ],
++                "loadParams" : false
++            },
++            "button" : [ { 
++                "name" : "btn_tool3",
++                "record" : true,
++                "priority" : 3,
++                "inheritable" : { 
++                    "resource" : "Buttons/btn_store",
++                    "position" : [ 31, 32 ],
++                    "loadParams" : true
++                }
++            } ],
++            "label" : [ { 
++                "name" : "lbl_tool3",
++                "record" : true,
++                "priority" : 10,
++                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
++                "inheritable" : { 
++                    "position" : [ 70, -1 ],
++                    "loadParams" : false,
++                    "color" : [ 1, 1, 1 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 270, 64 ],
++                    "wrapOverflow" : true
++                }
++            } ]
+         } ],
+         "spriteObject" : [ { 
+             "name" : "bg",
+Index: trunk/Engineering/src/game/ui/MultidimensionalScrollingMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/MultidimensionalScrollingMenu.hx	(nonexistent)
++++ trunk/Engineering/src/game/ui/MultidimensionalScrollingMenu.hx	(working copy)
+@@ -0,0 +1,383 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.ui;
++
++import com.firstplayable.hxlib.display.OPSprite;
++import openfl.display.DisplayObjectContainer;
++import game.ui.VirtualScrollingMenu.Orientation;
++import game.ui.VirtualScrollingMenu.Direction;
++import com.firstplayable.hxlib.display.OPSprite;
++import openfl.display.Sprite;
++
++
++enum Dimension
++{
++	ROW;
++	COLUMN;
++}
++
++/**
++ *  A virtual scrolling menu that handles lists of multiple rows/columns.
++ *  Does its own setup, but adopts parent's movement/data functions
++ */
++class MultidimensionalScrollingMenu extends VirtualScrollingMenu
++{
++
++	private var m_visibleCols:Int;
++	private var m_colSpacing:Float;
++	private var m_visibleRows:Int;
++	private var m_rowSpacing:Float;
++	
++	
++	/**
++	 * @param	centerRef - top left object in a scrolling gred
++	 * @param	bottomRef - object directly below center ref 
++	 * @param	rightRef - object directly to the right of center ref 
++	 */
++	public function new( scrollBounds:OPSprite, orientation:Orientation, centerRef:DisplayObjectContainer, ?bottomRef:DisplayObjectContainer, ?rightRef:DisplayObjectContainer, ?scrollBar:OPSprite, ?scrollTrack:OPSprite )
++	{
++		super ( scrollBounds, orientation, null, null, scrollBar, scrollTrack );
++
++		// ---------------------------------------------------
++		// Init other member vars using paist ref:
++		// - Visisble items
++		// - Item spacing
++		// - Item size
++		// - Start & End pos
++		// - List of scrolling items
++		// ---------------------------------------------------
++		addMultiRef( centerRef, bottomRef, rightRef );
++		
++		// ---------------------------------------------------
++		// Add scroll bar/track, if applicable
++		// ---------------------------------------------------
++		addScrollUI( scrollBar, scrollTrack );
++	}
++	
++	private function addMultiRef( centerRef:DisplayObjectContainer, ?bottomRef:DisplayObjectContainer, ?rightRef:DisplayObjectContainer )
++	{
++		m_visibleCols = 1;
++		m_visibleRows = 1;
++		
++		// ---------------------------------------------------------
++		// Get relevant item dimension, based on scroll orientation
++		// 		This is used for bounds detection.
++		// ---------------------------------------------------------
++		switch ( m_orientation )
++		{
++			case Orientation.HORIZONTAL:
++			{
++				m_itemSize = centerRef.width;
++			}
++			
++			case Orientation.VERTICAL:
++			{
++				m_itemSize = centerRef.height;
++			}
++		}
++		
++		// -------------------------------------------------------
++		// Get column spacing data, if applicable
++		// 		This is used when adding new columns in scrolling.
++		// -------------------------------------------------------
++		if ( rightRef != null )
++		{
++			m_colSpacing = rightRef.x - centerRef.x; // Includes item size + padding
++			m_visibleCols = 2;// Math.ceil( m_scrollArea.width / m_colSpacing );
++			trace( "Multidimensional scrolling, visible cols: " + m_visibleCols );
++		}
++		
++		// ----------------------------------------------------
++		// Get row spacing data, if applicable
++		//		This is used when adding new rows in scrolling.
++		// ----------------------------------------------------
++		if ( bottomRef != null )
++		{
++			m_rowSpacing = bottomRef.y - centerRef.y;
++			m_visibleRows = Math.ceil( m_scrollArea.height / m_rowSpacing );
++			trace( "Multidimensional scrolling, visible rows: " + m_visibleRows );
++		}
++		
++		// ----------------------------------------------------
++		// Populate a set of items based on above dimensions.
++		// Items are filled taking the scroll orientation into account, 
++		// 		such that the last row/col of items in the list are at the scroll end.
++		// ----------------------------------------------------
++		
++		var numRows:Int = m_visibleRows;
++		var numCols:Int = m_visibleCols;
++		var rowOffset:Float = m_rowSpacing;
++		var colOffset:Float = m_colSpacing;
++		var count:Int = 0;
++		
++		switch( m_orientation )
++		{	
++			case Orientation.HORIZONTAL:
++			{
++				var initYPos:Float = 0;
++				for ( col in 0...numCols )
++				numCols++; // Since we are adding new columns when scrolling, place an extra set out of view
++				{
++					for ( row in 0...numRows)
++					{
++						var item:VirtualScrollingItem = new VirtualScrollingItem( centerRef, count );
++						//item.addMask( m_scrollArea );
++						centerRef.y += rowOffset;
++						m_scrollingItems.push( item );
++						count++; // Temp - debugging
++					}
++					centerRef.x += colOffset;
++					rowOffset = 0;
++				}
++			}
++			case Orientation.VERTICAL:
++			{
++				numRows++; // Since we are adding new rows when scrolling, place an extra set out of view
++				var initXPos:Float = centerRef.x;
++				var initYPos:Float = centerRef.y;
++				for ( row in 0...numRows)
++				{
++					colOffset = 0;
++					centerRef.x = initXPos;
++					centerRef.y = initYPos;
++					
++					for ( col in 0...numCols )
++					{
++						var item:VirtualScrollingItem = new VirtualScrollingItem( centerRef, count );
++						//item.addMask( m_scrollArea );
++						centerRef.x += colOffset;
++						m_scrollingItems.push( item );
++						trace( "-------- added item at " + centerRef.x + " " + centerRef.y );
++
++						colOffset += m_colSpacing;
++						count++; // Temp - debugging
++					}
++					
++					centerRef.y += rowOffset;
++					rowOffset += m_rowSpacing;
++					//trace( "added row offset " + rowOffset + " final pos " + centerRef.y );
++
++				}
++			}
++		}
++		
++		centerRef.visible = false;
++		bottomRef.visible = false;
++		rightRef.visible = false;
++	}
++	
++	// ===================================
++	// Object positioning helper functions
++	// ===================================
++	
++	/**
++	 * Checks if list & repopulates a scrolling item at the top or bottom as needed
++	 */
++	private override function handleVirtualReposition( dir:Direction ):Void 
++	{
++		var newItem:VirtualScrollingItem = null;
++		var dataIdx:Int = 0;
++		
++		// Early return if user is scrolling towards the end of the list
++		if ( scrollingAtLimit( m_direction ) )
++		{
++			return;
++		}
++		
++		switch( dir )
++		{
++			case BACKWARD:
++			{
++				if ( scrolledOneItemBackward()) // only reposition items when a new (row/col of them) has come into view
++				{
++					switch( m_orientation ) 
++					{
++						case HORIZONTAL: // Scroll one col backward
++						{
++							dataIdx = m_userPos + m_visibleCols;
++							var newItems:Array< VirtualScrollingItem > = repositionSetAtEnd( COLUMN, dataIdx );
++							m_userPos++;
++							
++							for ( item in newItems )
++							{
++								item.updateData( m_dataset[ dataIdx ] );
++							}
++						}
++						case VERTICAL: // Scroll one row backward
++						{
++							dataIdx = m_userPos + m_visibleRows;
++							var newItems:Array< VirtualScrollingItem > = repositionSetAtEnd( ROW, dataIdx);
++							m_userPos ++;
++							
++							for ( item in newItems )
++							{
++								item.updateData( m_dataset[ dataIdx ] );
++							}
++						}
++					}
++				}
++			}
++			case FORWARD:
++			{
++				if ( scrolledOneItemForward() ) // only reposition items when a new (row/col of them) has come into view
++				{					
++					switch( m_orientation )
++					{
++						case HORIZONTAL: // Scroll one col forward
++						{
++							if ( m_userPos < m_dataset.length ) // If there is at least one item to add
++							{
++								dataIdx = m_userPos - m_visibleCols;
++								var newItems:Array< VirtualScrollingItem > = repositionSetAtStart( COLUMN, dataIdx );
++								m_userPos --;
++
++								for ( item in newItems )
++								{
++									item.updateData( m_dataset[ dataIdx ] );
++								}
++							}
++
++						}
++						case VERTICAL: // Scroll one row forward
++						{
++							if ( m_userPos > 0) // If there is at least one item to add
++							{
++								dataIdx = m_userPos - m_visibleRows;
++								var newItems:Array< VirtualScrollingItem > = repositionSetAtStart( ROW, dataIdx );
++								m_userPos --;
++
++								for ( item in newItems )
++								{
++									item.updateData( m_dataset[ dataIdx ] );
++								}
++							}
++						}
++					}
++				}
++			}
++		}
++	}
++	
++	/**
++	 * Take the last items of the list and place it at the top
++	 * Returns reference to them for data updates.
++	 * */
++	private function repositionSetAtStart( dimension:Dimension, index:Int ):Array< VirtualScrollingItem >
++	{
++		var repositioned:Array< VirtualScrollingItem > = new Array();
++		switch ( dimension )
++		{
++			case ROW:
++			{	
++				var rowOffset:Float = 0;
++				
++				// Grab items from the end of the list, up to one row
++				for ( i in 0...m_visibleRows )
++				{
++					var lastItem:VirtualScrollingItem = m_scrollingItems.pop();
++					
++					var firstItem:VirtualScrollingItem = m_scrollingItems[ 0 ];
++					var firstItemPos:Float = firstItem.pos( m_orientation ) + rowOffset;
++					
++					// Reposition at start
++					lastItem.setPosition( firstItemPos, m_orientation );
++					m_scrollingItems.insert( 0, lastItem );
++					
++					repositioned.push( lastItem );
++					
++					rowOffset += m_rowSpacing;
++				}
++			}
++			case COLUMN:
++			{
++				var colOffset:Float = 0;
++				
++				// Grab items from the end of the list, up to one col
++				for ( i in 0...m_visibleCols )
++				{
++					var lastItem:VirtualScrollingItem = m_scrollingItems.pop();
++					
++					var firstItem:VirtualScrollingItem = m_scrollingItems[ 0 ];
++					var firstItemPos:Float = firstItem.pos( m_orientation ) + colOffset;
++					
++					// Reposition at start 
++					lastItem.setPosition( firstItemPos, m_orientation );
++					m_scrollingItems.insert( 0, lastItem );
++					
++					repositioned.push( lastItem );
++					
++					colOffset += m_colSpacing;
++				}
++			}
++		}
++
++		return repositioned;
++	}
++	
++	/**
++	 * Take the first items of the list and place it at the bottom
++	 * Returns reference to them for data updates.
++	 * */
++	private function repositionSetAtEnd( dimension:Dimension, index:Int ):Array< VirtualScrollingItem >
++	{
++		var repositioned:Array< VirtualScrollingItem > = new Array();
++		switch ( dimension )
++		{
++			case ROW:
++			{	
++				var rowOffset:Float = 0;
++				
++				// Grab items from the front of the list, up to one row
++				for ( i in 0...m_visibleRows )
++				{
++					var firstItem:VirtualScrollingItem = m_scrollingItems.shift();
++					
++					var lastItem:VirtualScrollingItem = m_scrollingItems[ m_scrollingItems.length - 1 ];
++					var lastItemPos:Float = firstItem.pos( m_orientation ) + rowOffset;
++					
++					// Reposition at end
++					firstItem.setPosition( lastItemPos, m_orientation );
++					m_scrollingItems.insert( (m_scrollingItems.length - 1), firstItem );
++					
++					repositioned.push( firstItem );
++					
++					rowOffset += m_rowSpacing;
++				}
++			}
++			case COLUMN:
++			{
++				var colOffset:Float = 0;
++				
++				// Grab items from the front of the list, up to one row
++				for ( i in 0...m_visibleCols )
++				{
++					var firstItem:VirtualScrollingItem = m_scrollingItems.shift();
++					
++					var lastItem:VirtualScrollingItem = m_scrollingItems[ m_scrollingItems.length - 1 ];
++					var lastItemPos:Float = firstItem.pos( m_orientation ) + colOffset;
++					
++					// Reposition at end
++					firstItem.setPosition( lastItemPos, m_orientation );
++					m_scrollingItems.insert( (m_scrollingItems.length - 1), firstItem );
++					
++					repositioned.push( firstItem );
++					
++					colOffset += m_rowSpacing;
++				}
++			}
++		}
++		
++		return repositioned;
++	}
++}
+\ No newline at end of file
+Index: trunk/Engineering/src/game/ui/states/RecipeIngredientsMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/states/RecipeIngredientsMenu.hx	(revision 826)
++++ trunk/Engineering/src/game/ui/states/RecipeIngredientsMenu.hx	(working copy)
+@@ -28,7 +28,8 @@
+ import game.controllers.FlowController;
+ import game.def.GameState;
+ import game.net.NetAssets;
+-import game.ui.ScrollingManager;
++import game.ui.VirtualScrollingMenu;
++import game.ui.MultidimensionalScrollingMenu;
+ import game.ui.SpeckMenu;
+ import game.ui.states.RecipeIngredientsMenu.IngredientGroup;
+ import game.ui.states.RecipeIngredientsMenu.ToolGroup;
+@@ -70,19 +71,9 @@
+  * */
+ class RecipeIngredientsMenu extends SpeckMenu
+ {
+-	// ------ Static tunable vars:
+-	// TODO - callback to pull from paist bounding box
+-	private static inline var INGREDIENT_WIDTH:Float = 400;
+-	private static inline var INGREDIENT_HEIGHT:Float = 390;
+-	private static inline var INGREDIENT_NUM:Int = 6;
+-	
+-	private static inline var TOOL_WIDTH:Float = 700;
+-	private static inline var TOOL_HEIGHT:Float = 90;
+-	private static inline var TOOL_NUM:Int = 2;
+-
+ 	// ------ Member vars:
+-	private var m_ToolsMenu:ScrollingManager;
+-	private var m_IngredientsMenu:ScrollingManager; 
++	private var m_ingredientsMenu:VirtualScrollingMenu; 
++	private var m_toolsMenu:MultidimensionalScrollingMenu;
+ 	
+ 	private var m_recipeImage:OPSprite;
+ 
+@@ -90,34 +81,58 @@
+ 	{
+ 		super( "RecipeIngredientsMenu" );
+ 		
+-		initData( p );
++		// Grab highlighted recipe for setting up img/favorites
++		var recipe:Recipe = FlowController.data.selectedRecipe;
++
++		// ---------------------------------------------------
++		// Set menu title
++		// ---------------------------------------------------
++		var title:TextField = cast getChildByName( "headerText" );
++		title.text = recipe.name; 
+ 		
+-		m_recipeImage = null;
+-	}
+-	
+-	public function dispose():Void
+-	{
+-		m_ToolsMenu.dispose();
+-		m_IngredientsMenu.dispose();
++		// ---------------------------------------------------
++		// Set up the scrolling ingredients menu
++		// ---------------------------------------------------
++		var ingredientBounds:OPSprite = cast getChildByName( "spr_scrollBounds_ingredients" );
++		var ingredientScrollBar:OPSprite = cast getChildByName( "handleIngredients" );
++		var ingredientScrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking_ingredients" );
++		var ingredientRef1:OPSprite = cast getChildByName( "group_ingredient1" );
++		var ingredientRef2:OPSprite = cast getChildByName( "group_ingredient2" );
+ 		
+-		if (m_recipeImage != null)
+-		{
+-			removeChild(m_recipeImage);
+-			m_recipeImage = null;
+-		}
+-	}
+-	
+-	public function initData( p:GameStateParams ):Void
+-	{
+-		// Pull relevant params data 
+-		var recipe:Recipe = FlowController.data.selectedRecipe;
+-		var country:Country = FlowController.data.selectedCountry;
++		// Set menu-specific button onHit
++		var ingredientRefButton:GraphicButton = cast ingredientRef1.getChildByName( "btn_ingredient1" );
++		ingredientRefButton.onHit = onIngredientHit;
+ 		
+-		// Display recipe name as menu title
+-		var header:TextField = cast this.getChildByName( "headerText" );
+-		header.text = recipe.name;
++		m_ingredientsMenu = new VirtualScrollingMenu( ingredientBounds, Orientation.VERTICAL, ingredientRef1, ingredientRef2, ingredientScrollBar, ingredientScrollTrack );
+ 		
+-		// Favoriting button is visible in the consumer flow
++		addIngredientData();
++		this.addChild( m_ingredientsMenu );
++		m_ingredientsMenu.init();
++		
++		// ---------------------------------------------------
++		// Set up the scrolling ingredients menu
++		// ---------------------------------------------------
++		var toolBounds:OPSprite = cast getChildByName( "spr_scrollBounds_tools" );
++		var toolScrollBar:OPSprite = cast getChildByName( "handleTools" );
++		var toolScrollTrack:OPSprite = cast getChildByName( "spr_scrollBacking_tools" );
++		var toolRef1:OPSprite = cast getChildByName( "group_tool1" );
++		var toolRef2:OPSprite = cast getChildByName( "group_tool2" );
++		var toolRef3:OPSprite = cast getChildByName( "group_tool3" );
++		
++		// Set menu-specific button onHit
++		var toolRefButton:GraphicButton = cast toolRef1.getChildByName( "btn_tool1" );
++		toolRefButton.onHit = onToolHit;
++		
++		m_toolsMenu = new MultidimensionalScrollingMenu( toolBounds, Orientation.VERTICAL, toolRef1, toolRef3, toolRef2, toolScrollBar, toolScrollTrack );
++		
++		addToolData();
++		this.addChild( m_toolsMenu );
++		m_toolsMenu.init();
++		
++		// ---------------------------------------------------
++		// Set up the favorites button
++		// ---------------------------------------------------
++		// Favoriting button is only visible in the consumer flow
+ 		if ( FlowController.currentMode == FlowMode.CONSUMER )
+ 		{
+ 			// Show favorites button
+@@ -139,29 +154,10 @@
+ 				fav.downState = ResMan.instance.getImage( "2d/Buttons/btn_favorites_up" );
+ 			}
+ 		}
+-		
+-		
+-		// Get boundary for the scroll menus 
+-		var iBounds:DisplayObjectContainer = cast this.getChildByName( "ingredient_bounds" );
+-		var tBounds:DisplayObjectContainer = cast this.getChildByName( "tool_bounds" );
+-		
+-		// Create scroll menus
+-		m_IngredientsMenu = new ScrollingManager( iBounds.x, iBounds.y, INGREDIENT_WIDTH, INGREDIENT_HEIGHT, this, "vertical", INGREDIENT_NUM );
+-		m_ToolsMenu = new ScrollingManager( tBounds.x, tBounds.y, TOOL_WIDTH, TOOL_HEIGHT, this, "vertical", TOOL_NUM, 2 );
+-		m_IngredientsMenu.addScrollBar( cast getChildByName( "handleIngredients" ), cast getChildByName( "spr_scrollBacking_ingredients" ) );
+-		m_ToolsMenu.addScrollBar( cast getChildByName( "handleTools" ), cast getChildByName( "spr_scrollBacking_tools" ) );
+ 
+-		// Populate the tools & ingredients from ref, for the respective scroll menus
+-		createIngredients();
+-		createTools();
+-		
+-		// Initialize scroll menus
+-		m_IngredientsMenu.init();
+-		m_ToolsMenu.init();
+-		this.addChild( m_IngredientsMenu );
+-		this.addChild( m_ToolsMenu );
+-		
+-		// Edit recipe image
++		// ---------------------------------------------------
++		// Set up the recipe image
++		// ---------------------------------------------------
+ 		var paistImg:OPSprite = cast getChildByName( "recipeImage" );
+ 		
+ 		if (Tunables.USE_DATABASE_RESOURCES)
+@@ -191,17 +187,80 @@
+ 		{
+ 			var fileName:String = StringTools.replace( recipe.name, " ", "_" );
+ 			var recipeImg:Bitmap = ResMan.instance.getImageUnsafe( "2d/UI/recipesLarge/recipe_" + fileName + "_01" );
+-			if ( recipeImg == null ) // TEMPORARY UNTIL DB HOOKUP: use placeholder image if no recipe image exists
++			if ( recipeImg == null ) // Use placeholder image if no recipe image exists
+ 			{
+ 				recipeImg = ResMan.instance.getImage( "2d/UI/recipesLarge/placeholder" );
+ 			}
+ 			updateRecipeImage(recipeImg);
+ 		}
++	}
++	
++	// ===================================
++	// Scroll setup 
++	// ===================================
++	
++	private function addIngredientData()
++	{
++		var recipe:Recipe = FlowController.data.selectedRecipe;
+ 		
+-		// Make masks visible above scroll items
+-		showMasks();
++		for ( ingredient in recipe.ingredients )
++		{
++			var label:String; 
++			var buttonImg:Bitmap;
++			
++			if (Tunables.USE_DATABASE_RESOURCES)
++			{
++				label = ingredient.name;
++			}
++			else
++			{
++				label = ingredient.amount + "- " + ingredient.unit + " " + ingredient.name; 
++			}
++			
++			if ( ingredient.spotlight != "" )
++			{
++				buttonImg = ResMan.instance.getImage( "2d/Buttons/btn_info_up" );
++			}
++			else
++			{
++				buttonImg = ResMan.instance.getImage( "2d/Buttons/btn_checkSmall_up" );
++				// TODO button.enabled = false; // Check "buttons" are not interactable.
++			}
++			
++			m_ingredientsMenu.addData( null, buttonImg, null, label );
++		}
+ 	}
+ 	
++	private function addToolData()
++	{
++		var recipe:Recipe = FlowController.data.selectedRecipe;
++
++		for ( tool in recipe.tools )
++		{
++			trace( "adding " + tool.name );
++			// Button
++			var buttonImg:Bitmap;
++			if ((tool.URL == null) || (tool.URL == ""))
++			{
++				buttonImg = ResMan.instance.getImage( "2d/Buttons/btn_store_disabled", false );
++			}
++			else
++			{
++				buttonImg = ResMan.instance.getImage( "2d/Buttons/btn_store_up", false );
++			}
++			
++			// Label to display the tool name 
++			var label:String;
++			label = tool.name;
++			
++			m_toolsMenu.addData( null, buttonImg, null, label );
++		}
++	}
++	
++	// ===================================
++	// Menu setup
++	// ===================================
++	
+ 	/**
+ 	 * Updates the image 
+ 	 * @param	image
+@@ -247,6 +306,10 @@
+ 		m_recipeImage.y = paistImg.y - yOffset;
+ 	}
+ 	
++	// ===================================
++	// Button interaction 
++	// ===================================
++	
+ 	override public function onButtonHit( ?caller:GraphicButton ):Void 
+ 	{
+ 		super.onButtonHit( caller );
+@@ -279,182 +342,31 @@
+ 			}
+ 			
+ 		}
+-		else // Generated ingredient or tool button
+-		{
+-			var split:Array< String > = caller.name.split("_");
+-			var type:String = split[0];
+-			var name:String = split[1];
+-		
+-			if ( type == "ingredient" ) 
+-			{
+-				// Go to the ingredient info state
+-				var selectedIngredient:Ingredient = SpeckGlobals.dataManager.allIngredients.get( name );
+-				StateManager.setState( GameState.INGREDIENTINFO,  { args: [ GameState.RECIPEINGREDIENTS, selectedIngredient] } );
+-			}
+-			else if ( type == "tool" )
+-			{
+-				for ( tool in recipe.tools)
+-				{
+-					if ( tool.name == name )
+-					{
+-						goToUrl( tool.URL );
+-						return;
+-					}
+-				}
+-			}
+-			else
+-			{
+-				trace( "Unknown button type." );
+-			}
+-		}
+ 	}
+ 	
+-	private function createIngredients():Void
++	private function onIngredientHit( ?caller:GraphicButton ):Void
+ 	{
+-		// Get paist item for display ref: Ingredients
+-		var iPanel:DisplayObjectContainer = cast this.getChildByName( "group_ingredient1" );
+-		var iLabel:TextField = cast iPanel.getChildByName( "lbl_ingredient1" );
+-		var iButton:GraphicButton = cast iPanel.getChildByName( "btn_ingredient1" );
+-		var ref:IngredientGroup = { panel: iPanel, label: iLabel, button: iButton, ingredient: null };
++		WebAudio.instance.play( "SFX/button_click" );	
+ 		
+-		// Offset for incrementing list position
+-		var offset:Float = 0;
+-		
+-		// Loop through this recipe's ingredients
+-		for ( ingredient in FlowController.data.selectedRecipe.ingredients )
++		// Go to the ingredient info state
++		var selectedIngredient:Ingredient = SpeckGlobals.dataManager.allIngredients.get( caller.name );
++		if ( selectedIngredient.spotlight != "" )
+ 		{
+-			// Holding panel
+-			var panel:DisplayObjectContainer = new DisplayObjectContainer();
+-			panel.x = ref.panel.x; 
+-			panel.y = ref.panel.y + offset;
+-			panel.name = ingredient.name;
+-			panel.visible = true;
+-			this.addChild( panel );
+-			
+-			// Label to display the ingredient name 
+-			var label:TextField = new TextField();
+-			if (Tunables.USE_DATABASE_RESOURCES)
+-			{
+-				label.text = ingredient.name;
+-			}
+-			else
+-			{
+-				label.text = ingredient.amount + " " + ingredient.unit + " " + ingredient.name; 
+-			}
+-			label.setTextFormat( ref.label.getTextFormat() );
+-			label.width = ref.label.width;
+-			label.height = ref.label.height;
+-			label.wordWrap = true;
+-			label.x = ref.label.x;
+-			label.y = ref.label.y;
+-			label.visible = true;
+-			panel.addChild( label );
+-			
+-			// Button - either an intert check or an ingredient info button
+-			var button:GraphicButton; 
+-			if ( ingredient.spotlight != "" )
+-			{
+-				var img:Bitmap = ResMan.instance.getImage( "2d/Buttons/btn_info_up" );
+-				var imgOver:Bitmap = ResMan.instance.getImage( "2d/Buttons/btn_info_over" );
+-				button = new GraphicButton( img, img, imgOver, img, null, onButtonHit );
+-			}
+-			else
+-			{
+-				var img:Bitmap = ResMan.instance.getImage( "2d/Buttons/btn_checkSmall_up" );
+-				var imgOver:Bitmap = ResMan.instance.getImage( "2d/Buttons/btn_checkSmall_over");
+-				button = new GraphicButton( img, img, imgOver, img, null ); // check has no special hit behavior
+-				button.enabled = false; // Check "buttons" are not interactable.
+-			}
+-			
+-			button.x = ref.button.x;
+-			button.y = ref.button.y;
+-			button.width = ref.button.width;
+-			button.height = ref.button.height;
+-			button.name = "ingredient_" + ingredient.name;
+-			button.visible = true;
+-			panel.addChild( button );
+-			
+-			// Add item to menu
+-			m_IngredientsMenu.addItem( panel, button ); 
+-			
+-			// Increment offset 
+-			offset += button.height * 1.25 ; // Additional spacing so they don't overlap in overstate
++			StateManager.setState( GameState.INGREDIENTINFO,  { args: [ GameState.RECIPEINGREDIENTS, selectedIngredient] } );
+ 		}
+ 	}
+ 	
+-	private function createTools():Void
++	private function onToolHit( ?caller:GraphicButton ):Void
+ 	{
+-		// Get paist item for display ref: Tools 
+-		var tPanel:DisplayObjectContainer = cast this.getChildByName( "group_tool1" );
+-		var tLabel:TextField = cast tPanel.getChildByName( "lbl_tool1" );
+-		var tButton:GraphicButton = cast tPanel.getChildByName( "btn_tool1" );
++		WebAudio.instance.play( "SFX/button_click" );	
+ 		
+-		var ref:ToolGroup = cast { panel: tPanel, label: tLabel, button: tButton, tool: null };
+-		
+-		var yOffset:Float = 0;
+-		var xOffset:Float = 0; // places items in two columns 
+-		
+-		// Loop through this recipe's tools
+-		for ( tool in FlowController.data.selectedRecipe.tools )
++		for ( tool in FlowController.data.selectedRecipe.tools)
+ 		{
+-			// Holding panel
+-			var panel:DisplayObjectContainer = new DisplayObjectContainer();
+-			panel.x = ref.panel.x + xOffset; 
+-			panel.y = ref.panel.y + yOffset;
+-			panel.name = tool.name;
+-			this.addChild( panel );
+-			
+-			// Button
+-			var img:Bitmap;
+-			var imgDown:Bitmap;
+-			var imgOver:Bitmap;
+-			var imgDisabled:Bitmap;
+-			if ((tool.URL == null) || (tool.URL == ""))
++			if ( tool.name == name )
+ 			{
+-				img = ResMan.instance.getImage( "2d/Buttons/btn_store_disabled", false );
+-				imgDown = null;
+-				imgOver  = null;
+-				imgDisabled = null;
++				goToUrl( tool.URL );
++				return;
+ 			}
+-			else
+-			{
+-				img = ResMan.instance.getImage( "2d/Buttons/btn_store_up", false );
+-				imgDown = ResMan.instance.getImage( "2d/Buttons/btn_store_down" );
+-				imgOver = ResMan.instance.getImage( "2d/Buttons/btn_store_over", false );
+-				imgDisabled = null;
+-			}
+-			
+-			var button:GraphicButton = new GraphicButton( img, imgDown, imgOver, imgDisabled, null, onButtonHit );
+-			button.enabled = (tool.URL != null) && (tool.URL != "");
+-			
+-			button.x = ref.button.x;
+-			button.y = ref.button.y;
+-			button.name = "tool_" + tool.name;
+-			panel.addChild( button );
+-			
+-			// Label to display the tool name 
+-			var label:TextField = new TextField();
+-			label.text = tool.name; 
+-			label.setTextFormat( ref.label.getTextFormat() );
+-			label.autoSize = TextFieldAutoSize.LEFT;
+-			label.x = ref.label.x;
+-			label.y = ref.label.y;
+-			panel.addChild( label );
+-			
+-			// Add item to menu
+-			m_ToolsMenu.addItem( panel, button ); 
+-			
+-			// Place tools in two columns
+-			// Flip the x position, increment y every other placement 
+-			if ( xOffset > 0 )
+-			{
+-				xOffset = 0;
+-				yOffset += button.height;
+-			}
+-			else
+-			{
+-				xOffset = TOOL_WIDTH / 2;
+-			}
+ 		}
+ 	}
+ 	
+@@ -463,10 +375,11 @@
+ 		StateManager.setState( GameState.PARENTAL, { args: [ GameState.RECIPEINGREDIENTS, URL] } );
+ 	}
+ 	
+-	private function showMasks():Void
++	// ===================================
++	// Exit handling
++	// ===================================
++	public function dispose() 
+ 	{
+-		// Reparent mask above newly added scroll items
+-		m_ToolsMenu.reparent();
+-		m_IngredientsMenu.reparent();
++		 // todo
+ 	}
+ }
+\ No newline at end of file
+Index: trunk/Engineering/src/game/ui/VirtualScrollingItem.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(revision 826)
++++ trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(working copy)
+@@ -65,6 +65,8 @@
+ 		// Create new display object group from ref
+ 		// ---------------------------------------------------
+ 		copyDisplayGroup( refGroup, count );
++		
++		trace( "--------------------- Adding item " + count + " at pos (" + group.x + ", " + group.y + ")" );
+ 	}
+ 	
+ 	/**
+@@ -163,7 +165,7 @@
+ 		var refWidth = m_label.width;
+ 		var refHeight = m_label.height;
+ 		
+-		m_label.text = text;
++		m_label.text = text + " " + debugName;
+ 		
+ 		if ( m_label.autoSize == TextFieldAutoSize.NONE )
+ 		{
+Index: trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(revision 826)
++++ trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -69,6 +69,8 @@
+  *  A menu that handles the movement and data population of single-row/column scrolling lists. 
+  *  See MultidimensionalScrollingMenu for multi row/column support.
+  * 
++ * (Design TODO - make this a root class and split single and multidimensional logic both into extensions) 
++ * 
+  *  To be added as a child of an existing menu, and used to handle user input and the respositioning of items. 
+  *  Items are still children of the parent menu.
+  * 
+@@ -171,6 +173,16 @@
+ 		m_scrollArea.graphics.endFill();
+ 		
+ 		// ---------------------------------------------------
++		// Early return if invalid ref.
++		// (Also a signal for multidimensional scroll override.)
++		// ---------------------------------------------------
++		if ( refGroup1 == null || refGroup2 == null )
++		{
++			Debug.log( "Null ref; ScrollingMenu returning early from constructor" );
++			return;
++		}
++		
++		// ---------------------------------------------------
+ 		// Init other member vars using paist ref:
+ 		// - Visisble items
+ 		// - Item spacing
+@@ -311,7 +323,8 @@
+ 			return;
+ 		}
+ 		
+-		for ( i in 0...m_scrollingItems.length) // Populate items idx 1->length with data starting at idx 0. Item 0 is above field of view.
++		var numItems:Int = Math.floor( Math.min(m_scrollingItems.length, m_dataset.length) );
++		for ( i in 0...numItems ) // Populate items idx 1->length with data starting at idx 0. Item 0 is above field of view.
+ 		{
+ 			m_scrollingItems[i].updateData( m_dataset[i] );
+ 		}
+@@ -759,7 +772,6 @@
+ 		m_scrollBar.y += scrollBarDistance;
+ 	}
+ 	
+-	
+ 	// ===================================
+ 	// Cleanup/Exit handling
+ 	// ===================================

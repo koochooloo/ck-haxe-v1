@@ -1,0 +1,9 @@
+************* Module ExcelUtils
+W: 72, 0: TODO: this isn't always an error condition (only bad if merging multiple sheets; ok if sheets are distinct) (fixme)
+R: 28, 0: Too few public methods (0/2) (too-few-public-methods)
+C: 40, 7: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+C: 40,39: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+R: 50, 0: Too many local variables (23/15) (too-many-locals)
+R: 92,20: Redefinition of curValue type from int to unicode (redefined-variable-type)
+R: 50, 0: Too many branches (13/12) (too-many-branches)
+W:125,11: Catching too general exception Exception (broad-except)

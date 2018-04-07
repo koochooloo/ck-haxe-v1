@@ -1,0 +1,1 @@
+{"animations":{"2d/BG/bg_skyBase":{"frames":[0],"params":{"bounds":{"-1":[{"height":768,"name":"bounds","type":"box","width":1366,"x":0,"y":0}]},"center":{"-1":[{"name":"center","type":"vector","x":683,"y":767}]}}}},"frames":[[0,0,1366,768,0,0,0]],"images":["loading_MENU.png"]}

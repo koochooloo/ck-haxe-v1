@@ -1,0 +1,358 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "borderPanel" : [ { 
+            "name" : "scroll_border",
+            "record" : true,
+            "inheritable" : { 
+                "position" : [ 466, 136 ],
+                "boundingBox" : [ 0, 0, 900, 600 ]
+            }
+        } ],
+        "label" : [ { 
+            "name" : "headerText_recipes",
+            "record" : true,
+            "id" : 11,
+            "priority" : 6,
+            "text" : "ALLRECIPES",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_rSearch",
+            "record" : true,
+            "priority" : 11,
+            "text" : "SEARCH",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ -364, 56 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "touchable" : true,
+                "loadParams" : false,
+                "color" : [ 20, 20, 20 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "size" : [ 230, 45 ]
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "group_recipe0",
+            "record" : true,
+            "id" : 7,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 466, 168 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe0",
+                "record" : true,
+                "id" : 7,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/9patch/9patch-DefaultPanel",
+                    "scale" : [ 1.5, 1.5 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name0",
+                "record" : true,
+                "id" : 7,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 15, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 400, 100 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image0",
+                "record" : true,
+                "id" : 7,
+                "priority" : 6,
+                "inheritable" : { 
+                    "resource" : "2d/UI/recipes/placeholder",
+                    "position" : [ 31, 65 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_category3",
+            "id" : 3,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 413 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category3",
+                "record" : true,
+                "id" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName3",
+                "id" : 3,
+                "priority" : 7,
+                "text" : "CATEGORY3",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -20 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        }, { 
+            "name" : "group_category2",
+            "id" : 2,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 342 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category2",
+                "record" : true,
+                "id" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName2",
+                "id" : 2,
+                "priority" : 7,
+                "text" : "CATEGORY2",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -18 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        }, { 
+            "name" : "group_category1",
+            "id" : 1,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 271 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category1",
+                "record" : true,
+                "id" : 1,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName1",
+                "id" : 1,
+                "priority" : 7,
+                "text" : "CATEGORY1",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -18 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        }, { 
+            "name" : "group_category0",
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 200 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category0",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName0",
+                "priority" : 7,
+                "text" : "CATEGORY0",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -22 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        }, { 
+            "name" : "group_category5",
+            "id" : 5,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 555 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category5",
+                "record" : true,
+                "id" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName5",
+                "id" : 5,
+                "text" : "CATEGORY5",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -20 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        }, { 
+            "name" : "group_category4",
+            "id" : 4,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 484 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category4",
+                "record" : true,
+                "id" : 4,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName4",
+                "id" : 4,
+                "text" : "CATEGORY4",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -20 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        }, { 
+            "name" : "group_category6",
+            "id" : 6,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 320, 626 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_category6",
+                "record" : true,
+                "id" : 6,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipeCategory",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "categoryName6",
+                "id" : 6,
+                "text" : "CATEGORY6",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -112, -20 ],
+                    "loadParams" : false,
+                    "color" : [ 10, 7, 4 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 230, 34 ]
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_cSearch",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/UI/search",
+                "position" : [ -246, 105 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_4by3_guide",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "opacity" : 15,
+                "position" : [ 178, 0 ],
+                "scale" : [ 1024, 768 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

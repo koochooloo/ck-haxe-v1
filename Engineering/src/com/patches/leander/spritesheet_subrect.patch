@@ -1,0 +1,176 @@
+Index: firstplayable/hxlib/display/Anim.hx
+===================================================================
+--- firstplayable/hxlib/display/Anim.hx	(revision 669)
++++ firstplayable/hxlib/display/Anim.hx	(working copy)
+@@ -425,6 +425,7 @@
+         //if ( MainLoop.getPhase( UpdatePhase.ANIMATION ).currentUpdateWillRender )
+         //{
+ 			m_bitmap.bitmapData = newBitmap;
++			m_bitmap.scrollRect = m_animResource.getFrameSubRect( newFrameIndex );
+ 			
+ 			// NOTE: This must be called here in order for the origin property to work!...
+ 			// ... despite the fact that it does not look like that should be the case.
+Index: firstplayable/hxlib/display/IAnimResource.hx
+===================================================================
+--- firstplayable/hxlib/display/IAnimResource.hx	(revision 669)
++++ firstplayable/hxlib/display/IAnimResource.hx	(working copy)
+@@ -11,6 +11,7 @@
+ // EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+ ///////////////////////////////////////////////////////////////////////////
+ package com.firstplayable.hxlib.display;
++import openfl.geom.Rectangle;
+ import openfl.display.BitmapData;
+ 
+ /**
+@@ -21,7 +22,10 @@
+     // The number of frames the animation has.
+     public var numFrames(get, null): Int;
+     
+-    public function getFrameImage( frameIndex: Int ): BitmapData;    
++    public function getFrameImage( frameIndex: Int ): BitmapData;
++	
++	//! subrect for this frame, may be null if none applies (use whole image)
++    public function getFrameSubRect( frameIndex: Int ): Rectangle;
+ 
+     private function get_numFrames(): Int;
+ 	
+Index: firstplayable/hxlib/display/IflAnimResource.hx
+===================================================================
+--- firstplayable/hxlib/display/IflAnimResource.hx	(revision 669)
++++ firstplayable/hxlib/display/IflAnimResource.hx	(working copy)
+@@ -17,6 +17,7 @@
+ import com.firstplayable.hxlib.loader.ResMan;
+ import openfl.Assets;
+ import openfl.display.BitmapData;
++import openfl.geom.Rectangle;
+ using Lambda;
+ 
+ /**
+@@ -41,6 +42,13 @@
+         
+         return m_frameImage[ frameIndex ];
+     }
++	
++	public function getFrameSubRect( frameIndex:Int ):Rectangle  // TODO SCROLLRECT
++    {
++		//var frame:BitmapData = getFrameImage( frameIndex );
++        //return new Rectangle( 0, 0, frame.width, frame.height );
++		return null;
++    }
+ 
+     public function new( animResourcePath: String )
+     {
+Index: firstplayable/hxlib/display/SpriteMap.hx
+===================================================================
+--- firstplayable/hxlib/display/SpriteMap.hx	(revision 669)
++++ firstplayable/hxlib/display/SpriteMap.hx	(working copy)
+@@ -16,8 +16,10 @@
+ import com.firstplayable.hxlib.display.DisplayTools.Origin;
+ import openfl.display.Bitmap;
+ import openfl.display.Sprite;
++import openfl.geom.Rectangle;
+ import spritesheet.data.BehaviorData;
+ import spritesheet.Spritesheet;
++import spritesheet.data.SpritesheetFrame;
+ using com.firstplayable.hxlib.display.DisplayTools;
+ using Std;
+ 
+@@ -84,7 +86,9 @@
+ 		
+ 		//get first frame of the animation
+ 		var frameIndex:Int = data.frames[ index ];
+-		b.bitmapData = m_sheet.getFrame( frameIndex ).bitmapData;
++		var frame:SpritesheetFrame = m_sheet.getFrame( index );
++		b.bitmapData = frame.bitmapData; // TODO SCROLLRECT
++		b.scrollRect = new Rectangle (frame.x, frame.y, frame.width, frame.height);
+ 		
+ 		return b;
+ 	}
+Index: firstplayable/hxlib/display/SpritesheetAnimResource.hx
+===================================================================
+--- firstplayable/hxlib/display/SpritesheetAnimResource.hx	(revision 669)
++++ firstplayable/hxlib/display/SpritesheetAnimResource.hx	(working copy)
+@@ -16,6 +16,8 @@
+ import com.firstplayable.hxlib.loader.ResMan;
+ import openfl.Assets;
+ import openfl.display.BitmapData;
++import openfl.geom.Rectangle;
++import spritesheet.data.SpritesheetFrame;
+ import spritesheet.importers.BitmapImporter;
+ import spritesheet.Spritesheet;
+ 
+@@ -146,7 +148,7 @@
+         return totalNumFrames;
+     }
+     
+-    public function getFrameImage( frameIndex:Int ):BitmapData 
++    public function getFrameImage( frameIndex:Int ):BitmapData  // TODO SCROLLRECT
+     {
+         if ( frameIndex < 0 || frameIndex >= numFrames || m_spritesheet == null )
+         {
+@@ -155,6 +157,16 @@
+         return m_spritesheet.getFrame( frameIndex ).bitmapData;
+     }
+     
++	public function getFrameSubRect( frameIndex:Int ):Rectangle  // TODO SCROLLRECT
++    {
++        if ( frameIndex < 0 || frameIndex >= numFrames || m_spritesheet == null )
++        {
++            return null;
++        }
++		var frame:SpritesheetFrame = m_spritesheet.getFrame( frameIndex );
++        return new Rectangle( frame.x, frame.y, frame.width, frame.height );
++    }
++	
+     private inline function get_numFrames():Int
+     {
+         return numFrames;
+Index: firstplayable/hxlib/display/anim/importers/ZoeImporterPlus.hx
+===================================================================
+--- firstplayable/hxlib/display/anim/importers/ZoeImporterPlus.hx	(revision 669)
++++ firstplayable/hxlib/display/anim/importers/ZoeImporterPlus.hx	(working copy)
+@@ -78,6 +78,7 @@
+ 		var bigsheet:BitmapData = null;
+ 		
+ 		//stitch together multiple sheets
++		// TODO SPRITESHEET OPT
+ 		if ( sheets.length > 1 )
+ 		{
+ 			bigsheet = new BitmapData( bigW, bigH, true, 0xFFFFFF00 );
+Index: firstplayable/hxlib/loader/ResMan.hx
+===================================================================
+--- firstplayable/hxlib/loader/ResMan.hx	(revision 669)
++++ firstplayable/hxlib/loader/ResMan.hx	(working copy)
+@@ -462,7 +462,7 @@
+ 		if( useCache )
+ 			return res.content.content;
+ 		
+-		return new Bitmap( res.content.content.bitmapData );
++		return new Bitmap( res.content.content.bitmapData ); // TODO SCROLLRECT unbox/rebox
+     }
+ 	
+ 	public static function getImages( id:String, useCache:Bool = false ):Array<Bitmap>
+@@ -491,7 +491,7 @@
+ 		{
+ 			//Debug.log( "    " + loader.contentLoaderInfo.url );
+ 			// Order matters; make sure to push()
+-			imgs.push( new Bitmap( loader.content.bitmapData ) );
++			imgs.push( new Bitmap( loader.content.bitmapData ) ); // TODO SCROLLRECT unbox/rebox
+ 		}
+ 		
+ 		
+Index: firstplayable/hxlib/utils/json/JsonMenuMakerDirectory.hx
+===================================================================
+--- firstplayable/hxlib/utils/json/JsonMenuMakerDirectory.hx	(revision 669)
++++ firstplayable/hxlib/utils/json/JsonMenuMakerDirectory.hx	(working copy)
+@@ -122,7 +122,9 @@
+ 			 // If this isn't actually an animation, don't return a SpritesheetAnim
+ 			 if ( animLen == 1 )
+ 			 {
+-				 var bm:Bitmap = new Bitmap( spriteImage.getFrameImg( animationName ).bitmapData );
++				 var sourceBM = spriteImage.getFrameImg( animationName );
++				 var bm:Bitmap = new Bitmap( sourceBM.bitmapData );
++				 bm.scrollRect = sourceBM.scrollRect; // TODO SCROLLRECT ugh -- why the unbox/rebox here?
+ 				 var sbd:SpriteBoxData = spriteImage.getBoundsData();
+ 				 var opspr:OPSprite = new OPSprite( bm, sbd );
+ 				 return opspr;

@@ -1,0 +1,4 @@
+catch (err:Dynamic)$(CSLB){
+	$(EntryPoint)
+}
+

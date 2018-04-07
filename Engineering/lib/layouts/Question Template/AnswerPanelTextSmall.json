@@ -1,0 +1,80 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "panel" : [ { 
+            "name" : "pnl_answer",
+            "priority" : 2,
+            "inheritable" : { 
+                "position" : [ 450, 517 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_answer_vo",
+                "record" : true,
+                "id" : 3,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 35, 119 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ref_answer_one",
+                "record" : true,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/9patch/9patch-DefaultAnswer",
+                    "position" : [ 100, 11 ],
+                    "scale" : [ 4.6, 0.7 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ref_answer_two",
+                "record" : true,
+                "id" : 1,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/9patch/9patch-DefaultAnswer",
+                    "position" : [ 100, 85 ],
+                    "scale" : [ 4.6, 0.7 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ref_answer_three",
+                "record" : true,
+                "id" : 2,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/9patch/9patch-DefaultAnswer",
+                    "position" : [ 100, 159 ],
+                    "scale" : [ 4.6, 0.7 ],
+                    "loadParams" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_answer_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-TranslucentBacking",
+                    "scale" : [ 2.8, 0.92 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ]
+    }
+}

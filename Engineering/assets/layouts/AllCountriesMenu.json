@@ -1,0 +1,37 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_country",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/HudFlag",
+                "position" : [ 120, 96 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_menuName",
+            "text" : "TEST_TITLE_COUNTRIES",
+            "inheritable" : { 
+                "position" : [ 352, 128 ],
+                "loadParams" : false,
+                "font" : "/fonts/cartoonist_kooky.ttf:36",
+                "autoSize" : true
+            }
+        } ]
+    }
+}

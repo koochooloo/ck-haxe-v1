@@ -1,0 +1,63 @@
+Index: firstplayable/hxlib/loader/ResMan.hx
+===================================================================
+--- firstplayable/hxlib/loader/ResMan.hx	(revision 1581)
++++ firstplayable/hxlib/loader/ResMan.hx	(working copy)
+@@ -1319,15 +1319,10 @@
+ 			// Check to see if we need to craft a cache-busting querystring.
+ 			if ( urisuffix == null )
+ 			{
+-				var versionInfo:String = Version.versionInfo;
+-				if ( versionInfo != null && versionInfo.length > 0 )
++				var urlEncodedVersionInfo:String = Version.getUrlEncodedVersionInfo();
++				if ( urlEncodedVersionInfo != null && urlEncodedVersionInfo.length > 0 )
+ 				{
+-					// Let's just make this slightly easier to read...
+-					versionInfo = StringTools.replace( versionInfo, ":", "-" );
+-					versionInfo = StringTools.replace( versionInfo, "\t", "__" );
+-					versionInfo = StringTools.replace( versionInfo, " ", "_" );
+-					// but still urlEncode anyway, in case anything slipped through.
+-					urisuffix = "?v=" + StringTools.urlEncode( versionInfo );
++					urisuffix = "?v=" + urlEncodedVersionInfo;
+ 				}
+ 				else
+ 				{
+Index: firstplayable/hxlib/utils/Version.hx
+===================================================================
+--- firstplayable/hxlib/utils/Version.hx	(revision 1581)
++++ firstplayable/hxlib/utils/Version.hx	(working copy)
+@@ -73,9 +73,34 @@
+ 	public var buildName(default,null):String = "";
+ 
+ 	// denotes if a local build (true) or a jenkins build (false)
+-	public var isLocal(default,null):Bool;
++	public var isLocal(default, null):Bool;
+ 	
+ 	/**
++    * Provides a user friendlier form of the versionInfo string for
++    *    use in constructing URIs for asset retrieval to help out
++    *    with ccache-busting.
++	 * @return URL Encoded copy of Version.versionInfo; otherwise,
++	 * 		   an empty string in the event of an error.
++	 */
++	public static function getUrlEncodedVersionInfo():String
++	{
++		var versionString = Version.versionInfo;
++		var encodedVersionString = null;
++		if ( versionString != null && versionString.length > 0 )
++		{
++			// Let's just make this slightly easier to read...
++			versionString = StringTools.replace( versionString, ":", "-" );
++			versionString = StringTools.replace( versionString, "\t", "__" );
++			versionString = StringTools.replace( versionString, " ", "_" );
++			
++			// but still urlEncode anyway, in case anything slipped through.
++			encodedVersionString = StringTools.urlEncode( versionString );
++		}
++		
++		return (encodedVersionString != null ? encodedVersionString : "");
++	}
++	
++	/**
+ 	 * Constructs a new Version object, which is a text field to be added to the stage.
+ 	 * @param	x		pos
+ 	 * @param	y		pos

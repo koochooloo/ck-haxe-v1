@@ -1,0 +1,214 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_middle",
+            "record" : true,
+            "id" : 1,
+            "priority" : 7,
+            "inheritable" : { 
+                "resource" : "Buttons/AssessmentMiddle",
+                "position" : [ 683, 398 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_before",
+            "record" : true,
+            "priority" : 7,
+            "inheritable" : { 
+                "resource" : "Buttons/AssessmentBefore",
+                "position" : [ 453, 398 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_end",
+            "record" : true,
+            "id" : 2,
+            "priority" : 7,
+            "inheritable" : { 
+                "resource" : "Buttons/AssessmentEnd",
+                "position" : [ 911, 398 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_back",
+            "record" : true,
+            "id" : 14,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Back",
+                "position" : [ 80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_middle",
+            "record" : true,
+            "priority" : 8,
+            "text" : "ASSESS_MID",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 20,
+                "position" : [ 584, 429 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 200, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_before",
+            "record" : true,
+            "priority" : 8,
+            "text" : "ASSESS_PRE",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 20,
+                "position" : [ 354, 430 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 200, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_end",
+            "record" : true,
+            "priority" : 8,
+            "text" : "ASSESS_POST",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 20,
+                "position" : [ 812, 429 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 200, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_title",
+            "priority" : 15,
+            "text" : "ASSESS_TITLE",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 364, 286 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "center" ],
+                "size" : [ 640, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_panel",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-DefaultPanel",
+                "position" : [ 267, 272 ],
+                "scale" : [ 3.25, 1.35 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_button_backing_before",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-WhitePanel",
+                "position" : [ 345, 358 ],
+                "scale" : [ 0.85, 0.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_button_backing_middle",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-WhitePanel",
+                "position" : [ 574, 358 ],
+                "scale" : [ 0.85, 0.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_button_backing_end",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-WhitePanel",
+                "position" : [ 803, 358 ],
+                "scale" : [ 0.85, 0.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_logo",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/TitleLogo",
+                "position" : [ 0, 253 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_completed_before",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/CorrectAnswer",
+                "position" : [ 453, 482 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_completed_middle",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/CorrectAnswer",
+                "position" : [ 683, 482 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_completed_end",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/CorrectAnswer",
+                "position" : [ 911, 482 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

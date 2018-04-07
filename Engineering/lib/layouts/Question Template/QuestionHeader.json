@@ -1,0 +1,37 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "label" : [ { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "CountryName",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ]
+    }
+}

@@ -1,0 +1,119 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_login",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/Login",
+                "position" : [ 927, 372 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_message",
+            "record" : true,
+            "priority" : 10,
+            "text" : "LOGIN_ENTER_TEACHERID",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 323, 290 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 500, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_input",
+            "record" : true,
+            "priority" : 10,
+            "text" : "LOGIN_TEACHERID",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 323, 347 ],
+                "touchable" : true,
+                "loadParams" : false,
+                "color" : [ 20, 20, 20 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 500, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_error_message",
+            "record" : true,
+            "priority" : 10,
+            "text" : "ERROR",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 261, 463 ],
+                "visible" : false,
+                "loadParams" : false,
+                "color" : [ 31, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 810, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_login_panel",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-DefaultPanel",
+                "position" : [ 260, 270 ],
+                "scale" : [ 3.15, 0.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_logo",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/TitleLogo",
+                "position" : [ 0, -507 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_textInput",
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-TextInputField_default",
+                "position" : [ 322, 343 ],
+                "scale" : [ 5, 1 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

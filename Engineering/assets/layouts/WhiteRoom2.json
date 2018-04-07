@@ -1,0 +1,59 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Custom1" ],
+        "CustomPlatformSize" : { 
+            "Custom1" : [ 1334, 750 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "label" : [ { 
+            "name" : "lbl_testText",
+            "record" : true,
+            "text" : "fsdfsdffsdfs",
+            "inheritable" : { 
+                "position" : [ 376, 632 ],
+                "loadParams" : false,
+                "autoSize" : true
+            }
+        }, { 
+            "inheritable" : { 
+                "position" : [ 704, 592 ],
+                "loadParams" : false,
+                "autoSize" : true
+            }
+        }, { 
+            "inheritable" : { 
+                "position" : [ 184, 528 ],
+                "loadParams" : false,
+                "autoSize" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/BG/party_floor2",
+                "position" : [ -632, -264 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_test",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/GameplayUI/MVP_blank",
+                "position" : [ 840, 368 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

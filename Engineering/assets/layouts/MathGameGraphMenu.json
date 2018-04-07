@@ -1,0 +1,246 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "label" : [ { 
+            "name" : "lbl_question",
+            "record" : true,
+            "priority" : 2,
+            "text" : "5 + 5 = ?",
+            "inheritable" : { 
+                "position" : [ 223, 386 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/OpenSans-SemiBold.ttf:48",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 400, 120 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_review",
+            "record" : true,
+            "priority" : 2,
+            "text" : "MATH_QUESTION",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 204, 181 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:26",
+                "size" : [ 440, 160 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "headerText_math",
+            "record" : true,
+            "priority" : 8,
+            "text" : "MATH_TITLE",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "option1",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 230, 550 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_option1",
+                "record" : true,
+                "id" : 1,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_math",
+                    "position" : [ 33, 40 ],
+                    "scale" : [ 0.7, 0.7 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_option1",
+                "record" : true,
+                "id" : 1,
+                "priority" : 2,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ -16, 5 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/OpenSans-SemiBold.ttf:36",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 100, 60 ]
+                }
+            } ]
+        }, { 
+            "name" : "option2",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 335, 550 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_option2",
+                "record" : true,
+                "id" : 2,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_math",
+                    "position" : [ 33, 40 ],
+                    "scale" : [ 0.7, 0.7 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_option2",
+                "record" : true,
+                "id" : 2,
+                "priority" : 2,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ -16, 5 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/OpenSans-SemiBold.ttf:36",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 100, 60 ]
+                }
+            } ]
+        }, { 
+            "name" : "option3",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 440, 550 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_option3",
+                "record" : true,
+                "id" : 3,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_math",
+                    "position" : [ 33, 40 ],
+                    "scale" : [ 0.7, 0.7 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_option3",
+                "record" : true,
+                "id" : 3,
+                "priority" : 2,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ -16, 5 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/OpenSans-SemiBold.ttf:36",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 100, 60 ]
+                }
+            } ]
+        }, { 
+            "name" : "option4",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 545, 550 ],
+                "scale" : [ 0.7, 0.7 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_option4",
+                "record" : true,
+                "id" : 4,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_math",
+                    "position" : [ 33, 40 ],
+                    "scale" : [ 0.7, 0.7 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_option4",
+                "record" : true,
+                "id" : 4,
+                "priority" : 2,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ -16, 5 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/OpenSans-SemiBold.ttf:36",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 100, 60 ]
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_whiteboard",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-WoodenPanel",
+                "position" : [ 204, 318 ],
+                "scale" : [ 1.7, 0.8 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_items",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-WoodenPanel",
+                "position" : [ 654, 180 ],
+                "scale" : [ 1, 1.65 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_graph",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-WoodenPanel",
+                "position" : [ 924, 180 ],
+                "scale" : [ 1, 1.65 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

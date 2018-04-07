@@ -1,0 +1,1309 @@
+Index: lib/layouts/Login Flow/StudentConfirmation.json
+===================================================================
+--- lib/layouts/Login Flow/StudentConfirmation.json	(revision 625)
++++ lib/layouts/Login Flow/StudentConfirmation.json	(working copy)
+@@ -72,11 +72,12 @@
+                 "loadParams" : true
+             }
+         }, { 
+-            "name" : "spr_student",
++            "name" : "ref_student",
+             "priority" : 20,
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Red1_up",
+                 "position" : [ 683, 380 ],
++                "visible" : false,
+                 "loadParams" : true
+             }
+         } ]
+Index: lib/layouts/Login Flow/StudentSelectMenu.json
+===================================================================
+--- lib/layouts/Login Flow/StudentSelectMenu.json	(revision 625)
++++ lib/layouts/Login Flow/StudentSelectMenu.json	(working copy)
+@@ -22,7 +22,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Red1",
+                 "position" : [ 258, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_orange",
+@@ -31,7 +34,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Orange1",
+                 "position" : [ 381, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_yellow",
+@@ -40,7 +46,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Yellow1",
+                 "position" : [ 504, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_green",
+@@ -49,7 +58,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Green1",
+                 "position" : [ 627, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_blue",
+@@ -58,7 +70,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Blue1",
+                 "position" : [ 750, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_purple",
+@@ -67,7 +82,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Purple1",
+                 "position" : [ 873, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_brown",
+@@ -76,7 +94,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Brown1",
+                 "position" : [ 996, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         }, { 
+             "name" : "btn_grey",
+@@ -85,7 +106,10 @@
+             "inheritable" : { 
+                 "resource" : "Buttons/UserIcons/Grey1",
+                 "position" : [ 1119, 200 ],
+-                "loadParams" : true
++                "touchable" : false,
++                "visible" : false,
++                "loadParams" : true,
++                "enabled" : false
+             }
+         } ],
+         "label" : [ { 
+Index: src/game/column_layout/ColumnAlignment.hx
+===================================================================
+--- src/game/column_layout/ColumnAlignment.hx	(nonexistent)
++++ src/game/column_layout/ColumnAlignment.hx	(working copy)
+@@ -0,0 +1,20 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++enum ColumnAlignment
++{
++	LEFT;
++	RIGHT;
++}
+\ No newline at end of file
+Index: src/game/column_layout/ColumnLayout.hx
+===================================================================
+--- src/game/column_layout/ColumnLayout.hx	(nonexistent)
++++ src/game/column_layout/ColumnLayout.hx	(working copy)
+@@ -0,0 +1,176 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import openfl.geom.Point;
++
++class ColumnLayout
++{
++	// Private to prevent instantation
++	private function new()
++	{
++	}
++	
++	private static function leftAlign(params:ColumnLayoutParams):Void
++	{
++		// Current row and column in the layout.
++		var row:Int = 0;
++		var column:Int = 0;
++
++		// Position to place the current tile at.
++		var offset:Point = new Point(params.start.x, params.start.y);
++
++		// Helper function to advance to the next row in the layout.
++		function advanceRow():Void
++		{
++			row += 1;
++			column = 0;
++			offset.x = Math.round(params.start.x);
++			offset.y = Math.round(offset.y + params.height);
++		}
++
++		// Iterate over every tile.
++		for (item in params.items)
++		{
++			// Test what size of tile this is.
++			var isMedium:Bool = (item.size == ColumnSize.MEDIUM);
++			var isLarge:Bool = (item.size == ColumnSize.LARGE);
++
++			// Check if this tile won't fit and we should advance.
++			if (isMedium)
++			{
++				if (column > 2)
++				{
++					advanceRow();
++				}
++			}
++
++			// Check if this tile won't fit and we should advance.
++			if (isLarge)
++			{
++				if (column > 0)
++				{
++					advanceRow();
++				}
++			}
++
++			// Position the tile.
++			item.x = Math.round(offset.x);
++			item.y = Math.round(offset.y);
++
++			// Determine how many columns to advance.
++			if (isMedium)
++			{
++				column += 1;
++				offset.x = Math.round(offset.x + params.mediumWidth + params.gutterWidth);
++			}
++			else
++			{
++				column += 2;
++				offset.x = Math.round(offset.x + params.largeWidth);
++			}
++
++			// If we've reached the end of the row, advance to a new one.
++			if (column >= 2)
++			{
++				advanceRow();
++			}
++		}
++	}
++	
++	private static function rightAlign(params:ColumnLayoutParams):Void
++	{
++		// Current row and column in the layout.
++		var row:Int = 0;
++		var column:Int = 0;
++		
++		params.start = new Point(params.start.x + params.largeWidth, params.start.y);
++
++		// Position to place the current tile at.
++		var offset:Point = new Point(params.start.x, params.start.y);
++
++		// Helper function to advance to the next row in the layout.
++		function advanceRow():Void
++		{
++			row += 1;
++			column = 0;
++			offset.x = Math.round(params.start.x);
++			offset.y = Math.round(offset.y + params.height);
++		}
++
++		// Iterate over every tile.
++		for (item in params.items)
++		{
++			// Test what size of tile this is.
++			var isMedium:Bool = (item.size == ColumnSize.MEDIUM);
++			var isLarge:Bool = (item.size == ColumnSize.LARGE);
++			
++			// Check if this tile won't fit and we should advance.
++			if (isMedium)
++			{
++				if (column > 2)
++				{
++					advanceRow();
++				}
++			}
++
++			// Check if this tile won't fit and we should advance.
++			if (isLarge)
++			{
++				if (column > 0)
++				{
++					advanceRow();
++				}
++			}
++
++			// Determine how many columns to advance.
++			if (isMedium)
++			{
++				column += 1;
++				offset.x = Math.round(offset.x - params.mediumWidth - params.gutterWidth);
++			}
++			else
++			{
++				column += 2;
++				offset.x = Math.round(offset.x - params.largeWidth);
++			}
++
++			// Position the tile.
++			item.x = Math.round(offset.x);
++			item.y = Math.round(offset.y);
++			
++			// If we've reached the end of the row, advance to a new one.
++			if (column >= 2)
++			{
++				advanceRow();
++			}
++		}
++	}
++
++	// Helper function that applies a 3-column layout to the ComparisonTiles.
++	public static function apply(params:ColumnLayoutParams):Void
++	{
++		switch (params.align)
++		{
++			case ColumnAlignment.LEFT:
++				{
++					leftAlign(params);
++				}
++			case ColumnAlignment.RIGHT:
++				{
++					rightAlign(params);
++				}
++		}
++	}
++}
+Index: src/game/column_layout/ColumnLayoutParams.hx
+===================================================================
+--- src/game/column_layout/ColumnLayoutParams.hx	(nonexistent)
++++ src/game/column_layout/ColumnLayoutParams.hx	(working copy)
+@@ -0,0 +1,27 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++import openfl.geom.Point;
++
++typedef ColumnLayoutParams = 
++{
++	var items:Array<IArrangeable>;
++	var align:ColumnAlignment;
++	var start:Point;
++	var mediumWidth:Float;
++	var largeWidth:Float;
++	var gutterWidth:Float;
++	var height:Float;
++};
+\ No newline at end of file
+Index: src/game/column_layout/ColumnLayoutParamsBuilder.hx
+===================================================================
+--- src/game/column_layout/ColumnLayoutParamsBuilder.hx	(nonexistent)
++++ src/game/column_layout/ColumnLayoutParamsBuilder.hx	(working copy)
+@@ -0,0 +1,96 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import openfl.geom.Point;
++
++class ColumnLayoutParamsBuilder
++{
++	private var m_items:Array<IArrangeable>;
++	private var m_align:ColumnAlignment;
++	private var m_start:Point;
++	private var m_mediumWidth:Float;
++	private var m_largeWidth:Float;
++	private var m_gutterWidth:Float;
++	private var m_height:Float;
++	
++	private function new(items:Array<IArrangeable>)
++	{
++		m_items = items;
++		m_align = ColumnAlignment.LEFT;
++		m_start = new Point(0, 0);
++		m_mediumWidth = 0;
++		m_largeWidth = 0;
++		m_gutterWidth = 0;
++		m_height = 0;
++	}
++	
++	public function align(value:ColumnAlignment):ColumnLayoutParamsBuilder
++	{
++		m_align = value;
++		return this;
++	}
++	
++	public function start(value:Point):ColumnLayoutParamsBuilder
++	{
++		m_start = value;
++		return this;
++	}
++	
++	public function mediumWidth(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_mediumWidth = value;
++		return this;
++	}
++	
++	public function largeWidth(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_largeWidth = value;
++		return this;
++	}
++	
++	public function gutterWidth(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_gutterWidth = value;
++		return this;
++	}
++	
++	public function height(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_height = value;
++		return this;
++	}
++	
++	public function finalize():ColumnLayoutParams
++	{
++		var params:ColumnLayoutParams = 
++		{
++			items: m_items,
++			align: m_align,
++			start: m_start,
++			mediumWidth: m_mediumWidth,
++			largeWidth: m_largeWidth,
++			gutterWidth: m_gutterWidth,
++			height: m_height
++		};
++		
++		return params;
++	}
++	
++	public static function build(items:Array<IArrangeable>):ColumnLayoutParamsBuilder
++	{
++		return new ColumnLayoutParamsBuilder(items);
++	}
++}
+\ No newline at end of file
+Index: src/game/column_layout/ColumnSize.hx
+===================================================================
+--- src/game/column_layout/ColumnSize.hx	(nonexistent)
++++ src/game/column_layout/ColumnSize.hx	(working copy)
+@@ -0,0 +1,21 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++
++package game.column_layout;
++
++enum ColumnSize
++{
++	MEDIUM;
++	LARGE;
++}
+\ No newline at end of file
+Index: src/game/column_layout/IArrangeable.hx
+===================================================================
+--- src/game/column_layout/IArrangeable.hx	(nonexistent)
++++ src/game/column_layout/IArrangeable.hx	(working copy)
+@@ -0,0 +1,21 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++interface IArrangeable
++{
++	public var x(get, set):Float;
++	public var y(get, set):Float;
++	public var size(default, null):ColumnSize;
++}
+\ No newline at end of file
+Index: src/game/column_layout/ColumnAlignment.hx
+===================================================================
+--- src/game/column_layout/ColumnAlignment.hx	(nonexistent)
++++ src/game/column_layout/ColumnAlignment.hx	(working copy)
+@@ -0,0 +1,20 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++enum ColumnAlignment
++{
++	LEFT;
++	RIGHT;
++}
+\ No newline at end of file
+Index: src/game/column_layout/ColumnLayout.hx
+===================================================================
+--- src/game/column_layout/ColumnLayout.hx	(nonexistent)
++++ src/game/column_layout/ColumnLayout.hx	(working copy)
+@@ -0,0 +1,176 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import openfl.geom.Point;
++
++class ColumnLayout
++{
++	// Private to prevent instantation
++	private function new()
++	{
++	}
++	
++	private static function leftAlign(params:ColumnLayoutParams):Void
++	{
++		// Current row and column in the layout.
++		var row:Int = 0;
++		var column:Int = 0;
++
++		// Position to place the current tile at.
++		var offset:Point = new Point(params.start.x, params.start.y);
++
++		// Helper function to advance to the next row in the layout.
++		function advanceRow():Void
++		{
++			row += 1;
++			column = 0;
++			offset.x = Math.round(params.start.x);
++			offset.y = Math.round(offset.y + params.height);
++		}
++
++		// Iterate over every tile.
++		for (item in params.items)
++		{
++			// Test what size of tile this is.
++			var isMedium:Bool = (item.size == ColumnSize.MEDIUM);
++			var isLarge:Bool = (item.size == ColumnSize.LARGE);
++
++			// Check if this tile won't fit and we should advance.
++			if (isMedium)
++			{
++				if (column > 2)
++				{
++					advanceRow();
++				}
++			}
++
++			// Check if this tile won't fit and we should advance.
++			if (isLarge)
++			{
++				if (column > 0)
++				{
++					advanceRow();
++				}
++			}
++
++			// Position the tile.
++			item.x = Math.round(offset.x);
++			item.y = Math.round(offset.y);
++
++			// Determine how many columns to advance.
++			if (isMedium)
++			{
++				column += 1;
++				offset.x = Math.round(offset.x + params.mediumWidth + params.gutterWidth);
++			}
++			else
++			{
++				column += 2;
++				offset.x = Math.round(offset.x + params.largeWidth);
++			}
++
++			// If we've reached the end of the row, advance to a new one.
++			if (column >= 2)
++			{
++				advanceRow();
++			}
++		}
++	}
++	
++	private static function rightAlign(params:ColumnLayoutParams):Void
++	{
++		// Current row and column in the layout.
++		var row:Int = 0;
++		var column:Int = 0;
++		
++		params.start = new Point(params.start.x + params.largeWidth, params.start.y);
++
++		// Position to place the current tile at.
++		var offset:Point = new Point(params.start.x, params.start.y);
++
++		// Helper function to advance to the next row in the layout.
++		function advanceRow():Void
++		{
++			row += 1;
++			column = 0;
++			offset.x = Math.round(params.start.x);
++			offset.y = Math.round(offset.y + params.height);
++		}
++
++		// Iterate over every tile.
++		for (item in params.items)
++		{
++			// Test what size of tile this is.
++			var isMedium:Bool = (item.size == ColumnSize.MEDIUM);
++			var isLarge:Bool = (item.size == ColumnSize.LARGE);
++			
++			// Check if this tile won't fit and we should advance.
++			if (isMedium)
++			{
++				if (column > 2)
++				{
++					advanceRow();
++				}
++			}
++
++			// Check if this tile won't fit and we should advance.
++			if (isLarge)
++			{
++				if (column > 0)
++				{
++					advanceRow();
++				}
++			}
++
++			// Determine how many columns to advance.
++			if (isMedium)
++			{
++				column += 1;
++				offset.x = Math.round(offset.x - params.mediumWidth - params.gutterWidth);
++			}
++			else
++			{
++				column += 2;
++				offset.x = Math.round(offset.x - params.largeWidth);
++			}
++
++			// Position the tile.
++			item.x = Math.round(offset.x);
++			item.y = Math.round(offset.y);
++			
++			// If we've reached the end of the row, advance to a new one.
++			if (column >= 2)
++			{
++				advanceRow();
++			}
++		}
++	}
++
++	// Helper function that applies a 3-column layout to the ComparisonTiles.
++	public static function apply(params:ColumnLayoutParams):Void
++	{
++		switch (params.align)
++		{
++			case ColumnAlignment.LEFT:
++				{
++					leftAlign(params);
++				}
++			case ColumnAlignment.RIGHT:
++				{
++					rightAlign(params);
++				}
++		}
++	}
++}
+Index: src/game/column_layout/ColumnLayoutParams.hx
+===================================================================
+--- src/game/column_layout/ColumnLayoutParams.hx	(nonexistent)
++++ src/game/column_layout/ColumnLayoutParams.hx	(working copy)
+@@ -0,0 +1,27 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++import openfl.geom.Point;
++
++typedef ColumnLayoutParams = 
++{
++	var items:Array<IArrangeable>;
++	var align:ColumnAlignment;
++	var start:Point;
++	var mediumWidth:Float;
++	var largeWidth:Float;
++	var gutterWidth:Float;
++	var height:Float;
++};
+\ No newline at end of file
+Index: src/game/column_layout/ColumnLayoutParamsBuilder.hx
+===================================================================
+--- src/game/column_layout/ColumnLayoutParamsBuilder.hx	(nonexistent)
++++ src/game/column_layout/ColumnLayoutParamsBuilder.hx	(working copy)
+@@ -0,0 +1,96 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import openfl.geom.Point;
++
++class ColumnLayoutParamsBuilder
++{
++	private var m_items:Array<IArrangeable>;
++	private var m_align:ColumnAlignment;
++	private var m_start:Point;
++	private var m_mediumWidth:Float;
++	private var m_largeWidth:Float;
++	private var m_gutterWidth:Float;
++	private var m_height:Float;
++	
++	private function new(items:Array<IArrangeable>)
++	{
++		m_items = items;
++		m_align = ColumnAlignment.LEFT;
++		m_start = new Point(0, 0);
++		m_mediumWidth = 0;
++		m_largeWidth = 0;
++		m_gutterWidth = 0;
++		m_height = 0;
++	}
++	
++	public function align(value:ColumnAlignment):ColumnLayoutParamsBuilder
++	{
++		m_align = value;
++		return this;
++	}
++	
++	public function start(value:Point):ColumnLayoutParamsBuilder
++	{
++		m_start = value;
++		return this;
++	}
++	
++	public function mediumWidth(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_mediumWidth = value;
++		return this;
++	}
++	
++	public function largeWidth(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_largeWidth = value;
++		return this;
++	}
++	
++	public function gutterWidth(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_gutterWidth = value;
++		return this;
++	}
++	
++	public function height(value:Float):ColumnLayoutParamsBuilder
++	{
++		m_height = value;
++		return this;
++	}
++	
++	public function finalize():ColumnLayoutParams
++	{
++		var params:ColumnLayoutParams = 
++		{
++			items: m_items,
++			align: m_align,
++			start: m_start,
++			mediumWidth: m_mediumWidth,
++			largeWidth: m_largeWidth,
++			gutterWidth: m_gutterWidth,
++			height: m_height
++		};
++		
++		return params;
++	}
++	
++	public static function build(items:Array<IArrangeable>):ColumnLayoutParamsBuilder
++	{
++		return new ColumnLayoutParamsBuilder(items);
++	}
++}
+\ No newline at end of file
+Index: src/game/column_layout/ColumnSize.hx
+===================================================================
+--- src/game/column_layout/ColumnSize.hx	(nonexistent)
++++ src/game/column_layout/ColumnSize.hx	(working copy)
+@@ -0,0 +1,21 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++
++package game.column_layout;
++
++enum ColumnSize
++{
++	MEDIUM;
++	LARGE;
++}
+\ No newline at end of file
+Index: src/game/column_layout/IArrangeable.hx
+===================================================================
+--- src/game/column_layout/IArrangeable.hx	(nonexistent)
++++ src/game/column_layout/IArrangeable.hx	(working copy)
+@@ -0,0 +1,21 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.column_layout;
++
++interface IArrangeable
++{
++	public var x(get, set):Float;
++	public var y(get, set):Float;
++	public var size(default, null):ColumnSize;
++}
+\ No newline at end of file
+Index: src/game/ui/login/StudentButton.hx
+===================================================================
+--- src/game/ui/login/StudentButton.hx	(nonexistent)
++++ src/game/ui/login/StudentButton.hx	(working copy)
+@@ -0,0 +1,61 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.ui.login;
++
++import com.firstplayable.hxlib.display.GraphicButton;
++import com.firstplayable.hxlib.loader.ResMan;
++import game.column_layout.ColumnSize;
++import game.column_layout.IArrangeable;
++import game.utils.StudentUtils;
++import openfl.display.Bitmap;
++
++class StudentButton extends GraphicButton implements IArrangeable
++{
++	private static inline var ASSET_PATH:String = "2d/Buttons/UserIcons/";
++	
++	private static inline var UP_SUFFIX:String = "_up";
++	private static inline var DOWN_SUFFIX:String = "_down";
++	private static inline var OVER_SUFFIX:String = "_over";
++	
++	public var color(default, set):StudentColor;
++	public var number(default, set):StudentNumber;
++	public var size(default, null):ColumnSize;
++	
++	public function new(color:StudentColor, number:StudentNumber)
++	{
++		var up:Bitmap = ResMan.instance.getImage(ASSET_PATH + color + number + UP_SUFFIX);
++		var down:Bitmap = ResMan.instance.getImage(ASSET_PATH + color + number + DOWN_SUFFIX);
++		var over:Bitmap = ResMan.instance.getImage(ASSET_PATH + color + number + OVER_SUFFIX);
++		
++		var id:Int = StudentUtils.getIdFromColorAndNumber(color, number);
++		
++		super(up, down, over, null, null, null, id);
++		
++		this.color = color;
++		this.number = number;
++		this.size = ColumnSize.LARGE;
++	}
++	
++	private function updateImage():Void
++	{
++		var up:Bitmap = ResMan.instance.getImage(ASSET_PATH + color + number + UP_SUFFIX);
++		var down:Bitmap = ResMan.instance.getImage(ASSET_PATH + color + number + DOWN_SUFFIX);
++		var over:Bitmap = ResMan.instance.getImage(ASSET_PATH + color + number + OVER_SUFFIX);
++	}
++	
++	private function set_color(value:StudentColor):StudentColor
++	{
++		color = value;
++	}
++}
+\ No newline at end of file
+Index: src/game/ui/login/StudentColor.hx
+===================================================================
+--- src/game/ui/login/StudentColor.hx	(nonexistent)
++++ src/game/ui/login/StudentColor.hx	(working copy)
+@@ -0,0 +1,27 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.ui.login;
++
++@:enum
++abstract StudentColor(String) to String
++{
++	var RED = "Red";
++	var ORANGE = "Orange";
++	var YELLOW = "Yellow";
++	var GREEN = "Green";
++	var BLUE = "Blue";
++	var PURPLE = "Purple";
++	var BROWN = "Brown";
++	var GREY = "Grey";
++}
+\ No newline at end of file
+Index: src/game/ui/login/StudentIdConfirmation.hx
+===================================================================
+--- src/game/ui/login/StudentIdConfirmation.hx	(revision 625)
++++ src/game/ui/login/StudentIdConfirmation.hx	(working copy)
+@@ -28,13 +28,12 @@
+ 	public static inline var LAYOUT:String = "StudentConfirmation";
+ 	
+ 	private static inline var MESSAGE_TEXT:String = "lbl_message";
+-	private static inline var STUDENT_IMAGE:String = "spr_student";
++	private static inline var STUDENT_REF:String = "ref_student";
+ 	
+ 	public var message(get, set):String;
+-	public var studentImage(never, set):BitmapData;
+ 	
+ 	private var m_messageLabel:TextField;
+-	private var m_studentImage:OPSprite;
++	private var m_button:StudentButton;
+ 	
+ 	public function new()
+ 	{
+@@ -41,7 +40,6 @@
+ 		super(LAYOUT);
+ 		
+ 		m_messageLabel = getChildAs(MESSAGE_TEXT, TextField);
+-		m_studentImage = getChildAs(STUDENT_IMAGE, OPSprite);
+ 	}
+ 	
+ 	public function show():Void
+@@ -68,6 +66,11 @@
+ 		SpeckGlobals.event.dispatchEvent(event);
+ 	}
+ 	
++	public function setColorAndNumber(color:StudentColor, number:StudentNumber):Void
++	{
++		
++	}
++	
+ 	private function get_message():String
+ 	{
+ 		return m_messageLabel.text;
+@@ -79,11 +82,4 @@
+ 		
+ 		return message;
+ 	}
+-	
+-	private function set_studentImage(value:BitmapData):BitmapData
+-	{
+-		m_studentImage.changeImageData(value);
+-		
+-		return value;
+-	}
+ }
+\ No newline at end of file
+Index: src/game/ui/login/StudentIdMenu.hx
+===================================================================
+--- src/game/ui/login/StudentIdMenu.hx	(revision 625)
++++ src/game/ui/login/StudentIdMenu.hx	(working copy)
+@@ -17,77 +17,145 @@
+ import com.firstplayable.hxlib.display.GenericMenu;
+ import com.firstplayable.hxlib.display.GraphicButton;
+ import com.firstplayable.hxlib.display.LayerName;
++import game.column_layout.ColumnLayout;
++import game.column_layout.ColumnLayoutParams;
++import game.column_layout.ColumnLayoutParamsBuilder;
+ import game.events.GenericEvent;
+ import game.events.GenericMenuEvents;
++import openfl.display.DisplayObject;
++import openfl.geom.Point;
+ import openfl.text.TextField;
+ 
+-// TODO: Show answer buttons
+ class StudentIdMenu extends GenericMenu
+ {
+ 	public static inline var LAYOUT:String = "StudentSelectMenu";
+-	
++
+ 	private static inline var HEADER_TEXT:String = "headerText_class";
+ 	private static inline var INSTRUCTIONS_TEXT:String = "lbl_instructions";
+-	
++
++	private static var REFERENCE:Map<StudentColor, String> =
++		[
++			StudentColor.RED => "btn_red",
++			StudentColor.ORANGE => "btn_orange",
++			StudentColor.YELLOW => "btn_yellow",
++			StudentColor.GREEN => "btn_green",
++			StudentColor.BLUE => "btn_blue",
++			StudentColor.PURPLE => "btn_purple",
++			StudentColor.BROWN => "btn_brown",
++			StudentColor.GREY => "btn_grey"
++		];
++
+ 	public var header(get, set):String;
+ 	public var instructions(get, set):String;
+-	
++
+ 	private var m_headerLabel:TextField;
+ 	private var m_instructionsLabel:TextField;
+-	
++	private var m_buttons:Map<StudentColor, Array<StudentButton>>;
++
+ 	public function new()
+ 	{
+ 		super(LAYOUT);
+-		
++
+ 		m_headerLabel = getChildAs(HEADER_TEXT, TextField);
+ 		m_instructionsLabel = getChildAs(INSTRUCTIONS_TEXT, TextField);
++		m_buttons =
++			[
++				StudentColor.RED => [],
++				StudentColor.ORANGE => [],
++				StudentColor.YELLOW => [],
++				StudentColor.GREEN => [],
++				StudentColor.BLUE => [],
++				StudentColor.PURPLE => [],
++				StudentColor.BROWN => [],
++				StudentColor.GREY => []
++			];
+ 	}
+-	
++
+ 	public function show():Void
+ 	{
+ 		GameDisplay.attach(LayerName.PRIMARY, this);
+-		
++
+ 		var event = new GenericEvent(this, GenericMenuEvents.SHOWN);
+ 		SpeckGlobals.event.dispatchEvent(event);
+ 	}
+-	
++
+ 	public function hide():Void
+ 	{
+ 		GameDisplay.remove(LayerName.PRIMARY, this);
+-		
++
+ 		var event = new GenericEvent(this, GenericMenuEvents.HIDDEN);
+ 		SpeckGlobals.event.dispatchEvent(event);
+ 	}
+-	
++
+ 	override public function onButtonHit(?caller:GraphicButton):Void
+ 	{
+ 		super.onButtonHit(caller);
+-		
++
+ 		var event = new GenericEvent(caller.id, GenericMenuEvents.BUTTON_CLICKED);
+ 		SpeckGlobals.event.dispatchEvent(event);
+ 	}
+ 	
++	public function setButtonsOfColor(color:StudentColor, buttons:Array<StudentButton>):Void
++	{
++		// Remove the old buttons
++		var oldButtons:Array<StudentButton> = m_buttons.get(color);
++		for (button in oldButtons)
++		{
++			removeChild(button);
++		}
++
++		// Reparent the buttons and update their onHit callback
++		var newButtons:Array<StudentButton> = buttons.copy();
++		for (button in newButtons)
++		{
++			addChild(button);
++			button.onHit = onButtonHit;
++		}
++
++		// Store the new buttons
++		m_buttons.set(color, newButtons);
++
++		// Retrieve the button to use as reference
++		var child:String = REFERENCE.get(color);
++		var ref:DisplayObject = getChildByName(child);
++		
++		// Get the origin for the column
++		var start:Point = new Point(ref.x, ref.y);
++		
++		// Construct the column layout parameters
++		var params:ColumnLayoutParams =
++			ColumnLayoutParamsBuilder.build(cast newButtons)
++				.start(start)
++				.largeWidth(ref.width)
++				.height(ref.height)
++				.gutterWidth(10)
++				.finalize();
++				
++		// Perform column layout on the buttons
++		ColumnLayout.apply(params);
++	}
++
+ 	private function get_header():String
+ 	{
+ 		return m_headerLabel.text;
+ 	}
+-	
++
+ 	private function set_header(value:String):String
+ 	{
+ 		m_headerLabel.text = value;
+-		
++
+ 		return m_headerLabel.text;
+ 	}
+-	
++
+ 	private function get_instructions():String
+ 	{
+ 		return m_instructionsLabel.text;
+ 	}
+-	
++
+ 	private function set_instructions(value:String):String
+ 	{
+ 		m_instructionsLabel.text = value;
+-		
++
+ 		return m_instructionsLabel.text;
+ 	}
+ }
+\ No newline at end of file
+Index: src/game/ui/login/StudentNumber.hx
+===================================================================
+--- src/game/ui/login/StudentNumber.hx	(nonexistent)
++++ src/game/ui/login/StudentNumber.hx	(working copy)
+@@ -0,0 +1,23 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.ui.login;
++
++@:enum
++abstract StudentNumber(String) to String
++{
++	var ONE = "1"; 
++	var TWO = "2"; 
++	var THREE = "3"; 
++	var FOUR = "4"; 
++}
+\ No newline at end of file
+Index: src/game/utils/StudentUtils.hx
+===================================================================
+--- src/game/utils/StudentUtils.hx	(nonexistent)
++++ src/game/utils/StudentUtils.hx	(working copy)
+@@ -0,0 +1,43 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package game.utils;
++
++import game.ui.login.StudentColor;
++import game.ui.login.StudentNumber;
++
++class StudentUtils
++{
++	public static function getIdFromColorAndNumber(color:StudentColor, number:StudentNumber):Int
++	{
++		var colors:Array<StudentColor> = AbstractEnumTools.getValues(StudentColor);
++		var numbers:Array<StudentNumber> = AbstractEnumTools.getValues(StudentNumber);
++		
++		var colorIndex:Int = colors.indexOf(color);
++		var numberIndex:Int = numbers.indexOf(number);
++		
++		return (colorIndex * numbers.length) + numberIndex;
++	}
++	
++	public static function getColorFromId(id:Int):StudentColor
++	{
++		var numbers:Array<StudentNumber> = AbstractEnumTools.getValues(StudentNumber);
++		return Std.int(id / numbers.length);
++	}
++	
++	public static function getNumberFromId(id:Int):StudentNumber
++	{
++		var numbers:Array<StudentNumber> = AbstractEnumTools.getValues(StudentNumber);
++		return (id % numbers.length);
++	}
++}
+\ No newline at end of file

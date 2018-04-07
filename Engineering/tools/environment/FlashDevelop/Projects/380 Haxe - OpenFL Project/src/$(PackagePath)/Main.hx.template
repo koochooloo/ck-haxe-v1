@@ -1,0 +1,19 @@
+package $(PackageName);
+
+import openfl.display.Sprite;
+import openfl.Lib;
+
+/**
+$(CBI)* ...
+$(CBI)* @author $(DefaultUser)
+$(CBI)*/
+class Main extends Sprite $(CSLB){
+
+	public function new() $(CSLB){
+		super();
+		
+		// Assets:
+		// openfl.Assets.getBitmapData("img/assetname.jpg");
+	}
+
+}

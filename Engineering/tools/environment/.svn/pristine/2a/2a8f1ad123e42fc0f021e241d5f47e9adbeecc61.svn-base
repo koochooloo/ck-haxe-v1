@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><!-- use theme color or fallback -->
+<!--use textcolor from settings, otherwise create a contrasting color to theme color-->
+<head><meta charset="utf-8"/><link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/><link href="../../bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/><link href="../../bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/><link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic" rel="stylesheet" type="text/css"/><link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,600italic,400" rel="stylesheet" type="text/css"/><link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet" type="text/css"/><script src="../../jquery-1.9.1.min.js"></script><script src="../../bootstrap/js/bootstrap.min.js"></script><script src="../../bootstrap/js/bootstrap-select.min.js"></script><link href="../../styles.css" rel="stylesheet"/><link href="../../haxe-nav.css" rel="stylesheet"/><script type="text/javascript">var dox = {rootPath: "../../",platforms: ["Linux","Android","Windows","iOS","HTML5","Neko","macOS"]};</script><script type="text/javascript" src="../../nav.js"></script><script type="text/javascript" src="../../index.js"></script><link rel="icon" href="../../favicon.ico" type="image/x-icon"></link><title>away3d.debug.AwayStats - Away3D API Reference</title><meta name="description" content="Stats monitor for Away3D or general use in any project. The widget was designed to
+display all the necessary data in ways that are easily readable, while maintaining a
+tiny size."/></head><body><style>
+.navbar .brand {
+	display: inline-block;
+	float: none;
+	text-shadow: 0 0 0 transparent;
+</style><nav class="nav"><div class="navbar"><div class="navbar-inner" style="background:#FAFAFA; border-bottom:1px solid rgba(0,0,0,.09)"><div class="container"><a class="brand" style="color:#000000" href="../../">Away3D API Reference</a></div></div></div></nav><div class="container main-content"><div class="row-fluid"><div class="span3"><div class="well sidebar-nav"><form class="form-search" id="searchForm"><div class="input-prepend input-block-level"><span class="add-on"><i class="icon-search"></i></span><input id="search" type="text" placeholder="Search" autocomplete="off"/></div></form><div class="dropdown"><select id="select-platform" class="selectpicker" title="Filter by platform" data-width="100%"><option value="all" selected="true">All Platforms</option><option>Linux</option><option>Android</option><option>Windows</option><option>iOS</option><option>HTML5</option><option>Neko</option><option>macOS</option></select></div></div><div class="well sidebar-nav"><div id="nav"></div></div></div><div class="span9"><div class="page-header"><span class="viewsource"><a href="https://github.com/openfl/away3d/tree/master/away3d/debug/AwayStats.hx" class="btn btn-medium"><i class="fa fa-eye"></i> View source</a></span><h1><small>class</small> AwayStats</h1><h4><small>package <a href="../../away3d/debug/index.html">away3d.debug</a></small></h4><h4><small>extends </small></h4>    <p class="availability"><hr/><em>Available on  all platforms</em></p></div><div class="body"><div class="doc doc-main"><div class="indent"><p>Stats monitor for Away3D or general use in any project. The widget was designed to
+display all the necessary data in ways that are easily readable, while maintaining a
+tiny size.</p><p>The following data is displayed by the widget, either graphically, through
+text, or both.</p>
+<ul>
+  <li>Current frame rate in FPS (white in graph/bar)</li>
+  <li>SWF frame rate (Stage.frameRate)</li>
+  <li>Average FPS (blue in graph/bar)</li>
+  <li>Min/Max FPS (only on frame rate bar in minimized mode)</li>
+  <li>Current RAM usage (pink in graph)</li>
+  <li>Maximum RAM usage</li>
+  <li>Number of polygons in scene</li>
+  <li>Number of polygons last rendered (yellow in graph)</li>
+</ul><p>There are two display modes; standard and minimized, which are alternated by clicking
+the button in the upper right corner, at runtime. The widget can also be configured to
+start in minimized mode by setting the relevant constructor parameter.</p><p>All data can be reset at any time, by clicking the lower part of the widget (where
+the RAM and POLY counters are located. The average FPS can be reset separately by
+clicking it's ²displayed value. Furthermore, the stage frame rate can be increased or
+decreased by clicking the upper and lower parts of the graph, respectively. Clicking close
+to the center will increment in small values, and further away will increase the steps.
+The graph itself is only visible in standard (as opposed to minimized) display mode.</p><p>The average FPS is calculated using one of two methods, configurable via constructor
+parameters. By setting the meanDataLength to a non-zero value, the number of recorded
+frame rate values on which the average is based can be configured. This has a tiny
+impact on CPU usage, which is the reason why the default number is zero, denoting that
+the average is calculated from a running sum since the widget was last reset.</p></div></div><h3 class="section">Constructor</h3><div class="fields"><div class="field "><a name="new"></a><h3><p><code><a href="#new"><span class="identifier">new</span></a> (<span style="white-space:nowrap">?view3d:<a class="type" title="" href="../../away3d/containers/View3D.html">View3D</a>,</span> <span style="white-space:nowrap">minimized:<span class="type">Bool</span> = false,</span> <span style="white-space:nowrap">transparent:<span class="type">Bool</span> = false,</span> <span style="white-space:nowrap">meanDataLength:<span class="type">Int</span> = 0,</span> <span style="white-space:nowrap">enableClickToReset:<span class="type">Bool</span> = true,</span> <span style="white-space:nowrap">enableModifyFrameRate:<span class="type">Bool</span> = true</span>)</code></p></h3><div class="doc"><p>Create an Away3D stats widget. The widget can be added to the stage
+and positioned like any other display object. Once on the stage, you
+can drag the widget to re-position it at runtime.</p><p>If you pass a View3D instance, the widget will be able to display
+the total number of faces in your scene, and the amount of faces that
+were rendered during the last render() call. Views can also be registered
+after construction using the registerView() method. Omit the view
+constructor parameter to disable this feature altogether.</p><p class="javadoc">Parameters:</p><table class="table table-bordered params"><tr><th width="25%"><code>view</code></th><td><p>A reference to your Away3D view. This is required if you
+want the stats widget to display polycounts.</p></td></tr><tr><th width="25%"><code>minimized</code></th><td><p>Defines whether the widget should start up in minimized
+mode. By default, it is shown in full-size mode on launch.</p></td></tr><tr><th width="25%"><code>transparent</code></th><td><p>Defines whether to omit the background plate and print
+statistics directly on top of the underlying stage.</p></td></tr><tr><th width="25%"><code>meanDataLength</code></th><td><p>The number of frames on which to base the average
+frame rate calculation. The default value of zero indicates that all
+frames since the last reset will be used.</p></td></tr><tr><th width="25%"><code>enableClickToReset</code></th><td><p>Enables interaction allowing you to reset all
+counters by clicking the bottom bar of the widget. When activated, you
+can also click the average frame rate trace-out to reset just that one
+value.</p></td></tr><tr><th width="25%"><code>enableModifyFramerate</code></th><td><p>When enabled, allows you to click the upper
+and lower parts of the graph area to increase and decrease SWF frame rate
+respectively.</p></td></tr></table></div></div></div><h3 class="section">Variables</h3><div class="fields"><div class="field "><a name="avg_fps"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/debug/AwayStats.html#avg_fps"><span class="identifier">avg_fps</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p></p></div></div><div class="field "><a name="fps"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/debug/AwayStats.html#fps"><span class="identifier">fps</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p></p></div></div><div class="field "><a name="max_fps"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/debug/AwayStats.html#max_fps"><span class="identifier">max_fps</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p></p></div></div><div class="field "><a name="max_ram"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/debug/AwayStats.html#max_ram"><span class="identifier">max_ram</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p></p></div></div><div class="field "><a name="ram"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/debug/AwayStats.html#ram"><span class="identifier">ram</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p></p></div></div></div><h3 class="section">Methods</h3><div class="fields"><div class="field "><a name="registerView"></a><h3><p><code><a href="#registerView"><span class="identifier">registerView</span></a> (<span style="white-space:nowrap">view3d:<a class="type" title="" href="../../away3d/containers/View3D.html">View3D</a></span>):<span class="type">Void</span></code></p></h3><div class="doc"><p>Add a view to the list of those that are taken into account when
+calculating on-screen and total poly counts. Use this method when the
+stats widget is not instantiated in the same place as where you create
+your view, or when using several views, or when views are created and
+destroyed dynamically at runtime.</p></div></div><div class="field "><a name="reset"></a><h3><p><code><a href="#reset"><span class="identifier">reset</span></a> ():<span class="type">Void</span></code></p></h3><div class="doc"><p></p></div></div><div class="field "><a name="unregisterView"></a><h3><p><code><a href="#unregisterView"><span class="identifier">unregisterView</span></a> (<span style="white-space:nowrap">view3d:<a class="type" title="" href="../../away3d/containers/View3D.html">View3D</a></span>):<span class="type">Void</span></code></p></h3><div class="doc"><p>Remove a view from the list of those that are taken into account when
+calculating on-screen and total poly counts. If the supplied view is
+the only one known to the stats widget, calling this will leave the
+list empty, disabling poly count statistics altogether.</p></div></div></div><h3 class="section">Static variables</h3><div class="fields"><div class="field "><a name="instance"></a><h3><p><code><span class="label">static</span><span class="label">read only</span><a href="../../away3d/debug/AwayStats.html#instance"><span class="identifier">instance</span></a>:<a class="type" title="Stats monitor for Away3D or general use in any project." href="../../away3d/debug/AwayStats.html">AwayStats</a></code></p></h3><div class="doc"><p></p></div></div></div>  </div></div></div></div><footer class="section site-footer" style="background:#FAFAFA"><div class="container"><div class="copyright"><p style="color:#000000">This documentation is generated for version 1.8</p><p style="color:#000000">&copy; 2017 &nbsp;</p></div></div></footer><script src="../..//highlighter.js"></script><link href="../../highlighter.css" rel="stylesheet"/></body></html>

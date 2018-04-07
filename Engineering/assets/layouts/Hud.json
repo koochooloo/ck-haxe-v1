@@ -1,0 +1,560 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_paist",
+            "record" : true,
+            "id" : 6,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/HudCog",
+                "position" : [ 77, -404 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_cheats",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/HudCog",
+                "position" : [ 77, -315 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "pnl_allRecipeHud",
+            "inheritable" : { 
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipeGlobe",
+                "record" : true,
+                "id" : 9,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_globe",
+                    "position" : [ 80, 80 ],
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_search",
+                "record" : true,
+                "id" : 8,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipes",
+                    "position" : [ -80, 80 ],
+                    "positionRelative" : false,
+                    "origin" : "topRight",
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_backStack",
+                "record" : true,
+                "id" : 7,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 80, 692 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_gameplayHud",
+            "id" : 4,
+            "priority" : 1,
+            "inheritable" : { 
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_gameMusic",
+                "record" : true,
+                "id" : 12,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_music",
+                    "position" : [ -80, 80 ],
+                    "positionRelative" : false,
+                    "origin" : "topRight",
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_gameGlobe",
+                "record" : true,
+                "id" : 13,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_globe",
+                    "position" : [ 80, 80 ],
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_gameNext",
+                "record" : true,
+                "id" : 15,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Next",
+                    "position" : [ -80, -80 ],
+                    "positionRelative" : false,
+                    "origin" : "bottomRight",
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_gameBack",
+                "record" : true,
+                "id" : 14,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 80, -80 ],
+                    "positionRelative" : false,
+                    "origin" : "bottomLeft",
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_simpleHud",
+            "record" : true,
+            "id" : 4,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ -368, -8 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_simpleSnd",
+                "record" : true,
+                "id" : 29,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_music",
+                    "position" : [ 1654, 88 ],
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_back",
+                "record" : true,
+                "id" : 5,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 448, 696 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_settings",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 29, -152 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_sound",
+                "record" : true,
+                "id" : 16,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_sound",
+                    "position" : [ 50, -30 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_fb",
+                "record" : true,
+                "id" : 21,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_socialFb",
+                    "position" : [ 157, 76 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_twitter",
+                "record" : true,
+                "id" : 22,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_socialTwitter",
+                    "position" : [ 257, 76 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_gplus",
+                "record" : true,
+                "id" : 23,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_socialGPlus",
+                    "position" : [ 357, 76 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_about",
+                "record" : true,
+                "id" : 17,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_about",
+                    "position" : [ 50, -110 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_support",
+                "record" : true,
+                "id" : 18,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_support",
+                    "position" : [ 50, -190 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_tutorial",
+                "record" : true,
+                "id" : 19,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_tutorial",
+                    "position" : [ 50, -270 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_allergens",
+                "record" : true,
+                "id" : 20,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_allergens",
+                    "position" : [ 50, -350 ],
+                    "loadParams" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "panel_settingsImg",
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/UI/panel_settings",
+                    "position" : [ 48, 64 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsSupport",
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/UI/settingsSupport",
+                    "position" : [ 210, -165 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsTutorial",
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/UI/settingsTutorial",
+                    "position" : [ 210, -250 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsAllergens",
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/UI/settingsAllergens",
+                    "position" : [ 220, -330 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsAbout",
+                "priority" : 9,
+                "inheritable" : { 
+                    "resource" : "2d/UI/settingsAbout",
+                    "position" : [ 190, -90 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_fullHud",
+            "record" : true,
+            "id" : 4,
+            "priority" : 2,
+            "inheritable" : { 
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_zoom",
+                "record" : true,
+                "id" : 24,
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "2d/UI/zoomSlider/ZoomSliderHandle",
+                    "position" : [ -80, 117 ],
+                    "positionRelative" : false,
+                    "origin" : "middleRight",
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_star",
+                "record" : true,
+                "id" : 2,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_favorites",
+                    "position" : [ -80, -80 ],
+                    "positionRelative" : false,
+                    "origin" : "bottomRight",
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_settings",
+                "record" : true,
+                "id" : 4,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_settings",
+                    "position" : [ 80, -80 ],
+                    "positionRelative" : false,
+                    "origin" : "bottomLeft",
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_book",
+                "record" : true,
+                "id" : 3,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipes",
+                    "position" : [ -80, 80 ],
+                    "positionRelative" : false,
+                    "origin" : "topRight",
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_flag",
+                "record" : true,
+                "id" : 1,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_globe",
+                    "position" : [ 80, 80 ],
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_passport",
+                "record" : true,
+                "id" : 26,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Passport",
+                    "position" : [ 210, 80 ],
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_quiz",
+                "record" : true,
+                "id" : 25,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/ImageDefaultAnswer",
+                    "position" : [ 96, 182 ],
+                    "scale" : [ 0.75, 0.3 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_flow",
+                "record" : true,
+                "id" : 27,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/ImageDefaultAnswer",
+                    "position" : [ 272, 182 ],
+                    "scale" : [ 0.75, 0.3 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_cSearch",
+                "record" : true,
+                "priority" : 4,
+                "text" : "SEARCH",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 144, 59 ],
+                    "positionRelative" : false,
+                    "visible" : false,
+                    "loadParams" : false,
+                    "color" : [ 20, 20, 20 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "size" : [ 230, 45 ]
+                }
+            }, { 
+                "name" : "lbl_rSearch",
+                "record" : true,
+                "priority" : 4,
+                "text" : "SEARCH",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ -371, 59 ],
+                    "positionRelative" : false,
+                    "origin" : "topRight",
+                    "visible" : false,
+                    "loadParams" : false,
+                    "color" : [ 20, 20, 20 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "size" : [ 230, 45 ]
+                }
+            }, { 
+                "name" : "lbl_quiz",
+                "record" : true,
+                "priority" : 8,
+                "text" : "TEMPLATES",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 35, 163 ],
+                    "visible" : false,
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "autoSize" : true
+                }
+            }, { 
+                "name" : "lbl_flow",
+                "record" : true,
+                "priority" : 8,
+                "text" : "FLOWMODE",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 211, 163 ],
+                    "visible" : false,
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "autoSize" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_zoomBar",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "2d/UI/zoomSlider/ZoomSliderBacking",
+                    "position" : [ -80, 179 ],
+                    "positionRelative" : false,
+                    "origin" : "middleRight",
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ui_rSearch",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "2d/UI/9patch/9patch-TextInputField_default",
+                    "position" : [ -374, 49 ],
+                    "positionRelative" : false,
+                    "origin" : "topRight",
+                    "scale" : [ 2.5, 1 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ui_cSearch",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/UI/9patch/9patch-TextInputField_default",
+                    "position" : [ 130, 49 ],
+                    "positionRelative" : false,
+                    "scale" : [ 2.5, 1 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_favHud",
+            "priority" : 2,
+            "inheritable" : { 
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_favGlobe",
+                "record" : true,
+                "id" : 11,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_globe",
+                    "position" : [ 80, 80 ],
+                    "positionRelative" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_favSearch",
+                "record" : true,
+                "id" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_recipes",
+                    "position" : [ -80, 80 ],
+                    "positionRelative" : false,
+                    "origin" : "topRight",
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_assessHud",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_assessSnd",
+                "record" : true,
+                "id" : 28,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_music",
+                    "position" : [ 1287, 81 ],
+                    "scale" : [ 0.8, 0.8 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "ref_debugInfoPos",
+            "inheritable" : { 
+                "position" : [ 784, 192 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_4by3_guide",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "opacity" : 15,
+                "position" : [ 178, 0 ],
+                "scale" : [ 1024, 768 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

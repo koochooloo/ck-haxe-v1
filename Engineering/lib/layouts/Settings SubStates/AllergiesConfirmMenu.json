@@ -1,0 +1,80 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_confirm",
+            "record" : true,
+            "id" : 1,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_checkSmall",
+                "position" : [ 953, 419 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_cancel",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_x",
+                "position" : [ 753, 419 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_ingredient1",
+            "record" : true,
+            "priority" : 1,
+            "text" : "ALLERGIES",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 614, 77 ],
+                "loadParams" : false,
+                "color" : [ 10, 7, 4 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "textAlignment" : [ "center", "center" ],
+                "size" : [ 500, 300 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "chef",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-spoon",
+                "position" : [ 460, 855 ],
+                "scale" : [ 1.5, 1.5 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "bubble",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-SpeechBubble",
+                "position" : [ 560, 32 ],
+                "scale" : [ 2.5, 1.8 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

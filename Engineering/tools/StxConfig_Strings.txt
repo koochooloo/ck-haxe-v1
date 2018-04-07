@@ -1,0 +1,20 @@
+
+#paths relative to \Engineering\tools\common\SpreadsheetToXML
+
+defineRules{
+saveLocalCopy=true
+defaultImportPath=../../../lib/strings/
+defaultExportPath=../../../src/assets/
+doHaxeOutput=true
+}
+
+defineNewFromGoogle{
+name=Gamestrings
+sheetID=Gamestrings
+key=1sXuSRpDN2KvL7jcPgBAeZY_tgMCWowxvtJXXW_yTgEE
+importFile=Gamestrings.xls
+exportFile=PaistStrings.hx
+exportPath=../../../src/assets/strings/
+startRow=1
+dataFilter=["StringID", "English"]
+}

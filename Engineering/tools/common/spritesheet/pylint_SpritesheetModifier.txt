@@ -1,0 +1,11 @@
+************* Module SpritesheetModifier
+W:157, 0: TODO: way too much work to reopen and close file each time (fixme)
+W:170, 0: TODO only at start # TODO canonical (realpath?) (fixme)
+W:173, 0: TODO multiple matches (fixme)
+W:179, 0: TODO: quote imgRelPath (perl \Q$imgRelPath\E style) (fixme)
+W:180, 0: TODO multiple matches (fixme)
+R: 70, 0: Too many local variables (20/15) (too-many-locals)
+W: 93,39: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W:132,37: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R: 72, 4: Too many nested blocks (7/5) (too-many-nested-blocks)
+R:160, 0: Too many local variables (20/15) (too-many-locals)

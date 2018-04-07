@@ -1,0 +1,6 @@
+************* Module SpritesheetGenerator
+W: 31, 0: TODO: make this a class to prevent eg tpImageNameMod pass all over the place (fixme)
+W:178, 0: TODO: enable this for Jenkins autobuilds (fixme)
+W:184, 0: TODO: temp code to not get stuck waiting on TP while working on tool (fixme)
+R: 33, 0: Too many arguments (6/5) (too-many-arguments)
+W: 73,12: No exception type(s) specified (bare-except)

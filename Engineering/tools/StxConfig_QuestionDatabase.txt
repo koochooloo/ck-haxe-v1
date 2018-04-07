@@ -1,0 +1,50 @@
+
+#paths relative to \Engineering\tools\common\SpreadsheetToXML
+
+defineRules{
+saveLocalCopy=true
+defaultImportPath=../../../lib/strings/
+defaultExportPath=../../../assets/cms/
+doJSONOutput=true
+}
+
+defineNewFromGoogle{
+name=SocialStudies
+sheetID=Social Studies
+key=10v8v_Jn_5kFeD0eGSB-yEgV3gYdt8cKvkiLsy2wbqgw
+importFile=QuestionDatabase.xls
+startRow=1
+dataFilter=["ID", "WEEK", "GRADE", "INCLUDE", "QUESTION_TYPE", "COUNTRY_FACT", "COUNTRY_FACT_VO", "COUNTRY_IMAGE", "CURRICULUM", "COUNTRY", "QUESTION", "QUESTION_IMAGE", "QUESTION_VO", "CA_TEXT", "CA_IMAGE", "CA_VO", "WA_1_TEXT", "WA_1_IMAGE", "WA_1_VO", "WA_2_TEXT", "WA_2_IMAGE", "WA_2_VO"]
+}
+
+defineNewLocal{
+name=MathAndScience
+sheetID=MathAndScience
+importFile=QuestionDatabase.xls
+startRow=1
+dataFilter=["ID", "WEEK", "GRADE", "INCLUDE", "QUESTION_TYPE", "CURRICULUM", "RECIPE", "QUESTION", "QUESTION_IMAGE", "QUESTION_VO", "CA_TEXT", "CA_IMAGE", "CA_VO", "WA_1_TEXT", "WA_1_IMAGE", "WA_1_VO", "WA_2_TEXT", "WA_2_IMAGE", "WA_2_VO"]
+}
+
+defineNewLocal{
+name=ZeroWeekAssessment
+sheetID=0WeekAssessment
+importFile=QuestionDatabase.xls
+startRow=1
+dataFilter=["ID", "WEEK", "INCLUDE", "GRADE", "COUNTRY_FACT", "COUNTRY_FACT_VO", "QUESTION_TYPE", "CURRICULUM", "QUESTION", "QUESTION_IMAGE", "QUESTION_VO", "CA_TEXT", "CA_IMAGE", "CA_VO", "WA_1_TEXT", "WA_1_IMAGE", "WA_1_VO", "WA_2_TEXT", "WA_2_IMAGE", "WA_2_VO"]
+}
+
+defineNewLocal{
+name=FiveWeekAssessment
+sheetID=5WeekAssessment
+importFile=QuestionDatabase.xls
+startRow=1
+dataFilter=["ID", "WEEK", "INCLUDE", "GRADE", "COUNTRY_FACT", "COUNTRY_FACT_VO", "QUESTION_TYPE", "CURRICULUM", "QUESTION", "QUESTION_IMAGE", "QUESTION_VO", "CA_TEXT", "CA_IMAGE", "CA_VO", "WA_1_TEXT", "WA_1_IMAGE", "WA_1_VO", "WA_2_TEXT", "WA_2_IMAGE", "WA_2_VO"]
+}
+
+defineNewLocal{
+name=TenWeekAssessment
+sheetID=10WeekAssessment
+importFile=QuestionDatabase.xls
+startRow=1
+dataFilter=["ID", "WEEK", "INCLUDE", "GRADE", "COUNTRY_FACT", "COUNTRY_FACT_VO", "QUESTION_TYPE", "CURRICULUM", "QUESTION", "QUESTION_IMAGE", "QUESTION_VO", "CA_TEXT", "CA_IMAGE", "CA_VO", "WA_1_TEXT", "WA_1_IMAGE", "WA_1_VO", "WA_2_TEXT", "WA_2_IMAGE", "WA_2_VO"]
+}

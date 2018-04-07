@@ -1,0 +1,294 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "borderPanel" : [ { 
+            "name" : "scroll_bounds",
+            "record" : true,
+            "inheritable" : { 
+                "position" : [ 160, 128 ],
+                "boundingBox" : [ 0, 0, 1100, 630 ]
+            }
+        } ],
+        "button" : [ { 
+            "name" : "btn_back",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Back",
+                "position" : [ 80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_next",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Next",
+                "position" : [ -80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomRight",
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "headerText_recipe",
+            "record" : true,
+            "priority" : 8,
+            "text" : "RecipeName",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ]
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "group_step_large",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 172, 138 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "lbl_step_large",
+                "record" : true,
+                "priority" : 1,
+                "text" : "Put the tahini in a medium bowl with the lemon juice, 160ml water, the garlic and a quarter-teaspoon of salt. Whisk to a thick but pourable consistency, like double cream – add more water if need be – and set aside.",
+                "inheritable" : { 
+                    "position" : [ 190, 48 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 630, 480 ],
+                    "wrapOverflow" : true
+                }
+            }, { 
+                "name" : "lbl_stepNumber_large",
+                "record" : true,
+                "priority" : 1,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ 66, 79 ],
+                    "loadParams" : false,
+                    "font" : "/fonts/CarterOne.ttf:72",
+                    "size" : [ 100, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "panelStep_large",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "position" : [ 511, 135 ],
+                    "scale" : [ 4, 2 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "stepIcon_large",
+                "inheritable" : { 
+                    "resource" : "UI/stepNumber",
+                    "position" : [ 116, 138 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "chefBig_large",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/chefBig",
+                    "position" : [ 889, 90 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "chefLittle_large",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/chefLittle",
+                    "position" : [ 889, 90 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_step_medium",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 172, 138 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "lbl_step_medium",
+                "record" : true,
+                "priority" : 1,
+                "text" : "Put the tahini in a medium bowl with the lemon juice, 160ml water, the garlic and a quarter-teaspoon of salt. Whisk to a thick but pourable consistency, like double cream – add more water if need be – and set aside.",
+                "inheritable" : { 
+                    "position" : [ 190, 68 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 630, 300 ],
+                    "wrapOverflow" : true
+                }
+            }, { 
+                "name" : "lbl_stepNumber_medium",
+                "record" : true,
+                "priority" : 1,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ 67, 117 ],
+                    "loadParams" : false,
+                    "font" : "/fonts/CarterOne.ttf:72",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 100, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "panelStep_medium",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "position" : [ 511, 167 ],
+                    "scale" : [ 4, 1.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "stepIcon_medium",
+                "inheritable" : { 
+                    "resource" : "UI/stepNumber",
+                    "position" : [ 117, 172 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "chefBig_medium",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/chefBig",
+                    "position" : [ 889, 164 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "chefLittle_medium",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/chefLittle",
+                    "position" : [ 889, 164 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_step_small",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 172, 147 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "vo_fact",
+                "record" : true,
+                "priority" : 20,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 113, 201 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_step_small",
+                "record" : true,
+                "priority" : 1,
+                "text" : "Put the tahini in a medium bowl with the lemon juice, 160ml water, the garlic and a quarter-teaspoon of salt. Whisk to a thick but pourable consistency, like double cream – add more water if need be – and set aside.",
+                "inheritable" : { 
+                    "position" : [ 172, 28 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 630, 200 ],
+                    "wrapOverflow" : true
+                }
+            }, { 
+                "name" : "lbl_stepNumber_small",
+                "record" : true,
+                "priority" : 1,
+                "text" : "99",
+                "inheritable" : { 
+                    "position" : [ 61, 46 ],
+                    "loadParams" : false,
+                    "font" : "/fonts/CarterOne.ttf:72",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 100, 100 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "panelStep_small",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 4, 1 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "stepIcon_small",
+                "inheritable" : { 
+                    "resource" : "UI/stepNumber",
+                    "position" : [ 111, 101 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "chefBig_small",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/chefBig",
+                    "position" : [ 910, 126 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "chefLittle_small",
+                "record" : true,
+                "inheritable" : { 
+                    "resource" : "UI/chefLittle",
+                    "position" : [ 910, 126 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

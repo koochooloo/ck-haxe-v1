@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
+  <!-- Output SWF options -->
+  <output>
+    <movie outputType="CustomBuild" />
+    <movie input="" />
+    <movie path="project.xml" />
+    <movie fps="0" />
+    <movie width="0" />
+    <movie height="0" />
+    <movie version="0" />
+    <movie minorVersion="0" />
+    <movie platform="Lime" />
+    <movie background="#FFFFFF" />
+    <movie preferredSDK="tools\environment\HaxeToolkit\haxe" />
+  </output>
+  <!-- Other classes to be compiled into your SWF -->
+  <classpaths>
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\lime\5,7,1" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\actuate\1,8,6" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\hxcpp\3,4,188" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\random\1,4,1\src" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\spritesheet\1,2,0" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\away3d\5,0,4" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\openfl\6,2,2" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\parsihax\2,0,0\src" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\zame-particles\1,0,4" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\format\3,3,0" />
+    <class path="src" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\openfl\6,2,2\externs\core\openfl" />
+    <class path="C:\Projects\speck\trunk\Engineering\tools\environment\HaxeToolkit\haxe\lib\openfl\6,2,2\externs\extras" />
+    <class path="bin\html5\haxe" />
+  </classpaths>
+  <!-- Build options -->
+  <build>
+    <option directives="lime=5.7.1&#xA;actuate=1.8.6&#xA;hxcpp=3.4.188&#xA;random=1.4.1&#xA;spritesheet=1.2.0&#xA;away3d=5.0.4&#xA;openfl=6.2.2&#xA;parsihax=2.0.0&#xA;zame-particles=1.0.4&#xA;format=3.3.0&#xA;tools=5.7.1&#xA;howlerjs&#xA;no-compilation&#xA;openfl-html5&#xA;haxeJSON&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5&#xA;display" />
+    <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
+    <option mainClass="ApplicationMain" />
+    <option enabledebug="True" />
+    <option additional="--macro lime.Lib.extraParams()&#xA;--macro openfl._internal.utils.ExtraParams.include()&#xA;--remap flash:openfl&#xA;-resource assets/data/version.txt@version&#xA;-debug " />
+  </build>
+  <!-- haxelib libraries -->
+  <haxelib>
+    <!-- example: <library name="..." /> -->
+  </haxelib>
+  <!-- Class files to compile (other referenced classes will automatically be included) -->
+  <compileTargets>
+    <compile path="src\Main.hx" />
+  </compileTargets>
+  <!-- Paths to exclude from the Project Explorer tree -->
+  <hiddenPaths>
+    <hidden path="obj" />
+  </hiddenPaths>
+  <!-- Executed before build -->
+  <preBuildCommand>"$(ProjectDir)\tools\preBuildCommand.bat" "$(ProjectDir)" "$(OutputFile)" "$(TargetBuild)" "$(BuildConfig)"</preBuildCommand>
+  <!-- Executed after build -->
+  <postBuildCommand alwaysRun="False" />
+  <!-- Other project options -->
+  <options>
+    <option showHiddenPaths="False" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
+  </options>
+  <!-- Plugin storage -->
+  <storage />
+</project>

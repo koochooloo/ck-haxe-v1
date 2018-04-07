@@ -1,0 +1,1338 @@
+Index: InfoPanel.hx
+===================================================================
+--- InfoPanel.hx	(nonexistent)
++++ InfoPanel.hx	(working copy)
+@@ -0,0 +1,110 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.debug.infoPanel;
++import haxe.ds.StringMap;
++
++#if (debug || build_InfoPanel)
++
++/**
++ * A struct representing a given infoItem.
++ */
++typedef InfoPanelData = 
++{
++	name:String,
++	value:String
++}
++
++/**
++ * Collection of infoItem functions that are manually callable at runtime.
++ * Are registered in code.
++ */
++class InfoPanel
++{
++	private static var ms_InfoPanelTable:StringMap<InfoPanelData> = new StringMap<InfoPanelData>();
++	
++	/**
++	 * The regex describing an acceptable infoItem name
++	 * @return
++	 */
++	private static var INFOITEM_NAME_REGEX:EReg = ~/^[A-Z0-9 ]+$/i;
++	
++	/**
++	 * Returns whether the infoItem name is valid.
++	 * @return
++	 */
++	public static function validateFieldName(name:String):Bool
++	{
++		return (INFOITEM_NAME_REGEX.match(name));
++	}
++	
++	public static function getInfoItemNames():Iterator<String>
++	{
++		return ms_InfoPanelTable.keys();
++	}
++	
++	/**
++	 * Returns whether a infoItem of the specified name exists
++	 * @param	infoItemName
++	 * @return
++	 */
++	public static function infoItemExists(infoItemName:String):Bool
++	{
++		return ms_InfoPanelTable.exists(infoItemName);
++	}
++	
++	/**
++	 * Gets the infoItem with the given name, returning null if it doesn't exist.
++	 * @param	infoItemName
++	 */
++	public static function getInfoItem(infoItemName:String):InfoPanelData
++	{
++		if (!infoItemExists(infoItemName))
++		{
++			return null;
++		}
++		
++		return ms_InfoPanelTable.get(infoItemName);
++	}
++	
++	/**
++	 * Tries to register the provided infoItem into the table.
++	 * @param	newInfoItem
++	 */
++	public static function registerInfoItem(newInfoItem:InfoPanelData):Void
++	{
++		if (newInfoItem == null)
++		{
++			Debug.warn("trying to register a null infoItem...");
++			return;
++		}
++		
++		if (ms_InfoPanelTable.exists(newInfoItem.name))
++		{
++			Debug.warn("infoItem: " + newInfoItem.name + " already exists! Skipping...");
++			return;
++		}
++		
++		if (!validateFieldName(newInfoItem.name))
++		{
++			Debug.warn("InfoItem name is invalid, only accepts alpha numeric + spaces");
++			return;
++		}
++		
++		//Add the new infoItem to the 
++		ms_InfoPanelTable.set(newInfoItem.name, newInfoItem);
++	}
++	
++	
++}
++#end
+Index: infoPanelItems/InfoPanelItem.hx
+===================================================================
+--- infoPanelItems/InfoPanelItem.hx	(nonexistent)
++++ infoPanelItems/InfoPanelItem.hx	(working copy)
+@@ -0,0 +1,469 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++#if (debug || build_InfoPanel)
++package com.firstplayable.hxlib.debug.infoPanel.infoPanelItems;
++import com.firstplayable.hxlib.debug.tunables.ui.SelectButton;
++import com.firstplayable.hxlib.debug.infoPanel.InfoPanel.InfoPanelData;
++import com.firstplayable.hxlib.debug.events.RefreshUIEvent;
++import openfl.events.MouseEvent;
++import com.firstplayable.hxlib.debug.tunables.ui.UIDefs;
++import com.firstplayable.hxlib.debug.tunables.ui.TunableTextField;
++import haxe.EnumTools;
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import openfl.events.FocusEvent;
++import openfl.text.TextFieldType;
++import openfl.display.BlendMode;
++import openfl.display.Sprite;
++import openfl.events.Event;
++import com.firstplayable.hxlib.Debug;
++
++import openfl.display.DisplayObjectContainer;
++import openfl.display.Shape;
++import openfl.text.TextField;
++import openfl.text.TextFormat;
++
++enum InfoPanelItemFields
++{
++	NAME_FIELD;
++	VALUE_FIELD;
++}
++
++/**
++ * Defines an item to be shown on the infoItem menu.
++ * Allows calling the infoItem at runtime.
++ */
++class InfoPanelItem extends Sprite
++{	
++	//==================================
++	// UI DEFS
++	//==================================
++	/**
++	 * The ratio of available field space in an item for the Name field.
++	 */
++	public static var InfoPanel_UI_FIELD_WIDTH_NAME(get, null):Float;
++	public static function get_InfoPanel_UI_FIELD_WIDTH_NAME():Float
++	{
++		return Tunables.getFloatField("InfoPanel_UI_FIELD_WIDTH_NAME", 0.3);
++	}
++	
++	/**
++	 * The ratio of available field space in an item for the Tags field.
++	 */
++	public static var InfoPanel_UI_FIELD_WIDTH_VALUE(get, null):Float;
++	public static function get_InfoPanel_UI_FIELD_WIDTH_VALUE():Float
++	{
++		return Tunables.getFloatField("InfoPanel_UI_FIELD_WIDTH_VALUE", 0.7);
++	}
++	
++	/**
++	 * The minimum gap between buttons on the item
++	 */
++	public static var InfoPanel_UI_ITEM_BTN_GAP(get, null):Float;
++	public static function get_InfoPanel_UI_ITEM_BTN_GAP():Float
++	{
++		return Tunables.getFloatField("InfoPanel_UI_ITEM_BTN_GAP", 4.0);
++	}
++	
++	//==================================
++	// Members and Implementation
++	//==================================
++	
++	private var m_initialWidth:Float;
++	private var m_initialHeight:Float;
++	private var m_infoItem:InfoPanelData;
++	
++	//The container that holds the elements in this item.
++	private var m_container:Shape;
++	
++	//The text fields for this item
++	private var m_textFields:Array<TunableTextField>;
++	
++	//================================================================
++	// Data Properties
++	//================================================================
++	public var infoItemName(get, null):String;
++	
++	//================================================================
++	// GUI Property Declarations
++	//================================================================
++	
++	/**
++	 * How much horizontal space is available for all the buttons
++	 */
++	public var buttonSpace(get, null):Float;
++	
++	/**
++	 * How much horizontal space is available for all the text fields.
++	 */
++	public var fieldSpace(get, null):Float;
++	
++	/**
++	 * Whether this item has been inited yet.
++	 */
++	public var m_inited:Bool;
++	
++	//=================================================================
++
++	public function new(startWidth:Float, startHeight:Float, infoItem:InfoPanelData) 
++	{
++		super();
++		
++		m_initialWidth = startWidth;
++		m_initialHeight = startHeight;
++		
++		m_infoItem = infoItem;
++		
++		//setup the UI
++		
++		m_container = new Shape();
++		addChild(m_container);
++		
++		//Create the text fields
++		m_textFields = [];
++		var fields:Array<InfoPanelItemFields> = EnumTools.createAll(InfoPanelItemFields);
++		for (field in fields)
++		{
++			//No infoItem fields are editable.
++			var newTextField = new TunableTextField(field.getIndex(), getEditableForField(field));
++			m_textFields.push(newTextField);
++		}
++		
++		m_inited = false;
++	
++		//Create the container
++		updateContainer();
++	}
++	
++	public function init():Void
++	{	
++		updateContainer();
++		
++		var initialFieldWidth:Float = m_initialWidth - buttonSpace;
++		
++		//position the fields
++		var curX:Float = 0;
++		for (field in m_textFields)
++		{
++			initField(field, initialFieldWidth, curX);
++			curX += field.width;
++		}
++		
++		m_inited = true;
++	}
++	
++	/**
++	 * Called when this item is deleted.
++	 */
++	public function release():Void
++	{
++		for (field in m_textFields)
++		{
++			field.removeEventListener(FocusEvent.FOCUS_OUT, onDefocusTextField);
++			
++			field.release();
++			removeChild(field);
++			field = null;
++		}
++		m_textFields = [];
++		
++		removeChild(m_container);
++		m_container = null;
++		
++		m_infoItem = null;
++		
++		m_inited = false;
++	}
++	
++	/**
++	 * Updates appearance
++	 * @param	e
++	 */
++	public function onRefreshUI(e:RefreshUIEvent):Void
++	{
++		updateContainer();
++		
++		//position the fields
++		var curX:Float = 0;
++		for (field in m_textFields)
++		{
++			field.onRefreshUI(e);
++			positionField(field, fieldSpace, curX);
++			curX += field.width;
++		}
++	}
++	
++	/**
++	 * Updates the container that represents the whole item.
++	 */
++	public function updateContainer():Void
++	{		
++		m_container.graphics.clear();
++		m_container.blendMode = BlendMode.NORMAL;
++		m_container.graphics.lineStyle(UIDefs.TUNABLES_UI_OUTLINE_SIZE, UIDefs.TUNABLES_UI_OUTLINE_COLOR);
++		m_container.graphics.beginFill(UIDefs.TUNABLES_UI_BG_COLOR);
++		
++		m_container.graphics.drawRoundRect(0, 0, m_initialWidth, UIDefs.TUNABLES_UI_ITEM_SIZE, UIDefs.TUNABLES_UI_ROUND_RECT_CORNER_SIZE);
++		m_container.graphics.endFill();
++	}
++	
++	//=========================================================
++	// Data Property Implementations
++	//=========================================================
++	
++	/**
++	 * Returns the property for the provided field ID
++	 * @return
++	 */
++	public function getPropertyForField(field:InfoPanelItemFields):Dynamic
++	{
++		switch(field)
++		{
++			case NAME_FIELD: 			return m_infoItem.name;
++			case VALUE_FIELD: 			return m_infoItem.value;
++			default: return null;
++		}
++	}
++	
++	/**
++	 * Gets the name of the infoItem that this item represents.
++	 * @return
++	 */
++	public function get_infoItemName():String
++	{
++		return m_infoItem.name;
++	}
++	
++	//=========================================================
++	// GUI Property Implementations
++	//=========================================================
++	
++	/**
++	 * Gets the outline color to use for this item
++	 * @return
++	 */
++	public function getOutlineColor():Int
++	{
++		return UIDefs.TUNABLES_UI_OUTLINE_COLOR;
++	}
++	
++	/**
++	 * The amount of width in the item available for buttons
++	 * @return
++	 */
++	public function get_buttonSpace():Float
++	{
++		return ((UIDefs.TUNABLES_UI_ITEM_SIZE + InfoPanel_UI_ITEM_BTN_GAP) * UIDefs.TUNABLES_UI_ITEMS_NUM_BUTTONS);
++	}
++	
++	/**
++	 * The amount of width in the item available for text fields
++	 * @return
++	 */
++	public function get_fieldSpace():Float
++	{
++		return m_initialWidth - buttonSpace;
++	}
++	
++	//=================================================================================
++	// Text Field Code
++	//=================================================================================
++	
++	/**
++	 * Gets the fraction of the available width for fields to use for this field.
++	 * @param	field
++	 * @return
++	 */
++	public function getWidthRatioForField(field:InfoPanelItemFields):Float
++	{
++		switch(field)
++		{
++			case NAME_FIELD: 				return InfoPanel_UI_FIELD_WIDTH_NAME;
++			case VALUE_FIELD: 				return InfoPanel_UI_FIELD_WIDTH_VALUE;
++		}
++	}
++	
++	/**
++	 * Returns whether the provided field is editable for this item or not
++	 * @param	field
++	 * @return
++	 */
++	public function getEditableForField(field:InfoPanelItemFields):Bool
++	{
++		return false;
++	}
++	
++	/**
++	 * Inits the field with the provided ID.
++	 * @param	fieldID
++	 */
++	private function initField(field:TunableTextField, initialFieldSpace:Float, curX:Float):Void
++	{		
++		if (field == null)
++		{
++			Debug.log("Don't init the null field");
++			return;
++		}
++		
++		var id:Int = field.fieldID;
++		var fieldID:InfoPanelItemFields = EnumTools.createByIndex(InfoPanelItemFields, id);
++		var textToShow:String = Std.string(getPropertyForField(fieldID));
++		
++		positionField(field, initialFieldSpace, curX);
++		
++		field.addEventListener(FocusEvent.FOCUS_OUT, onDefocusTextField);
++
++		updateTextField(field);
++		addChild(field);
++	}
++	
++	/**
++	 * Positions the field in the item based on parameters.
++	 * @param	field
++	 * @param	initialFieldSpace
++	 * @param	curX
++	 */
++	private function positionField(field:TunableTextField, initialFieldSpace:Float, curX:Float):Void
++	{
++		if (field == null)
++		{
++			return;
++		}
++		
++		var fieldID:InfoPanelItemFields = EnumTools.createByIndex(InfoPanelItemFields, field.fieldID);
++		
++		field.x = curX;
++		field.y = 0;
++		var targetFieldWidth:Float = Math.floor(initialFieldSpace * getWidthRatioForField(fieldID));
++		field.width = Math.floor(initialFieldSpace * getWidthRatioForField(fieldID));
++		field.height = UIDefs.TUNABLES_UI_ITEM_SIZE;
++	}
++	
++	/**
++	 * CB for when the value field of this item loses the focus
++	 * @param	e
++	 */
++	private function onDefocusTextField(e:FocusEvent):Void
++	{
++		//Nothing by default.
++		return;
++	}
++	
++	/**
++	 * If the focus event is for one of the fields belonging to this item
++	 * @param	e
++	 * @return
++	 */
++	private function myFocusEvent(e:FocusEvent):Bool
++	{
++		if (e.target == null)
++		{
++			return false;
++		}
++		
++		if (!Std.is(e.target, TunableTextField))
++		{
++			return false;
++		}
++		
++		return (m_textFields.indexOf(cast(e.target, TunableTextField)) != -1);
++	}
++	
++	/**
++	 * Returns whether this item passes the provided filter.
++	 * @param	filter
++	 * @return
++	 */
++	public function itemPassesFilter(filter:InfoPanelData):Bool
++	{
++		//Name is exact match
++		if ((filter.name != "") && (m_infoItem.name.indexOf(filter.name) == -1))
++		{
++			return false;
++		}
++		
++		return true;
++	}
++	
++	/**
++	 * Returns a text field by field id.
++	 * @param	fieldID
++	 * @return
++	 */
++	private function getTextField(fieldID:InfoPanelItemFields):TunableTextField
++	{
++		var fieldIdx:Int = fieldID.getIndex();
++		if (fieldIdx >= m_textFields.length)
++		{
++			Debug.warn("no text field for: " + fieldID);
++		}
++		return m_textFields[fieldIdx];
++	}
++	
++	//=========================================================
++	// Data validation, and comitting
++	// Generally don't want to override these functions.
++	// Instead look at the static versions in the next section.
++	//=========================================================
++	
++	/**
++	 * Sets the value text field string.
++	 * @param	val
++	 */
++	private function updateTextField(field:TunableTextField):Void
++	{
++		var fieldID:InfoPanelItemFields = EnumTools.createByIndex(InfoPanelItemFields, field.fieldID);
++		
++		switch(fieldID)
++		{
++			case NAME_FIELD:
++			{
++				updateTextFieldName();
++			}
++			case VALUE_FIELD:
++			{
++				updateTextFieldValue();
++			}
++		}
++	}
++	
++	/**
++	 * Updates the value text field based on current type.
++	 */
++	private function updateTextFieldName():Void
++	{
++		var textField:TunableTextField = getTextField(NAME_FIELD);
++		if (textField == null)
++		{
++			Debug.warn("name text field is null, can't set text...");
++			return;
++		}
++		textField.text = m_infoItem.name;
++	}
++	
++	private function updateTextFieldValue():Void
++	{
++		var textField:TunableTextField = getTextField(VALUE_FIELD);
++		if (textField == null)
++		{
++			Debug.warn("name text field is null, can't set text...");
++			return;
++		}
++		textField.text = m_infoItem.value;
++	}
++	
++	
++	//=============================================================
++	
++}
++#end
+Index: infoPanelItems/InfoPanelItemColumnLabels.hx
+===================================================================
+--- infoPanelItems/InfoPanelItemColumnLabels.hx	(nonexistent)
++++ infoPanelItems/InfoPanelItemColumnLabels.hx	(working copy)
+@@ -0,0 +1,112 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++#if (debug || build_InfoPanel)
++package com.firstplayable.hxlib.debug.infoPanel.infoPanelItems;
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import com.firstplayable.hxlib.debug.infoPanel.InfoPanel.InfoPanelData;
++import com.firstplayable.hxlib.debug.infoPanel.infoPanelItems.InfoPanelItem;
++import com.firstplayable.hxlib.debug.events.RefreshUIEvent;
++import com.firstplayable.hxlib.debug.tunables.ui.UIDefs;
++import com.firstplayable.hxlib.debug.tunables.ui.TunableTextField;
++import openfl.events.MouseEvent;
++import com.firstplayable.hxlib.debug.tunables.ui.RemoveItemButton;
++import com.firstplayable.hxlib.debug.tunables.ui.AddItemButton;
++import com.firstplayable.hxlib.Debug;
++import openfl.text.TextField;
++import openfl.text.TextFieldType;
++import openfl.text.TextFormat;
++
++/**
++ * The InfoPanelItem for the column headers.
++ * Not interactive, just there for reference
++ */
++class InfoPanelItemColumnLabels extends InfoPanelItem
++{
++	//==================================
++	// Column Header Defs
++	//==================================
++	
++	/**
++	 * The text color for column header infoItem items
++	 */
++	public static var CHEAT_UI_HEADER_TEXT_COLOR(get, null):Int;
++	public static function get_CHEAT_UI_HEADER_TEXT_COLOR():Int
++	{
++		if (Reflect.hasField(Tunables, "CHEAT_UI_HEADER_TEXT_COLOR"))
++		{
++			return Reflect.field(Tunables, "CHEAT_UI_HEADER_TEXT_COLOR");
++		}
++		else
++		{
++			return 0x000000;
++		}
++	}
++	
++	/**
++	 * The fill color for column header tunable items
++	 */
++	public static var CHEAT_UI_HEADER_BG_COLOR(get, null):Int;
++	public static function get_CHEAT_UI_HEADER_BG_COLOR():Int
++	{
++		if (Reflect.hasField(Tunables, "CHEAT_UI_HEADER_BG_COLOR"))
++		{
++			return Reflect.field(Tunables, "CHEAT_UI_HEADER_BG_COLOR");
++		}
++		else
++		{
++			return 0xD1D1D1;
++		}
++	}
++	
++	/**
++	 * Construct a column label tunable item
++	 * @param	startWidth
++	 * @param	startHeight
++	 * @param	variable
++	 */
++	public function new(startWidth:Float, startHeight:Float, columnLabels:InfoPanelData) 
++	{		
++		super(startWidth, startHeight, columnLabels);
++	}
++	
++	/**
++	 * Post-construction initialization
++	 */
++	override public function init():Void
++	{	
++		super.init();
++		
++		for (field in m_textFields)
++		{
++			field.backgroundColor = CHEAT_UI_HEADER_BG_COLOR;
++			field.textColor = CHEAT_UI_HEADER_TEXT_COLOR;
++		}
++	}
++	
++	/**
++	 * Updates appearance
++	 * @param	e
++	 */
++	override public function onRefreshUI(e:RefreshUIEvent):Void
++	{
++		super.onRefreshUI(e);
++		
++		for (field in m_textFields)
++		{
++			field.backgroundColor = CHEAT_UI_HEADER_BG_COLOR;
++			field.textColor = CHEAT_UI_HEADER_TEXT_COLOR;
++		}
++	}
++}
++#end
+Index: InfoPanelMenu.hx
+===================================================================
+--- InfoPanelMenu.hx	(nonexistent)
++++ InfoPanelMenu.hx	(working copy)
+@@ -0,0 +1,627 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++#if (debug || build_InfoPanel)
++package com.firstplayable.hxlib.debug.infoPanel;
++import com.firstplayable.hxlib.utils.Version;
++import js.Browser;
++import com.firstplayable.hxlib.debug.tunables.ui.SaveButton;
++import com.firstplayable.hxlib.debug.events.RefreshUIEvent;
++import com.firstplayable.hxlib.debug.tunables.ui.UIDefs;
++import openfl.net.URLRequest;
++import openfl.Lib;
++import com.firstplayable.hxlib.debug.tunables.ui.InfoButton;
++import com.firstplayable.hxlib.debug.tunables.ui.TunablePagingWidget;
++import com.firstplayable.hxlib.Debug;
++import com.firstplayable.hxlib.display.GameDisplay;
++import com.firstplayable.hxlib.display.LayerName;
++import com.firstplayable.hxlib.debug.infoPanel.InfoPanel;
++import com.firstplayable.hxlib.events.PagingEvent;
++import com.firstplayable.hxlib.debug.infoPanel.infoPanelItems.InfoPanelItem;
++import com.firstplayable.hxlib.debug.infoPanel.infoPanelItems.InfoPanelItemColumnLabels;
++import haxe.ds.StringMap;
++import openfl.display.BlendMode;
++import openfl.display.Sprite;
++import openfl.events.KeyboardEvent;
++import openfl.events.MouseEvent;
++import openfl.geom.Rectangle;
++import openfl.ui.Keyboard;
++
++/**
++ * Creates a debug menu for InfoPanel registered to InfoPanel.hx
++ * Like the tunable menu, they can be paged through, and searched on.
++ * The function they represent will be called everytime they're clicked.
++ */
++
++class InfoPanelMenu extends Sprite
++{	
++	public static var BOTTOM_BAR_HEIGHT(get, null):Float;
++	public static function get_BOTTOM_BAR_HEIGHT():Float
++	{
++		return UIDefs.TUNABLES_UI_ITEM_SIZE * UIDefs.TUNABLES_UI_BOTTOM_BAR_SIZE;
++	}
++	
++	//==================================================================
++	// GUI Items
++	//==================================================================
++	
++	//Map of all variable items
++	private var m_allInfoPanelItems:StringMap<InfoPanelItem>;
++	private var m_filteredItems:Array<InfoPanelItem>;
++	
++	//Items on display
++	private var m_headerItems:List<InfoPanelItem>;
++	private var m_InfoPanelItems:List<InfoPanelItem>;
++	private var m_footerItems:List<InfoPanelItem>;
++	
++	//Header Widgets
++	private var m_infoButton:Sprite;
++	
++	//Footer Widgets
++	private var m_pagingWidget:TunablePagingWidget;
++	
++	//==================================================================
++	// GUI Properties
++	//==================================================================
++	
++	private static inline var INFO_BUTTON_URL:String = "https://wiki.1stplayable.com/index.php/Web/Haxe/Debug_Info_Viewer";
++	
++	private var m_startWidth:Float;
++	private var m_startHeight:Float;
++	
++	private var m_init:Bool = false;
++	private var m_showing:Bool = false;
++	
++	private var itemWidth(get, null):Float;
++	
++	//==================================================================
++	// Model Properties
++	//==================================================================
++	
++	public static var NUM_ITEMS_PER_PAGE:Int = 20;
++	
++	private var m_curPage:Int;
++	private var curPage(get, set):Int;
++	private var pageCount(get, null):Int;
++	
++	/**
++	 * Constructs a TunablesMenu with the provided width and height.
++	 * @param	startWidth
++	 * @param	startHeight
++	 */
++	public function new(startWidth:Float, startHeight:Float) 
++	{
++		super();
++		
++		m_curPage = 0;
++		
++		m_startWidth = startWidth;
++		m_startHeight = startHeight;
++		
++		//=======================================================
++		// Create the items
++		//=======================================================
++		
++		untyped var ua = detect.parse(navigator.userAgent);
++		
++		InfoPanel.registerInfoItem( {
++			name: 	"Game Version",
++			value:	Version.versionInfo
++			} );
++		
++		InfoPanel.registerInfoItem( {
++			name: 	"Browser",
++			value:	ua.browser.family
++			} );
++			
++		InfoPanel.registerInfoItem( {
++			name: 	"Browser Version",
++			value:	ua.browser.major + "." + ua.browser.minor
++			} );
++			
++		InfoPanel.registerInfoItem( {
++			name: 	"Device",
++			value:	ua.device.family
++			} );
++		
++		//==============================================
++		//Create the Header
++		//==============================================
++		m_headerItems = new List<InfoPanelItem>();
++		
++		//construct the header item
++		var headerColumns:InfoPanelData = 
++		{
++			name: "Info Item: ",
++			value: "Value:",
++		};
++		
++		var columnsItem:InfoPanelItemColumnLabels = new InfoPanelItemColumnLabels(itemWidth, UIDefs.TUNABLES_UI_ITEM_SIZE, headerColumns);
++		m_headerItems.add(columnsItem);
++		
++		//==============================================
++		//Create the Info Items representing InfoPanel
++		//==============================================
++		
++		m_allInfoPanelItems = new StringMap<InfoPanelItem>();
++		m_filteredItems = [];
++		m_InfoPanelItems = new List<InfoPanelItem>();
++		
++		//construct the items
++		for (infoItem in InfoPanel.getInfoItemNames())
++		{
++			var nextItem:InfoPanelItem = createItemForInfoItem(InfoPanel.getInfoItem(infoItem), itemWidth, UIDefs.TUNABLES_UI_ITEM_SIZE);
++			if (nextItem != null)
++			{
++				m_filteredItems.push(nextItem);
++				m_allInfoPanelItems.set(infoItem, nextItem);
++			}
++		}
++		
++		//==============================================
++		//Create the Footer
++		//==============================================
++		
++		m_footerItems = new List<InfoPanelItem>();
++		
++		m_infoButton = null;
++		m_pagingWidget = null;
++		
++		m_init = false;
++		m_showing = false;
++	}
++	
++	/**
++	 * Sets up the window, and all the items
++	 */
++	private function initWindow():Void
++	{		
++		//add the info button
++		m_infoButton = new InfoButton();
++		m_infoButton.addEventListener(MouseEvent.CLICK, onClickedInfo);
++		addChild(m_infoButton);
++		
++		//init the paging widget
++		m_pagingWidget = new TunablePagingWidget(itemWidth, BOTTOM_BAR_HEIGHT);
++		addChild(m_pagingWidget);
++		m_pagingWidget.init();
++		m_pagingWidget.curPage = curPage;
++		m_pagingWidget.pageCount = pageCount;
++		
++		//update items
++		refreshItems();
++		
++		//add listeners
++		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
++		DebugDefs.debugEventTarget.addEventListener(RefreshUIEvent.REFRESH_UI_EVENT, onUIRefresh);
++		m_pagingWidget.addEventListener(PagingEvent.PAGING_EVENT, onPagingEvent);
++	}
++	
++	/**
++	 * Releases the window in preparation for deletion.
++	 * In most cases you won't need to do this since the window should
++	 * persist in the DEBUG layer, but it's here if you need.
++	 */
++	public function release():Void
++	{
++		m_pagingWidget.removeEventListener(PagingEvent.PAGING_EVENT, onPagingEvent);
++		m_infoButton.removeEventListener(MouseEvent.CLICK, onClickedInfo);
++		DebugDefs.debugEventTarget.removeEventListener(RefreshUIEvent.REFRESH_UI_EVENT, onUIRefresh);
++		stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
++		
++		var itemLists:Array<List<InfoPanelItem>> = getItemLists();
++		for (list in itemLists)
++		{
++			for (item in list)
++			{
++				removeItem(item);
++			}
++			list.clear();
++		}
++		m_filteredItems = [];
++		m_allInfoPanelItems = null;
++		m_headerItems = null;
++		m_footerItems = null;
++
++		for (item in m_allInfoPanelItems)
++		{
++			item.release();
++		}
++		m_allInfoPanelItems = null;
++		
++		m_curPage = 0;
++		
++		removeChild(m_infoButton);
++		m_infoButton = null;
++		
++		m_pagingWidget.release();
++		removeChild(m_pagingWidget);
++		m_pagingWidget = null;
++	}
++	
++	//==================================================================
++	// Window Maintenance
++	//==================================================================
++	
++	/**
++	 * Toggles between showing and hiding the debug menu.
++	 */
++	public function toggleShow():Void
++	{
++		show(!m_showing);
++	}
++	
++	/**
++	 * Shows or hide the window, initing it if it hasn't been shown yet.
++	 * @param	show
++	 */
++	public function show( show:Bool = true ):Void
++	{
++		if (show && !m_showing)
++		{
++			GameDisplay.attach( LayerName.DEBUG, this );
++			if (!m_init)
++			{
++				initWindow();
++				m_init = true;
++			}
++			
++			m_showing = true;
++		}
++		else if(!show && m_showing)
++		{
++			GameDisplay.remove( LayerName.DEBUG, this );
++			m_showing = false;
++		}
++	}
++	
++	private function updateWindow(leftX:Float, topY:Float, rightX:Float, bottomY:Float):Void
++	{		
++		//Debug.log('Drawing window: ($leftX,$topY)-($rightX,$bottomY)');
++		
++		graphics.clear();
++		blendMode = BlendMode.NORMAL;
++		graphics.lineStyle(UIDefs.TUNABLES_UI_OUTLINE_SIZE, UIDefs.TUNABLES_UI_OUTLINE_COLOR);
++		graphics.beginFill(UIDefs.TUNABLES_UI_BG_COLOR);
++		
++		graphics.drawRoundRect(leftX, topY, rightX, bottomY, UIDefs.TUNABLES_UI_ROUND_RECT_CORNER_SIZE);
++		graphics.endFill();
++	}
++	
++	//==================================================================
++	// Item Maintenance
++	//==================================================================
++	
++	/**
++	 * Gets a list of all tunable items that should be visible on the menu
++	 * @return
++	 */
++	private function getItemLists():Array<List<InfoPanelItem>>
++	{
++		return [m_headerItems, m_InfoPanelItems, m_footerItems];
++	}
++	
++	/**
++	 * Redraw all the tunable items based on the current m_items list
++	 */
++	private function refreshItems():Void
++	{
++		var itemLists:Array<List<InfoPanelItem>> = getItemLists();
++		
++		//Remove all items from self
++		for (list in itemLists)
++		{
++			for (item in list)
++			{
++				if (getChildIndex(item) != -1)
++				{
++					removeChild(item);
++				}
++			}
++		}
++		m_InfoPanelItems.clear();
++		
++		//Re-add all header items
++		for (item in m_headerItems)
++		{
++			addChild(item);
++			if (!item.m_inited)
++			{
++				item.init();
++			}
++		}
++		
++		//Add only items for the current page
++		var curItem:Int = 0;
++		var firstItemOfPage:Int = curPage * NUM_ITEMS_PER_PAGE;
++		var endOfPage:Int = (curPage + 1) * NUM_ITEMS_PER_PAGE;
++		
++		for (i in firstItemOfPage...endOfPage)
++		{
++			if (i >= m_filteredItems.length)
++			{
++				break;
++			}
++			
++			var item:InfoPanelItem = m_filteredItems[i];
++			addChild(item);
++			if (!item.m_inited)
++			{
++				item.init();
++			}
++			
++			m_InfoPanelItems.add(item);
++		}
++		
++		//Re-add all footer items
++		for (item in m_footerItems)
++		{
++			addChild(item);
++			if (!item.m_inited)
++			{
++				item.init();
++			}
++		}
++		
++		//Position the items
++		updateItemPositions();
++	}
++	
++	/**
++	 * Updates all visible tunable items to their correct positions.
++	 */
++	private function updateItemPositions():Void
++	{
++		var itemLists:Array<List<InfoPanelItem>> = getItemLists();
++		
++		var topY:Float = UIDefs.TUNABLES_UI_OUTLINE_SIZE;
++		var itemY:Float = topY;
++		
++		//Add all items back
++		for (list in itemLists)
++		{
++			if (list == m_footerItems)
++			{				
++				//IF we have multiple pages, the footer should always be at the same place.
++				if (pageCount > 1)
++				{
++					var numPaddingItems:Int = NUM_ITEMS_PER_PAGE - m_InfoPanelItems.length;
++					var padding:Float = numPaddingItems * (UIDefs.TUNABLES_UI_ITEM_SIZE + UIDefs.TUNABLES_UI_OUTLINE_SIZE);
++					itemY += padding;
++				}
++			}
++			
++			for (nextItem in list)
++			{
++				nextItem.x = UIDefs.TUNABLES_UI_OUTLINE_SIZE;
++				nextItem.y = itemY;
++				
++				itemY += (UIDefs.TUNABLES_UI_ITEM_SIZE + UIDefs.TUNABLES_UI_OUTLINE_SIZE);
++			}
++		}
++		
++		//Grab the first item for positioning and size reference
++		var firstItem:InfoPanelItem = m_headerItems.first();
++		if (firstItem == null)
++		{
++			Debug.warn("Somehow we have no header items. Something has gone horribly wrong...");
++			return;
++		}
++		var firstItemRect:Rectangle = firstItem.getBounds(this);
++		
++		//=================================================
++		//Header buttons
++		//=================================================
++		//Reposition the Help Button
++		removeChild(m_infoButton);
++		m_infoButton.x = firstItem.fieldSpace;
++		m_infoButton.y = topY + 1;
++		addChild(m_infoButton);
++		
++		//=================================================
++		//Footer buttons
++		//=================================================
++		var leftOverSpace:Float = BOTTOM_BAR_HEIGHT - UIDefs.TUNABLES_UI_ITEM_SIZE;
++		
++		//Reposition the paging widget
++		m_pagingWidget.x = UIDefs.TUNABLES_UI_OUTLINE_SIZE + ((itemWidth - m_pagingWidget.width) / 2);
++		m_pagingWidget.y = itemY;
++		
++		m_pagingWidget.visible = (pageCount > 1);
++		m_pagingWidget.pageCount = pageCount;
++		
++		itemY += BOTTOM_BAR_HEIGHT;
++		
++		//=================================================
++		//Determine window size
++		//=================================================
++		
++		var leftX:Float = firstItemRect.left;
++		var topY:Float = firstItemRect.top;
++		var rightX:Float = leftX + itemWidth;
++		var bottomY:Float = itemY;
++		
++		updateWindow(leftX, topY, rightX, bottomY);
++	}
++	
++	/**
++	 * Removes an item
++	 * @param	item
++	 */
++	private function removeItem(item:InfoPanelItem):Void
++	{
++		if (item == null)
++		{
++			Debug.warn("Can't remove null item");
++			return;
++		}
++		
++		if (m_allInfoPanelItems.exists(item.infoItemName))
++		{
++			m_allInfoPanelItems.remove(item.infoItemName);
++		}
++		//Removal is almost always from near the end of the list
++		//so this should be relatively fast.
++		m_filteredItems.remove(item);
++		m_InfoPanelItems.remove(item);
++		
++		removeChild(item);
++		item.release();
++	}
++	
++	//=================================================================
++	// GUI Property Implementations
++	//=================================================================
++	
++	/**
++	 * Returns the width that items should be.
++	 * @return
++	 */
++	private function get_itemWidth():Float
++	{
++		return m_startWidth;
++	}
++	
++	//==================================================================
++	// Model Property Implementations
++	//==================================================================
++	
++	/**
++	 * Gets the current page number
++	 * @return
++	 */
++	private function get_curPage():Int
++	{
++		return m_curPage;
++	}
++	
++	/**
++	 * Attempts to set the current page number to the specified page.
++	 * @param	newPage
++	 * @return
++	 */
++	private function set_curPage(newPage:Int):Int
++	{
++		if (newPage < 0 || newPage >= pageCount)
++		{
++			return m_curPage;
++		}
++		
++		m_curPage = newPage;
++		m_pagingWidget.curPage = newPage;
++		refreshItems();
++		
++		return m_curPage;
++	}
++	
++	/**
++	 * Returns the number of pages needed to display all the filtered items.
++	 * @return
++	 */
++	private function get_pageCount():Int
++	{
++		return Std.int(Math.ceil(m_filteredItems.length / NUM_ITEMS_PER_PAGE));
++	}
++	
++	//==================================================================
++	// User Input Handling
++	//==================================================================
++	
++	/**
++	 * Handles clicking the help button
++	 * @param	e
++	 */
++	private function onClickedInfo(e:MouseEvent):Void
++	{
++		if (e.currentTarget != m_infoButton)
++		{
++			return;
++		}
++		
++		openfl.Lib.getURL(new URLRequest(INFO_BUTTON_URL));
++	}
++	
++	/**
++	 * Updates the page
++	 * @param	e
++	 */
++	private function onPagingEvent(e:PagingEvent):Void
++	{
++		m_pagingWidget.curPage = curPage = e.page;
++	}
++	
++	/**
++	 * Handles keyboard presses.
++	 * @param	e
++	 */
++	private function onKeyDown(e:KeyboardEvent):Void
++	{
++		if (e.keyCode == Keyboard.PAGE_UP)
++		{
++			toggleShow();
++		}
++		else if (e.keyCode == Keyboard.ENTER)
++		{
++			if (stage != null)
++			{
++				stage.focus = this;
++			}
++		}
++	}
++	
++	/**
++	 * UI Parameters have changed, redraw items.
++	 * @param	e
++	 */
++	private function onUIRefresh(e:RefreshUIEvent):Void
++	{
++		//Refresh UI
++		for (list in getItemLists())
++		{
++			for ( item in list)
++			{
++				item.onRefreshUI(e);
++			}
++		}
++		
++		//TODO: We should really not have to do this.
++		//Items not currently visible should really just be data and not have UI.
++		//Need to break this out into a model and view.
++		//Refresh all variable items
++		for (item in m_allInfoPanelItems)
++		{
++			item.onRefreshUI(e);
++		}
++		
++		//Do standard item updating
++		refreshItems();
++	}
++	
++	//==================================================================
++	// Helper Functions
++	//==================================================================
++	
++	/**
++	 * Creates a infoItem item with the provided info.
++	 * TODO: may want different infoItem item types later.
++	 * @param	infoItem
++	 * @param	startWidth
++	 * @param	startHeight
++	 * @return
++	 */
++	private static function createItemForInfoItem(infoItem:InfoPanelData, startWidth:Float, startHeight:Float):InfoPanelItem
++	{
++		var newItem:InfoPanelItem = new InfoPanelItem(startWidth, startHeight, infoItem);		
++		return newItem;
++	}
++}
++#end

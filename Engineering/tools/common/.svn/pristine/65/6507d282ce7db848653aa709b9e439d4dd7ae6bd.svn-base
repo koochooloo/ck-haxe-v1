@@ -1,0 +1,5 @@
+************* Module AssetManifestParser
+R: 46, 0: Too few public methods (1/2) (too-few-public-methods)
+R: 62, 0: Too few public methods (0/2) (too-few-public-methods)
+R: 80, 0: Too few public methods (0/2) (too-few-public-methods)
+W:232,11: Catching too general exception Exception (broad-except)

@@ -1,0 +1,488 @@
+Index: src/game/controllers/QuestionController.hx
+===================================================================
+--- src/game/controllers/QuestionController.hx	(revision 1027)
++++ src/game/controllers/QuestionController.hx	(working copy)
+@@ -31,6 +31,7 @@
+ import game.net.AccountManager;
+ import game.net.NetAssets;
+ import game.ui.HudMenu.HudMode;
++import game.ui.SpeckMenu;
+ import game.ui.question.Answer.UIAnswer;
+ import game.ui.question.AnswerPanel;
+ import game.ui.question.ImageAnswer;
+@@ -83,6 +84,13 @@
+ 	private var m_uiAnswerToCmsAnswer:ObjectMap<UIAnswer, CMSAnswer>;
+ 
+ 	private var m_tracker:Option<AnswerTracker>;
++	
++	private var m_textQuestionUI:TextQuestion;
++	private var m_imageQuestionUI:ImageQuestion;
++	private var m_questionAudioId:String;
++	private var m_answerPanel:AnswerPanel;
++	private var m_answerAudioID:String;
++	private var m_hasAllAnswerAudio:Bool;
+ 
+ 	public function new(data:Dataset<CMSQuestion>)
+ 	{
+@@ -251,6 +259,10 @@
+ 		var isText:Bool = false;
+ 		var isImage:Bool = false;
+ 		var isNumber:Bool = false;
++		
++		m_questionAudioId = null;
++		m_imageQuestionUI = null;
++		m_textQuestionUI = null;
+ 
+ 		var isSocialStudies:Bool = (data.curriculum == Curriculum.SOCIAL_STUDIES);
+ 		var isMathScience:Bool = (data.curriculum == Curriculum.MATH_AND_SCIENCE);
+@@ -295,16 +307,18 @@
+ 			{
+ 				var question = isSocialStudiesAssessment ? TextQuestion.makeSocialStudies() : TextQuestion.makeDefault();
+ 
++				m_textQuestionUI = question;
++				
+ 				question.text = data.questionText;
+ 
+-				if (hasVO)
++				/*if (hasVO)
+ 				{
+-					question.showVOButton();
++					//question.showVOButton();
+ 				}
+ 				else
+ 				{
+-					question.hideVOButton();
+-				}
++					//question.hideVOButton();
++				}*/
+ 
+ 				builder.textQuestion(question);
+ 			}
+@@ -314,6 +328,8 @@
+ 
+ 				question.text = data.questionText;
+ 
++				m_imageQuestionUI = question;
++				
+ 				data.questionImage.flatMap(function(imagePath)
+ 				{
+ 					var imgUrl = S3_ASSET_URL + imagePath + ".png";
+@@ -331,7 +347,7 @@
+ 						}
+ 					}
+ 
+-					NetAssets.instance.getImage(imgUrl, onImgLoaded);
++					NetAssets.instance.getImage(imgUrl, onImgLoaded );
+ 
+ 					return Some(imagePath);
+ 				});
+@@ -342,19 +358,22 @@
+ 						{
+ 							var sndUrl = S3_SOUND_URL + sndName;
+ 							var sndId = 'Questions/${sndName}';
+-
++							
++							m_questionAudioId = sndId;
++							
+ 							WebAudio.instance.multiRegister([sndUrl, sndUrl.replace(".ogg", ".mp3")], sndId);
+-							WebAudio.instance.load([sndId]);
++							WebAudio.instance.load([sndId], onQuestionAudioLoadComplete );
+ 
+ 							return Some(sndName);
+ 						});
++						
+ 
+ 					// TODO: Show this after the load completes?
+-					question.showVOButton();
++					//question.showVOButton();
+ 				}
+ 				else
+ 				{
+-					question.hideVOButton();
++					//question.hideVOButton();
+ 				}
+ 
+ 				builder.imageQuestion(question);
+@@ -382,7 +401,8 @@
+ 				if (isImage)
+ 				{
+ 					var answerUI = new ImageAnswer();
+-
++					m_imageAnswerUI = answerUI;
++					
+ 					answer.image.flatMap(function(assetPath)
+ 					{
+ 						var imgUrl = S3_ASSET_URL + assetPath + ".png";
+@@ -476,6 +496,7 @@
+ 				}
+ 			}
+ 
++			m_answerPanel = AnswerPanel;
+ 			// Helper function to determine if VO is present
+ 			function hasVO(answer:CMSAnswer):Bool
+ 			{
+@@ -489,9 +510,11 @@
+ 					{
+ 						var sndUrl = S3_SOUND_URL + vo;
+ 						var sndId = 'Questions/$vo';
+-
++						
++						m_answerAudioID = sndId;
++						
+ 						WebAudio.instance.multiRegister([sndUrl, sndUrl.replace(".ogg", ".mp3")], sndId);
+-						WebAudio.instance.load([sndId]);
++						WebAudio.instance.load([sndId], onAnswerAudioLoadComplete);
+ 
+ 						return Some(vo);
+ 					});
+@@ -500,16 +523,7 @@
+ 			}
+ 
+ 			// Show the answer VO button if we have all necessary VO
+-			var hasAllAnswerVO:Bool = data.answers.foreach(hasVO);
+-			if (hasAllAnswerVO)
+-			{
+-				data.answers.foreach(loadVO);
+-				panel.showVOButton();
+-			}
+-			else
+-			{
+-				panel.hideVOButton();
+-			}
++			m_hasAllAnswerVO = data.answers.foreach(hasVO);
+ 
+ 			panel.answers = Random.shuffle(m_answerUI);
+ 
+@@ -541,7 +555,7 @@
+ 					return Some(countryFact);
+ 				});
+ 
+-				var hasVO:Bool = data.countryFactVO.isSome();
++				/*var hasVO:Bool = data.countryFactVO.isSome();
+ 				if (hasVO)
+ 				{
+ 					expanded.showVOButton();
+@@ -551,7 +565,7 @@
+ 				{
+ 					expanded.hideVOButton();
+ 					compact.hideVOButton();
+-				}
++				}*/
+ 
+ 				builder.expandedStory(expanded)
+ 				.compactStory(compact);
+@@ -575,7 +589,37 @@
+ 
+ 		m_uiBundle = Some(bundle);
+ 	}
++	
++	private function onQuestionAudioLoadComplete():Void
++	{
++		if ( !WebAudio.instance.has( m_questionAudioId ) )
++		{
++			if ( m_textQuestionUI != null )
++			{
++				m_textQuestionUI.hideVOButton();
++			}
++			else if ( m_imageQuestionUI != null )
++			{
++				m_imageQuestionUI.hideVOButton();
++			}
++		}
++		else // perhaps redundant?
++		{
++			if ( m_textQuestionUI != null )
++			{
++				m_textQuestionUI.showVOButton();
++			}
++			else if ( m_imageQuestionUI != null )
++			{
++				m_imageQuestionUI.showVOButton();
++			}
++		}
++	}
+ 
++	private function onAnswerAudioLoadComplete():Void
++	{
++	}
++
+ 	private function onButtonClicked(event:GenericEvent<QuestionButtonIds>):Void
+ 	{
+ 		WebAudio.instance.play("SFX/button_click");
+Index: src/game/ui/question/AnswerPanel.hx
+===================================================================
+--- src/game/ui/question/AnswerPanel.hx	(revision 1027)
++++ src/game/ui/question/AnswerPanel.hx	(working copy)
+@@ -84,12 +84,18 @@
+ 	
+ 	public function showVOButton():Void
+ 	{
+-		showObject(ANSWER_VO_BUTTON);
++		trace( "show answer vo" );
++		var button:GraphicButton = cast getChildByName( "ANSWER_VO_BUTTON" );
++		SpeckMenu.showAndEnableButton( button );
++		//showObject(ANSWER_VO_BUTTON);
+ 	}
+ 	
+ 	public function hideVOButton():Void
+ 	{
+-		hideObject(ANSWER_VO_BUTTON);
++		trace( "hide answer vo" );
++		var button:GraphicButton = cast getChildByName( "ANSWER_VO_BUTTON" );
++		SpeckMenu.hideAndDisableButton( button );
++		//hideObject(ANSWER_VO_BUTTON);
+ 	}
+ 	
+ 	public function disableButtonsForCA(id:QuestionButtonIds):Void
+Index: src/game/ui/question/ImageQuestion.hx
+===================================================================
+--- src/game/ui/question/ImageQuestion.hx	(revision 1027)
++++ src/game/ui/question/ImageQuestion.hx	(working copy)
+@@ -13,6 +13,7 @@
+ 
+ package game.ui.question;
+ 
++import com.firstplayable.hxlib.display.GraphicButton;
+ import com.firstplayable.hxlib.display.OPSprite;
+ import game.utils.TextParser;
+ import motion.Actuate;
+@@ -81,12 +82,16 @@
+ 	
+ 	public function showVOButton():Void
+ 	{
+-		showObject(QUESTION_VO_BUTTON);
++		var button:GraphicButton = cast getChildByName( "QUESTION_VO_BUTTON" );
++		SpeckMenu.showAndEnableButton(  button );
++		//showObject(QUESTION_VO_BUTTON);
+ 	}
+ 	
+ 	public function hideVOButton():Void
+ 	{
+-		return hideObject(QUESTION_VO_BUTTON);
++		var button:GraphicButton = cast getChildByName( "QUESTION_VO_BUTTON" );
++		SpeckMenu.hideAndDisableButton(  button );
++		//return hideObject(QUESTION_VO_BUTTON);
+ 	}
+ 	
+ 	private function get_text():String
+Index: src/game/ui/question/TextQuestion.hx
+===================================================================
+--- src/game/ui/question/TextQuestion.hx	(revision 1027)
++++ src/game/ui/question/TextQuestion.hx	(working copy)
+@@ -13,6 +13,8 @@
+ 
+ package game.ui.question;
+ 
++import com.firstplayable.hxlib.display.GraphicButton;
++import game.ui.SpeckMenu;
+ import game.utils.TextParser;
+ import motion.Actuate;
+ import openfl.display.DisplayObject;
+@@ -76,12 +78,18 @@
+ 	
+ 	public function showVOButton():Void
+ 	{
+-		showObject(QUESTION_VO_BUTTON);
++		trace( "show question vo" );
++		var button:GraphicButton = cast getChildByName( "QUESTION_VO_BUTTON" );
++		SpeckMenu.showAndEnableButton(  button );
++		//showObject(QUESTION_VO_BUTTON);
+ 	}
+ 	
+ 	public function hideVOButton():Void
+ 	{
+-		return hideObject(QUESTION_VO_BUTTON);
++		trace( "hide question vo" );
++		var button:GraphicButton = cast getChildByName( "QUESTION_VO_BUTTON" );
++		SpeckMenu.hideAndDisableButton(  button );
++		//return hideObject(QUESTION_VO_BUTTON);
+ 	}
+ 	
+ 	private function get_text():String
+Index: src/game/ui/SpeckMenu.hx
+===================================================================
+--- src/game/ui/SpeckMenu.hx	(revision 1028)
++++ src/game/ui/SpeckMenu.hx	(working copy)
+@@ -36,6 +36,9 @@
+  */
+ class SpeckMenu extends GenericMenu 
+ {
++	private static var FADE_ALPHA:Float = 0.25; // Disabled VO buttons fade to FADE_ALPHA
++	private static var VO_SUBSTRING:String = "vo_"; // VO buttons have names containing VO_SUBSTRING
++	
+ 	public function new(menuName:String) 
+ 	{
+ 		super(menuName);
+@@ -111,11 +114,10 @@
+ 
+ 		for ( child in this.__children )
+ 		{
+-			if ( child.visible ) // Don't show items hidden in the paist menu
++			if ( child.visible && !StringTools.startsWith( child.name, VO_SUBSTRING ) )// Don't show items hidden in the paist menu; VO has its own alpha handling
+ 			{
+-				Actuate.tween(child, SpeckGlobals.FADE_TIME, { alpha: 1 } ).onComplete( Actuate.stop, [ child ] );
++				Actuate.tween(child, SpeckGlobals.FADE_TIME, { alpha: 1 } ).onComplete( disableVOButtons );
+ 			}
+-
+ 		}
+ 	}
+ 	
+@@ -196,4 +198,72 @@
+ 	{
+ 		
+ 	}
++	
++	/**
++	 *  VO buttons disabled by default, then set visible if audio is added in the child menu/state.
++	 *  Acts on all buttons in menu labeled "VO_".
++	 */
++	private function disableVOButtons():Void
++	{
++		var button:GraphicButton = null;
++		
++		for ( child in this.__children )
++		{			
++			if ( child.__children != null )
++			{
++				for ( grandchild in child.__children )
++				{
++				    if (  Std.is(grandchild, GraphicButton) && StringTools.startsWith( grandchild.name, VO_SUBSTRING ) )
++					{
++						button = cast ( grandchild, GraphicButton );
++						hideAndDisableButton( button );
++					}
++				}
++			}
++			
++			if (  Std.is(child, GraphicButton) && StringTools.startsWith( child.name, VO_SUBSTRING ) )
++			{
++				button = cast ( child, GraphicButton );
++				hideAndDisableButton( button );
++			}
++		}
++	}
++	
++	/**
++	 *  Reenables param button and sets alpha to 1.
++	 *  Used for VO button reenabling.
++	 */
++	public static function showAndEnableButton( button:GraphicButton ):Void
++	{
++		if ( button == null )
++		{
++			return;
++		}
++		
++		button.alpha = 1;
++		button.enabled = true;
++		button.visible = true;
++		
++		var sprite:OPSprite = cast button;
++		sprite.cursor = MouseCursor.POINTER;
++	}
++	
++	/**
++	 *  Disables param button and sets alpha to FADE_ALPHA
++	 *  Used for VO button disabling.
++	 */
++	public static function hideAndDisableButton( button:GraphicButton ):Void
++	{
++		if ( button == null )
++		{
++			return;
++		}
++		
++		button.alpha = FADE_ALPHA;
++		button.enabled = false;
++		button.visible = true;
++				
++		var sprite:OPSprite = cast button;
++		sprite.cursor = MouseCursor.ARROW;
++	}
+ }
+\ No newline at end of file
+Index: src/game/ui/states/RecipeStepsMenu.hx
+===================================================================
+--- src/game/ui/states/RecipeStepsMenu.hx	(revision 1027)
++++ src/game/ui/states/RecipeStepsMenu.hx	(working copy)
+@@ -46,7 +46,8 @@
+ 	stepIcon:OPSprite,
+ 	chef:OPSprite,
+ 	label:TextField,
+-	stepNumber:TextField
++	stepNumber:TextField,
++	voButton:GraphicButton
+ }
+ 
+ class RecipeStepsMenu extends SpeckMenu
+@@ -175,35 +176,29 @@
+ 	private function getPaistGroups():Array< StepGroup >
+ 	{
+ 		var paistGroups:Array< StepGroup > = new Array();
+-		for (i in 0...3)
+-		{
+-			var size:String = null;
+-			switch(i)
+-			{
+-				case 0: size = "small";
+-				case 1: size = "medium";
+-				case 2: size = "large";
+-			}
+-			
+-			var panel:DisplayObjectContainer = cast getChildByName("group_step_" + size);
+-			var pane:OPSprite = cast panel.getChildByName("panelStep_" + size);
+-			var stepIcon:OPSprite = cast panel.getChildByName("stepIcon_" + size);
+-			var big:OPSprite = cast panel.getChildByName("chefBig_" + size);
+-			var label:TextField = cast panel.getChildByName("lbl_step_" + size);
+-			var stepNumber:TextField = cast panel.getChildByName("lbl_stepNumber_" + size);
+-			panel.visible = false;
+-			
+-			var group:StepGroup = { 
+-				panel: panel, 
+-				menuPane: pane, 
+-				stepIcon: stepIcon, 
+-				chef: big, 
+-				label: label, 
+-				stepNumber: stepNumber
+-			};
+-			paistGroups.push(group);
+-		}
++
++		var size:String = "small";
+ 		
++		var panel:DisplayObjectContainer = cast getChildByName("group_step_" + size);
++		var pane:OPSprite = cast panel.getChildByName("panelStep_" + size);
++		var stepIcon:OPSprite = cast panel.getChildByName("stepIcon_" + size);
++		var big:OPSprite = cast panel.getChildByName("chefBig_" + size);
++		var label:TextField = cast panel.getChildByName("lbl_step_" + size);
++		var stepNumber:TextField = cast panel.getChildByName("lbl_stepNumber_" + size);
++		var voButton:GraphicButton = cast panel.getChildByName( "vo_fact" );
++		panel.visible = false;
++		
++		var group:StepGroup = { 
++			panel: panel, 
++			menuPane: pane, 
++			stepIcon: stepIcon, 
++			chef: big, 
++			label: label, 
++			stepNumber: stepNumber,
++			voButton: voButton
++		};
++		paistGroups.push(group);
++		
+ 		return paistGroups;
+ 	}
+ 	
+Index: src/SpeckGlobals.hx
+===================================================================
+--- src/SpeckGlobals.hx	(revision 1028)
++++ src/SpeckGlobals.hx	(working copy)
+@@ -75,7 +75,7 @@
+ 	//==========================================
+ 	public static var hud:HudMenu;
+ 	public static var countryMenu:CountryMenu;
+-	public static inline var FADE_TIME:Float = 1;
++	public static inline var FADE_TIME:Float = 0.5;
+ 	
+ 	//==========================================
+ 	// Audio

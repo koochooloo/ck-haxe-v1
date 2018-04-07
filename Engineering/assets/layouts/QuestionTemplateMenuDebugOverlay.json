@@ -1,0 +1,227 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "borderPanel" : [ { 
+            "name" : "pnl_debug",
+            "priority" : 9,
+            "inheritable" : { },
+            "button" : [ { 
+                "name" : "btn_previous_grade",
+                "record" : true,
+                "id" : 11,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 1183, 568 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_next_grade",
+                "record" : true,
+                "id" : 12,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Next",
+                    "position" : [ 1302, 568 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_previous_curriculum",
+                "record" : true,
+                "id" : 9,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 1183, 288 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_next_curriculum",
+                "record" : true,
+                "id" : 10,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Next",
+                    "position" : [ 1302, 288 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_next_week",
+                "record" : true,
+                "id" : 8,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Next",
+                    "position" : [ 1302, 432 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_previous_week",
+                "record" : true,
+                "id" : 7,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 1183, 432 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_previous_question",
+                "record" : true,
+                "id" : 5,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Back",
+                    "position" : [ 1183, 712 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_next_question",
+                "record" : true,
+                "id" : 6,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_Next",
+                    "position" : [ 1302, 712 ],
+                    "scale" : [ 0.5, 0.5 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_current_grade",
+                "record" : true,
+                "priority" : 8,
+                "text" : "Grade",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 1142, 500 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 200, 30 ]
+                }
+            }, { 
+                "name" : "lbl_current_question",
+                "record" : true,
+                "priority" : 8,
+                "text" : "Question",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 1142, 644 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 200, 30 ]
+                }
+            }, { 
+                "name" : "lbl_current_week",
+                "record" : true,
+                "priority" : 8,
+                "text" : "Week",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 1128, 362 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 200, 30 ]
+                }
+            }, { 
+                "name" : "lbl_curriculum",
+                "record" : true,
+                "priority" : 8,
+                "text" : "Curriculum",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 1142, 179 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:24",
+                    "textAlignment" : [ "center", "left or top" ],
+                    "size" : [ 200, 30 ]
+                }
+            } ]
+        } ],
+        "label" : [ { 
+            "name" : "lbl_current_curriculum",
+            "record" : true,
+            "priority" : 8,
+            "text" : "Curriculum",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 1078, 219 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 300, 30 ]
+            }
+        }, { 
+            "name" : "lbl_week",
+            "record" : true,
+            "priority" : 8,
+            "text" : "Week",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 1128, 322 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 200, 30 ]
+            }
+        }, { 
+            "name" : "lbl_grade",
+            "record" : true,
+            "priority" : 8,
+            "text" : "Grade",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 1142, 468 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 200, 30 ]
+            }
+        }, { 
+            "name" : "lbl_question",
+            "record" : true,
+            "priority" : 8,
+            "text" : "Question",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 1142, 608 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 200, 30 ]
+            }
+        } ]
+    }
+}

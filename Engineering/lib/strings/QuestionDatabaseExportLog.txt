@@ -1,0 +1,192 @@
+
+Processing config files...
+Found config file: C:\Projects\speck\trunk\Engineering\tools\StxConfig_QuestionDatabase.txt
+...processing complete
+
+Importing files from Google...
+Found file to import: SocialStudies
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls
+Processing a sheet...
+Sheet: Social Studies
+Total rows: 118 (when Sheet = ALL, this is total of all rows)
+Total cols: 22
+	Col 0 is named 'ID'
+	Col 1 is named 'WEEK'
+	Col 2 is named 'GRADE'
+	Col 3 is named 'INCLUDE'
+	Col 4 is named 'QUESTION_TYPE'
+	Col 5 is named 'CURRICULUM'
+	Col 6 is named 'COUNTRY'
+	Col 7 is named 'COUNTRY_FACT'
+	Col 8 is named 'COUNTRY_FACT_VO'
+	Col 9 is named 'COUNTRY_IMAGE'
+	Col 10 is named 'QUESTION'
+	Col 11 is named 'QUESTION_IMAGE'
+	Col 12 is named 'QUESTION_VO'
+	Col 13 is named 'CA_TEXT'
+	Col 14 is named 'CA_IMAGE'
+	Col 15 is named 'CA_VO'
+	Col 16 is named 'WA_1_TEXT'
+	Col 17 is named 'WA_1_IMAGE'
+	Col 18 is named 'WA_1_VO'
+	Col 19 is named 'WA_2_TEXT'
+	Col 20 is named 'WA_2_IMAGE'
+	Col 21 is named 'WA_2_VO'
+Spreadsheet examined!
+
+...importing complete
+
+Gathering data from spreadsheets...
+Gathering data from: SocialStudies
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls
+Processing a sheet...
+Sheet: Social Studies
+Total rows: 118 (when Sheet = ALL, this is total of all rows)
+Total cols: 22
+	Col 0 is named 'ID'
+	Col 1 is named 'WEEK'
+	Col 2 is named 'GRADE'
+	Col 3 is named 'INCLUDE'
+	Col 4 is named 'QUESTION_TYPE'
+	Col 5 is named 'CURRICULUM'
+	Col 6 is named 'COUNTRY'
+	Col 7 is named 'COUNTRY_FACT'
+	Col 8 is named 'COUNTRY_FACT_VO'
+	Col 9 is named 'COUNTRY_IMAGE'
+	Col 10 is named 'QUESTION'
+	Col 11 is named 'QUESTION_IMAGE'
+	Col 12 is named 'QUESTION_VO'
+	Col 13 is named 'CA_TEXT'
+	Col 14 is named 'CA_IMAGE'
+	Col 15 is named 'CA_VO'
+	Col 16 is named 'WA_1_TEXT'
+	Col 17 is named 'WA_1_IMAGE'
+	Col 18 is named 'WA_1_VO'
+	Col 19 is named 'WA_2_TEXT'
+	Col 20 is named 'WA_2_IMAGE'
+	Col 21 is named 'WA_2_VO'
+Spreadsheet examined!
+
+Gathering data from: MathAndScience
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls
+Processing a sheet...
+Sheet: MathAndScience
+Total rows: 118 (when Sheet = ALL, this is total of all rows)
+Total cols: 19
+	Col 0 is named 'ID'
+	Col 1 is named 'WEEK'
+	Col 2 is named 'GRADE'
+	Col 3 is named 'INCLUDE'
+	Col 4 is named 'QUESTION_TYPE'
+	Col 5 is named 'CURRICULUM'
+	Col 6 is named 'RECIPE'
+	Col 7 is named 'QUESTION'
+	Col 8 is named 'QUESTION_IMAGE'
+	Col 9 is named 'QUESTION_VO'
+	Col 10 is named 'CA_TEXT'
+	Col 11 is named 'CA_IMAGE'
+	Col 12 is named 'CA_VO'
+	Col 13 is named 'WA_1_TEXT'
+	Col 14 is named 'WA_1_IMAGE'
+	Col 15 is named 'WA_1_VO'
+	Col 16 is named 'WA_2_TEXT'
+	Col 17 is named 'WA_2_IMAGE'
+	Col 18 is named 'WA_2_VO'
+Spreadsheet examined!
+
+Gathering data from: ZeroWeekAssessment
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls
+Processing a sheet...
+Sheet: 0WeekAssessment
+Total rows: 43 (when Sheet = ALL, this is total of all rows)
+Total cols: 20
+	Col 0 is named 'ID'
+	Col 1 is named 'WEEK'
+	Col 2 is named 'INCLUDE'
+	Col 3 is named 'GRADE'
+	Col 4 is named 'QUESTION_TYPE'
+	Col 5 is named 'CURRICULUM'
+	Col 6 is named 'COUNTRY_FACT'
+	Col 7 is named 'COUNTRY_FACT_VO'
+	Col 8 is named 'QUESTION_IMAGE'
+	Col 9 is named 'QUESTION'
+	Col 10 is named 'QUESTION_VO'
+	Col 11 is named 'CA_TEXT'
+	Col 12 is named 'CA_IMAGE'
+	Col 13 is named 'CA_VO'
+	Col 14 is named 'WA_1_TEXT'
+	Col 15 is named 'WA_1_IMAGE'
+	Col 16 is named 'WA_1_VO'
+	Col 17 is named 'WA_2_TEXT'
+	Col 18 is named 'WA_2_IMAGE'
+	Col 19 is named 'WA_2_VO'
+Spreadsheet examined!
+
+Gathering data from: FiveWeekAssessment
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls
+Processing a sheet...
+Sheet: 5WeekAssessment
+Total rows: 43 (when Sheet = ALL, this is total of all rows)
+Total cols: 20
+	Col 0 is named 'ID'
+	Col 1 is named 'WEEK'
+	Col 2 is named 'INCLUDE'
+	Col 3 is named 'GRADE'
+	Col 4 is named 'QUESTION_TYPE'
+	Col 5 is named 'CURRICULUM'
+	Col 6 is named 'COUNTRY_FACT'
+	Col 7 is named 'COUNTRY_FACT_VO'
+	Col 8 is named 'QUESTION_IMAGE'
+	Col 9 is named 'QUESTION'
+	Col 10 is named 'QUESTION_VO'
+	Col 11 is named 'CA_TEXT'
+	Col 12 is named 'CA_IMAGE'
+	Col 13 is named 'CA_VO'
+	Col 14 is named 'WA_1_TEXT'
+	Col 15 is named 'WA_1_IMAGE'
+	Col 16 is named 'WA_1_VO'
+	Col 17 is named 'WA_2_TEXT'
+	Col 18 is named 'WA_2_IMAGE'
+	Col 19 is named 'WA_2_VO'
+Spreadsheet examined!
+
+Gathering data from: TenWeekAssessment
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls
+Processing a sheet...
+Sheet: 10WeekAssessment
+Total rows: 43 (when Sheet = ALL, this is total of all rows)
+Total cols: 20
+	Col 0 is named 'ID'
+	Col 1 is named 'WEEK'
+	Col 2 is named 'INCLUDE'
+	Col 3 is named 'GRADE'
+	Col 4 is named 'QUESTION_TYPE'
+	Col 5 is named 'CURRICULUM'
+	Col 6 is named 'COUNTRY_FACT'
+	Col 7 is named 'COUNTRY_FACT_VO'
+	Col 8 is named 'QUESTION_IMAGE'
+	Col 9 is named 'QUESTION'
+	Col 10 is named 'QUESTION_VO'
+	Col 11 is named 'CA_TEXT'
+	Col 12 is named 'CA_IMAGE'
+	Col 13 is named 'CA_VO'
+	Col 14 is named 'WA_1_TEXT'
+	Col 15 is named 'WA_1_IMAGE'
+	Col 16 is named 'WA_1_VO'
+	Col 17 is named 'WA_2_TEXT'
+	Col 18 is named 'WA_2_IMAGE'
+	Col 19 is named 'WA_2_VO'
+Spreadsheet examined!
+
+...gathering data complete
+
+Exporting to JSON...
+Exporting: SocialStudies
+Exporting: MathAndScience
+Exporting: ZeroWeekAssessment
+Exporting: FiveWeekAssessment
+Exporting: TenWeekAssessment
+...exporting complete
+
+Cleaning up SpreadsheetToXml execution.
+Trying Unlock: C:\Projects\speck\trunk\Engineering\lib\strings\QuestionDatabase.xls

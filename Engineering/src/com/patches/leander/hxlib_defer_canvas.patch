@@ -1,0 +1,13 @@
+Index: firstplayable/hxlib/display/BitmapDataWithParams.hx
+===================================================================
+--- firstplayable/hxlib/display/BitmapDataWithParams.hx	(revision 1432)
++++ firstplayable/hxlib/display/BitmapDataWithParams.hx	(working copy)
+@@ -28,7 +28,7 @@
+ 	 */
+ 	public var animFrameIndex(default,null):Int;
+ 
+-	public function new( params:Params, width:Int, height:Int, transparent:Bool=true, fillColor:UInt=0xFFFFFFFF ) 
++	public function new( params:Params, width:Int, height:Int, transparent:Bool=true, fillColor:Null<UInt>=null ) 
+ 	{
+ 		super(width, height, transparent, fillColor);
+ 		this.params = params;

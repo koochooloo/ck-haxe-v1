@@ -1,0 +1,72 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "panel" : [ { 
+            "name" : "pnl_question",
+            "priority" : 10,
+            "inheritable" : { 
+                "position" : [ 450, 293 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_question_vo",
+                "record" : true,
+                "id" : 4,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 43, 40 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_question",
+                "record" : true,
+                "priority" : 10,
+                "text" : "Question text.",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 67, 19 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 610, 170 ],
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_question_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-SecondaryPanel",
+                    "scale" : [ 2.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_question_header",
+                "priority" : 4,
+                "inheritable" : { 
+                    "resource" : "UI/headers/Question",
+                    "position" : [ 90, 12 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ]
+    }
+}

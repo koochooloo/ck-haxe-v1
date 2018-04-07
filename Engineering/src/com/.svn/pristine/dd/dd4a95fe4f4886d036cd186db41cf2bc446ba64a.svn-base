@@ -1,0 +1,1478 @@
+Index: display/DataView/DataViewDefs.hx
+===================================================================
+--- display/DataView/DataViewDefs.hx	(nonexistent)
++++ display/DataView/DataViewDefs.hx	(working copy)
+@@ -0,0 +1,28 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.display.dataView;
++
++enum EntryType
++{
++	PRIMARY_KEY;	//Used to uniquely identify elements in the database.
++	REQUIRED;		//This field must have a non-null value.
++	OPTIONAL;		//This field may have a null/empty value.
++}
++
++enum SortType
++{
++	NONE;
++	ASCENDING;
++	DESCENDING;
++}
+Index: display/DataView/DataViewFilter.hx
+===================================================================
+--- display/DataView/DataViewFilter.hx	(nonexistent)
++++ display/DataView/DataViewFilter.hx	(working copy)
+@@ -0,0 +1,476 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.display.dataView;
++
++enum FilterLogicOperator
++{
++	// Multi Filters
++	AND;
++	OR;
++	
++	// Single Filters
++	NOT;
++	
++	// Evaluate this filter
++	EVALUATE;
++	
++	ERROR;
++}
++
++enum FilteringMatchType
++{
++	EQUALS;
++	NOT_EQUALS;
++	
++	LESS_THAN;
++	LESS_THAN_OR_EQUALS;
++	
++	GREATER_THAN;
++	GREATER_THAN_OR_EQUALS;
++	
++	CONTAINS_ANY;
++	CONTAINS_ALL;
++	CONTAINS_NONE;
++	
++	LAMBDA;
++	
++	ERROR;
++}
++
++/**
++ * A class the can be constructed to check if anonymous structures
++ * match provided parameters.
++ * 
++ * Can be simple value checkers, or can be made into complicated
++ * expressions via nesting and chaining filters together.
++ */
++class DataViewFilter
++{
++	/**
++	 * The logic operator for this filter.
++	 * EVALUATE filters will check their value, and match type
++	 * against the data in question.
++	 * 
++	 * All other filters will apply their logic to sub-filters.
++	 * 
++	 * Single filters will apply their logic to the first sub-filter
++	 * and return that filter's evaluation. Will not work with
++	 * multiple sub-filters.
++	 * 
++	 * Multi-filters will apply their logic to all their subfilters.
++	 * E.g an AND filter with 4 sub filters will return true iff the
++	 * data passes all of the sub filters.
++	 */
++	private var m_logicOperator:FilterLogicOperator;
++	
++	/**
++	 * Sub-filters to be evaluated. Will be null for EVALUATE filters.
++	 */
++	private var m_subFilters:Array<DataViewFilter>;
++	
++	/**
++	 * The field this filter cares about. Will be ignored by non EVALUATE filters.
++	 */
++	private var m_field:String;
++	
++	/**
++	 * The value used when this filter evaluates.
++	 * Will be ignored by non EVALUATE filters. 
++	 */
++	private var m_value:Dynamic;
++	
++	/**
++	 * What type of match to look for during evaluation.
++	 * * Will be ignored by non EVALUATE filters. 
++	 */
++	private var m_matchType:FilteringMatchType;
++	
++	/**
++	 * Function used when match type is Lambda to run
++	 * a custom logic operation during evaluation
++	 */
++	private var m_lamdaFunction:Dynamic -> String -> Bool;
++	
++	//=================================================
++	// Filter Setup	
++	//=================================================
++
++	/**
++	 * Constructs a filter
++	 * @param	operator
++	 * @param	value (optional) - needed if operator is EVALUATE
++	 * @param   m_field(optional) - needed if operator is EVALUATE
++	 * @param	matchType (optional) - needed if operator is EVALUATE
++	 * @param	lamdaFunction (optional) - needed if matchType is LAMDA
++	 */
++	public function new( operator:FilterLogicOperator,
++		?field:String, ?value:Dynamic, 
++		?matchType:FilteringMatchType, ?lamdaFunction:Dynamic -> String -> Bool)
++	{
++		if (operator == null)
++		{
++			Debug.warn("logic operator was null!");
++			m_logicOperator = ERROR;
++			return;
++		}
++		else
++		{
++			m_logicOperator = operator;
++		}
++		
++		if (m_logicOperator == EVALUATE)
++		{
++			m_subFilters = null;
++			
++			if (field == null)
++			{
++				Debug.warn("Filter is EVALUATE but no field supplied...");
++				m_logicOperator = ERROR;
++				return;
++			}
++			m_field = field;
++			
++			m_value = value;
++			if (matchType == null)
++			{
++				Debug.warn("EVALUATE but match type was null!");
++				m_matchType = ERROR;
++				return;
++			}
++			else
++			{
++				m_matchType = matchType;
++			}
++			
++			if (m_matchType == LAMBDA)
++			{
++				if (lamdaFunction == null)
++				{
++					Debug.warn("match type set to Lamda, but no function supplied!");
++					m_matchType = ERROR;
++					return;
++				}
++				
++				m_lamdaFunction = lamdaFunction;
++			}
++		}
++		else
++		{
++			m_subFilters = [];
++			
++			m_value = null;
++			m_matchType = null;
++			m_lamdaFunction = null;
++		}
++	}
++	
++	/**
++	 * Adds the provided filter to the collection of subfilters.
++	 * Ignored if logic operator is EVAULTE
++	 * @param	filter
++	 */
++	public function addSubfilter(filter:DataViewFilter):Void
++	{
++		if (m_logicOperator == EVALUATE)
++		{
++			return;
++		}
++		
++		m_subFilters.push(filter);
++	}
++	
++	/**
++	 * Removes the provided filter from the collection of subfilters.
++	 * Ignored if logic operator is EVAULTE
++	 * @param	filter
++	 */
++	public function removeSubfilter(filter:DataViewFilter):Void
++	{
++		if (m_logicOperator == EVALUATE)
++		{
++			return;
++		}
++		
++		m_subFilters.remove(filter);
++	}
++	
++	//=================================================
++	// Filter Evaluation	
++	//=================================================
++	
++	/**
++	 * Checks if a provided anonymous struct objects passes this filter.
++	 * @param	data
++	 * @param	field
++	 * @return
++	 */
++	public function passesFilter(data:Dynamic):Bool
++	{
++		switch(m_logicOperator)
++		{
++			case EVALUATE: 
++			{
++				return evaluate(data);
++			}
++			case AND:
++			{
++				if ((m_subFilters == null) || (m_subFilters.length == 0))
++				{
++					Debug.warn("" + m_logicOperator + " has no subFilters!");
++					return false;
++				}
++				
++				for (filter in m_subFilters)
++				{
++					if (!filter.passesFilter(data))
++					{
++						return false;
++					}
++				}
++				return true;
++			}
++			case OR:
++			{
++				if ((m_subFilters == null) || (m_subFilters.length == 0))
++				{
++					Debug.warn("" + m_logicOperator + " has no subFilters!");
++					return false;
++				}
++				
++				for (filter in m_subFilters)
++				{
++					if (filter.passesFilter(data))
++					{
++						return true;
++					}
++				}
++				return false;
++			}
++			case NOT:
++			{
++				if ((m_subFilters == null) || (m_subFilters.length != 1))
++				{
++					Debug.warn("" + m_logicOperator + " does not have a single sub filter!");
++					return false;
++				}
++				
++				return !(m_subFilters[0].passesFilter(data));
++			}
++			case ERROR:
++			{
++				return false;
++			}
++		}
++	}
++
++	/**
++	 * Function called on leaf filters while checking if a data element passes.
++	 * @param	data
++	 * @param	field
++	 * @return
++	 */
++	private function evaluate(data:Dynamic):Bool
++	{
++		if (m_logicOperator != EVALUATE)
++		{
++			Debug.warn("evaluate called on non EVALUATE filter...");
++			return false;
++		}
++		
++		if (!Reflect.hasField(data, m_field))
++		{
++			Debug.warn("data " + data + " did not have: " + m_field);
++			return false;
++		}
++		
++		var dataVal:Dynamic = Reflect.field(data, m_field);
++		
++		switch(m_matchType)
++		{
++			case EQUALS:
++			{
++				return dataVal == m_value;
++			}
++			case NOT_EQUALS:
++			{
++				return dataVal != m_value;
++			}
++			case LESS_THAN:
++			{
++				return dataVal < m_value;
++			}
++			case LESS_THAN_OR_EQUALS:
++			{
++				return dataVal <= m_value;
++			}
++			case GREATER_THAN:
++			{
++				return dataVal > m_value;
++			}
++			case GREATER_THAN_OR_EQUALS:
++			{
++				return dataVal >= m_value;
++			}
++			case CONTAINS_ANY:
++			{
++				var iterableFilter:Iterable<Dynamic> = cast m_value;
++				
++				var filterMap:Map<String, Bool> = new Map<String, Bool>();
++				for (entry in iterableFilter)
++				{
++					var entryStr:String = Std.string(entry);
++					filterMap[entryStr] = true;
++				}
++				
++				var iterableData:Iterable<Dynamic> = cast dataVal;
++				for (entry in iterableData)
++				{
++					var entryStr:String = Std.string(entry);
++					if (filterMap.exists(entryStr))
++					{
++						return true;
++					}
++				}
++				
++				return false;
++			}
++			case CONTAINS_ALL:
++			{
++				if (Std.is(data, String))
++				{
++					var valStr:String = cast dataVal;
++					return (valStr.indexOf(m_value) != -1);
++				}
++				
++				var iterableFilter:Iterable<Dynamic> = cast m_value;
++				var iterableData:Iterable<Dynamic> = cast dataVal;
++				
++				var dataMap:Map<String, Int> = new Map<String, Int>();
++				var filterMap:Map<String, Int> = new Map<String, Int>();
++				
++				for (entry in iterableData)
++				{
++					var entryStr:String = Std.string(entry);
++					if (dataMap.exists(entryStr))
++					{
++						dataMap[entryStr] += 1;
++					}
++					else
++					{
++						dataMap[entryStr] = 1;
++					}
++				}
++				
++				for (entry in iterableFilter)
++				{
++					var entryStr:String = Std.string(entry);
++					if (filterMap.exists(entryStr))
++					{
++						filterMap[entryStr] += 1;
++					}
++					else
++					{
++						filterMap[entryStr] = 1;
++					}
++				}
++				
++				for (key in filterMap.keys())
++				{
++					if (!dataMap.exists(key))
++					{
++						return false;
++					}
++					
++					if (dataMap[key] < filterMap[key])
++					{
++						return false;
++					}
++				}
++				
++				return true;
++			}
++			case CONTAINS_NONE:
++			{
++				if (Std.is(data, String))
++				{
++					var valStr:String = cast dataVal;
++					return (valStr.indexOf(m_value) == -1);
++				}
++				
++				var iterableFilter:Iterable<Dynamic> = cast m_value;
++				var iterableData:Iterable<Any> = cast dataVal;
++				
++				var filterMap:Map<String, Bool> = new Map<String, Bool>();
++				for (entry in iterableFilter)
++				{
++					var entryStr:String = Std.string(entry);
++					filterMap[entryStr] = true;
++				}
++				
++				for (entry in iterableData)
++				{
++					var entryStr:String = Std.string(entry);
++					if (filterMap.exists(entryStr))
++					{
++						return false;
++					}
++				}
++				
++				return true;
++			}
++			case LAMBDA:
++			{
++				return m_lamdaFunction(data, m_field);
++			}
++			case ERROR:
++			{
++				return false;
++			}
++		}
++	}
++	
++	//=================================================
++	// Testing and Debug
++	//=================================================
++	public static function testDataView():Void
++	{
++		//========================================
++		// DeMorgan's
++		//========================================
++		var filter1:DataViewFilter = new DataViewFilter(AND);
++		var filter1A:DataViewFilter = new DataViewFilter(NOT);
++		filter1A.addSubfilter(new DataViewFilter(EVALUATE, "text", "Hello World", EQUALS));
++		var filter1B:DataViewFilter = new DataViewFilter(NOT);
++		filter1B.addSubfilter(new DataViewFilter(EVALUATE, "toast", "Burnt", EQUALS));
++		
++		filter1.addSubfilter(filter1A);
++		filter1.addSubfilter(filter1B);
++		
++		var filter2:DataViewFilter = new DataViewFilter(NOT);
++		var filter2_Root = new DataViewFilter(OR);
++		filter2_Root.addSubfilter(new DataViewFilter(EVALUATE, "text", "Hello World", EQUALS));
++		filter2_Root.addSubfilter(new DataViewFilter(EVALUATE, "toast", "Burnt", EQUALS));
++		filter2.addSubfilter(filter2_Root);
++
++		testObj = {text:"Bark", toast:"Buttered"};
++		Debug.warn_if(filter1.passesFilter(testObj) != filter2.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(!filter1.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(!filter2.passesFilter(testObj), "Failed test!");
++		
++		testObj = {text:"Bark", toast:"Burnt"};
++		Debug.warn_if(filter1.passesFilter(testObj) != filter2.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(filter1.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(filter2.passesFilter(testObj), "Failed test!");	
++	}
++}
+\ No newline at end of file
+Index: display/DataView/DataViewModel.hx
+===================================================================
+--- display/DataView/DataViewModel.hx	(nonexistent)
++++ display/DataView/DataViewModel.hx	(working copy)
+@@ -0,0 +1,96 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++
++package com.firstplayable.hxlib.display.dataView;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.DataViewFilter;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.DataViewSort;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.SortType;
++
++/**
++ * Handles iteracting with a provided IDataViewDatabase to provide the model
++ * for a data view. Handles Returning entries based on a numerical index,
++ * fitering, sorting etc.
++ */
++class DataViewModel
++{
++	/**
++	 * Reference to the database managed by this model.
++	 */
++	private var m_database:IDataViewDatabase;
++	
++	/**
++	 * The current filters being set.
++	 */
++	private var m_activeFilters:Map<String, DataViewFilter>;
++
++	/**
++	 * The current sort status for each field.
++	 * Sorting is in the field order provided by the database.
++	 */
++	private var m_activeSorts:Map<String, SortType>;
++	
++	//=============================================================================
++	// Interface
++	//=============================================================================
++	
++	//===============================
++	// Filtering
++	//===============================
++	
++	/**
++	 * Adds a filter to the collection of active filters.
++	 * If there is already a filter for the provided field,
++	 * replace it.
++	 */
++	public function addToFilter(filter:DataViewFilter):Void
++	{
++		m_activeFilters[filter.field] = filter;
++	}
++	
++	/**
++	 * Removes a filter to the collection of active filters
++	 * @param	filter
++	 */
++	public function removeFromFilter(field:String):Void
++	{
++		m_activeFilters.remove(field);
++	}
++	
++	/**
++	 * Removes all filters from the collection of active filters.
++	 * @param	filter
++	 */
++	public function resetFilter():Void
++	{
++		m_activeFilters = new Map<String, DataViewFilter>();
++	}
++	
++	/**
++	 * Returns if the item at the provided index passes the active filters.
++	 * TODO: currently all filters are AND, and check for contains
++	 * @param	id
++	 */
++	private function passesFilter(id:Int):Bool
++	{
++		var data:Dynamic = m_database.getData(id);
++		if (data == null)
++		{
++			return false;
++		}
++		
++		
++	}
++	
++	
++}
+\ No newline at end of file
+Index: display/DataView/IDataViewDatabase.hx
+===================================================================
+--- display/DataView/IDataViewDatabase.hx	(nonexistent)
++++ display/DataView/IDataViewDatabase.hx	(working copy)
+@@ -0,0 +1,116 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++
++package com.firstplayable.hxlib.display.dataView;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.EntryType;
++
++/**
++ * Provides an interface for classes that store and manage data
++ * that can be accessed by a DataView class.
++ * 
++ * The database class will need to be responsible for allowing
++ * data to be accessed in a predictable order, regardless of how it's
++ * organized under the hood, by integer indexes.
++ */
++interface IDataViewDatabase
++{
++	//==================================================
++	// Access the Database
++	//==================================================
++	
++	/**
++	 * Gets the anonymous struct associated with the provided key
++	 * @param	id
++	 * @return
++	 */
++	public function getData(id:String):Dynamic;
++		
++	/**
++	 * Returns an iterator over all the primary keys in the database. 
++	 * @return
++	 */
++	public function getKeys():Iterator<Any>;
++	
++	/**
++	 * Returns a map of all fields in the database, with the entry type
++	 * of those fields.
++	 * @return
++	 */
++	public function getFields():Map<String, EntryType>;
++
++	//==================================================
++	// Mutate the Database
++	//==================================================
++	
++	/**
++	 * Attempts to update the data stored at id with newData.
++	 * Returns true if successful.
++	 * @param	id
++	 * @param	newData
++	 * @return
++	 */
++	public function updateData(id:String, updatedData:Dynamic):Bool;
++	
++	/**
++	 * Attempts to add an element to the database with the provided key.
++	 * Returns whether successful.
++	 * @param	id
++	 * @param	newData
++	 * @return
++	 */
++	public function addData(id:String, newData:Dynamic):Bool;
++	
++	/**
++	 * Attempts to remove an element from the database with the provided key.
++	 * Returns whether successful.
++	 * @param	id
++	 * @return
++	 */
++	public function removeData(id:String):Bool;
++	
++	//==================================================
++	// Rollback the Database
++	//==================================================
++	
++	/**
++	 * Attempt to undo all uncommitted changes from a specific entry.
++	 * Returns if successful.
++	 * @param	id
++	 * @return
++	 */
++	public function rollbackData(id:String):Bool;
++	
++	/**
++	 * Attempt to undo all uncommitted changes.
++	 * @return
++	 */
++	public function rollbackAllData():Void;
++	
++	//==================================================
++	// Commit the Database
++	//==================================================
++	
++	/**
++	 * Attempts to "commit" the current state of a specifc entry. Eg. on a save.
++	 * Returns if successful.
++	 * @param	id
++	 * @return
++	 */
++	public function commitData(id:String):Bool;
++	
++	/**
++	 * Attempts to commit the entire current state of the database.
++	 */
++	public function commitAllData():Void;
++}
+\ No newline at end of file
+Index: display/DataView/DataViewDefs.hx
+===================================================================
+--- display/DataView/DataViewDefs.hx	(nonexistent)
++++ display/DataView/DataViewDefs.hx	(working copy)
+@@ -0,0 +1,28 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.display.dataView;
++
++enum EntryType
++{
++	PRIMARY_KEY;	//Used to uniquely identify elements in the database.
++	REQUIRED;		//This field must have a non-null value.
++	OPTIONAL;		//This field may have a null/empty value.
++}
++
++enum SortType
++{
++	NONE;
++	ASCENDING;
++	DESCENDING;
++}
+Index: display/DataView/DataViewFilter.hx
+===================================================================
+--- display/DataView/DataViewFilter.hx	(nonexistent)
++++ display/DataView/DataViewFilter.hx	(working copy)
+@@ -0,0 +1,476 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.display.dataView;
++
++enum FilterLogicOperator
++{
++	// Multi Filters
++	AND;
++	OR;
++	
++	// Single Filters
++	NOT;
++	
++	// Evaluate this filter
++	EVALUATE;
++	
++	ERROR;
++}
++
++enum FilteringMatchType
++{
++	EQUALS;
++	NOT_EQUALS;
++	
++	LESS_THAN;
++	LESS_THAN_OR_EQUALS;
++	
++	GREATER_THAN;
++	GREATER_THAN_OR_EQUALS;
++	
++	CONTAINS_ANY;
++	CONTAINS_ALL;
++	CONTAINS_NONE;
++	
++	LAMBDA;
++	
++	ERROR;
++}
++
++/**
++ * A class the can be constructed to check if anonymous structures
++ * match provided parameters.
++ * 
++ * Can be simple value checkers, or can be made into complicated
++ * expressions via nesting and chaining filters together.
++ */
++class DataViewFilter
++{
++	/**
++	 * The logic operator for this filter.
++	 * EVALUATE filters will check their value, and match type
++	 * against the data in question.
++	 * 
++	 * All other filters will apply their logic to sub-filters.
++	 * 
++	 * Single filters will apply their logic to the first sub-filter
++	 * and return that filter's evaluation. Will not work with
++	 * multiple sub-filters.
++	 * 
++	 * Multi-filters will apply their logic to all their subfilters.
++	 * E.g an AND filter with 4 sub filters will return true iff the
++	 * data passes all of the sub filters.
++	 */
++	private var m_logicOperator:FilterLogicOperator;
++	
++	/**
++	 * Sub-filters to be evaluated. Will be null for EVALUATE filters.
++	 */
++	private var m_subFilters:Array<DataViewFilter>;
++	
++	/**
++	 * The field this filter cares about. Will be ignored by non EVALUATE filters.
++	 */
++	private var m_field:String;
++	
++	/**
++	 * The value used when this filter evaluates.
++	 * Will be ignored by non EVALUATE filters. 
++	 */
++	private var m_value:Dynamic;
++	
++	/**
++	 * What type of match to look for during evaluation.
++	 * * Will be ignored by non EVALUATE filters. 
++	 */
++	private var m_matchType:FilteringMatchType;
++	
++	/**
++	 * Function used when match type is Lambda to run
++	 * a custom logic operation during evaluation
++	 */
++	private var m_lamdaFunction:Dynamic -> String -> Bool;
++	
++	//=================================================
++	// Filter Setup	
++	//=================================================
++
++	/**
++	 * Constructs a filter
++	 * @param	operator
++	 * @param	value (optional) - needed if operator is EVALUATE
++	 * @param   m_field(optional) - needed if operator is EVALUATE
++	 * @param	matchType (optional) - needed if operator is EVALUATE
++	 * @param	lamdaFunction (optional) - needed if matchType is LAMDA
++	 */
++	public function new( operator:FilterLogicOperator,
++		?field:String, ?value:Dynamic, 
++		?matchType:FilteringMatchType, ?lamdaFunction:Dynamic -> String -> Bool)
++	{
++		if (operator == null)
++		{
++			Debug.warn("logic operator was null!");
++			m_logicOperator = ERROR;
++			return;
++		}
++		else
++		{
++			m_logicOperator = operator;
++		}
++		
++		if (m_logicOperator == EVALUATE)
++		{
++			m_subFilters = null;
++			
++			if (field == null)
++			{
++				Debug.warn("Filter is EVALUATE but no field supplied...");
++				m_logicOperator = ERROR;
++				return;
++			}
++			m_field = field;
++			
++			m_value = value;
++			if (matchType == null)
++			{
++				Debug.warn("EVALUATE but match type was null!");
++				m_matchType = ERROR;
++				return;
++			}
++			else
++			{
++				m_matchType = matchType;
++			}
++			
++			if (m_matchType == LAMBDA)
++			{
++				if (lamdaFunction == null)
++				{
++					Debug.warn("match type set to Lamda, but no function supplied!");
++					m_matchType = ERROR;
++					return;
++				}
++				
++				m_lamdaFunction = lamdaFunction;
++			}
++		}
++		else
++		{
++			m_subFilters = [];
++			
++			m_value = null;
++			m_matchType = null;
++			m_lamdaFunction = null;
++		}
++	}
++	
++	/**
++	 * Adds the provided filter to the collection of subfilters.
++	 * Ignored if logic operator is EVAULTE
++	 * @param	filter
++	 */
++	public function addSubfilter(filter:DataViewFilter):Void
++	{
++		if (m_logicOperator == EVALUATE)
++		{
++			return;
++		}
++		
++		m_subFilters.push(filter);
++	}
++	
++	/**
++	 * Removes the provided filter from the collection of subfilters.
++	 * Ignored if logic operator is EVAULTE
++	 * @param	filter
++	 */
++	public function removeSubfilter(filter:DataViewFilter):Void
++	{
++		if (m_logicOperator == EVALUATE)
++		{
++			return;
++		}
++		
++		m_subFilters.remove(filter);
++	}
++	
++	//=================================================
++	// Filter Evaluation	
++	//=================================================
++	
++	/**
++	 * Checks if a provided anonymous struct objects passes this filter.
++	 * @param	data
++	 * @param	field
++	 * @return
++	 */
++	public function passesFilter(data:Dynamic):Bool
++	{
++		switch(m_logicOperator)
++		{
++			case EVALUATE: 
++			{
++				return evaluate(data);
++			}
++			case AND:
++			{
++				if ((m_subFilters == null) || (m_subFilters.length == 0))
++				{
++					Debug.warn("" + m_logicOperator + " has no subFilters!");
++					return false;
++				}
++				
++				for (filter in m_subFilters)
++				{
++					if (!filter.passesFilter(data))
++					{
++						return false;
++					}
++				}
++				return true;
++			}
++			case OR:
++			{
++				if ((m_subFilters == null) || (m_subFilters.length == 0))
++				{
++					Debug.warn("" + m_logicOperator + " has no subFilters!");
++					return false;
++				}
++				
++				for (filter in m_subFilters)
++				{
++					if (filter.passesFilter(data))
++					{
++						return true;
++					}
++				}
++				return false;
++			}
++			case NOT:
++			{
++				if ((m_subFilters == null) || (m_subFilters.length != 1))
++				{
++					Debug.warn("" + m_logicOperator + " does not have a single sub filter!");
++					return false;
++				}
++				
++				return !(m_subFilters[0].passesFilter(data));
++			}
++			case ERROR:
++			{
++				return false;
++			}
++		}
++	}
++
++	/**
++	 * Function called on leaf filters while checking if a data element passes.
++	 * @param	data
++	 * @param	field
++	 * @return
++	 */
++	private function evaluate(data:Dynamic):Bool
++	{
++		if (m_logicOperator != EVALUATE)
++		{
++			Debug.warn("evaluate called on non EVALUATE filter...");
++			return false;
++		}
++		
++		if (!Reflect.hasField(data, m_field))
++		{
++			Debug.warn("data " + data + " did not have: " + m_field);
++			return false;
++		}
++		
++		var dataVal:Dynamic = Reflect.field(data, m_field);
++		
++		switch(m_matchType)
++		{
++			case EQUALS:
++			{
++				return dataVal == m_value;
++			}
++			case NOT_EQUALS:
++			{
++				return dataVal != m_value;
++			}
++			case LESS_THAN:
++			{
++				return dataVal < m_value;
++			}
++			case LESS_THAN_OR_EQUALS:
++			{
++				return dataVal <= m_value;
++			}
++			case GREATER_THAN:
++			{
++				return dataVal > m_value;
++			}
++			case GREATER_THAN_OR_EQUALS:
++			{
++				return dataVal >= m_value;
++			}
++			case CONTAINS_ANY:
++			{
++				var iterableFilter:Iterable<Dynamic> = cast m_value;
++				
++				var filterMap:Map<String, Bool> = new Map<String, Bool>();
++				for (entry in iterableFilter)
++				{
++					var entryStr:String = Std.string(entry);
++					filterMap[entryStr] = true;
++				}
++				
++				var iterableData:Iterable<Dynamic> = cast dataVal;
++				for (entry in iterableData)
++				{
++					var entryStr:String = Std.string(entry);
++					if (filterMap.exists(entryStr))
++					{
++						return true;
++					}
++				}
++				
++				return false;
++			}
++			case CONTAINS_ALL:
++			{
++				if (Std.is(data, String))
++				{
++					var valStr:String = cast dataVal;
++					return (valStr.indexOf(m_value) != -1);
++				}
++				
++				var iterableFilter:Iterable<Dynamic> = cast m_value;
++				var iterableData:Iterable<Dynamic> = cast dataVal;
++				
++				var dataMap:Map<String, Int> = new Map<String, Int>();
++				var filterMap:Map<String, Int> = new Map<String, Int>();
++				
++				for (entry in iterableData)
++				{
++					var entryStr:String = Std.string(entry);
++					if (dataMap.exists(entryStr))
++					{
++						dataMap[entryStr] += 1;
++					}
++					else
++					{
++						dataMap[entryStr] = 1;
++					}
++				}
++				
++				for (entry in iterableFilter)
++				{
++					var entryStr:String = Std.string(entry);
++					if (filterMap.exists(entryStr))
++					{
++						filterMap[entryStr] += 1;
++					}
++					else
++					{
++						filterMap[entryStr] = 1;
++					}
++				}
++				
++				for (key in filterMap.keys())
++				{
++					if (!dataMap.exists(key))
++					{
++						return false;
++					}
++					
++					if (dataMap[key] < filterMap[key])
++					{
++						return false;
++					}
++				}
++				
++				return true;
++			}
++			case CONTAINS_NONE:
++			{
++				if (Std.is(data, String))
++				{
++					var valStr:String = cast dataVal;
++					return (valStr.indexOf(m_value) == -1);
++				}
++				
++				var iterableFilter:Iterable<Dynamic> = cast m_value;
++				var iterableData:Iterable<Any> = cast dataVal;
++				
++				var filterMap:Map<String, Bool> = new Map<String, Bool>();
++				for (entry in iterableFilter)
++				{
++					var entryStr:String = Std.string(entry);
++					filterMap[entryStr] = true;
++				}
++				
++				for (entry in iterableData)
++				{
++					var entryStr:String = Std.string(entry);
++					if (filterMap.exists(entryStr))
++					{
++						return false;
++					}
++				}
++				
++				return true;
++			}
++			case LAMBDA:
++			{
++				return m_lamdaFunction(data, m_field);
++			}
++			case ERROR:
++			{
++				return false;
++			}
++		}
++	}
++	
++	//=================================================
++	// Testing and Debug
++	//=================================================
++	public static function testDataView():Void
++	{
++		//========================================
++		// DeMorgan's
++		//========================================
++		var filter1:DataViewFilter = new DataViewFilter(AND);
++		var filter1A:DataViewFilter = new DataViewFilter(NOT);
++		filter1A.addSubfilter(new DataViewFilter(EVALUATE, "text", "Hello World", EQUALS));
++		var filter1B:DataViewFilter = new DataViewFilter(NOT);
++		filter1B.addSubfilter(new DataViewFilter(EVALUATE, "toast", "Burnt", EQUALS));
++		
++		filter1.addSubfilter(filter1A);
++		filter1.addSubfilter(filter1B);
++		
++		var filter2:DataViewFilter = new DataViewFilter(NOT);
++		var filter2_Root = new DataViewFilter(OR);
++		filter2_Root.addSubfilter(new DataViewFilter(EVALUATE, "text", "Hello World", EQUALS));
++		filter2_Root.addSubfilter(new DataViewFilter(EVALUATE, "toast", "Burnt", EQUALS));
++		filter2.addSubfilter(filter2_Root);
++
++		testObj = {text:"Bark", toast:"Buttered"};
++		Debug.warn_if(filter1.passesFilter(testObj) != filter2.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(!filter1.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(!filter2.passesFilter(testObj), "Failed test!");
++		
++		testObj = {text:"Bark", toast:"Burnt"};
++		Debug.warn_if(filter1.passesFilter(testObj) != filter2.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(filter1.passesFilter(testObj), "Failed test!");
++		Debug.warn_if(filter2.passesFilter(testObj), "Failed test!");	
++	}
++}
+\ No newline at end of file
+Index: display/DataView/DataViewModel.hx
+===================================================================
+--- display/DataView/DataViewModel.hx	(nonexistent)
++++ display/DataView/DataViewModel.hx	(working copy)
+@@ -0,0 +1,96 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++
++package com.firstplayable.hxlib.display.dataView;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.DataViewFilter;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.DataViewSort;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.SortType;
++
++/**
++ * Handles iteracting with a provided IDataViewDatabase to provide the model
++ * for a data view. Handles Returning entries based on a numerical index,
++ * fitering, sorting etc.
++ */
++class DataViewModel
++{
++	/**
++	 * Reference to the database managed by this model.
++	 */
++	private var m_database:IDataViewDatabase;
++	
++	/**
++	 * The current filters being set.
++	 */
++	private var m_activeFilters:Map<String, DataViewFilter>;
++
++	/**
++	 * The current sort status for each field.
++	 * Sorting is in the field order provided by the database.
++	 */
++	private var m_activeSorts:Map<String, SortType>;
++	
++	//=============================================================================
++	// Interface
++	//=============================================================================
++	
++	//===============================
++	// Filtering
++	//===============================
++	
++	/**
++	 * Adds a filter to the collection of active filters.
++	 * If there is already a filter for the provided field,
++	 * replace it.
++	 */
++	public function addToFilter(filter:DataViewFilter):Void
++	{
++		m_activeFilters[filter.field] = filter;
++	}
++	
++	/**
++	 * Removes a filter to the collection of active filters
++	 * @param	filter
++	 */
++	public function removeFromFilter(field:String):Void
++	{
++		m_activeFilters.remove(field);
++	}
++	
++	/**
++	 * Removes all filters from the collection of active filters.
++	 * @param	filter
++	 */
++	public function resetFilter():Void
++	{
++		m_activeFilters = new Map<String, DataViewFilter>();
++	}
++	
++	/**
++	 * Returns if the item at the provided index passes the active filters.
++	 * TODO: currently all filters are AND, and check for contains
++	 * @param	id
++	 */
++	private function passesFilter(id:Int):Bool
++	{
++		var data:Dynamic = m_database.getData(id);
++		if (data == null)
++		{
++			return false;
++		}
++		
++		
++	}
++	
++	
++}
+\ No newline at end of file
+Index: display/DataView/IDataViewDatabase.hx
+===================================================================
+--- display/DataView/IDataViewDatabase.hx	(nonexistent)
++++ display/DataView/IDataViewDatabase.hx	(working copy)
+@@ -0,0 +1,116 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++
++package com.firstplayable.hxlib.display.dataView;
++import com.firstplayable.hxlib.display.DataView.DataViewDefs.EntryType;
++
++/**
++ * Provides an interface for classes that store and manage data
++ * that can be accessed by a DataView class.
++ * 
++ * The database class will need to be responsible for allowing
++ * data to be accessed in a predictable order, regardless of how it's
++ * organized under the hood, by integer indexes.
++ */
++interface IDataViewDatabase
++{
++	//==================================================
++	// Access the Database
++	//==================================================
++	
++	/**
++	 * Gets the anonymous struct associated with the provided key
++	 * @param	id
++	 * @return
++	 */
++	public function getData(id:String):Dynamic;
++		
++	/**
++	 * Returns an iterator over all the primary keys in the database. 
++	 * @return
++	 */
++	public function getKeys():Iterator<Any>;
++	
++	/**
++	 * Returns a map of all fields in the database, with the entry type
++	 * of those fields.
++	 * @return
++	 */
++	public function getFields():Map<String, EntryType>;
++
++	//==================================================
++	// Mutate the Database
++	//==================================================
++	
++	/**
++	 * Attempts to update the data stored at id with newData.
++	 * Returns true if successful.
++	 * @param	id
++	 * @param	newData
++	 * @return
++	 */
++	public function updateData(id:String, updatedData:Dynamic):Bool;
++	
++	/**
++	 * Attempts to add an element to the database with the provided key.
++	 * Returns whether successful.
++	 * @param	id
++	 * @param	newData
++	 * @return
++	 */
++	public function addData(id:String, newData:Dynamic):Bool;
++	
++	/**
++	 * Attempts to remove an element from the database with the provided key.
++	 * Returns whether successful.
++	 * @param	id
++	 * @return
++	 */
++	public function removeData(id:String):Bool;
++	
++	//==================================================
++	// Rollback the Database
++	//==================================================
++	
++	/**
++	 * Attempt to undo all uncommitted changes from a specific entry.
++	 * Returns if successful.
++	 * @param	id
++	 * @return
++	 */
++	public function rollbackData(id:String):Bool;
++	
++	/**
++	 * Attempt to undo all uncommitted changes.
++	 * @return
++	 */
++	public function rollbackAllData():Void;
++	
++	//==================================================
++	// Commit the Database
++	//==================================================
++	
++	/**
++	 * Attempts to "commit" the current state of a specifc entry. Eg. on a save.
++	 * Returns if successful.
++	 * @param	id
++	 * @return
++	 */
++	public function commitData(id:String):Bool;
++	
++	/**
++	 * Attempts to commit the entire current state of the database.
++	 */
++	public function commitAllData():Void;
++}
+\ No newline at end of file

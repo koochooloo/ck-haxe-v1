@@ -1,0 +1,48 @@
+<ResourceProject version="3.0">
+  <Head>
+  </Head>
+  <Body>
+    <resources name="BG/">
+      <paramDefaults>
+        <paramDefault name="bounds" value="Automatic;Bounds" />
+        <paramDefault name="center" value="Automatic;(Center,Bottom)" />
+      </paramDefaults>
+      <resource name="bg_didyouknow" path="BG/bg_didyouknow.png" md5="5191357f5e06b9e059a7b5db6a115cc3">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="683" y="767" paramType="Automatic;(Center,Bottom)" />
+          <box name="bounds" x="0" y="0" width="1366" height="768" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="bg_sky1" path="BG/bg_sky1.png" md5="9e3d4dbade59bb901a16c27b01de40c9">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="1024" y="1023" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="2048" height="1024" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="bg_skyBase" path="BG/bg_skyBase.png" md5="e304d2d666787bbe8cc6a3aa002eba58">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="683" y="767" paramType="Automatic;(Center,Bottom)" />
+          <box name="bounds" x="0" y="0" width="1366" height="768" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+    </resources>
+  </Body>
+</ResourceProject>

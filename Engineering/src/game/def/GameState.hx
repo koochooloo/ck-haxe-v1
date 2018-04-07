@@ -1,0 +1,56 @@
+//
+// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
+//
+// UNPUBLISHED -- Rights reserved under the copyright laws of the United
+// States. Use of a copyright notice is precautionary only and does not
+// imply publication or disclosure.
+//
+// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+///////////////////////////////////////////////////////////////////////////
+
+package game.def;
+
+
+enum GameState 
+{
+	SPLASH;
+	TEACHER_ID_LOGIN;
+	STUDENT_ID_LOGIN;
+	ASSESSMENT_OR_GLOBE;
+	ASSESSMENT;
+	ASSESSMENT_COMPLETED;
+	GLOBE;
+	RECIPES;
+	FAVORITES;
+	SETTINGS;
+	ALLERGIES;
+	TUTORIAL;
+	SUPPORT;
+	ABOUT;
+	RECIPESERVING;
+	RECIPEINGREDIENTS;
+	RECIPESTEPS;
+	INGREDIENTINFO;
+	MATHGAME;
+	FLAGGAME;
+	DIDYOUKNOW;
+	ALLCOUNTRIES;
+	COUNTRY;
+	COUNTRYRECIPES;
+	COUNTRYINTRO;
+	ALLERGIESCONFIRM;
+	PARENTAL;
+	ADMIN;
+	QUESTION;
+	PASSPORT;
+	LOAD_QUESTION_AUDIO;
+	COUNTRYSTORY;
+	MODESELECT;
+	
+	#if (debug || build_cheats)
+	MENU_TEST;
+	#end
+}

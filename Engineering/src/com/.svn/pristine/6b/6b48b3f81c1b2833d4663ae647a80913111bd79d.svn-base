@@ -1,0 +1,80 @@
+Index: hxlib/display/anim/SpritesheetAnim.hx
+===================================================================
+--- hxlib/display/anim/SpritesheetAnim.hx	(revision 1298)
++++ hxlib/display/anim/SpritesheetAnim.hx	(working copy)
+@@ -36,6 +36,7 @@
+     // State tracking from AnimatedSprite.
+     private var loopTimeMS:Float = 0;
+     private var timeElapsedMS:Float = 0;
++    var animationCompletionRatio:Float = 0;
+     private var currentBehavior:BehaviorData = null;
+     private var shouldLoop:Bool = false;
+ 
+@@ -145,9 +146,7 @@
+ 	 * Clamps to valid range, but may return 0 on empty/missing anim.
+ 	 */
+     private function getCurrentFrameIndex():Int
+-	{
+-        var ratio:Float = timeElapsedMS / loopTimeMS;
+-		
++	{		
+ 		var lastFrameIdx:Int = 0;
+ 		if ( ( currentBehavior != null ) && ( currentBehavior.frames != null ) )
+ 		{
+@@ -155,7 +154,7 @@
+ 			lastFrameIdx = currentBehavior.frames.length - 1;
+ 		}
+ 		
+-        var frameIdx:Int = Math.round( ratio * lastFrameIdx );
++        var frameIdx:Int = Math.round( animationCompletionRatio * lastFrameIdx );
+ 		if ( frameIdx > lastFrameIdx )
+ 		{
+ 			// Never return > lastFrameIdx, unless this is an empty anim (see below).
+@@ -179,18 +178,18 @@
+             
+             timeElapsedMS += deltaTimeMS;
+             
+-            var ratio = timeElapsedMS / loopTimeMS;
++            animationCompletionRatio = timeElapsedMS / loopTimeMS;
+             
+-            if (ratio >= 1) {
++            if (animationCompletionRatio >= 1) {
+                 
+                 if ( shouldLoop ) {
+                     
+-                    ratio -= Math.floor (ratio);
++                    animationCompletionRatio -= Math.floor (animationCompletionRatio);
+                     
+                 } else {
+                     
+                     behaviorComplete = true;
+-                    ratio = 1;
++                    animationCompletionRatio = 1;
+ 					timeElapsedMS = loopTimeMS;
+                     
+                 }
+Index: hxlib/display/Params.hx
+===================================================================
+--- hxlib/display/Params.hx	(revision 1298)
++++ hxlib/display/Params.hx	(working copy)
+@@ -240,7 +240,19 @@
+ 	private static inline function getParamFieldAsBool( param:Dynamic, field:String ):Null<Bool>
+ 	{
+ 		var v:Dynamic = Reflect.field( param, field );
+-		return Std.is (v, Bool) ? cast v : null;
++		if ( Std.is (v, Bool) )
++		{
++			return cast v;
++		}
++		else if ( Std.is (v, Int) )
++		{
++			var vAsInt:Int = cast v;
++			return vAsInt != 0;
++		}
++		else
++		{
++			return null;
++		}
+ 	}
+ 	
+ 	private static inline function getParamFieldAsString( param:Dynamic, field:String ):String

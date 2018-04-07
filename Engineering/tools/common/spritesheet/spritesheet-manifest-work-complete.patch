@@ -1,0 +1,3396 @@
+Index: 2015-12-15_manifestWIP.patch
+===================================================================
+--- 2015-12-15_manifestWIP.patch	(revision 749)
++++ 2015-12-15_manifestWIP.patch	(nonexistent)
+@@ -1,1111 +0,0 @@
+-Index: AddIFLAnimationsToSpritesheets.py
+-===================================================================
+---- AddIFLAnimationsToSpritesheets.py	(revision 742)
+-+++ AddIFLAnimationsToSpritesheets.py	(working copy)
+-@@ -32,9 +32,22 @@
+-    ifl_dir = os.path.abspath( options.args.pop( 0 ) )
+-    spritesheet_dir = os.path.abspath( options.args.pop( 0 ) )
+-    print( "\niflDirectory " + ifl_dir )
+--   #print( "\nspritesheetDirectory " + spritesheet_dir )
+-+   print( "\nspritesheetDirectory " + spritesheet_dir )
+-    
+-    spritesheet_dict = {}
+-+   print("\n\n\n===========Finding the sheets....============")
+-+   #find all sheets
+-+   for cur_dir_abs_path, dirs, files in os.walk( spritesheet_dir ):
+-+      cur_dir_rel_path = os.path.relpath( cur_dir_abs_path, spritesheet_dir )
+-+      for filename in files:
+-+         name, ext = os.path.splitext( filename )
+-+         if ext.lower() == ".json":
+-+            source_dir_rel_path = os.path.join( cur_dir_rel_path, filename )
+-+            #spritesheet_abs_path = os.path.join( os.path.join( spritesheet_dir, source_dir_rel_path ), os.path.basename( source_dir_rel_path ) + ".json" )
+-+            spritesheet_abs_path = os.path.join( spritesheet_dir, source_dir_rel_path )
+-+            print spritesheet_abs_path
+-+            if not spritesheet_dict.has_key( spritesheet_abs_path ):
+-+               spritesheet_dict[spritesheet_abs_path] = Spritesheet(spritesheet_abs_path)
+- 
+-    print ( "\nfind all ifl files" )
+-           
+-@@ -47,22 +60,43 @@
+-          name, ext = os.path.splitext( filename )
+-          if ext.lower() == ".ifl":
+-             iflFullPath = os.path.join( cur_dir_abs_path, filename )
+-+            
+-             print iflFullPath
+-             # load IFL animation
+-             anim = IFLAnim(iflFullPath)
+-             #anim.printFrames()
+-+
+-+            for k in spritesheet_dict:
+-+               if spritesheet_dict[ k ].hasAnim(anim.source_dirname):
+-+                  sheetsAnim = spritesheet_dict[ k ].getAnim(anim.source_dirname)
+-+
+-+                  replacement = anim.containingFolder
+-+                  replacement = replacement[replacement.find("\\2d\\") + len("\\2d\\"):]
+-+                  replacement = replacement.replace( "\\", "/" )
+-+                  replacement = replacement + "/" + name
+-+
+-+                  print( "\n\n" )
+-+                  print( "Success; let's replace  " + sheetsAnim + " with " + replacement )
+-+                  print( "\n\n" )
+-+
+-+                  spritesheet_dict[ k ].replace(sheetsAnim, replacement)
+-+
+-+                  continue
+-+                  #print( "YAY! we found it =)" )
+-+                  #spritesheet_dict[k].addIFLAnimation( anim )
+-+                  
+-             
+--            # load the spritesheet containing the sprites for the IFL animation
+--            source_dir_rel_path = os.path.join( cur_dir_rel_path, anim.source_dirname )
+--            spritesheet_abs_path = os.path.join( os.path.join( spritesheet_dir, source_dir_rel_path ), os.path.basename( source_dir_rel_path ) + "_sheet.json" )
+--            if not spritesheet_dict.has_key( spritesheet_abs_path ):
+--               spritesheet_dict[spritesheet_abs_path] = Spritesheet(spritesheet_abs_path)
+--            # add IFL animation to the spritesheet
+--            spritesheet_dict[spritesheet_abs_path].addIFLAnimation( anim )
+--            #spritesheet_dict[spritesheet_abs_path].printAnimations()
+-+##            # load the spritesheet containing the sprites for the IFL animation
+-+##            source_dir_rel_path = os.path.join( cur_dir_rel_path, anim.source_dirname )
+-+##            spritesheet_abs_path = os.path.join( ifl_dir, source_dir_rel_path )
+-+##            if not spritesheet_dict.has_key( spritesheet_abs_path ):
+-+##               spritesheet_dict[spritesheet_abs_path] = Spritesheet(spritesheet_abs_path)
+-+##            # add IFL animation to the spritesheet
+-+##            spritesheet_dict[spritesheet_abs_path].addIFLAnimation( anim )
+-+##            #spritesheet_dict[spritesheet_abs_path].printAnimations()
+-             
+-             
+-    # Write spritesheets
+-    for path, spritesheet in spritesheet_dict.iteritems():   
+-       print "Saving " + spritesheet.full_path
+--      spritesheet.Save()
+-\ No newline at end of file
+-+      spritesheet.Save()
+-Index: AssetManifestWriter.py
+-===================================================================
+---- AssetManifestWriter.py	(nonexistent)
+-+++ AssetManifestWriter.py	(working copy)
+-@@ -0,0 +1,57 @@
+-+##
+-+## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-+##
+-+## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-+## States. Use of a copyright notice is precautionary only and does not
+-+## imply publication or disclosure.
+-+##
+-+## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-+## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-+## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-+## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-+###########################################################################
+-+import os
+-+import argparse
+-+import re
+-+
+-+class AssetManifestWriter():
+-+	def __init__( self, output_file_path ):
+-+		self.outputFile = open( output_file_path, 'w' )
+-+
+-+	def writeClassBegin( self ):
+-+		self.outputFile.write( "package assets;\n\n" )
+-+		
+-+		self.outputFile.write( "import haxe.ds.StringMap;\n" )
+-+		
+-+		self.outputFile.write( "\n//WARNING! THIS CLASS IS AUTO-GENERATED BY TOOLS. YOUR CHANGES WILL BE OVERWRITTEN." )
+-+		self.outputFile.write( "\nclass SpritesheetManifest\n{\n" )
+-+
+-+                self.outputFile.write( "	public static inline var INVALID:String = \"invalid\";\n" )
+-+		self.outputFile.write( "	private var m_map:StringMap<String> \n\n" )
+-+
+-+		self.outputFile.write( "	public static function getSheetPath( assetName:String ):String\n" )
+-+		self.outputFile.write( "	{\n" )
+-+		self.outputFile.write( "		if ( m_map == null ) { init() }\n" )
+-+		self.outputFile.write( "		if ( !m_map.exists( assetName ) ) { return INVALID; }\n" )
+-+		self.outputFile.write( "		else { return m_map.get( assetName ); }\n" )
+-+		self.outputFile.write( "	}\n\n" )
+-+		
+-+		self.outputFile.write( "	public static function init():Void\n" )
+-+		self.outputFile.write( "	{\n" )
+-+		self.outputFile.write( "		m_map = new StringMap<String>();\n" )
+-+
+-+	def writeEntry( self, assetName, assetPath ):
+-+                assetPath = assetPath[assetPath.find("2d\\"):]
+-+                assetPath = assetPath.replace( "\\", "/" )
+-+                assetName = os.path.splitext( assetName )[0]
+-+		self.outputFile.write( "		m_map.set( \"" + assetName + "\", \"" + assetPath + "\" );\n" )
+-+
+-+	def writeClassEnd( self ):
+-+		self.outputFile.write( "	}\n" )
+-+		self.outputFile.write( '}' )
+-+		
+-+	def closeOutputFile( self ):
+-+		self.outputFile.close()
+-+
+-+
+-+
+-Index: ExcelUtils.py
+-===================================================================
+---- ExcelUtils.py	(nonexistent)
+-+++ ExcelUtils.py	(working copy)
+-@@ -0,0 +1,131 @@
+-+#
+-+# Copyright (C) 2013, 1st Playable Productions, LLC. All rights reserved.
+-+#
+-+# UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-+# States. Use of a copyright notice is precautionary only and does not
+-+# imply publication or disclosure.
+-+#
+-+# THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-+# OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-+# DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-+# EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-+##########################################################################
+-+
+-+from xlrd import open_workbook
+-+#import win32com.client as win32
+-+import math
+-+import time
+-+import PrintUtils
+-+import sys
+-+
+-+SAFE_COL_END_VAL = 1
+-+SAFE_ROW_END_VAL = 3
+-+
+-+WHITESPACE_CHARS = [ " ", "\n", "\t", "\r" ]
+-+
+-+class SpreadsheetInfo():
+-+	def __init__( self ):
+-+		self.numRows = 0
+-+		self.numCols = 0
+-+		self.sheetData = []
+-+		self.columnInfo = {}
+-+		
+-+# Can probably use empty_cell in xlrd
+-+def isValidEntry( rawExcelEntry ):
+-+	if rawExcelEntry is None:
+-+		return False
+-+
+-+	if type( rawExcelEntry ) == int or type( rawExcelEntry ) == float:
+-+		return True
+-+	
+-+	cleanEntry = rawExcelEntry
+-+	if hasattr( cleanEntry, "replace" ):
+-+		for char in WHITESPACE_CHARS:
+-+			cleanEntry = cleanEntry.replace( char, "" )
+-+		
+-+	return len( cleanEntry ) > 0
+-+
+-+def getFileInfo( spreadsheetLoc, sheetID, startRow ):
+-+        print("sanity 1")
+-+	currentWorkbook = open_workbook( spreadsheetLoc )
+-+	print("sanity 2")
+-+	sheets = []
+-+	if sheetID == "ALL":
+-+		for curSheetID in range( 0, currentWorkbook.nsheets ):
+-+			sheets.append( currentWorkbook.sheet_by_index( curSheetID ) )
+-+	else:
+-+		sheets.append( currentWorkbook.sheet_by_index( int( sheetID ) ) )
+-+	print("sanity 3")
+-+	numCols = sheets[ 0 ].ncols
+-+	numRows = 0
+-+
+-+	print( "Sheet: " + str( sheetID ) )
+-+	print( "Total rows: " + str( numRows ) + " (when Sheet = ALL, this is total of all rows)" )
+-+	print( "Total cols: " + str( numCols ) )
+-+	
+-+	sheetData = []
+-+
+-+	for curSheet in sheets:
+-+                print( "Processing a sheet..." )
+-+		if curSheet.ncols != numCols:
+-+			# TODO: this isn't always an error condition (only bad if merging multiple sheets; ok if sheets are distinct)
+-+			PrintUtils.printMsg( "WARNING: a sheet has incorrect number of columns; skipping", True )
+-+			PrintUtils.printMsg( "Expected: " + str( numCols ), True )
+-+			PrintUtils.printMsg( "Found   : " + str( curSheet.ncols ), True )
+-+			continue
+-+		
+-+		curNumRows = curSheet.nrows
+-+		numRows += curNumRows
+-+		
+-+		for curRow in range( 0, curNumRows ):
+-+			newRowData = []
+-+			rowID = curRow
+-+			for curCol in range( 0, numCols ):
+-+				colID = curCol
+-+				curValue = curSheet.cell( rowID, colID ).value
+-+				cellType = type( curValue )
+-+				if cellType == int or ( cellType == float and math.floor( curValue ) == curValue ):
+-+					curValue = int( curValue )
+-+				# See if its a valid entry
+-+				if not isValidEntry( curValue ):
+-+					curValue = unicode( "" )
+-+				newRowData.append( curValue )
+-+			sheetData.append( newRowData )
+-+
+-+	colData = {}
+-+	for curCol in range( 0, numCols ):
+-+		startRowName = unicode( sheetData[ startRow ][ curCol ] ).encode('utf-8')
+-+		row1Name = unicode( sheetData[ 0 ][ curCol ] ).encode('utf-8')
+-+		row2Name = unicode( sheetData[ 1 ][ curCol ] ).encode('utf-8')
+-+		if startRowName != "":
+-+			colData[ curCol ] = startRowName
+-+		elif row1Name != "":
+-+			colData[ curCol ] = row1Name
+-+		elif row2Name != "":
+-+			colData[ curCol ] = row2Name       
+-+		
+-+	
+-+	fileInfo = SpreadsheetInfo()
+-+	fileInfo.numRows = numRows
+-+	fileInfo.numCols = numCols
+-+	fileInfo.sheetData = sheetData
+-+	fileInfo.columnInfo = colData
+-+	
+-+	return fileInfo
+-+
+-+def gatherSpreadsheetInfo( spreadsheetLoc, sheetID, startRow ):
+-+	spreadsheetInfo = None
+-+	
+-+	try:
+-+		print( "Examining " + str( spreadsheetLoc ) + ", sheet ID " + str( sheetID ) + ", start row " + str( startRow ) )
+-+		spreadsheetInfo = getFileInfo( spreadsheetLoc, sheetID, startRow )
+-+		PrintUtils.printMsg( "Spreadsheet examined!" )
+-+		PrintUtils.printMsg( "" )
+-+	except:
+-+                
+-+		PrintUtils.printMsg( "WARNING: something went wrong while gathering spreadsheet info from " + spreadsheetLoc, True )
+-+		PrintUtils.printMsg( "    Error type: " + str( sys.exc_info()[0] ), True )
+-+		PrintUtils.printMsg( "    Error val : " + str( sys.exc_info()[1] ), True ) 
+-+	return spreadsheetInfo
+-+
+-+	
+-Index: GenerateSpritesheets.py
+-===================================================================
+---- GenerateSpritesheets.py	(revision 742)
+-+++ GenerateSpritesheets.py	(working copy)
+-@@ -10,10 +10,82 @@
+- ## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+- ## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+- ###########################################################################
+-+
+-+from ParseAssetListManifest import AssestManifest
+-+from ParseCompressionSettingsManifest import getCompressionData
+-+from AssetManifestWriter import AssetManifestWriter
+-+
+- import os
+- import argparse
+- import subprocess
+- import sys
+-+import shutil
+-+
+-+
+-+class Group():
+-+    def __init__( self ):
+-+        self.files = []
+-+        self.command = ""
+-+
+-+    def add( self, filename ):
+-+        self.files.append( filename )
+-+
+-+
+-+def getGroups( assetManifest ):
+-+    groupManifest = {}
+-+    print("============================Making groups")
+-+    for dirpath, dirs, files in os.walk( sourceDirectory ):
+-+        relPath = os.path.relpath( dirpath, sourceDirectory )
+-+        relPath = relPath.replace("\\", "/")
+-+
+-+        # TODO: remove "2d" dep
+-+        if relPath == ".":
+-+            relPath = "2d/" 
+-+        else:
+-+            relPath = "2d/" + relPath + "/"
+-+            
+-+        for filename in files:
+-+            if not ( filename.lower().endswith(".png") or filename.lower().endswith(".jpg") ):
+-+                continue
+-+            
+-+            ospath = os.path.join( dirpath, filename )
+-+            filename = relPath + filename
+-+            assetManifest.setOsFilePath( filename, ospath )
+-+            loadGroup = assetManifest.getLoadGroup( filename )
+-+            compGroup = assetManifest.getCompressionID( filename )
+-+            spritesheetGroup = loadGroup + "_" + compGroup
+-+
+-+            destPath = os.path.join( destDirectory, spritesheetGroup )
+-+            destsheet = destPath + os.sep + spritesheetGroup
+-+            hxManifestWriter.writeEntry( filename, (destsheet + ".json") )
+-+            assetManifest.setOutputPath( filename, destsheet )
+-+
+-+            #button handling
+-+            shorterfilename = os.path.splitext( filename )[0]
+-+            if shorterfilename.lower().endswith( "_up" ):
+-+                shorterfilename = shorterfilename[:shorterfilename.find("_up")] + ".png"
+-+                assetManifest.setOutputPath( shorterfilename, destsheet )
+-+            
+-+
+-+            if spritesheetGroup in groupManifest:
+-+                groupManifest[ spritesheetGroup ].add( filename )
+-+                print( "added " + filename + " to " + spritesheetGroup )
+-+            else:
+-+                newgroup = Group()
+-+                newgroup.add( filename )
+-+                #newgroup.dirpath = dirpath
+-+                print( "new group created; added " + filename + " to " + spritesheetGroup )
+-+                compressionData = commandManifest[ compGroup ]
+-+                command = compressionData.command
+-+                newgroup.command = command
+-+                
+-+                groupManifest[ spritesheetGroup ] = newgroup           
+-+    print("==================DONE===========================")
+-+    assetManifest.save()
+-+    return groupManifest
+-+
+-+
+-+    
+- 	
+- 
+- if __name__ == "__main__":
+-@@ -21,6 +93,8 @@
+-     
+-     parser.add_argument( 'sourceDir', action='store', help='Specify the directory containing images that should be turned into spritesheets' )
+-     parser.add_argument( 'destDir', action='store', help='Specify which directory the spritesheets should be saved to' )
+-+    parser.add_argument( 'assetManifestPath', action='store', help='TODO' )
+-+    parser.add_argument( 'hxManifestPath', action='store', help='TODO' )
+-     parser.add_argument( '-maxWidth', action='store', default="4096", help='(Optional) Specify the max width of generated spritesheets; defaults to 4096px' )
+-     parser.add_argument( '-maxHeight', action='store', default="4096", help='(Optional) Specify the max height of generated spritesheets; defaults to 4096px' )
+-     parser.add_argument( '-compression', action='store', default="RGBA8888", help='(Optional) Specify the max width of generated spritesheets; defaults to RGBA8888' )
+-@@ -34,24 +108,51 @@
+-     print( "\nsourceDirectory " + sourceDirectory )
+-     print( "\ndestDirectory " + destDirectory )
+- 
+--    #for each dirpath
+--    for dirpath, dirs, files in os.walk( sourceDirectory ):	 
+--        print "----------------------------"
+--        #print dirpath
+--        relPath = os.path.relpath( dirpath, sourceDirectory )
+--        destPath = os.path.join( destDirectory, relPath )
+--        print "Generating spritesheet for [ " + relPath + " ]"
+--        #print destPath
+--        spritesheetName = os.path.basename(dirpath) + "_sheet"
+--        #print spritesheetName
+--        path = relPath.split( os.sep )
+--                
+--        # Add args for executing TexturePacker
+--        # TexturePacker --sheet %SPRITESHEET_DST_PATH%/..._spritesheet.png --data %SPRITESHEET_DST_PATH%/..._spritesheet.json --texture-format png --format easeljs %SPRITE_SRC_PATH%/%%X/
+-+    hxManifestWriter = AssetManifestWriter( os.path.abspath( options.hxManifestPath ) )
+-+    hxManifestWriter.writeClassBegin()
+-+
+-+    #TODO: pass in this name? (so data_make can ensure clean up)
+-+    tempdir = os.path.join( sourceDirectory, "tp_temp\\" )
+-+    if os.path.exists( tempdir ):
+-+        os.chdir( sourceDirectory )
+-+        print( "removing : "+ tempdir )
+-+        shutil.rmtree( tempdir )
+-+
+-+    assetManifest = AssestManifest( os.path.abspath( options.assetManifestPath ) )
+-+    commandManifest = getCompressionData( os.path.abspath( options.assetManifestPath ) )
+-+    
+-+    # find all groups
+-+    groupManifest = getGroups( assetManifest )
+-+    # for each group, call the command
+-+    for key in groupManifest.keys():
+-+        files = groupManifest[ key ].files
+-+        destPath = os.path.join( destDirectory, key )
+-+        spritesheetName = key #+ "_sheet"
+-+
+-+        print( "Generating sheet for group '" + key + "'..." )
+-+        print( "    dest sheet: " + (destPath + os.sep + spritesheetName + ".json") )
+-+        print( "    command:    " + groupManifest[ key ].command )
+-+
+-+        os.makedirs( tempdir )
+-+        #print( "    files: " )
+-+        for f in files:
+-+            assetOsPath = assetManifest.getOsFilePath( f )
+-+            #print( "        '" + assetOsPath + "'" )
+-+            tempdest = os.path.join( tempdir, os.path.relpath( assetOsPath, "2d/" ).replace( "..\\", "" ) )
+-+            splittemp = os.path.split( tempdest )[0]
+-+            if not os.path.exists( splittemp ):
+-+                os.makedirs( splittemp )
+-+            #print( "           copying temp to '" + splittemp + "'" )
+-+            shutil.copy2( assetOsPath, splittemp )
+-+        
+-+
+-         args = []
+-         args.append( "TexturePacker" )
+-         args.append( "--sheet" )
+--        args.append( destPath + os.sep + spritesheetName + "{n}.png" )
+-+        # switch to this line to enable multi-sheet support  (also uncomment --multipack below)
+-+        # note that, at this time, hxlib does NOT support multi-sheet spritesheets
+-+        #args.append( destPath + os.sep + spritesheetName + "{n}.png" )
+-+        args.append( destPath + os.sep + spritesheetName + ".png" )
+-         args.append( "--data" )
+-         args.append( destPath + os.sep + spritesheetName + ".json" )
+-         args.append( "--texture-format" )
+-@@ -58,16 +159,6 @@
+-         args.append( "png" )
+-         args.append( "--format" )
+-         args.append( "easeljs" )
+--        args.append( "--png-opt-level" )
+--        args.append( "7" )
+--        args.append( "--opt" )
+--        args.append( options.compression )
+--        if options.dither != "":
+--            args.append( "--" + options.dither )
+--        args.append( "--max-width" )
+--        args.append( options.maxWidth )
+--        args.append( "--max-height" )
+--        args.append( options.maxHeight )
+-         args.append( "--algorithm" )
+-         args.append( "MaxRects" )
+-         args.append( "--maxrects-heuristics" )
+-@@ -74,7 +165,7 @@
+-         args.append( "Best" )
+-         args.append( "--pack-mode" )
+-         args.append( "Best" )
+--        args.append( "--multipack" )
+-+        #args.append( "--multipack" ) see multi-sheet coment above
+-         args.append( "--border-padding" )
+-         args.append( "0" )
+-         args.append( "--shape-padding" )
+-@@ -81,20 +172,27 @@
+-         args.append( "2" ) # default
+-         #args.append( "--verbose" )
+-         #args.append( "--enable-rotation" )
+-+
+-+        commands = groupManifest[ key ].command.split()
+-+        for cmd in commands:
+-+            if str(cmd) == "3" or str(cmd) == "5":
+-+                cmd = "1"
+-+            args.append( cmd )
+-+
+-+        args.append( tempdir )
+-+
+-         
+--        minTexturePackerArgs = len(args)
+-+        os.chdir( tempdir )
+-+        ret = subprocess.call( args )
+- 
+--        #print '|', (len(path))*'---', '[',os.path.basename(dirpath),']'
+--        for f in files:
+--            #print '|', len(path)*'---', f
+--            if f.lower().endswith(".png") or f.lower().endswith(".jpg"):
+--                args.append( f )
+--                
+--        if len(args) > minTexturePackerArgs :
+--            os.chdir(dirpath)
+--            ret = subprocess.call( args )
+--            if ret != 0:
+--                print( "\n!!!ERROR: TexturePacker failed. See output above, which may contain more info." )
+--                sys.exit( 1 )
+-+        os.chdir( sourceDirectory )
+-+        shutil.rmtree( tempdir )
+-+        
+-+        if ret != 0:
+-+            print( "\n!!!ERROR: TexturePacker failed. See output above, which may contain more info." )
+-+            sys.exit( 1 )
+-+        
+-+        print("... success! (afaict)")
+- 
+--
+-+    hxManifestWriter.writeClassEnd()
+-+    hxManifestWriter.closeOutputFile()
+-Index: IFLAnim.py
+-===================================================================
+---- IFLAnim.py	(revision 742)
+-+++ IFLAnim.py	(working copy)
+-@@ -33,14 +33,25 @@
+-                   + "ifl_line may include a file name followed by an optional number that specifies the number of frames " )
+-             frame_path = ifl_line_parts[0]
+-             frame_delay = ifl_line_parts[1] if num_parts > 1 else -1
+--            self.frames.append( self.Frame( frame_path, frame_delay ) )
+-+            self.frames.append( self.Frame( frame_path, frame_delay,  ) )
+-             # TODO: handle ifl comments
+-       # Quick and easy way to get the folder containing the sprites
+-       # Assume all frames are in the same folder and use the path for the first frame
+-       if len( self.frames ) > 0:
+--         self.source_dirname = os.path.dirname( self.frames[0].path )
+-+         containingFolder = os.path.split(self.full_path)[0]
+-+         self.containingFolder = containingFolder
+-+         frame_path = os.path.join(containingFolder,self.frames[0].path )
+-+
+-+         
+-+         frame_path = frame_path[frame_path.find("\\2d\\")+1:]
+-+         frame_path = frame_path.replace( "\\", "/" )
+-+         frame_path = frame_path.replace( ".png", "" )
+-+
+-+         
+-+         self.source_dirname = frame_path#os.path.dirname( self.frames[0].path )
+-+         print( "IFL " + full_path + " is gonna use " + self.source_dirname )
+-       ifl_file.close()
+--      
+-+
+-    def printFrames(self):
+-       for item in self.frames:
+-          print item.path, item.frame_delay
+-Index: ParseAssetListManifest.py
+-===================================================================
+---- ParseAssetListManifest.py	(nonexistent)
+-+++ ParseAssetListManifest.py	(working copy)
+-@@ -0,0 +1,171 @@
+-+##
+-+## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-+##
+-+## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-+## States. Use of a copyright notice is precautionary only and does not
+-+## imply publication or disclosure.
+-+##
+-+## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-+## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-+## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-+## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-+###########################################################################
+-+
+-+import os
+-+import argparse
+-+import pickle
+-+import re
+-+import ExcelUtils
+-+
+-+
+-+COL_HEADER_ROW_ID = 0
+-+DATA_START_ROW = COL_HEADER_ROW_ID + 1
+-+
+-+ASSET_LIST_SHEET_ID = 1
+-+
+-+PATH_COL_ID = 0
+-+COMPID_COL_ID = 1
+-+LOADGROUP_COL_ID = 2
+-+
+-+DEFAULT_COMPRESSION_ID = "DEFAULT"
+-+DEFAULT_LOAD_GROUP = "DEFAULT"
+-+
+-+
+-+class AssetData():
+-+    def __init__( self, origPath, compressionID, loadGroup ):
+-+        self.origPath = origPath
+-+        self.compressionID = compressionID
+-+        self.loadGroup = loadGroup
+-+        self.outputPath = origPath
+-+        #self.ospath = "not set"
+-+
+-+        print ("created new asset data: " + self.origPath + ", " + self.compressionID + ", " + self.loadGroup )
+-+
+-+
+-+
+-+class AssestManifest():
+-+    def __init__( self, manifest_file_path ):
+-+        self.assetData = getAssetListData( manifest_file_path )
+-+        self.osPathMap = {}
+-+        self.outputPathMap = {}
+-+
+-+    def getCompressionID( self, path ):
+-+        compID = self.get( path, "compressionID" )
+-+        if compID == "":
+-+            compID = DEFAULT_COMPRESSION_ID
+-+        print( "Compression ID for '" + path + "' is " + compID )
+-+        return compID
+-+
+-+
+-+    def getLoadGroup( self, path ):
+-+        print("----------------------")
+-+        self.tab = "   "
+-+        loadGroup = self.get( path, "loadGroup" )
+-+        if loadGroup == "":
+-+            loadGroup = DEFAULT_LOAD_GROUP
+-+        print( "Load group for '" + path + "' is " + loadGroup )
+-+        return loadGroup
+-+
+-+
+-+    def get( self, path, attr ):
+-+        if path in self.assetData and getattr( self.assetData[ path ], attr ) != "":
+-+            return getattr( self.assetData[ path ], attr )
+-+        elif path.find( "." ) != -1:
+-+            newpath = path[:path.rfind("/") + 1] # +1 to include the trailing slash
+-+            print(self.tab + "going to try next: " + newpath)
+-+            self.tab = self.tab + "   "
+-+            return self.get( newpath, attr )
+-+        elif path.count( "/" ) > 1:
+-+            newpath = path[:path.rfind("/")]
+-+            newpath = newpath[:newpath.rfind("/") + 1] # +1 to include the trailing slash
+-+            print(self.tab + "going to try next: " + newpath)
+-+            self.tab = self.tab + "   "
+-+            return self.get( newpath, attr )
+-+        else:
+-+            return ""
+-+
+-+    def setOutputPath( self, filename, sheetPath ):
+-+        self.outputPathMap[filename] = sheetPath
+-+
+-+    def getOutputPath( self, filename ):
+-+        return self.outputPathMap[filename]
+-+        
+-+
+-+    def setOsFilePath( self, filename, fullPath ):
+-+        self.osPathMap[filename] = fullPath
+-+        #print( "The OS path for '" + filename + "' is '" + fullPath + "'" )
+-+
+-+
+-+    def getOsFilePath( self, filename ):
+-+        return self.osPathMap[filename]
+-+
+-+    def save( self ):
+-+        output = open('data.pkl', 'wb')
+-+        #order must match load()
+-+        pickle.dump(self.outputPathMap, output, 0)
+-+        pickle.dump(self.osPathMap, output, -1)
+-+        output.close()
+-+
+-+    def load( self ):
+-+        pkl_file = open('data.pkl', 'rb')
+-+        # order must match save()
+-+        self.outputPathMap = pickle.load(pkl_file)
+-+        self.osPathMap = pickle.load(pkl_file)
+-+        pkl_file.close()
+-+        print("===============\n        Loaded a Pickle!\n=======================")
+-+        print("osPathMap: \n" )
+-+        for k, v in self.osPathMap.iteritems():
+-+            print( "    " + k + " : " + v )
+-+        print("outputPathMap: \n" )
+-+        for k, v in self.outputPathMap.iteritems():
+-+            print( "    " + k + " : " + v )
+-+
+-+
+-+def getInUnicode( value ):
+-+    uniValue = "error"
+-+    try:
+-+        uniValue = unicode( value ).encode('utf-8')
+-+    except UnicodeEncodeError as err:
+-+        print( "ERROR: Can't encode utf-8: " + value )
+-+    except:
+-+        print( "ERROR: Can't encode this cell (not UnicodeEncodeError): " + value )
+-+
+-+    return str( uniValue )
+-+
+-+
+-+
+-+
+-+def parseAssetListSheet( settingsData ):
+-+
+-+    assets = []
+-+
+-+    for curRow in range( DATA_START_ROW, settingsData.numRows ):
+-+        origPath = getInUnicode( settingsData.sheetData[ curRow ][ PATH_COL_ID ] )
+-+        compression = getInUnicode( settingsData.sheetData[ curRow ][ COMPID_COL_ID ] )
+-+        loadGroup = getInUnicode( settingsData.sheetData[ curRow ][ LOADGROUP_COL_ID ] )
+-+        
+-+        assetData = AssetData( origPath, compression, loadGroup )
+-+        assets.append( assetData )
+-+
+-+    return assets
+-+
+-+
+-+
+-+def makeAssetLookup( assetsList ):
+-+    assetLookup = {}
+-+    # make the initial dictionary
+-+    for asset in assetsList:
+-+        if asset.origPath in assetLookup:
+-+            print( "WARNING: duplicate entry found in asset manifest for " + asset.origPath + "; overwriting" )
+-+        assetLookup[ asset.origPath ] = asset
+-+
+-+    return assetLookup
+-+            
+-+
+-+
+-+def getAssetListData( manifest_file_path ):
+-+    assetListData = ExcelUtils.gatherSpreadsheetInfo( manifest_file_path, ASSET_LIST_SHEET_ID, COL_HEADER_ROW_ID ) #< an excel workbook object
+-+    assets = parseAssetListSheet( assetListData )
+-+    assetLookup = makeAssetLookup( assets )
+-+
+-+    return assetLookup
+-Index: ParseCompressionSettingsManifest.py
+-===================================================================
+---- ParseCompressionSettingsManifest.py	(nonexistent)
+-+++ ParseCompressionSettingsManifest.py	(working copy)
+-@@ -0,0 +1,90 @@
+-+##
+-+## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-+##
+-+## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-+## States. Use of a copyright notice is precautionary only and does not
+-+## imply publication or disclosure.
+-+##
+-+## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-+## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-+## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-+## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-+###########################################################################
+-+
+-+import os
+-+import argparse
+-+import re
+-+import ExcelUtils
+-+
+-+
+-+COL_HEADER_ROW_ID = 0
+-+DATA_START_ROW = COL_HEADER_ROW_ID + 1
+-+
+-+COMPRESSION_SHEET_ID = 0
+-+
+-+COMPID_COL_ID = 0
+-+DITHER_COL_ID = 1 # dither command in TP is formatted different than the others
+-+ADDL_ARGS_START_COL = 2
+-+
+-+ARG_NAME_IDX = 0
+-+ARG_VAL_IDX = 1
+-+
+-+
+-+class CompressionData():
+-+    def __init__( self, settingID, dither, args ):
+-+        self.settingID = settingID
+-+        self.dither = dither
+-+        self.args = args
+-+
+-+        command = ""
+-+
+-+        if dither != "":
+-+            command += " --" + dither
+-+
+-+        for arg in args:
+-+            command += " --" + str( arg[ARG_NAME_IDX] ) + " " + str( arg[ARG_VAL_IDX] )
+-+
+-+        print( "created command named " + settingID + ": " + command )
+-+        self.command = command
+-+
+-+
+-+
+-+def getInUnicode( value ):
+-+    uniValue = "error"
+-+    try:
+-+        uniValue = unicode( value ).encode('utf-8')
+-+    except UnicodeEncodeError as err:
+-+        print( "ERROR: Can't encode utf-8: " + value )
+-+    except:
+-+        print( "ERROR: Can't encode this cell (not UnicodeEncodeError): " + value )
+-+
+-+    return str( uniValue )
+-+
+-+
+-+def parseSettingsSheet( settingsData ):
+-+    settings = {}
+-+    
+-+    keys = sorted( settingsData.columnInfo.keys() )
+-+    
+-+    for curRow in range( DATA_START_ROW, settingsData.numRows ):
+-+        settingID = getInUnicode( settingsData.sheetData[ curRow ][ COMPID_COL_ID ] )
+-+        dither = getInUnicode( settingsData.sheetData[ curRow ][ DITHER_COL_ID ] )
+-+        args = []
+-+
+-+        for curCol in range( ADDL_ARGS_START_COL, len( keys ) ):
+-+            val = settingsData.sheetData[ curRow ][ curCol ]
+-+            key = settingsData.columnInfo[ curCol ]
+-+            if val != "":
+-+                args.append( [ key, val ] )
+-+
+-+        compressionData = CompressionData( settingID, dither, args )
+-+        settings[ settingID ] = compressionData
+-+
+-+    return settings
+-+
+-+
+-+
+-+def getCompressionData( manifest_file_path ):
+-+    compressionData = ExcelUtils.gatherSpreadsheetInfo( manifest_file_path, COMPRESSION_SHEET_ID, COL_HEADER_ROW_ID ) #< an excel workbook object
+-+    return parseSettingsSheet( compressionData )
+-+
+-Index: PrintUtils.py
+-===================================================================
+---- PrintUtils.py	(nonexistent)
+-+++ PrintUtils.py	(working copy)
+-@@ -0,0 +1,21 @@
+-+#
+-+# Copyright (C) 2013, 1st Playable Productions, LLC. All rights reserved.
+-+#
+-+# UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-+# States. Use of a copyright notice is precautionary only and does not
+-+# imply publication or disclosure.
+-+#
+-+# THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-+# OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-+# DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-+# EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-+##########################################################################
+-+import os
+-+
+-+LOG_FILE_PTR = None
+-+
+-+def printMsg( msg, printToConsole = False ):
+-+        if LOG_FILE_PTR != None:
+-+                LOG_FILE_PTR.write( str( msg ) + "\n" )
+-+        if printToConsole:
+-+               print( msg ) 
+-Index: Spritesheet.py
+-===================================================================
+---- Spritesheet.py	(revision 742)
+-+++ Spritesheet.py	(working copy)
+-@@ -12,6 +12,7 @@
+- ###########################################################################
+- import os
+- import json
+-+import re
+- 
+- EASELJS_MEMBER_NAME_IMAGES = "images"
+- EASELJS_MEMBER_NAME_FRAMES = "frames"
+-@@ -34,11 +35,53 @@
+-       
+-       animations_json_member = self.spritesheet_json_object["animations"]
+-       for anim_name in animations_json_member:   
+--        #print anim_name
+--        #print animations_json_member[ anim_name ]
+-+        print anim_name
+-+        print animations_json_member[ anim_name ]
+-         self.source_animation_dict[ anim_name ] = animations_json_member[ anim_name ]
+-       in_file.close()
+-+
+-+   def hasAnim( self, animname ):
+-+      print_path = self.full_path
+-+      print_path = print_path[print_path.find("\\2d\\")+1:]
+-+      #print( "   looking in " + print_path + "....." )
+-+      animname = animname.replace( "2d/", "" )
+-+      if animname in self.source_animation_dict:
+-+         return True
+-+      else:
+-+         patterns = re.findall( r'_\d+', animname )
+-+         if len( patterns ) > 0:
+-+            #print( "      also trying " + animname.replace( patterns[ len( patterns ) - 1 ], "" ) )
+-+            return animname.replace( patterns[ len( patterns ) - 1 ], "" ) in self.source_animation_dict
+-+         else:
+-+            return False
+-+
+-+   def getAnim( self, animname ):
+-+      print_path = self.full_path
+-+      print_path = print_path[print_path.find("\\2d\\")+1:]
+-+      #print( "   looking in " + print_path + "....." )
+-+      animname = animname.replace( "2d/", "" )
+-+      if animname in self.source_animation_dict:
+-+         return animname#self.source_animation_dict[animname]
+-+      else:
+-+         patterns = re.findall( r'_\d+', animname )
+-+         if len( patterns ) > 0:
+-+            #print( "      also trying " + animname.replace( patterns[ len( patterns ) - 1 ], "" ) )
+-+            #return animname.replace( patterns[ len( patterns ) - 1 ], "" ) in self.source_animation_dict
+-+            return animname.replace( patterns[ len( patterns ) - 1 ], "" )#self.source_animation_dict[animname.replace( patterns[ len( patterns ) - 1 ], "" )]
+-+         else:
+-+            return animname
+-+
+-+
+-+   def replace( self, old, new ):
+-+      member_value = self.spritesheet_json_object[EASELJS_MEMBER_NAME_ANIMATIONS]
+-+      val = member_value[old]
+-+      del member_value[old]
+-+      member_value[new] = val
+-+      self.spritesheet_json_object[EASELJS_MEMBER_NAME_ANIMATIONS] = member_value
+-+
+-+   
+-    def addIFLAnimation( self, ifl_anim ):
+-+      return
+-       anim_name, ext = os.path.splitext( os.path.basename( ifl_anim.full_path ) )
+-       # get list of frame indexes for the animation
+-       frame_indexes = [] 
+-@@ -53,7 +96,7 @@
+-                try:
+-                   source_frame_index = int(frame_name[frame_name_separator_index+1:])
+-                   frame_name_prefix = frame_name[:frame_name_separator_index]
+--                  frame_index = self.source_animation_dict[frame_name_prefix][source_frame_index]
+-+                  frame_index = 13#self.source_animation_dict[frame_name_prefix][source_frame_index]
+-                except ValueError as e:
+-                   print(e)
+-          if frame_index != -1:
+-@@ -61,6 +104,7 @@
+-          else:
+-             print "Frame for ", frame_name , " not found. Skipping..."
+-       # add animation
+-+      anim_name = "SUCCESS__" + anim_name
+-       self.ifl_animation_dict[anim_name] = frame_indexes
+-    def printAnimations( self ):
+-       print "source_animation_dict"
+-@@ -113,6 +157,15 @@
+-          animations_json_member[k] = v
+-       # update texturepacker data
+-       texturepacker_json_member.append( STRING_MODIFIED_BY_1P )
+-+
+-+      # fix anim names to contain the "2d/" for consistency
+-+      member_value = self.spritesheet_json_object[EASELJS_MEMBER_NAME_ANIMATIONS]
+-+      new_member_value = {}
+-+      for k, v in member_value.iteritems():
+-+         #print( "\n----> changing " + k + " to " + ("2d/" + k) )
+-+         k = "2d/" + k
+-+         new_member_value[k] = v
+-+      self.spritesheet_json_object[EASELJS_MEMBER_NAME_ANIMATIONS] = new_member_value
+-       
+-       # write output
+-       out_file_output = "{"    
+-@@ -123,7 +176,7 @@
+-       
+-       out_file_output += self.__json_member_to_string( EASELJS_MEMBER_NAME_FRAMES )
+-       out_file_output += ",\n\n"
+--      
+-+
+-       out_file_output += self.__json_member_to_string( EASELJS_MEMBER_NAME_ANIMATIONS )
+-       out_file_output += ",\n\n"
+-       
+-Index: UpdatePaistResource.py
+-===================================================================
+---- UpdatePaistResource.py	(revision 742)
+-+++ UpdatePaistResource.py	(working copy)
+-@@ -14,6 +14,7 @@
+- import argparse
+- import re
+- from IFLAnim import IFLAnim
+-+from ParseAssetListManifest import AssestManifest
+- 
+- MIN_ARGS = 4
+- 
+-@@ -36,50 +37,14 @@
+- 		#insert spritesheet filename to resource
+- 		for line in inFile:
+- 			if line.find( resourcePropertyPattern ) != -1:
+--				#print line
+-+				print line
+- 				resource_value_start = line.find( ':' ) + 3 # find beginning of the value
+--				resource_value_end = line.rfind( '"' )
+--				resource_value = line[resource_value_start:resource_value_end]
+--				#print resource_value
+--				folderNameEnd = line.rfind( '/' )
+--				if folderNameEnd != -1:
+--					resource_full_path = os.path.join( sprite_source_dir, resource_value + ".ifl" )
+--					isIFL = os.path.exists( resource_full_path )
+--					#print resource_full_path
+--					#print isIFL
+--					if isIFL:
+--						anim = IFLAnim(resource_full_path)
+--						folderName = os.path.dirname(resource_value) + "/" + anim.source_dirname
+--					else:
+--						folderName = line[resource_value_start:folderNameEnd]
+-+				resource_value = line[resource_value_start:]
+-+				print resource_value
+-+				resource_value = "2d/" + resource_value
+-+				line = line[:resource_value_start] + resource_value
+-+				actualdata.append( resource_value )
+- 					
+--					spritesheetName = os.path.basename(folderName) + '_sheet'
+--					#print (folderName)
+--					#print (spritesheetName)
+--					animationNameStart = folderNameEnd + 1;
+--					spritesheetRes = folderName + "/" + spritesheetName
+--					#print (spritesheetRes)
+--					# update line in order to use spritesheet-based resource
+--					line = line[:resource_value_start] + spritesheetRes + ':' + line[animationNameStart:]
+--					#print line
+--					# save in the spritesheet info to the list
+--					if spritesheetRes not in spritesheetResList:
+--						spritesheetResList.append(spritesheetRes)
+--						json = spritesheetRes
+--						pngs = []
+--						
+--						curSpritesheetDir = os.path.join( sprite_dest_dir, folderName )
+--						for xroot, xdirs, xfiles in os.walk( curSpritesheetDir ):
+--							for xcurFile in xfiles:
+--								if xcurFile.find(".png") != -1: # TODO: case safety
+--									p = re.compile( '.*(?P<pathVal>\d+).png' )
+--									m = p.search( xcurFile )
+--									if m != None:
+--										xspritesheetRes = spritesheetRes + m.group( 'pathVal' )
+--										if xspritesheetRes not in pngs:
+--											pngs.append(xspritesheetRes)
+--						actualdata.append( [json, pngs] )
+--					
+- 			output += line
+- 		
+- 		inFile.close()
+-@@ -100,6 +65,8 @@
+- class PaistManifestWriter( object ):
+- 	def __init__( self ):
+- 		self.outputFile = open( manifest_file_path, 'w' )
+-+		self.assetManifest = AssestManifest( os.path.abspath( asset_manifest_xls_path ) )
+-+		self.assetManifest.load()
+- 	
+- 	def writeClassBegin( self ):
+- 		self.outputFile.write( "package assets;\n" )
+-@@ -114,7 +81,7 @@
+- 	# write code for adding JSON resource
+- 	#    ResMan.addRes( "Splash_layout", { src : "assets/json_layouts/Splash.json", rename : "Splash.json", content: JsonAssets._json_layouts__Splash } );
+- 	def writeJsonRes( self, destJsonPath, libraryNameOut ):
+--		self.outputFile.write( "		ResMan.addRes( \"" + libraryNameOut + "\", { " )
+-+		self.outputFile.write( "		ResMan.instance.addRes( \"" + libraryNameOut + "\", { " )
+- 		
+- 		# write 'src'
+- 		srcValue = destJsonPath[destJsonPath.find ( "\\assets\\" ) + 1:]
+-@@ -121,10 +88,6 @@
+- 		srcValue = srcValue.replace( '\\', '/' )
+- 		self.outputFile.write( "src : \"" + srcValue + "\", " )
+- 		
+--		# write 'rename'
+--		head, tail = os.path.split(srcValue)
+--		renameValue = tail
+--		self.outputFile.write( "rename : \"" + renameValue + "\", " )
+- 
+- 		# write 'content'
+- 		# name of the variable in JsonAssets.hx
+-@@ -140,34 +103,30 @@
+- 	#    ResMan.addRes( "Splash_layout", { src:"2d/splash/splash_spritesheet.png" } );
+- 	#    ResMan.addRes( "Splash_layout", { src:"2d/splash/splash_spritesheet.json", rename: "splash_spritesheet.json", content: JsonAssets._2d_splash_splash_spritesheet } );
+- 	def writeSpritesheetRes( self, libraryName, spritesheetResourceValue ):
+--		self.outputFile.write( "		ResMan.addRes( \"" + libraryName + "\", { " )
+--		srcValue = "2d/" + spritesheetResourceValue[0] + ".png"
+--		self.outputFile.write( "src : \"" + srcValue + "\", sources : [ " )
+-+                garbage_start_pos = spritesheetResourceValue.find( "," )
+-+                if garbage_start_pos != -1:
+-+                        spritesheetResourceValue = spritesheetResourceValue[:garbage_start_pos-1]
+-+
+-+                #print( "\n" + spritesheetResourceValue + " ------>" )
+-+                spritesheetResourceValue = self.assetManifest.getOutputPath( spritesheetResourceValue + ".png" )
+-+                #print( "        ==='" + spritesheetResourceValue + "'===" )
+-+
+-+                spritesheetResourceValue = spritesheetResourceValue[spritesheetResourceValue.find ( "\\2d\\" ) + 1:]
+-+		spritesheetResourceValue = spritesheetResourceValue.replace( '\\', '/' )
+-+                
+-+		self.outputFile.write( "		ResMan.instance.addRes( \"" + libraryName + "\", { " )
+-+		srcValue = spritesheetResourceValue + ".png"
+-+		self.outputFile.write( "src : \"" + srcValue + "\"} );\n " )
+- 		
+--		pngs = spritesheetResourceValue[1]
+--		for png in pngs:
+--			pngValue = "2d/" + png + ".png"
+--			self.outputFile.write( "\"" + pngValue + "\" " )
+--			if ( pngs.index( png ) != ( len( pngs ) - 1 ) ):
+--				self.outputFile.write( ", " )
+--			
+-+		self.outputFile.write( "		ResMan.instance.addRes( \"" + libraryName + "\", { " )
+- 		
+--		self.outputFile.write( " ] } );\n" )
+--		
+--		self.outputFile.write( "		ResMan.addRes( \"" + libraryName + "\", { " )
+--		
+- 		# write 'src'
+--		srcValue = "2d/" + spritesheetResourceValue[0] + ".json"
+-+		srcValue = spritesheetResourceValue + ".json"
+- 		self.outputFile.write( "src : \"" + srcValue + "\", " )
+--		
+--		# write 'rename'
+--		head, tail = os.path.split(srcValue)
+--		renameValue = tail
+--		self.outputFile.write( "rename : \"" + renameValue + "\", " )
+- 
+- 		# write 'content'
+- 		# name of the variable in JsonAssets.hx
+--		varname = "2d/" + spritesheetResourceValue[0]
+-+		varname = spritesheetResourceValue
+- 		varname = varname.replace( '/', '_' )
+- 		contentValue = "JsonAssets._" + varname
+- 		self.outputFile.write( "content : " + contentValue )
+-@@ -200,7 +159,9 @@
+-     json_dest_dir = os.path.abspath( options.args.pop( 0 ) )
+-     manifest_file_path = os.path.abspath( options.args.pop( 0 ) )
+-     sprite_dest_dir = os.path.abspath( options.args.pop( 0 ) ) # where the actual spritesheets live
+-+    asset_manifest_xls_path = os.path.abspath( options.args.pop( 0 ) )
+-     
+-+    
+-     #print( "\njson_source_dir " + json_source_dir )
+-     #print( "\nsprite_source_dir " + sprite_source_dir )
+-     #print( "\njson_dest_dir " + json_dest_dir )
+Index: AddIFLAnimationsToSpritesheets.py
+===================================================================
+--- AddIFLAnimationsToSpritesheets.py	(revision 742)
++++ AddIFLAnimationsToSpritesheets.py	(nonexistent)
+@@ -1,68 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-import argparse
+-from IFLAnim import IFLAnim
+-from Spritesheet import Spritesheet
+-
+-MIN_ARGS = 2
+-
+-if __name__ == "__main__":
+-   parser = argparse.ArgumentParser( description='Runs a module on a directory of flas and re-exports them.' )
+-   parser.add_argument( 'args',nargs='*' )
+-   options = parser.parse_args()
+-
+-   numArgs = len( options.args )
+-
+-   if numArgs < MIN_ARGS:
+-      print( "Insufficient number of arguments. Expected: ifl_dir spritesheet_dir" )
+-      print( "    Optionally: module to execute, args for that module" )
+-      exit
+-
+-   ifl_dir = os.path.abspath( options.args.pop( 0 ) )
+-   spritesheet_dir = os.path.abspath( options.args.pop( 0 ) )
+-   print( "\niflDirectory " + ifl_dir )
+-   #print( "\nspritesheetDirectory " + spritesheet_dir )
+-   
+-   spritesheet_dict = {}
+-
+-   print ( "\nfind all ifl files" )
+-          
+-   #find all ifl files
+-   for cur_dir_abs_path, dirs, files in os.walk( ifl_dir ):
+-      #print "----------------------------"
+-      cur_dir_rel_path = os.path.relpath( cur_dir_abs_path, ifl_dir )
+-      for filename in files:
+-         #print('\t%s' % filename)
+-         name, ext = os.path.splitext( filename )
+-         if ext.lower() == ".ifl":
+-            iflFullPath = os.path.join( cur_dir_abs_path, filename )
+-            print iflFullPath
+-            # load IFL animation
+-            anim = IFLAnim(iflFullPath)
+-            #anim.printFrames()
+-            
+-            # load the spritesheet containing the sprites for the IFL animation
+-            source_dir_rel_path = os.path.join( cur_dir_rel_path, anim.source_dirname )
+-            spritesheet_abs_path = os.path.join( os.path.join( spritesheet_dir, source_dir_rel_path ), os.path.basename( source_dir_rel_path ) + "_sheet.json" )
+-            if not spritesheet_dict.has_key( spritesheet_abs_path ):
+-               spritesheet_dict[spritesheet_abs_path] = Spritesheet(spritesheet_abs_path)
+-            # add IFL animation to the spritesheet
+-            spritesheet_dict[spritesheet_abs_path].addIFLAnimation( anim )
+-            #spritesheet_dict[spritesheet_abs_path].printAnimations()
+-            
+-            
+-   # Write spritesheets
+-   for path, spritesheet in spritesheet_dict.iteritems():   
+-      print "Saving " + spritesheet.full_path
+-      spritesheet.Save()
+\ No newline at end of file
+Index: AssetManifestParser.py
+===================================================================
+--- AssetManifestParser.py	(nonexistent)
++++ AssetManifestParser.py	(working copy)
+@@ -0,0 +1,237 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import os
++
++import DataMakeUtils
++import ExcelUtils
++
++
++TP_SETTINGS_SHEET_ID = 0
++ASSET_LIST_SHEET_ID = 1
++COL_HEADER_ROW_ID = 0
++DATA_START_ROW = COL_HEADER_ROW_ID + 1
++
++# TP Settings sheet consts
++SETTING_ID_COL_ID = 0
++DITHER_COL_ID = 1 # dither command in TP is formatted different than the others
++ADDL_ARGS_START_COL = 2
++ARG_NAME_IDX = 0
++ARG_VAL_IDX = 1
++
++# Asset paths sheet consts
++PATH_COL_ID = 0
++SETTING_COL_ID = 1
++LOADGROUP_COL_ID = 2
++
++DEFAULT_TP_SETTING_ID = "DEFAULT"
++DEFAULT_LOAD_GROUP = "default"
++
++
++################################################################################################    
++# Represents a load group / TP setting combination.
++# The number of these created will be <= the number of rows in the Asset Paths sheet.
++# This data will correspond to a single spritesheet (and each spritesheet will have an AssetGroup).
++class AssetGroup():
++    def __init__( self, groupID, tpConfig ):
++        self.ID = groupID
++        self.paths = []
++        self.tpConfig = tpConfig
++
++    def addPath( self, path ):
++        if path in self.paths:
++            print( "Path '" + path + "' has already been added to asset group " + self.ID )
++            return
++        
++        self.paths.append( path )
++
++
++################################################################################################
++# Represents data from a single row of the TP Settings sheet in the Asset Manifest xls
++class TpConfig():
++    def __init__( self, settingID, dither, args ):
++        self.ID = settingID
++        #self.dither = dither
++        #self.args = args
++
++        self.command = ""
++
++        if dither != "":
++            self.command += " --" + dither
++
++        for arg in args:
++            self.command += " --" + str( arg[ ARG_NAME_IDX ] )+ " " + str( arg[ ARG_VAL_IDX ] )
++
++
++
++################################################################################################
++# Represents data from a single row of the Asset Paths sheet in the Asset Manifest xls
++class AssetEntry():
++    def __init__( self, path, tpSetting, loadGroup ):
++        self.path = path   
++        self.tpSetting = tpSetting
++        self.loadGroup = loadGroup
++        
++
++################################################################################################
++################################################################################################
++# ENTRY POINT
++def parseAssetManifest( manifestPath ):
++    assetData = ExcelUtils.gatherSpreadsheetInfo( manifestPath, ASSET_LIST_SHEET_ID, COL_HEADER_ROW_ID ) # an excel workbook object
++    tpSettingsData = ExcelUtils.gatherSpreadsheetInfo( manifestPath, TP_SETTINGS_SHEET_ID, COL_HEADER_ROW_ID )
++
++    tpSettingsMap = parseSettingsSheet( tpSettingsData )
++    assetGroups = makeGroups( parseAssetSheet( assetData ), tpSettingsMap )
++
++    return assetGroups
++
++
++#------------------------------------------------------------------------------
++# returns a dict mapping settingID -> TpConfig
++def parseSettingsSheet( settingsData ):
++    settingsMap = {}
++    keys = sorted( settingsData.columnInfo.keys() )
++
++    # Get each setting
++    for curRow in range( DATA_START_ROW, settingsData.numRows ):
++        settingID = getInUnicode( settingsData.sheetData[ curRow ][ SETTING_ID_COL_ID ] )
++
++        if settingID in settingsMap:
++            print( "Warning: duplicate TexturePacker settings entry detected in the asset manifest: " + settingID )
++            continue;
++        
++        dither = getInUnicode( settingsData.sheetData[ curRow ][ DITHER_COL_ID ] )
++        args = []
++
++        # Get all of the properties for this setting
++        for curCol in range( ADDL_ARGS_START_COL, len( keys ) ):
++            val = settingsData.sheetData[ curRow ][ curCol ]
++            key = settingsData.columnInfo[ curCol ]
++            if val != "":
++                args.append( [ key, val ] )
++
++        # Map setting ID -> setting properties
++        settingsMap[ settingID ] = TpConfig( settingID, dither, args )
++
++    return settingsMap
++
++
++#------------------------------------------------------------------------------
++# returns a dict mapping asset path -> AssetEntry
++def parseAssetSheet( assetData ):
++    assetEntries = {}
++    
++    for curRow in range( DATA_START_ROW, assetData.numRows ):
++        assetPath = getInUnicode( assetData.sheetData[ curRow ][ PATH_COL_ID ] )
++        tpSettingID = getInUnicode( assetData.sheetData[ curRow ][ SETTING_COL_ID ] )
++        loadGroup = getInUnicode( assetData.sheetData[ curRow ][ LOADGROUP_COL_ID ] )
++
++        # All other paths will use this format, so modify this to conform
++        # (it will eventually get stripped back out when we bake to .hx)
++        assetPath = "./" + assetPath
++
++        if assetPath in assetEntries:
++            print( "Warning: duplicate asset entry detected in the asset manifest: '" + assetPath + "'" )
++            continue
++
++        assetEntries[ assetPath ] = AssetEntry( assetPath, tpSettingID, loadGroup )
++
++    return assetEntries
++ 
++
++#------------------------------------------------------------------------------
++# returns a dict mapping "loadGroup_tpSetting" -> AssetGroup
++def makeGroups( assetEntries, tpSettingsMap ):
++    assetGroups = {}
++
++    # Sorting by path length (shortest first) ensures that, if values aren't defined for a child dir/file,
++    # we'll have already defined a value for the parent (which the child can then inherit)
++    keys = sorted( assetEntries.keys(), DataMakeUtils.sortAssetKeys )
++    
++    for key in keys:
++        
++        entry = assetEntries[ key ]
++        path = entry.path
++        tpSettingName = entry.tpSetting
++        loadGroup = entry.loadGroup
++
++        # Inherit TP settings if needed
++        if tpSettingName == "":
++            tpSettingName = findTpSettingName( path, assetEntries )
++
++        # Inherit LoadGroup if needed
++        if loadGroup == "":
++            loadGroup = findLoadGroup( path, assetEntries )
++                
++
++        # Look up the TP settings data based on the TP setting ID
++        tpSetting = tpSettingsMap.get( tpSettingName, DEFAULT_TP_SETTING_ID )
++        if tpSetting == None and len( tpSettingsMap ) > 0:
++            tpSetting = tpSettingsMap.values()[0]
++
++        # Create a name for this group (this will become one spritesheet)
++        groupName = loadGroup + "_" + tpSettingName
++
++        if not groupName in assetGroups:
++            assetGroups[ groupName ] = AssetGroup( groupName, tpSetting )
++            print( "    + Created new  asset group '" + groupName + "'" )
++
++        # Add the current entry to the group
++        assetGroups[ groupName ].addPath( path )
++
++    return assetGroups
++
++
++############### HELPER FUNCTIONS: ################
++
++# Attempts to find a parent's TP setting ID to inherit
++def findTpSettingName( targetPath, assetEntries ):
++    keys = assetEntries.keys()
++    newPath = DataMakeUtils.find( targetPath, assetEntries.keys(), False )
++
++    if newPath != targetPath and newPath in keys:
++        return assetEntries[ newPath ].tpSetting
++    else:
++        return DEFAULT_TP_SETTING_ID
++ 
++
++#------------------------------------------------------------------------------
++# Attempts to find a parent's load group to inherit
++def findLoadGroup( targetPath, assetEntries ):
++    keys = assetEntries.keys()
++    newPath = DataMakeUtils.find( targetPath, assetEntries.keys(), False )
++    
++    if newPath != targetPath and newPath in keys:
++        loadGroup = assetEntries[ newPath ].loadGroup
++        if loadGroup != "":
++            return loadGroup
++
++    return DEFAULT_LOAD_GROUP
++
++
++
++#------------------------------------------------------------------------------
++# Helper function to ensure unicode data
++def getInUnicode( value ):
++    uniValue = ""
++    try:
++        uniValue = unicode( value ).encode('utf-8')
++    except UnicodeEncodeError as err:
++        print( "ERROR: Can't encode utf-8: " + value )
++    except:
++        print( "ERROR: Can't encode this cell (not UnicodeEncodeError): " + value )
++
++    return str( uniValue )
++
++
++
+Index: CopySprites.py
+===================================================================
+--- CopySprites.py	(revision 742)
++++ CopySprites.py	(nonexistent)
+@@ -1,34 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-import shutil
+-
+-		
+-print( "Copying backdrops from 'lib' to 'assets' directory ..." )
+-
+-sourceDirectory = os.path.normpath( "../../../lib/2d" )
+-destDirectory = os.path.normpath( "../../../assets/2d" )
+-
+-#find all files
+-for root, dirs, files in os.walk( sourceDirectory ):
+-      for curFile in files:
+-         name, ext = os.path.splitext( curFile )
+-         srcPath = os.path.join( root, curFile )
+-         destPath = srcPath.replace( sourceDirectory, destDirectory )
+-
+-         if name.lower() == "backdrop": # for files named 'backdrop' which were excluded from spritesheets
+-            destDir = os.path.dirname( destPath )
+-            if not os.path.exists( destDir ):
+-               os.makedirs(destDir)
+-            shutil.copy(srcPath, destPath)
+-
+Index: DataMakeUtils.py
+===================================================================
+--- DataMakeUtils.py	(nonexistent)
++++ DataMakeUtils.py	(working copy)
+@@ -0,0 +1,47 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++
++
++#------------------------------------------------------------------------------
++
++# Sort keys by length (shortest first)
++def sortAssetKeys( k1, k2 ):
++    len1 = len( k1 )
++    len2 = len( k2 )
++
++    if len1 < len2:
++        return -1
++    elif len1 == len2:
++        return 0
++    else:
++        return 1
++
++
++#------------------------------------------------------------------------------
++# Given a target path and a list of paths, finds the longest path that is
++# a substring of the target path.
++# Used to inherit parent settings.
++def find( targetPath, paths, allowTargetAsReturnVal ):
++    longestSubStr = targetPath
++    longestLen = 0;
++
++    # Find the path that is the longest substring of the specified path
++    for currPath in paths:
++        if ( allowTargetAsReturnVal or currPath != targetPath ) and targetPath.find( currPath ) != -1:
++            currLen = len( currPath )
++            if currLen > longestLen:
++                longestLen = currLen
++                longestSubStr = currPath
++
++    return longestSubStr
+Index: ExcelUtils.py
+===================================================================
+--- ExcelUtils.py	(nonexistent)
++++ ExcelUtils.py	(working copy)
+@@ -0,0 +1,129 @@
++#
++# Copyright (C) 2013, 1st Playable Productions, LLC. All rights reserved.
++#
++# UNPUBLISHED -- Rights reserved under the copyright laws of the United
++# States. Use of a copyright notice is precautionary only and does not
++# imply publication or disclosure.
++#
++# THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++# OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++# DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++# EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++##########################################################################
++
++from xlrd import open_workbook
++#import win32com.client as win32
++import math
++import time
++import PrintUtils
++import sys
++
++SAFE_COL_END_VAL = 1
++SAFE_ROW_END_VAL = 3
++
++WHITESPACE_CHARS = [ " ", "\n", "\t", "\r" ]
++
++class SpreadsheetInfo():
++	def __init__( self ):
++		self.numRows = 0
++		self.numCols = 0
++		self.sheetData = []
++		self.columnInfo = {}
++		
++# Can probably use empty_cell in xlrd
++def isValidEntry( rawExcelEntry ):
++	if rawExcelEntry is None:
++		return False
++
++	if type( rawExcelEntry ) == int or type( rawExcelEntry ) == float:
++		return True
++	
++	cleanEntry = rawExcelEntry
++	if hasattr( cleanEntry, "replace" ):
++		for char in WHITESPACE_CHARS:
++			cleanEntry = cleanEntry.replace( char, "" )
++		
++	return len( cleanEntry ) > 0
++
++def getFileInfo( spreadsheetLoc, sheetID, startRow ):
++	currentWorkbook = open_workbook( spreadsheetLoc )
++	
++	sheets = []
++	if sheetID == "ALL":
++		for curSheetID in range( 0, currentWorkbook.nsheets ):
++			sheets.append( currentWorkbook.sheet_by_index( curSheetID ) )
++	else:
++		sheets.append( currentWorkbook.sheet_by_index( int( sheetID ) ) )
++	
++	numCols = sheets[ 0 ].ncols
++	numRows = 0
++
++	PrintUtils.printMsg( "Sheet: " + str( sheetID ) )
++	PrintUtils.printMsg( "Total rows: " + str( numRows ) + " (when Sheet = ALL, this is total of all rows)" )
++	PrintUtils.printMsg( "Total cols: " + str( numCols ) )
++	
++	sheetData = []
++
++	for curSheet in sheets:
++                PrintUtils.printMsg( "Processing a sheet..." )
++		if curSheet.ncols != numCols:
++			# TODO: this isn't always an error condition (only bad if merging multiple sheets; ok if sheets are distinct)
++			PrintUtils.printMsg( "WARNING: a sheet has incorrect number of columns; skipping", True )
++			PrintUtils.printMsg( "Expected: " + str( numCols ), True )
++			PrintUtils.printMsg( "Found   : " + str( curSheet.ncols ), True )
++			continue
++		
++		curNumRows = curSheet.nrows
++		numRows += curNumRows
++		
++		for curRow in range( 0, curNumRows ):
++			newRowData = []
++			rowID = curRow
++			for curCol in range( 0, numCols ):
++				colID = curCol
++				curValue = curSheet.cell( rowID, colID ).value
++				cellType = type( curValue )
++				if cellType == int or ( cellType == float and math.floor( curValue ) == curValue ):
++					curValue = int( curValue )
++				# See if its a valid entry
++				if not isValidEntry( curValue ):
++					curValue = unicode( "" )
++				newRowData.append( curValue )
++			sheetData.append( newRowData )
++
++	colData = {}
++	for curCol in range( 0, numCols ):
++		startRowName = unicode( sheetData[ startRow ][ curCol ] ).encode('utf-8')
++		row1Name = unicode( sheetData[ 0 ][ curCol ] ).encode('utf-8')
++		row2Name = unicode( sheetData[ 1 ][ curCol ] ).encode('utf-8')
++		if startRowName != "":
++			colData[ curCol ] = startRowName
++		elif row1Name != "":
++			colData[ curCol ] = row1Name
++		elif row2Name != "":
++			colData[ curCol ] = row2Name       
++		
++	
++	fileInfo = SpreadsheetInfo()
++	fileInfo.numRows = numRows
++	fileInfo.numCols = numCols
++	fileInfo.sheetData = sheetData
++	fileInfo.columnInfo = colData
++	
++	return fileInfo
++
++def gatherSpreadsheetInfo( spreadsheetLoc, sheetID, startRow ):
++	spreadsheetInfo = None
++	
++	try:
++		PrintUtils.printMsg( "Examining " + str( spreadsheetLoc ) )
++		spreadsheetInfo = getFileInfo( spreadsheetLoc, sheetID, startRow )
++		PrintUtils.printMsg( "Spreadsheet examined!" )
++		PrintUtils.printMsg( "" )
++	except:
++		PrintUtils.printMsg( "WARNING: something went wrong while gathering spreadsheet info from " + spreadsheetLoc, True )
++		PrintUtils.printMsg( "    Error type: " + str( sys.exc_info()[0] ), True )
++		PrintUtils.printMsg( "    Error val : " + str( sys.exc_info()[1] ), True ) 
++	return spreadsheetInfo
++
++	
+Index: GenerateSpritesheets.py
+===================================================================
+--- GenerateSpritesheets.py	(revision 742)
++++ GenerateSpritesheets.py	(nonexistent)
+@@ -1,100 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-import argparse
+-import subprocess
+-import sys
+-	
+-
+-if __name__ == "__main__":
+-    parser = argparse.ArgumentParser( description='Runs a module on a directory of flas and re-exports them.' )
+-    
+-    parser.add_argument( 'sourceDir', action='store', help='Specify the directory containing images that should be turned into spritesheets' )
+-    parser.add_argument( 'destDir', action='store', help='Specify which directory the spritesheets should be saved to' )
+-    parser.add_argument( '-maxWidth', action='store', default="4096", help='(Optional) Specify the max width of generated spritesheets; defaults to 4096px' )
+-    parser.add_argument( '-maxHeight', action='store', default="4096", help='(Optional) Specify the max height of generated spritesheets; defaults to 4096px' )
+-    parser.add_argument( '-compression', action='store', default="RGBA8888", help='(Optional) Specify the max width of generated spritesheets; defaults to RGBA8888' )
+-    parser.add_argument( '-dither', action='store', default="", help='(Optional) Specify which (if any) dither to use; defaults to none; do not include "--", eg just specify "dither-fs"' )
+-
+-    options = parser.parse_args()
+-
+-    sourceDirectory = os.path.abspath( options.sourceDir )
+-    destDirectory = os.path.abspath( options.destDir )
+-    
+-    print( "\nsourceDirectory " + sourceDirectory )
+-    print( "\ndestDirectory " + destDirectory )
+-
+-    #for each dirpath
+-    for dirpath, dirs, files in os.walk( sourceDirectory ):	 
+-        print "----------------------------"
+-        #print dirpath
+-        relPath = os.path.relpath( dirpath, sourceDirectory )
+-        destPath = os.path.join( destDirectory, relPath )
+-        print "Generating spritesheet for [ " + relPath + " ]"
+-        #print destPath
+-        spritesheetName = os.path.basename(dirpath) + "_sheet"
+-        #print spritesheetName
+-        path = relPath.split( os.sep )
+-                
+-        # Add args for executing TexturePacker
+-        # TexturePacker --sheet %SPRITESHEET_DST_PATH%/..._spritesheet.png --data %SPRITESHEET_DST_PATH%/..._spritesheet.json --texture-format png --format easeljs %SPRITE_SRC_PATH%/%%X/
+-        args = []
+-        args.append( "TexturePacker" )
+-        args.append( "--sheet" )
+-        args.append( destPath + os.sep + spritesheetName + "{n}.png" )
+-        args.append( "--data" )
+-        args.append( destPath + os.sep + spritesheetName + ".json" )
+-        args.append( "--texture-format" )
+-        args.append( "png" )
+-        args.append( "--format" )
+-        args.append( "easeljs" )
+-        args.append( "--png-opt-level" )
+-        args.append( "7" )
+-        args.append( "--opt" )
+-        args.append( options.compression )
+-        if options.dither != "":
+-            args.append( "--" + options.dither )
+-        args.append( "--max-width" )
+-        args.append( options.maxWidth )
+-        args.append( "--max-height" )
+-        args.append( options.maxHeight )
+-        args.append( "--algorithm" )
+-        args.append( "MaxRects" )
+-        args.append( "--maxrects-heuristics" )
+-        args.append( "Best" )
+-        args.append( "--pack-mode" )
+-        args.append( "Best" )
+-        args.append( "--multipack" )
+-        args.append( "--border-padding" )
+-        args.append( "0" )
+-        args.append( "--shape-padding" )
+-        args.append( "2" ) # default
+-        #args.append( "--verbose" )
+-        #args.append( "--enable-rotation" )
+-        
+-        minTexturePackerArgs = len(args)
+-
+-        #print '|', (len(path))*'---', '[',os.path.basename(dirpath),']'
+-        for f in files:
+-            #print '|', len(path)*'---', f
+-            if f.lower().endswith(".png") or f.lower().endswith(".jpg"):
+-                args.append( f )
+-                
+-        if len(args) > minTexturePackerArgs :
+-            os.chdir(dirpath)
+-            ret = subprocess.call( args )
+-            if ret != 0:
+-                print( "\n!!!ERROR: TexturePacker failed. See output above, which may contain more info." )
+-                sys.exit( 1 )
+-
+-
+Index: IFLAnim.py
+===================================================================
+--- IFLAnim.py	(revision 742)
++++ IFLAnim.py	(nonexistent)
+@@ -1,50 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-import re
+-
+-class IFLAnim:
+-   def __init__( self, full_path ):
+-      self.full_path = full_path
+-      self.frames = []
+-      # open ifl
+-      ifl_file = open( full_path, 'r' )
+-      for ifl_line_num, ifl_line in enumerate(ifl_file, 1):
+-         ifl_line = ifl_line.strip() # trim whitespaces, including the new line at the end
+-         #print ( ifl_line )
+-         if ifl_line:
+-            ifl_line_parts = re.split('\s+(?=[\S]*$)', ifl_line) # split at the last whitespace
+-            #print ifl_line_parts
+-            num_parts = len( ifl_line_parts )
+-            if num_parts > 2 or num_parts <= 0:
+-               raise ValueError( 
+-                  full_path + os.linesep
+-                  + "Error in Line " + str(ifl_line_num) + ": " + ifl_line + os.linesep
+-                  + "ifl_line may include a file name followed by an optional number that specifies the number of frames " )
+-            frame_path = ifl_line_parts[0]
+-            frame_delay = ifl_line_parts[1] if num_parts > 1 else -1
+-            self.frames.append( self.Frame( frame_path, frame_delay ) )
+-            # TODO: handle ifl comments
+-      # Quick and easy way to get the folder containing the sprites
+-      # Assume all frames are in the same folder and use the path for the first frame
+-      if len( self.frames ) > 0:
+-         self.source_dirname = os.path.dirname( self.frames[0].path )
+-      ifl_file.close()
+-      
+-   def printFrames(self):
+-      for item in self.frames:
+-         print item.path, item.frame_delay
+-   class Frame:
+-      def __init__(self, path, frame_delay):
+-         self.path = path
+-         self.frame_delay = frame_delay
+Index: MakeHaxeData.py
+===================================================================
+--- MakeHaxeData.py	(nonexistent)
++++ MakeHaxeData.py	(working copy)
+@@ -0,0 +1,121 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import argparse
++import os
++
++import AssetManifestParser
++import PaistParser
++import ResourceMapWriter
++import SourceMapper
++import SpritesheetGenerator
++import SpritesheetMapper
++import SpritesheetModifier
++
++
++# TODO: desctiption of tool
++
++
++class DataMaker():
++    def __init__( self ):
++        self.theMap = {} # auditSourceDir will make this a Map (as defined in MappedData.py)
++        self.groups = {} # "loadGroup_tpSetting" -> AssetGroup
++
++    def auditSourceDir( self, imageSourceDir ):
++        print( "Mapping source dir  '" + imageSourceDir + "'..." )
++        self.theMap = SourceMapper.mapSourceDir( imageSourceDir )
++        print( "...done mpping source dir!\n\n" )
++        
++    def makeSheetGroups( self, manifestPath ):
++        print( "Parsing asset manifest  '" + manifestPath + "'..." )
++        self.groups = AssetManifestParser.parseAssetManifest( manifestPath ) # returns Dict mapping "loadGroup_tpSetting" -> AssetGroup
++        print( "...done parsing asset manifest!\n\n" )
++
++    def initSpritesheetData( self, sheetDestDir ):
++        print( "Initializing spritesheet data..." )
++        SpritesheetMapper.initSpriteseets( self.theMap, self.groups, sheetDestDir )
++        print( "...done initializing spritesheet data!\n\n" )
++
++        print( "Mapping spritesheet data..." )
++        SpritesheetMapper.mapAssetsToSpritesheets( self.theMap.images, self.theMap.spritesheetsByAssetPath )
++        SpritesheetMapper.mapAssetsToSpritesheets( self.theMap.ifls, self.theMap.spritesheetsByAssetPath )
++        print( "...done mapping spritesheet data!\n\n" )
++
++    def generateSpritesheets( self, sourceDir, tempDir, sheetDestDir, logPath ):
++        print( "Creating spritesheets..." )
++        SpritesheetGenerator.generateSpritesheets( sourceDir, tempDir, sheetDestDir, self.theMap.spritesheetsByID, logPath, TP_IMAGE_NAME_MOD )
++        print( "...done creating spritesheets!\n\n" )
++
++    def modifySpritesheets( self, spritesheetDestDir ):
++        print( "Fixing some image names in the spritesheet jsons..." )
++        SpritesheetModifier.fixImageNames( self.theMap.spritesheetsByID, TP_IMAGE_NAME_MOD )
++        print( "...done fixing some image names in the spritesheet jsons!\n\n" )
++        
++        print( "Adding IFLs to spritesheets..." )
++        SpritesheetModifier.addIFLsToSpritesheets( spritesheetDestDir, self.theMap.spritesheetsByID )
++        print( "...done adding IFLs to spritesheets!\n\n" )
++
++    def parsePaistFiles( self, paistFilesSrcDir, paistFilesDestDir ):
++        print( "Copying Paist json files (with fixed res paths)..." )
++        self.paistFileToSpritesheetsMap = PaistParser.fixResPathsAndCopy( paistFilesSrcDir, paistFilesDestDir, self.theMap )
++        print( "...done fixing and copying Paist json files!\n\n" )
++        # paistFileToSpritesheetsMap will be used to write PaistManifest.hx
++
++    def writePaistManifest( self, manifestDest, paistDest ):
++        print( "Writing Paist Manifest..." )
++        PaistParser.writePaistManifest( manifestDest, self.paistFileToSpritesheetsMap, paistDest )
++        print( "...done writing Paist Manifest!\n\n" )
++
++    def writeResourceMap( self, resMapPath ):
++        print( "Writing Resource Map..." )
++        ResourceMapWriter.writeResourceMap( resMapPath, self.theMap.spritesheetsByID )
++        print( "...done writing Resource Map!\n\n" )
++
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser( description='Data make script for haxe projects.' )
++
++    parser.add_argument( 'assetManifestPath', action='store', help='Specify the path to the Asset Manifest, which specifies what TP settings and load groups to use' )
++    parser.add_argument( 'imageSourceDir', action='store', help='Specify the directory containing images that should be turned into spritesheets' )
++    parser.add_argument( 'spritesheetDestDir', action='store', help='Specify the path to the directory where spritesheets should be created' )
++    parser.add_argument( 'imgTempDir', action='store', help='Specify the path to temporarily copy images to when creating spritesheets' )
++    parser.add_argument( 'tpTempLogPath', action='store', help='Specify the path to a temporary file that will be used to buffer TP output' )
++    parser.add_argument( 'paistSrcDir', action='store', help='Specify the path where this project\'s Paist json files live' )
++    parser.add_argument( 'paistDestDir', action='store', help='Specify a temporary directory to place modified Paist files' )
++    parser.add_argument( 'paistManidestDest', action='store', help='Specify the file that will be used to write out the Paist Manifest to' )
++    parser.add_argument( 'resourceMapDest', action='store', help='Specify the file that will be used to write out the Resource Map to' )
++    #parser.add_argument( '-maxWidth', action='store', default="4096", help='(Optional) Specify the max width of generated spritesheets; defaults to 4096px' )
++
++    args = parser.parse_args()
++
++    TP_IMAGE_NAME_MOD = "TP_NO_ANIM_NAME_MOD"
++
++    startDir = os.path.abspath( "./" )
++
++    maker = DataMaker()
++
++    maker.auditSourceDir( args.imageSourceDir )
++    maker.makeSheetGroups( args.assetManifestPath )
++    maker.initSpritesheetData( args.spritesheetDestDir )
++    maker.generateSpritesheets( args.imageSourceDir, args.imgTempDir, args.spritesheetDestDir, args.tpTempLogPath ) # TODO: Only do this for full data_make
++    maker.modifySpritesheets( args.spritesheetDestDir )  # TODO: Only do this for full data_make
++
++    # Spritesheet generation jumps between a few dirs; ensure we're back where we started
++    os.chdir( startDir )
++    
++    maker.parsePaistFiles( args.paistSrcDir, args.paistDestDir )
++    maker.writePaistManifest( args.paistManidestDest, args.paistDestDir )
++    maker.writeResourceMap( args.resourceMapDest )
++
++
+Index: MappedData.py
+===================================================================
+--- MappedData.py	(nonexistent)
++++ MappedData.py	(working copy)
+@@ -0,0 +1,176 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import os
++import pickle
++import re
++
++
++#################################################################################
++class Map():
++    def __init__( self ):
++        self.images = {}        # map image.relPath -> Image
++        self.ifls = {}          # map ifl.relPath -> IFL
++        self.spritesheetsByID = {}
++        self.spritesheetsByAssetPath = {}
++
++    def save( self, dest ):
++        output = open( dest, 'wb' )
++        pickle.dump( self, output, pickle.HIGHEST_PROTOCOL )
++        output.close()
++
++    def load( self, source ):
++        pklFile = open( self, 'rb' )
++        data = pickle.load( pklFile )
++        pklFile.close()
++
++        self.images = data.images
++        self.ifls = data.ifls
++        self.spritesheets = data.spritesheetsByID
++        self.spritesheets = data.spritesheetsByAssetPath
++
++    def addImage( self, image ):
++        if image.relPath in self.images:
++            print( "Warning: we're already tracking image '" + image.relPath + "'" )
++            return
++        self.images[ image.relPath ] = image
++
++    def addIfl( self, ifl ):
++        if ifl.relPath in self.ifls:
++            print( "Warning: we're already tracking IFL '" + ifl.relPath + "'" )
++            return
++        self.ifls[ ifl.relPath ] = ifl
++
++
++    def addSpritesheet( self, sheet ):
++        if sheet.ID in self.spritesheetsByID:
++            print( "Warning: we're already tracking spritesheet '" + sheet.ID + "'" )
++        else:
++            self.spritesheetsByID[ sheet.ID ] = sheet
++            print( "        its ID: " + sheet.ID )
++
++        print( "        its paths: " )
++        for path in sheet.manifestData.paths:
++            if path in self.spritesheetsByAssetPath:
++                print( "Warning: we're already tracking spritesheet '" + sheet.ID + "'" )
++                continue
++            self.spritesheetsByAssetPath[ path ] = sheet
++            print( "            : " + path )
++
++
++    def getIfl( self, iflName ):
++        if iflName in self.ifls:
++            return self.ifls[ iflName ]
++        else:
++            return None
++
++    def getImage( self, imageName ):
++        if imageName in self.images:
++            return self.images[ imageName ]
++        else:
++            return None
++
++    def findSheetByResource( self, resourceName ):
++        for key in self.ifls.keys():
++            if key.find( resourceName ) != -1:
++                return self.ifls[ key ].spritesheet
++
++        for key in self.images.keys():
++            if key.find( resourceName ) != -1:
++                return self.images[ key ].spritesheet
++
++        return None
++
++    def findResourceRelPath( self, resourceName ):
++        for key in self.ifls.keys():
++            if key.find( resourceName ) != -1:
++                return self.ifls[ key ].relPath
++
++        for key in self.images.keys():
++            if key.find( resourceName ) != -1:
++                return self.images[ key ].relPath
++
++        return resourceName
++
++
++
++#################################################################################
++# Represents the meta-data corresponding to a single spritesheet
++class Spritesheet():
++    def __init__( self, ID, manifestData, filepath ):
++        self.ID = ID
++        self.relPath = filepath
++        self.jsonFilePath = "not set"
++        self.manifestData = manifestData # AssetGroup object; contains TP settings and paths of items that will be included in this sheet
++        self.assets = {} # IFLs and Images
++
++    def addAsset( self, asset ):
++        self.assets[ asset.relPath ] = asset
++
++
++#################################################################################
++# Represents an individual .png or .jpg, as well as its associated meta-data
++class Image():
++    def __init__( self, filepath ):
++        self.relPath = filepath
++        self.fullOsPath = os.path.abspath( filepath )
++        self.spritesheet = None
++        self.iflOwner = None  #not all images will have this
++
++
++
++#################################################################################
++# Represents an individual IFL animation, as well as its associated meta-data
++class IFL():
++    def __init__( self, filepath ):
++        self.relPath = filepath
++        self.fullOsPath = os.path.abspath( filepath )
++        self.images = []
++        self.spritesheet = None
++
++    def readAndLink( self, theMap ):
++        iflParentDir = os.path.split( self.relPath )[ 0 ]
++        iflFile = open( self.fullOsPath, 'r' )
++
++        print( "\n    IFL '" + self.relPath + "', which lives in '" + iflParentDir + "', contains: " )
++
++        for lineNum, line in enumerate( iflFile, 1 ):
++            line = line.strip() # trim whitespaces, including the new line at the end
++            if not line:
++                continue
++
++            # Parse each line; split path and frame hold
++            lineParts = re.split('\s+(?=[\S]*$)', line)
++            numLineParts = len( lineParts )
++            if numLineParts > 2 or numLineParts <= 0:
++               raise ValueError( 
++                  self.relPath + os.linesep
++                  + "Error in Line " + str( lineNum ) + ": " + line + os.linesep
++                  + "ifl line may include a file name followed by an optional number that specifies the number of frames" )
++            
++            framePath = iflParentDir + "/" + lineParts[0]
++            frameDelay = lineParts[1] if numLineParts > 1 else -1 # TODO: what default should we actually use; TODO: we don't use this at all yet
++
++            print( "        " + framePath )
++
++            frameImg = theMap.getImage( framePath )
++            if frameImg == None:
++                print( "Warning: cannot find IFL frame image '" + framePath + "'" )
++                continue
++
++            self.images.append( frameImg )
++            frameImg.iflOwner = self
++            
++
++        iflFile.close()
++
+Index: MergeAnimFrames.bat
+===================================================================
+--- MergeAnimFrames.bat	(revision 742)
++++ MergeAnimFrames.bat	(nonexistent)
+@@ -1,4 +0,0 @@
+-::Calls script to turn json files into haxe code.
+-@ECHO off
+-python MergeAnimFrames.py
+-pause
+\ No newline at end of file
+Index: MergeAnimFrames.py
+===================================================================
+--- MergeAnimFrames.py	(revision 742)
++++ MergeAnimFrames.py	(nonexistent)
+@@ -1,89 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-
+-class FlattenAnims( object ):
+-	def __init__( self ):
+-		print( "merging animation frames..." )
+-	
+-	def findFiles( self ):
+-		sourceDirectory = "../../../assets/2d/"
+-		
+-		#find all JSON files
+-		for root, dirs, files in os.walk( sourceDirectory ):
+-				for curFile in files:
+-					
+-					name, ext = os.path.splitext( curFile )
+-					
+-					if ext.lower() == ".json":
+-						self.mergeFrames( root + '/' + name )
+-		
+-	def mergeFrames( self, file ):
+-		urlIn = file + ".json"
+-		urlOut = file + "-merged.json"
+-		
+-		print( "    ->in " + file )
+-		inFile = open( urlIn, 'r' )
+-		
+-		#determine whether to edit the file
+-		stopMerge = False
+-		inData = inFile.read()
+-		if inData.find( "Modified by 1st Playable" ) > -1 or inData.find( "Created with TexturePacker" ) == -1:
+-			stopMerge = True
+-		
+-		if stopMerge:
+-			print( "File cannot be modified. Make sure it was exported from TexturePacker." )
+-			inFile.close()
+-			return
+-		
+-		inFile.seek( 0 )
+-		output = ""
+-		animFramePattern = "\":["
+-		lastAnimName = ""
+-		frames = ""
+-		
+-		#merge frame arrays for matching animations
+-		for line in inFile:
+-			if line.find( animFramePattern ) != -1:
+-				animNameStart = line.find( '"' ) + 1
+-				animNameEnd = line.rfind( '_' )
+-				animName = line[animNameStart:animNameEnd]
+-				
+-				frameNumStart = line.find( ':[' ) + 2
+-				frameNumEnd = line.rfind( ']' )
+-				frameNum = line[frameNumStart:frameNumEnd]
+-				
+-				if lastAnimName != animName and lastAnimName != "":
+-					output += "        \"" + lastAnimName + "\":[" + frames[:-1] + "],\n"
+-					frames = ""
+-					
+-				lastAnimName = animName
+-				frames += frameNum + ","
+-			elif line.find( "}," ) != -1:
+-				output += "        \"" + lastAnimName + "\":[" + frames[:-1] + "]\n"
+-				output += line
+-			elif line.find( "Created with TexturePacker" ) != -1:
+-				output += line[:-1] + ",\n        \"Modified by 1st Playable frame merge tool\"\n"
+-			else:
+-				output += line
+-		
+-		inFile.close()
+-		
+-		outFile = open( urlOut, 'w' )
+-		outFile.write( output )
+-		outFile.close()
+-		os.remove( urlIn )
+-		os.rename( urlOut, urlIn )
+-	
+-reader = FlattenAnims()
+-reader.findFiles()
+Index: PaistParser.py
+===================================================================
+--- PaistParser.py	(nonexistent)
++++ PaistParser.py	(working copy)
+@@ -0,0 +1,181 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import os
++import re
++
++PAIST_RES_PROP_STR = "\"resource\" : "
++PAIST_RES_PROP_PATTERN =  PAIST_RES_PROP_STR + '"(?P<resource>.+)",'  #'": \[(?P<digits>\d+)\]'
++
++
++def fixResPathsAndCopy( srcDir, destDir, resMap ):
++    paistFileToSpritesheetsMap = {}
++
++    srcDir = os.path.abspath( srcDir )
++    destDir = os.path.abspath( destDir )
++
++    print( "    Looking in '" + srcDir + "'" )
++
++    for root, dirs, files in os.walk( srcDir ):
++        for filename in files:
++            filepath = os.path.join( root, filename )
++            sheets = processJsonFile( filepath, destDir, resMap )
++            paistFileToSpritesheetsMap[ filepath ] = sheets
++
++    return paistFileToSpritesheetsMap
++            
++
++def processJsonFile( filepath, destDir, resMap ):
++    print( "        found file '" + filepath + "'" )
++
++    sheets = []
++
++    paistInFile = open( filepath, 'r' )
++    paistStr = ""
++
++    resPattern = re.compile( PAIST_RES_PROP_PATTERN )
++
++    # Look for "resource" lines in the Paist json
++    for line in paistInFile:
++        match = resPattern.search( line )
++        
++        # Found one!
++        if match != None:
++
++            # Get the value that's currently used
++            resource = str( match.group( "resource" ) )
++
++            # Find what sheet this resource lives in, and save it (so that we can specify which sheets to load with which Paist files)
++            sheet = resMap.findSheetByResource( resource )
++            if sheet != None:
++                if not sheet in sheets:
++                    sheets.append( sheet )
++            else:
++                print( "            Warning: cannot find which sheet '" + resource + "' lives in" )
++                
++            # Modify the resource path to use the path format hxlib expects (rather than what Paist expects)
++            newResPath = resMap.findResourceRelPath( resource )
++            newResPath = newResPath.replace( "./", "" )
++            newResPath = os.path.splitext( newResPath )[ 0 ]
++
++            print( "            replacing '" + resource + "' with '" + newResPath + "'" )
++
++            # Modify the line that will be written out
++            line = line[ :match.start( "resource" )] + newResPath + "\",\n"
++
++        paistStr += line
++        
++    paistInFile.close()
++
++    # Now, write out the new file
++    destPath = os.path.join( destDir, os.path.split( filepath )[1] )
++    print( "        Writing it back out to '" + destPath + "'" )
++
++    paistOutFile = open( destPath, 'w' )
++    paistOutFile.write( paistStr )
++    paistOutFile.close()
++    
++    return sheets
++
++
++
++def writePaistManifest( manifestDest, paistFilenameToSpritesheetsMap, paistDestDir ):
++    manifest = ManifestWriter( manifestDest, paistDestDir )
++    manifest.writeStart()
++    
++    for key in paistFilenameToSpritesheetsMap.keys():
++        libName = os.path.split( key )[ 1 ]
++        libName = os.path.splitext( libName )[ 0 ]
++        
++        manifest.writePaistFile( libName )
++        
++        sheets = paistFilenameToSpritesheetsMap[ key ]
++        for sheet in sheets:
++            manifest.writeSpritesheet( sheet, libName )
++
++    manifest.writeEnd()
++
++
++
++class ManifestWriter():
++    def __init__( self, manifestDest, paistDestDir ):
++        self.manifest = open( os.path.abspath( manifestDest ), 'w' )
++        self.paistDestDir = paistDestDir
++
++    def writeStart( self ):
++        self.manifest.write( "package assets;\n" )
++        self.manifest.write( "import assets.JsonAssets;\n" )
++        self.manifest.write( "import com.firstplayable.hxlib.loader.ResMan;\n" )
++
++        self.manifest.write( "\n//WARNING! THIS CLASS IS AUTO-GENERATED BY TOOLS. YOUR CHANGES WILL BE OVERWRITTEN." )
++        self.manifest.write( "\nclass PaistManifest\n{\n" )
++        self.manifest.write( "\tpublic static function init():Void\n" )
++        self.manifest.write( "\t{\n" )
++
++
++    def writePaistFile( self, libName ):
++        filepath = self.paistDestDir + "\\" + libName
++        filepath = filepath.replace( "..\\assets\\", "" ) # TODO: no hard-coding "assets"...
++        filepath = filepath.replace( "\\", "/" )
++
++        print( "    writing entry for paist file: " + libName )
++
++        line = "\t\t"
++        line += "ResMan.instance.addRes( \""
++        line += libName
++        line += "\", { src : \""
++        line += filepath + ".json"
++        line += "\", content : JsonAssets."
++        line += "_" + filepath.replace( "/", "_" )
++        line += " } );\n"
++
++        self.manifest.write( line )
++
++
++    def writeSpritesheet( self, spritesheet, libName ):
++        sheetPath = spritesheet.relPath.replace( "..\\assets\\", "" ) # TODO: no hard-coding "assets"...
++        sheetPath = sheetPath.replace( "\\", "/" )
++        print( "        writing entry for sheet: " + sheetPath )
++
++        # sheet png
++        line = "\t\t"
++        line += "ResMan.instance.addRes( \""
++        line += libName
++        line += "\", { src : \""
++        line += sheetPath + ".png\""
++        line += " } );\n"
++
++        # sheet json
++        line += "\t\t"
++        line += "ResMan.instance.addRes( \""
++        line += libName
++        line += "\", { src : \""
++        line += sheetPath + ".json"
++        line += "\", content : JsonAssets."
++        line += "_" + sheetPath.replace( "/", "_" )
++        line += " } );\n"
++
++        self.manifest.write( line )
++        
++
++    def writeEnd( self ):
++        self.manifest.write( "\t}\n" )
++        self.manifest.write( "}" )
++        self.manifest.close()
++
++
++        
++
++
++
++
+Index: PrintUtils.py
+===================================================================
+--- PrintUtils.py	(nonexistent)
++++ PrintUtils.py	(working copy)
+@@ -0,0 +1,21 @@
++#
++# Copyright (C) 2013, 1st Playable Productions, LLC. All rights reserved.
++#
++# UNPUBLISHED -- Rights reserved under the copyright laws of the United
++# States. Use of a copyright notice is precautionary only and does not
++# imply publication or disclosure.
++#
++# THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++# OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++# DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++# EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++##########################################################################
++import os
++
++LOG_FILE_PTR = None
++
++def printMsg( msg, printToConsole = False ):
++        if LOG_FILE_PTR != None:
++                LOG_FILE_PTR.write( str( msg ) + "\n" )
++        if printToConsole:
++               print( msg ) 
+Index: ResourceMapWriter.py
+===================================================================
+--- ResourceMapWriter.py	(nonexistent)
++++ ResourceMapWriter.py	(working copy)
+@@ -0,0 +1,82 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++import os
++import argparse
++import re
++
++
++def writeResourceMap( resMapPath, spritesheets ):
++        writer = ResourceMapWriter( resMapPath )
++        writer.writeClassBegin()
++
++        for key in spritesheets.keys():
++                sheet = spritesheets[ key ]
++
++                sheetpath = sheet.relPath.replace( "..\\assets\\", "" ) # TODO: no hard-coding "assets"...
++                sheetpath = sheetpath.replace( "\\", "/" ) + ".json"
++
++                for asset in sheet.assets:
++                        assetpath = asset.replace( "\\", "/" )
++                        assetpath = assetpath.replace( "./", "" )
++                        writer.writeEntry( assetpath, sheetpath )
++
++                        shortname = os.path.splitext( assetpath )[ 0 ]
++                        if shortname != assetpath:
++                                writer.writeEntry( shortname, sheetpath )
++
++        writer.writeClassEnd()
++        writer.closeOutputFile()
++
++        
++
++class ResourceMapWriter():
++	def __init__( self, resMapPath ):
++		self.outputFile = open( resMapPath, 'w' )
++
++	def writeClassBegin( self ):
++		self.outputFile.write( "package assets;\n\n" )
++		
++		self.outputFile.write( "import haxe.ds.StringMap;\n" )
++		
++		self.outputFile.write( "\n//WARNING! THIS CLASS IS AUTO-GENERATED BY TOOLS. YOUR CHANGES WILL BE OVERWRITTEN." )
++		self.outputFile.write( "\nclass ResourceMap\n{\n" )
++
++                self.outputFile.write( "	public static inline var INVALID:String = \"invalid\";\n" )
++		self.outputFile.write( "	private static var m_map:StringMap<String>; \n\n" )
++
++		self.outputFile.write( "	public static function getSheetPath( assetName:String ):String\n" )
++		self.outputFile.write( "	{\n" )
++		self.outputFile.write( "		if ( m_map == null ) { init(); }\n" )
++		self.outputFile.write( "		if ( !m_map.exists( assetName ) ) { return INVALID; }\n" )
++		self.outputFile.write( "		else { return m_map.get( assetName ); }\n" )
++		self.outputFile.write( "	}\n\n" )
++		
++		self.outputFile.write( "	public static function init():Void\n" )
++		self.outputFile.write( "	{\n" )
++		self.outputFile.write( "		m_map = new StringMap<String>();\n" )
++
++	def writeEntry( self, assetPath, sheetPath ):
++                #assetPath = assetPath[assetPath.find("2d\\"):]
++                #assetPath = assetPath.replace( "\\", "/" )
++                #assetName = os.path.splitext( assetName )[0]
++		self.outputFile.write( "		m_map.set( \"" + assetPath + "\", \"" + sheetPath + "\" );\n" )
++
++	def writeClassEnd( self ):
++		self.outputFile.write( "	}\n" )
++		self.outputFile.write( '}' )
++		
++	def closeOutputFile( self ):
++		self.outputFile.close()
++
++
++
+Index: SourceMapper.py
+===================================================================
+--- SourceMapper.py	(nonexistent)
++++ SourceMapper.py	(working copy)
+@@ -0,0 +1,79 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import os
++import re
++
++from MappedData import Map, Image, IFL
++
++
++SUPPORTED_IMG_FORMATS = [ ".png", ".jpg" ]
++IFL_FORMAT = ".ifl"
++
++
++# Recursively iterates through a directoy of images and creates mappings between images and IFLs
++def mapSourceDir( imageSourceDir ):
++    theMap = Map()
++
++    # First, just gather all the images and IFLs
++    for dirpath, dirs, files in os.walk( imageSourceDir ):
++  
++        for filename in files:
++            fileExt = os.path.splitext( filename )[1].lower()
++            if not shouldMap( fileExt ):
++                print( "    - skipping '" + filename + "'" )
++                continue
++            
++            filepath = os.path.join( dirpath, filename )
++            filepath = filepath.replace( "\\", "/" )
++            
++            if fileExt == IFL_FORMAT:
++                theMap.addIfl( IFL( filepath ) )
++            else:
++                theMap.addImage( Image( filepath ) )
++
++            print( "    + tracking '" + filepath + "'" )
++
++
++    # Now, map IFL <--> frame images
++    for iflName in theMap.ifls:
++        ifl = theMap.getIfl( iflName )
++        if ifl == None:
++            print( "Couldn't find IFL instance for '" + iflName + "' for linking" )
++            continue
++        ifl.readAndLink( theMap )
++
++    return theMap
++
++            
++
++def shouldMap( ext ):
++    return ( ext in SUPPORTED_IMG_FORMATS or ext == IFL_FORMAT );
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
+Index: Spritesheet.py
+===================================================================
+--- Spritesheet.py	(revision 742)
++++ Spritesheet.py	(nonexistent)
+@@ -1,141 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-import json
+-
+-EASELJS_MEMBER_NAME_IMAGES = "images"
+-EASELJS_MEMBER_NAME_FRAMES = "frames"
+-EASELJS_MEMBER_NAME_ANIMATIONS = "animations"
+-EASELJS_MEMBER_NAME_TEXTUREPACKER = "texturepacker"
+-
+-STRING_MODIFIED_BY_1P = "Modified by 1st Playable frame merge tool"
+-STRING_CREATED_WITH_TP = "Created with TexturePacker"
+-
+-class Spritesheet:
+-   def __init__( self, full_path ):
+-      self.full_path = full_path
+-      self.source_animation_dict = {} # for animations that were already in the spritesheet generated by TexturePacker. Should not be modified outside __init__
+-      self.ifl_animation_dict = {} # for IFL animations
+-
+-      in_file = open( full_path, 'r' )
+-      
+-      # Load animations
+-      self.spritesheet_json_object = json.loads(in_file.read())
+-      
+-      animations_json_member = self.spritesheet_json_object["animations"]
+-      for anim_name in animations_json_member:   
+-        #print anim_name
+-        #print animations_json_member[ anim_name ]
+-        self.source_animation_dict[ anim_name ] = animations_json_member[ anim_name ]
+-      in_file.close()
+-   def addIFLAnimation( self, ifl_anim ):
+-      anim_name, ext = os.path.splitext( os.path.basename( ifl_anim.full_path ) )
+-      # get list of frame indexes for the animation
+-      frame_indexes = [] 
+-      for ifl_frame in ifl_anim.frames:
+-         frame_name, ext = os.path.splitext( os.path.basename( ifl_frame.path ) )
+-         frame_index = -1
+-         if self.source_animation_dict.has_key( frame_name ):
+-            frame_index = self.source_animation_dict[ frame_name ][0]
+-         else:
+-            frame_name_separator_index = frame_name.rfind( '_' )
+-            if frame_name_separator_index != -1:
+-               try:
+-                  source_frame_index = int(frame_name[frame_name_separator_index+1:])
+-                  frame_name_prefix = frame_name[:frame_name_separator_index]
+-                  frame_index = self.source_animation_dict[frame_name_prefix][source_frame_index]
+-               except ValueError as e:
+-                  print(e)
+-         if frame_index != -1:
+-            frame_indexes.append( frame_index )
+-         else:
+-            print "Frame for ", frame_name , " not found. Skipping..."
+-      # add animation
+-      self.ifl_animation_dict[anim_name] = frame_indexes
+-   def printAnimations( self ):
+-      print "source_animation_dict"
+-      for k, v in self.source_animation_dict.iteritems():
+-         print k, v
+-      print "ifl_animation_dict"
+-      for k, v in self.ifl_animation_dict.iteritems():
+-         print k, v
+-   def __json_member_to_string( self, member_name):
+-      member_value = self.spritesheet_json_object[member_name]
+-      output = "\"" + member_name + "\": "
+-      if isinstance( member_value, list ):
+-         output += "[\n    "
+-         output += ",\n    ".join( json.dumps(item) for item in self.spritesheet_json_object[member_name] )
+-         output += "\n]"
+-      elif isinstance( member_value, dict ):
+-         output += "{\n    "
+-         output += ",\n    ".join( 
+-            ( json.dumps(k) + ": " + json.dumps(v) )
+-            for k, v in member_value.iteritems()
+-            )
+-         output += "\n}"
+-      else:
+-         output += json.dumps( member_value )
+-      return output
+-   
+-   def Save( self ):
+-      url_in = self.full_path
+-      url_out = os.path.splitext( self.full_path )[0] + "-merged.json"
+-      #print( "    ->in " + url_in )
+-      #print( "    ->out " + url_out )
+-
+-      #determine whether to edit the file
+-      stopMerge = False
+-      texturepacker_json_member = self.spritesheet_json_object[EASELJS_MEMBER_NAME_TEXTUREPACKER]
+-      texturepacker_data = json.dumps( texturepacker_json_member )
+-      if texturepacker_data.find( STRING_CREATED_WITH_TP ) == -1:
+-         print( "File cannot be modified. Make sure it was exported from TexturePacker." )
+-         stopMerge = True
+-      if texturepacker_data.find( STRING_MODIFIED_BY_1P ) > -1:
+-         print( "File has already been modified. Skipping...." )
+-         stopMerge = True
+-      
+-      if stopMerge:
+-         return
+-
+-      animations_json_member = self.spritesheet_json_object["animations"]
+-      # update animation data - add ifl files. overwrite if already exists.
+-      for k, v in self.ifl_animation_dict.iteritems():
+-         animations_json_member[k] = v
+-      # update texturepacker data
+-      texturepacker_json_member.append( STRING_MODIFIED_BY_1P )
+-      
+-      # write output
+-      out_file_output = "{"    
+-      
+-      out_file_output += "\n\n"
+-      out_file_output += self.__json_member_to_string( EASELJS_MEMBER_NAME_IMAGES )
+-      out_file_output += ",\n\n"
+-      
+-      out_file_output += self.__json_member_to_string( EASELJS_MEMBER_NAME_FRAMES )
+-      out_file_output += ",\n\n"
+-      
+-      out_file_output += self.__json_member_to_string( EASELJS_MEMBER_NAME_ANIMATIONS )
+-      out_file_output += ",\n\n"
+-      
+-      out_file_output += self.__json_member_to_string( EASELJS_MEMBER_NAME_TEXTUREPACKER )
+-      out_file_output += "\n\n"
+-
+-      out_file_output += "}\n"
+-
+-      out_file = open( url_out, 'w')
+-      out_file.write( out_file_output )
+-      out_file.close();
+-      
+-      os.remove( url_in )
+-      os.rename( url_out, url_in )
+-
+Index: SpritesheetGenerator.py
+===================================================================
+--- SpritesheetGenerator.py	(nonexistent)
++++ SpritesheetGenerator.py	(working copy)
+@@ -0,0 +1,184 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import os
++import re
++import shutil
++import subprocess
++import sys
++
++from MappedData import Image, IFL
++
++
++# Multipack is not currently supported by haxelib
++ALLOW_MULITPACK = False
++
++
++#TODO: make this a class to prevent eg tpImageNameMod pass all over the place
++
++def generateSpritesheets( sourceDir, tempDir, sheetDestDir, spritesheets, tpLogPath, tpImageNameMod ):
++    sourceDir = os.path.abspath( sourceDir )
++    sheetDestDir = os.path.abspath( sheetDestDir )
++
++    # Redirect TP output, since it will fight with print for stdout otherwise
++    # (without this, TP output will be jumbled in with print output)
++    tpLogPath = os.path.abspath( tpLogPath )
++    
++    tempDir = os.path.abspath( tempDir )
++    clearTempDir( tempDir, sourceDir )
++
++    print( "    sourceDir    : '" + sourceDir + "'" )
++    print( "    tempDir      : '" + tempDir + "'" )
++    print( "    sheetDestDir : '" + sheetDestDir + "'" )
++    
++    for sheetname in spritesheets:
++        sheet = spritesheets[ sheetname ]
++        print( "\n    Making: " + sheet.ID )
++
++        # copy images to a temp directory; this is needed because
++        # TP is not great at pulling individual images in from different dirs
++        copyFilesToTemp( tempDir, sheet, tpImageNameMod )
++        
++        # set up args
++        sheetDest = sheetDestDir + os.sep + sheetname
++        tpCmd = sheet.manifestData.tpConfig.command
++        tpArgs = getTpArgs( sheetDest, tpCmd, tempDir )
++        sheet.jsonFilePath = sheetDest + ".json"
++        
++        # run TP
++        runTP( tpArgs, tempDir, tpLogPath )
++        
++        # delete temp
++        clearTempDir( tempDir, sourceDir )
++
++
++
++def clearTempDir( tempDir, sourceDir ):
++    if os.path.isdir( tempDir ):
++        os.chdir( sourceDir ) #make sure we're not in the dir we're deleting
++        shutil.rmtree( tempDir )
++
++
++def copyFilesToTemp( tempDir, sheet, tpImageNameMod ):
++    for assetname in sheet.assets:
++        asset = sheet.assets[ assetname ]
++        
++        if isinstance( asset, Image ):
++            copyFile( asset, tempDir, tpImageNameMod )
++        elif isinstance( asset, IFL ):
++            for frame in asset.images:
++                copyFile( frame, tempDir, tpImageNameMod )
++        else:
++            print( "Warning: spritesheet '" + sheet.ID + "' has unknown asset: " + str(asset) )
++
++
++def copyFile( image, destDir, tpImageNameMod ):
++    imgRelPath = fixRelPath( image.relPath, tpImageNameMod )
++    destPath = os.path.join( destDir, os.path.relpath( imgRelPath ) )
++    print( "        copying '" + imgRelPath + "' ---> '" + destPath + "'" )
++
++    destDir = os.path.split( destPath )[0]
++    if not os.path.exists( destDir ):
++        os.makedirs( destDir )
++
++    shutil.copy2( image.fullOsPath, destPath )
++
++
++def fixRelPath( path, tpImageNameMod ):
++    # TP will automatically create animations out of files matching the pattern:  image-name-prefix_####.ext
++    # eg: "myImage_001."png, "myImage_002.png" become an animation named "myImage"
++    # We want to retain control over what are counted as animations, so temporarily mangle the name to confuse TP
++    # New name replaces the '_' before the digits with TP_IMAGE_NAME_MOD
++    match = re.search( '.+(?P<digits>_\d+)\.[a-zA-Z]+', path )
++    if match != None:
++        matchLoc = match.start( "digits" )
++        path = path[:matchLoc] + tpImageNameMod + path[matchLoc+1:]
++
++    return path
++
++
++
++def getTpArgs( spritesheetPath, imageSettings, srcDir ):
++    args = []
++
++    args.append( "TexturePacker" )
++
++    # defines where the sheet's png(s) will be placed
++    args.append( "--sheet" )
++    if ALLOW_MULITPACK:
++        args.append( spritesheetPath + "{n}.png" )
++        args.append( "--multipack" )
++    else:
++        args.append( spritesheetPath + ".png" )
++
++    # defines where the sheet's json will be placed
++    args.append( "--data" )
++    args.append( spritesheetPath + ".json" )
++    
++    # Various settings; see https://www.codeandweb.com/texturepacker/documentation#command-line
++    # These (and more) can be migrated to your project's AssetManifest as needed;
++    # for more info, see (TODO: wiki link; for now see danielle@1stplayable.com)
++    args.append( "--texture-format" )
++    args.append( "png" )
++    args.append( "--format" )
++    args.append( "easeljs" )
++    args.append( "--algorithm" )
++    args.append( "MaxRects" )
++    args.append( "--maxrects-heuristics" )
++    args.append( "Best" )
++    args.append( "--pack-mode" )
++    args.append( "Best" )
++    args.append( "--border-padding" )
++    args.append( "0" )
++    args.append( "--shape-padding" )
++    args.append( "2" ) # default
++
++    # mostly for debugging
++    # TODO: enable this for Jenkins autobuilds
++    args.append( "--verbose" )
++
++    # Custom commands specified in your project's Asset Manifest
++    commands = imageSettings.split()
++    for cmd in commands:
++        # TODO: temp code to not get stuck waiting on TP while working on tool
++        if str(cmd) == "3" or str(cmd) == "5":
++            cmd = "1"
++        args.append( cmd )
++
++    args.append( srcDir )
++
++    return args
++
++
++def runTP( args, tempImgDir, tpLogPath ):
++    tpLog = open( tpLogPath, 'w' )
++    
++    os.chdir( tempImgDir )
++    ret = subprocess.call( args, stdout=tpLog, stderr=tpLog )
++
++    tpLog.close()
++    tpLog = open( tpLogPath, 'r' )
++
++    print( "\n\n        --- Begin TP output for this sheet ---\n" )
++    for line in tpLog:
++        print( "            " + line )
++    print( "        ---End TP output for this sheet ---\n\n" )
++    tpLog.close()
++    
++    if ret != 0:
++        print( "\n!!!ERROR: TexturePacker failed." )
++        sys.exit( 1 )
++    
++    print( "     Finished with this spritesheet!" )
++
++    
+Index: SpritesheetMapper.py
+===================================================================
+--- SpritesheetMapper.py	(nonexistent)
++++ SpritesheetMapper.py	(working copy)
+@@ -0,0 +1,44 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++import os
++
++import DataMakeUtils
++from MappedData import Spritesheet
++
++
++def initSpriteseets( mainMap, assetGroups, sheetDestDir ):
++    for groupName in assetGroups:
++        sheetDestPath = os.path.join( sheetDestDir, groupName )
++        groupObj = assetGroups[ groupName ]
++        
++        print( "    making meta data for spritesheet " + sheetDestPath )
++        sheet = Spritesheet( groupName, groupObj, sheetDestPath )
++
++        mainMap.addSpritesheet( sheet )
++
++
++# Maps IFLS and Images to Spritesheets
++def mapAssetsToSpritesheets( assets, sheetsByAssetPaths ):
++    sheetKeys = sheetsByAssetPaths.keys()
++
++    for assetName in assets:
++        asset = assets[ assetName ]
++        
++        sheetKey = DataMakeUtils.find( assetName, sheetKeys, True )
++        sheet = sheetsByAssetPaths[ sheetKey ]
++
++        print( "    asset '" + assetName + "' will be placed in \n\t\tspritesheet '" + sheet.ID + "'" )
++
++        sheet.addAsset( asset )
++        asset.spritesheet = sheet
+Index: SpritesheetModifier.py
+===================================================================
+--- SpritesheetModifier.py	(nonexistent)
++++ SpritesheetModifier.py	(working copy)
+@@ -0,0 +1,136 @@
++##
++## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++##
++## UNPUBLISHED -- Rights reserved under the copyright laws of the United
++## States. Use of a copyright notice is precautionary only and does not
++## imply publication or disclosure.
++##
++## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++###########################################################################
++
++
++import os
++import re
++
++from MappedData import IFL
++
++
++TP_CREDIT_STR = "\"Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS\""
++FP_MOD_STR = "\"Modified by 1st Playable Productions using https://svn.1stplayable.com/hxlib/trunk/tools/spritesheet/SpritesheetModifier.py\""
++
++ANIM_BLOCK_START_STR = "\"animations\": {"
++
++
++def writeFile( outfile, outstr ):
++    if outstr.find( FP_MOD_STR ) == -1:
++        location = outstr.find( TP_CREDIT_STR )
++        if location == -1:
++            print( "    Can't find where to add 'modified by 1P' string to spritesheet json" )
++        else:
++            location = location + len( TP_CREDIT_STR )
++            outstr = outstr[:location] + ",\n        " + FP_MOD_STR + "\n" + outstr[location:]
++
++    outfile.write( outstr )
++
++
++def fixImageNames( spritesheetsByID, tpImgNameMod ):
++    for key in spritesheetsByID.keys():
++        sheet = spritesheetsByID[ key ]
++        print( "    checking: " + sheet.jsonFilePath )
++        
++        jsonPath = os.path.abspath( sheet.jsonFilePath )
++        json = open( jsonPath, 'r' )
++
++        strToWrite = ""
++        
++        for line in json:
++            if line.find( tpImgNameMod ) != -1:
++                newline = line.replace( tpImgNameMod, "_" )
++                line = newline
++            strToWrite += line
++
++        json.close()
++        
++        json = open( jsonPath, 'w' )
++        writeFile( json, strToWrite )
++        json.close()
++
++
++def addIFLsToSpritesheets( spritesheetDestDir, spritesheetsByID ):
++    for key in spritesheetsByID.keys():
++        sheet = spritesheetsByID[ key ]
++        jsonPath = sheet.jsonFilePath
++        print( "    checking: '" + jsonPath + "'..." )
++
++        for assetname in sheet.assets:
++            asset = sheet.assets[ assetname ]
++            
++            if isinstance( asset, IFL ):
++                print( "        found IFL: '" + asset.relPath + "'" )
++                addIFL( asset, sheet )
++
++
++def addIFL( ifl, sheet ):
++    jsonPath = os.path.abspath( sheet.jsonFilePath )
++    json = open( jsonPath, 'r' )
++    jsonStr = json.read()
++    json.close()
++
++    frames = []
++    
++    # Find line of the json corresponding to each frame image in the IFL
++    for image in ifl.images:
++        imgRelPath = image.relPath.replace( "./", "" )
++        imgRelPath = os.path.splitext( imgRelPath )[0]
++
++        pathLocStart = jsonStr.find( imgRelPath )
++        if pathLocStart == -1:
++            print( "            couldn't find frame: " + imgRelPath )
++            continue
++
++        # Find the frame index for this frame image
++        pattern = re.compile( imgRelPath + '": \[(?P<digits>\d+)\]' )
++        match = pattern.search( jsonStr, pathLocStart )
++        if match != None:
++            frames.append( match.group( "digits" ) )
++        else:
++            print( "                    Warning: could not find frame index for " + imgRelPath )
++        
++    # Find location in file to add this IFL to
++    animBlockLocation = jsonStr.find( ANIM_BLOCK_START_STR )
++    if animBlockLocation == -1:
++        print( "            could not find anim block in file to add this IFL to" )
++        return
++
++    animListStart = animBlockLocation + len( ANIM_BLOCK_START_STR )
++    newStr = jsonStr[:animListStart]
++
++    # Write ifl anim name
++    iflPath = ifl.relPath.replace( "./", "" )
++    iflPath = os.path.splitext( iflPath )[0]
++    iflString = "    \"" + iflPath + "\": ["
++
++    # Write each frame index
++    first = True
++    for frame in frames:
++        if not first:
++            iflString += ", "
++        first = False
++        
++        iflString += str( frame )
++
++    # Write eol chars 
++    iflString += "],"
++    
++    # Finish putting the file back together, and write out
++    newStr += "\n" + iflString + jsonStr[animListStart:]
++    json = open( jsonPath, 'w' )
++    writeFile( json, newStr )
++    json.close()
++
++    print( "            adding the following line to the json: '" + iflString + "'" )
++    
++    
+Index: SpritesToSpritesheets.bat
+===================================================================
+--- SpritesToSpritesheets.bat	(revision 742)
++++ SpritesToSpritesheets.bat	(nonexistent)
+@@ -1,24 +0,0 @@
+-::Calls script to export png files into spritesheets
+-@ECHO off
+-
+-
+-SET "PATH=C:/Program Files/CodeAndWeb/TexturePacker/bin;%PATH%"
+-
+-echo Merging and copying sprites from lib to assets!
+-
+-set SRC_PATH=../../../lib/2d
+-set DST_PATH=../../../assets/2d
+-
+-echo Generating spritesheets using TexturePacker
+-for /d %%X in (%SRC_PATH%/*) do (
+-   TexturePacker --sheet %DST_PATH%/%%X/%%X_spritesheet.png --data %DST_PATH%/%%X/%%X_spritesheet.json --texture-format png --format easeljs %SRC_PATH%/%%X/
+-)
+-
+-set PAIST_JSON_DST_PATH=../../../lib/json_layouts/
+-set PAIST_JSON_SRC_PATH=../../../assets/json_layouts/
+-
+-python UpdatePaistResource.py %PAIST_JSON_SRC_PATH% %PAIST_JSON_DST_PATH%
+-
+-echo Batching complete!
+-
+-pause
+\ No newline at end of file
+Index: UpdatePaistResource.py
+===================================================================
+--- UpdatePaistResource.py	(revision 742)
++++ UpdatePaistResource.py	(nonexistent)
+@@ -1,225 +0,0 @@
+-##
+-## Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
+-##
+-## UNPUBLISHED -- Rights reserved under the copyright laws of the United
+-## States. Use of a copyright notice is precautionary only and does not
+-## imply publication or disclosure.
+-##
+-## THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
+-## OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
+-## DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
+-## EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
+-###########################################################################
+-import os
+-import argparse
+-import re
+-from IFLAnim import IFLAnim
+-
+-MIN_ARGS = 4
+-
+-class PaistJsonIO( object ):
+-	def __init__( self ):
+-		print( "Updating resource property to use spritesheets..." )
+-	
+-	def updateResource( self, urlIn, urlOut, libraryNameOut, sprite_dest_dir ):
+-		#print( "    ->in " + urlIn )
+-		inFile = open( urlIn, 'r' )
+-		outDir, outFileName = os.path.split(urlOut)
+-		spritesheetResList = [];
+-		actualdata = [];
+-		
+-		output = ""
+-		resourcePropertyPattern = "\"resource\" :" # ex) "resource" : "hud/button/back",
+-		lastAnimName = ""
+-		frames = ""
+-		
+-		#insert spritesheet filename to resource
+-		for line in inFile:
+-			if line.find( resourcePropertyPattern ) != -1:
+-				#print line
+-				resource_value_start = line.find( ':' ) + 3 # find beginning of the value
+-				resource_value_end = line.rfind( '"' )
+-				resource_value = line[resource_value_start:resource_value_end]
+-				#print resource_value
+-				folderNameEnd = line.rfind( '/' )
+-				if folderNameEnd != -1:
+-					resource_full_path = os.path.join( sprite_source_dir, resource_value + ".ifl" )
+-					isIFL = os.path.exists( resource_full_path )
+-					#print resource_full_path
+-					#print isIFL
+-					if isIFL:
+-						anim = IFLAnim(resource_full_path)
+-						folderName = os.path.dirname(resource_value) + "/" + anim.source_dirname
+-					else:
+-						folderName = line[resource_value_start:folderNameEnd]
+-					
+-					spritesheetName = os.path.basename(folderName) + '_sheet'
+-					#print (folderName)
+-					#print (spritesheetName)
+-					animationNameStart = folderNameEnd + 1;
+-					spritesheetRes = folderName + "/" + spritesheetName
+-					#print (spritesheetRes)
+-					# update line in order to use spritesheet-based resource
+-					line = line[:resource_value_start] + spritesheetRes + ':' + line[animationNameStart:]
+-					#print line
+-					# save in the spritesheet info to the list
+-					if spritesheetRes not in spritesheetResList:
+-						spritesheetResList.append(spritesheetRes)
+-						json = spritesheetRes
+-						pngs = []
+-						
+-						curSpritesheetDir = os.path.join( sprite_dest_dir, folderName )
+-						for xroot, xdirs, xfiles in os.walk( curSpritesheetDir ):
+-							for xcurFile in xfiles:
+-								if xcurFile.find(".png") != -1: # TODO: case safety
+-									p = re.compile( '.*(?P<pathVal>\d+).png' )
+-									m = p.search( xcurFile )
+-									if m != None:
+-										xspritesheetRes = spritesheetRes + m.group( 'pathVal' )
+-										if xspritesheetRes not in pngs:
+-											pngs.append(xspritesheetRes)
+-						actualdata.append( [json, pngs] )
+-					
+-			output += line
+-		
+-		inFile.close()
+-      
+-		dirOut = os.path.dirname( urlOut )
+-		if not os.path.exists( dirOut ):
+-			os.makedirs(dirOut)
+-
+-		outFile = open( urlOut, 'w' )
+-		outFile.write( output )
+-		outFile.close()
+-
+-		# write manifest
+-		for res in actualdata:
+-			manifest.writeSpritesheetRes( libraryNameOut, res )
+-	
+-	
+-class PaistManifestWriter( object ):
+-	def __init__( self ):
+-		self.outputFile = open( manifest_file_path, 'w' )
+-	
+-	def writeClassBegin( self ):
+-		self.outputFile.write( "package assets;\n" )
+-		self.outputFile.write( "import assets.JsonAssets;\n" )
+-		self.outputFile.write( "import com.firstplayable.hxlib.loader.ResMan;\n" )
+-
+-		self.outputFile.write( "\n//WARNING! THIS CLASS IS AUTO-GENERATED BY TOOLS. YOUR CHANGES WILL BE OVERWRITTEN." )
+-		self.outputFile.write( "\nclass PaistManifest\n{\n" )
+-		self.outputFile.write( "	public static function init():Void\n" )
+-		self.outputFile.write( "	{\n" )
+-
+-	# write code for adding JSON resource
+-	#    ResMan.addRes( "Splash_layout", { src : "assets/json_layouts/Splash.json", rename : "Splash.json", content: JsonAssets._json_layouts__Splash } );
+-	def writeJsonRes( self, destJsonPath, libraryNameOut ):
+-		self.outputFile.write( "		ResMan.addRes( \"" + libraryNameOut + "\", { " )
+-		
+-		# write 'src'
+-		srcValue = destJsonPath[destJsonPath.find ( "\\assets\\" ) + 1:]
+-		srcValue = srcValue.replace( '\\', '/' )
+-		self.outputFile.write( "src : \"" + srcValue + "\", " )
+-		
+-		# write 'rename'
+-		head, tail = os.path.split(srcValue)
+-		renameValue = tail
+-		self.outputFile.write( "rename : \"" + renameValue + "\", " )
+-
+-		# write 'content'
+-		# name of the variable in JsonAssets.hx
+-		varname = srcValue[len("assets"):]
+-		varname, ext = os.path.splitext( varname )
+-		varname = varname.replace( '/', '_' )
+-		contentValue = "JsonAssets." + varname
+-		self.outputFile.write( "content : " + contentValue )
+-		
+-		self.outputFile.write( " } );\n" )
+-	
+-	# write code for adding spritesheet resource
+-	#    ResMan.addRes( "Splash_layout", { src:"2d/splash/splash_spritesheet.png" } );
+-	#    ResMan.addRes( "Splash_layout", { src:"2d/splash/splash_spritesheet.json", rename: "splash_spritesheet.json", content: JsonAssets._2d_splash_splash_spritesheet } );
+-	def writeSpritesheetRes( self, libraryName, spritesheetResourceValue ):
+-		self.outputFile.write( "		ResMan.addRes( \"" + libraryName + "\", { " )
+-		srcValue = "2d/" + spritesheetResourceValue[0] + ".png"
+-		self.outputFile.write( "src : \"" + srcValue + "\", sources : [ " )
+-		
+-		pngs = spritesheetResourceValue[1]
+-		for png in pngs:
+-			pngValue = "2d/" + png + ".png"
+-			self.outputFile.write( "\"" + pngValue + "\" " )
+-			if ( pngs.index( png ) != ( len( pngs ) - 1 ) ):
+-				self.outputFile.write( ", " )
+-			
+-		
+-		self.outputFile.write( " ] } );\n" )
+-		
+-		self.outputFile.write( "		ResMan.addRes( \"" + libraryName + "\", { " )
+-		
+-		# write 'src'
+-		srcValue = "2d/" + spritesheetResourceValue[0] + ".json"
+-		self.outputFile.write( "src : \"" + srcValue + "\", " )
+-		
+-		# write 'rename'
+-		head, tail = os.path.split(srcValue)
+-		renameValue = tail
+-		self.outputFile.write( "rename : \"" + renameValue + "\", " )
+-
+-		# write 'content'
+-		# name of the variable in JsonAssets.hx
+-		varname = "2d/" + spritesheetResourceValue[0]
+-		varname = varname.replace( '/', '_' )
+-		contentValue = "JsonAssets._" + varname
+-		self.outputFile.write( "content : " + contentValue )
+-		
+-		self.outputFile.write( " } );\n" )
+-		
+-	def writeClassEnd( self ):
+-		self.outputFile.write( "	}\n" )
+-		self.outputFile.write( '}' )
+-		
+-	def closeOutputFile( self ):
+-		self.outputFile.close()
+-
+-
+-if __name__ == "__main__":
+-    parser = argparse.ArgumentParser( description='Runs a module on a directory of flas and re-exports them.' )
+-    parser.add_argument( 'args',nargs='*' )
+-    options = parser.parse_args()
+-
+-    numArgs = len( options.args )
+-
+-    if numArgs < MIN_ARGS:
+-        print( "Insufficient number of arguments. Expected: json_source_dir sprite_source_dir json_dest_dir manifest_file_path" )
+-        print( "    Optionally: module to execute, args for that module" )
+-        exit
+-	
+-	
+-    json_source_dir = os.path.abspath( options.args.pop( 0 ) )
+-    sprite_source_dir = os.path.abspath( options.args.pop( 0 ) )
+-    json_dest_dir = os.path.abspath( options.args.pop( 0 ) )
+-    manifest_file_path = os.path.abspath( options.args.pop( 0 ) )
+-    sprite_dest_dir = os.path.abspath( options.args.pop( 0 ) ) # where the actual spritesheets live
+-    
+-    #print( "\njson_source_dir " + json_source_dir )
+-    #print( "\nsprite_source_dir " + sprite_source_dir )
+-    #print( "\njson_dest_dir " + json_dest_dir )
+-
+-    jsonFile = PaistJsonIO()
+-    manifest = PaistManifestWriter();
+-    manifest.writeClassBegin()
+-
+-    #find all JSON files
+-    for root, dirs, files in os.walk( json_source_dir ):
+-          for curFile in files:
+-             name, ext = os.path.splitext( curFile )
+-             srcJsonPath = root + '/' + curFile
+-             destJsonPath = root.replace( json_source_dir, json_dest_dir ) + '/' + curFile
+-             libraryName = name + "_layout"
+-             if ext.lower() == ".json":
+-                jsonFile.updateResource( srcJsonPath, destJsonPath, libraryName, sprite_dest_dir )
+-                manifest.writeJsonRes( destJsonPath, libraryName );
+-
+-    manifest.writeClassEnd()
+-    manifest.closeOutputFile()
+-

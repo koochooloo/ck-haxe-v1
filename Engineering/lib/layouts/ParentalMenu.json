@@ -1,0 +1,119 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_confirm",
+            "record" : true,
+            "id" : 1,
+            "priority" : 8,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_checkSmall",
+                "position" : [ 907, 610 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_cancel",
+            "record" : true,
+            "priority" : 8,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_x",
+                "position" : [ 793, 610 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_3",
+            "priority" : 2,
+            "text" : "PARENT_ANSWER_1",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 736, 433 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:100",
+                "textAlignment" : [ "right or bottom", "left or top" ],
+                "size" : [ 100, 180 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_wordProblem",
+            "record" : true,
+            "priority" : 2,
+            "text" : "PARENT_QUESTION",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 617, 97 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "size" : [ 470, 180 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_text",
+            "record" : true,
+            "priority" : 2,
+            "text" : "PARENT_ANSWER_2",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 840, 433 ],
+                "touchable" : true,
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:100",
+                "size" : [ 200, 180 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_tut6",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-SpeechBubble",
+                "position" : [ 529, 60 ],
+                "scale" : [ 2.5, 1.3 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_whiteboard",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-WoodenPanel",
+                "position" : [ 599, 412 ],
+                "scale" : [ 2, 0.8 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "girlHat",
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-Backpack",
+                "position" : [ 445, 768 ],
+                "scale" : [ 1.2, 1.2 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

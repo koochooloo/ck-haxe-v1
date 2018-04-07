@@ -1,0 +1,21 @@
+Index: JsonToHaxe.py
+===================================================================
+--- JsonToHaxe.py	(revision 1486)
++++ JsonToHaxe.py	(working copy)
+@@ -57,13 +57,13 @@
+ 		inFile = open( url, 'r' )
+ 		output = ""
+ 
+-		jsonPrefix = '\t'
+-		jsonPostfix = '\n'
++		jsonPrefix = '\t"'
++		jsonPostfix = '"\n'
+ 
+ 		#json load and then dump has the effect of stripping all whitespace
+ 		jsonData = json.load(inFile, None, None, JsonToHaxe.jsonClassHook)
+ 		jsonText = json.dumps(jsonData, sort_keys=True, indent=None, separators=(',',':'))
+-		#jsonText = re.sub(r"\"", '\\"', jsonText)
++		jsonText = re.sub(r"\"", '\\"', jsonText)
+ 
+ 		output += jsonPrefix + jsonText + jsonPostfix
+ 

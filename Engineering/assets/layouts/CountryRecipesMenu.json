@@ -1,0 +1,46 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_countryMenu",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/HudBook",
+                "position" : [ 144, 224 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_recipeIngredients",
+            "record" : true,
+            "id" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/HudFlag",
+                "position" : [ 304, 232 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_menuName",
+            "text" : "TEST_TITLE_CRECIPES",
+            "inheritable" : { 
+                "position" : [ 120, 96 ],
+                "loadParams" : false,
+                "font" : "/fonts/cartoonist_kooky.ttf:36",
+                "autoSize" : true
+            }
+        } ]
+    }
+}

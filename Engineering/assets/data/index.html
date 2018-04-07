@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" style="-webkit-user-select: none; -ms-content-zooming: none;">
+<head>
+	
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>Chef Koochooloo</title>
+	
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	
+	<style> 
+	  
+	  @font-face { font-family: 'CarterOne';
+            src: url('fnt/CarterOne.ttf') format('truetype')
+      }
+	  
+	  @font-face { font-family: 'angrybirds-regular';
+            src: url('fnt/angrybirds-regular.ttf') format('truetype')
+      }
+	  
+	  	  @font-face { font-family: 'DidactGothic-Regular';
+            src: url('fnt/DidactGothic-Regular.ttf') format('truetype')
+      }
+	  
+	   	  @font-face { font-family: 'OpenSans-SemiBold';
+            src: url('fnt/OpenSans-SemiBold.ttf') format('truetype')
+      }
+	  
+	   	  @font-face { font-family: 'OpenSans-Bold';
+            src: url('fnt/OpenSans-Bold.ttf') format('truetype')
+      }
+	  
+	   	  @font-face { font-family: 'OpenSans-SemiBoldItalic';
+            src: url('fnt/OpenSans-SemiBoldItalic.ttf') format('truetype')
+      }
+	  
+	  	html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+		body { background: #b7f5ff; }
+
+		#openfl-content {
+			background-repeat: no-repeat;
+			background-size: cover;
+			width: 100%;
+			height: 100%;
+		}
+		
+		#bg {
+			background-image: url('2d/loading_MENU.png');
+			background-repeat: no-repeat;
+			background-size: cover;
+			width: 100%;
+			height: 100%;
+		}
+		
+	   .fnt-loader-CarterOne {
+			font-family: "CarterOne", sans-serif;
+		}
+		
+	   .fnt-loader-angrybirds-regular {
+			font-family: "angrybirds-regular", sans-serif;
+		}
+		
+	   .fnt-loader-DidactGothic-Regular {
+			font-family: "DidactGothic-Regular", sans-serif;
+	   }
+	    
+	   .fnt-loader-OpenSans-SemiBold {
+			font-family: "OpenSans-SemiBold", sans-serif;
+	   }
+      
+	    .fnt-loader-OpenSans-SemiBoldItalic {
+			font-family: "OpenSans-SemiBoldItalic", sans-serif;
+	   }
+	   
+	    .fnt-loader-OpenSans-Bold {
+			font-family: "OpenSans-Bold", sans-serif;
+	   }	   
+	</style>
+	
+	<!-- Game depends -->
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.33.min.js"></script>
+	<script src="lib/howler.min.js?v=::APP_VERSION::"></script>
+	<script src="speck.js?v=::APP_VERSION::"></script>
+	<script src="lib/detect.min.js?v=::APP_VERSION::"></script>
+		
+</head>
+<body>
+	<div id="bg"></div>
+	<div id="openfl-content"></div>
+	
+	<!-- Only included so that this font loads before we get to the splash menu -->
+	<div id="addl-splash-text">
+	  <span class="fnt-loader-CarterOne">&nbps;</span>
+	  <span class="fnt-loader-angrybirds-regular">&nbps;</span>
+	  <span class="fnt-loader-DidactGothic-Regular">&nbps;</span>
+	  <span class="fnt-loader-OpenSans-SemiBold">&nbps;</span>
+	  <span class="fnt-loader-OpenSans-Bold">&nbps;</span>
+	  <span class="fnt-loader-OpenSans-SemiBoldItalic">&nbps;</span>	
+	</div>
+	
+	<script>
+		function gameInit() {
+			var devicePixelRatio = window.devicePixelRatio ? window.devicePixelRatio : 1;
+			
+			var w = window.innerWidth * devicePixelRatio;
+			var h = window.innerHeight * devicePixelRatio;
+			/*var aspect = 1.78;  // Assume approx 16:9 widescreen if device fails to provide window.
+			if ( w && h )
+			{
+				aspect = Math.max( w, h ) / Math.min( w, h );
+			}*/
+			
+			lime.embed("speck", "openfl-content", 0, 0, { parameters: {} } );
+		}
+		window.onload = function() {
+				gameInit();
+		};
+	</script>
+</body>
+</html>

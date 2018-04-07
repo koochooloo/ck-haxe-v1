@@ -1,0 +1,182 @@
+Index: firstplayable/hxlib/display/GenericMenu.hx
+===================================================================
+--- firstplayable/hxlib/display/GenericMenu.hx	(revision 1278)
++++ firstplayable/hxlib/display/GenericMenu.hx	(working copy)
+@@ -289,6 +289,14 @@
+ 	{
+ 	}
+ 	
++	public function onButtonOver( ?caller:GraphicButton ):Void
++	{
++	}
++	
++    public function onButtonOut( ?caller:GraphicButton ):Void
++	{
++	}
++	
+ 	public function addButton( button:GraphicButton ):Void
+ 	{
+ 		// button will have been validated before this point
+Index: firstplayable/hxlib/display/GraphicButton.hx
+===================================================================
+--- firstplayable/hxlib/display/GraphicButton.hx	(revision 1278)
++++ firstplayable/hxlib/display/GraphicButton.hx	(working copy)
+@@ -206,6 +206,7 @@
+         upState = up;
+         downState = validateButtonState( down );
+         overState = validateButtonState( over );
++		Debug.log("New Button: " + overState.name);
+         disabledState = disabled;
+         label = labelField;
+         
+@@ -276,6 +277,12 @@
+     {
+         Utils.safeRemoveListener( stage, MouseEvent.MOUSE_UP, onUp );
+         Utils.safeRemoveListener( this, MouseEvent.MOUSE_DOWN, onDown );
++		if (!m_isMobile)
++		{
++			Utils.safeRemoveListener( this, MouseEvent.MOUSE_OVER, onOver );
++			Utils.safeRemoveListener( this, MouseEvent.MOUSE_OUT, onOut );
++			Utils.safeRemoveListener( this, MouseEvent.MOUSE_MOVE, onMove );
++		}
+     }
+ 
+     /**
+@@ -303,6 +310,11 @@
+         addLabel();
+         
+ 		Utils.safeAddListener( this, MouseEvent.MOUSE_DOWN, onDown );
++		if (!m_isMobile)
++		{
++			Utils.safeAddListener( this, MouseEvent.MOUSE_OVER, onOver );
++			Utils.safeAddListener( this, MouseEvent.MOUSE_MOVE, onMove );
++		}
+ 		
+ 		var prevState:GraphicButtonState = m_curState;
+         m_curState = UP;
+@@ -338,6 +350,61 @@
+ 		onButtonDown( this );
+     }
+ 	
++	 /**
++     * Defines the over state behavior.
++     * @param    e
++     */
++    private function onOver( e:MouseEvent = null ):Void
++    {
++		if (m_curState != OVER)
++		{
++			clearListeners();
++			clearGraphics();
++			
++			changeImage( overState );
++			addLabel();
++			
++			Utils.safeAddListener( this, MouseEvent.MOUSE_DOWN, onDown );
++			if (!m_isMobile)
++			{
++				Utils.safeAddListener( this, MouseEvent.MOUSE_OUT, onOut );
++			}
++			
++			m_curState = OVER;
++			
++			// Explicitly called regardless of prior state
++			onButtonOver( this );
++		}
++    }
++	
++     /**
++     * Defines the behavior when the mouse leaves the button
++     * @param    e
++     */
++    private function onOut( e:MouseEvent = null ):Void
++    {		
++		if (m_curState == OVER)
++		{
++			// Explicitly called regardless of prior state
++			onButtonOut( this );
++			
++			// Return to the up state.
++			onUp();
++		}
++    }
++	
++	/**
++     * Defines the behavior when the mouse leaves the button
++     * @param    e
++     */
++    private function onMove( e:MouseEvent = null ):Void
++    {		
++		if (m_curState == UP)
++		{
++			onOver(e);
++		}
++    }
++	
+     /**
+      * Defines the disabled state behavior.
+      * @param    e
+@@ -417,4 +484,36 @@
+             Debug.log( this + " was released!" );
+         }
+     }
++	
++	 /**
++     * The trigger for when the button is hovered (entering over state). Can be set to any function.
++     * @param caller    the object that processed the event.
++     */
++    public dynamic function onButtonOver( caller:GraphicButton ):Void
++    {
++        if ( label != null )
++        {
++            Debug.log( this + " \'" + label.text + "\' was hovered!" );
++        }
++        else 
++        {
++            Debug.log( this + " was hovered!" );
++        }
++    }
++	
++	/**
++     * The trigger for when the button is de-hovered (leaving over state). Can be set to any function.
++     * @param caller    the object that processed the event.
++     */
++    public dynamic function onButtonOut( caller:GraphicButton ):Void
++    {		
++        if ( label != null )
++        {
++            Debug.log( this + " \'" + label.text + "\' was de-hovered!" );
++        }
++        else 
++        {
++            Debug.log( this + " was de-hovered!" );
++        }
++    }
+ }
+\ No newline at end of file
+Index: firstplayable/hxlib/utils/json/IJsonClient.hx
+===================================================================
+--- firstplayable/hxlib/utils/json/IJsonClient.hx	(revision 1278)
++++ firstplayable/hxlib/utils/json/IJsonClient.hx	(working copy)
+@@ -28,6 +28,8 @@
+     public function onButtonHit( ?caller:GraphicButton ):Void;
+     public function onButtonDown( ?caller:GraphicButton ):Void;
+     public function onButtonUp( ?caller:GraphicButton ):Void;
++	public function onButtonOver( ?caller:GraphicButton ):Void;
++	public function onButtonOut( ?caller:GraphicButton ):Void;
+     public function addButton( btn:GraphicButton ):Void;
+     
+     public function addChild( child:DisplayObject ):DisplayObject;    // IJsonClient will be a Sprite; need to know that this method is available
+Index: firstplayable/hxlib/utils/json/JsonMenuPlugIn.hx
+===================================================================
+--- firstplayable/hxlib/utils/json/JsonMenuPlugIn.hx	(revision 1278)
++++ firstplayable/hxlib/utils/json/JsonMenuPlugIn.hx	(working copy)
+@@ -193,6 +193,8 @@
+ 			btn.onHit = m_rMenu.onButtonHit;
+ 			btn.onButtonDown = m_rMenu.onButtonDown;
+ 			btn.onButtonUp = m_rMenu.onButtonUp;
++			btn.onButtonOver = m_rMenu.onButtonOver;
++			btn.onButtonOut = m_rMenu.onButtonOut;
+             m_rMenu.addButton( btn );
+         }
+         

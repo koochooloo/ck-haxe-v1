@@ -1,0 +1,357 @@
+Index: FiniteStateMachine.hx
+===================================================================
+--- FiniteStateMachine.hx	(nonexistent)
++++ FiniteStateMachine.hx	(working copy)
+@@ -0,0 +1,260 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.state;
++
++import com.firstplayable.hxlib.Debug;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.ExitRequestType;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.InterruptType;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.MachineProperties;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateId;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateList;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateMap;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateOperationsMap;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateStatusId;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateTransDecisionFunc;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateTransDecisionMap;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.StateTransitionFunc;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.TransitionMap;
++import com.firstplayable.hxlib.state.FiniteStateMachineTypes.TransResult;
++
++/**
++ * Based on dslib's SimpleStateMachine
++ */
++class FiniteStateMachine
++{
++	public static inline var INVALID_STATE_ID = -1;
++	
++	public var curStateId( default, null ):StateId;
++	public var prevStateId( default, null ):StateId;
++	public var name:String = "Unnammed State Machine"; //< DEBUGGING SUPPORT: Used to identify this machine's prints from other machines which may be operating at the same time
++	
++	private var m_defaultStateId:StateId;
++	private var m_props:MachineProperties;
++	
++	private var m_stateMap:StateMap;
++	private var m_stateOpMap:StateOperationsMap;
++	private var m_stateTransDecisionMap:StateTransDecisionMap;
++	private var m_defaultTransMap:TransitionMap;
++	private var m_defaultTransDecisionFunc:StateTransDecisionFunc;
++	private var m_transHandlerFunc:StateTransitionFunc;
++	
++	public function new( stateMap:StateMap, 
++						stateOpMap:StateOperationsMap, 
++						stateTransDecisionMap:StateTransDecisionMap,
++						defaultTransMap:TransitionMap,
++						defaultTransDecisionFunc:StateTransDecisionFunc,
++						transHandlerFunc:StateTransitionFunc,
++						defaultStateId:StateId ) 
++	{
++		//Debug.error_if( ( defaultTransDecisionFunc == null ), "No Default Transition Decision Function was specified!" );
++		
++		curStateId = INVALID_STATE_ID;
++		prevStateId = INVALID_STATE_ID;
++		
++		m_stateMap = stateMap;
++		m_stateOpMap = stateOpMap;
++		m_stateTransDecisionMap = stateTransDecisionMap;
++		m_defaultTransMap = defaultTransMap;
++		
++		m_defaultTransDecisionFunc = defaultTransDecisionFunc;
++		m_transHandlerFunc = transHandlerFunc;
++		
++		m_defaultStateId = defaultStateId;
++		
++		setInterruptType( INTERRUPTS_BLOCKED );
++	}
++	
++	public function setState( stateID:StateId, ?curStateExitType:ExitRequestType = null ):Bool
++	{
++		if ( curStateExitType == null )
++		{
++			curStateExitType == EXIT_IF_INTERRUPTIBLE;
++		}
++		
++		Debug.log( name + " (setState) Request for: " + curStateId + " to exit to " + stateID );
++		
++		if ( Debug.warn_if( !isStateValid( stateID ), "( " + name + " ) " + stateID + " isn't known check StateMachine set up." )
++			|| Debug.warn_if( !isStateOpVerified( stateID ), "( " + name + " ) " + "No StateOpFunc is defined for State: " + stateID + "!" ) )
++		{
++			//--EARLY EXIT--
++			return false;
++		}
++		
++		if ( isCurStateValid() )
++		{
++			// If we're not explicitly forcing a change, then only allow when in an interruptible state.
++			if ( (curStateExitType == EXIT_IF_INTERRUPTIBLE) && !isInterruptible() )
++			{
++				//--EARLY EXIT--
++				return false;
++			}
++			
++			// Enforce the policy that we ONLY allow transitioning to known states.
++			if ( Debug.warn_if( !m_stateMap.exists( curStateId ), "( " + name + " ) " + "Specified State: " + stateID + " isn't a known state." ) )
++			{
++				//--EARLY EXIT--
++				return false;
++			}
++			
++			var viableStates:StateList = m_stateMap.get( curStateId );
++			if ( Debug.warn_if( (viableStates.indexOf( stateID ) == -1), "( " + name + " ) " + stateID + " isn't a valid destination state of CurState: " + curStateId ) )
++			{
++				//--EARLY EXIT--
++				return false;
++			}
++		}
++		
++		var transTargetState:StateId = runStateDecisionFunction( stateID );
++		var transitionResult:TransResult = m_transHandlerFunc( transTargetState );
++		if ( Debug.warn_if( transitionResult == TRANS_FAILED, "( " + name + " ) " + "Error occurred during transition from " + curStateId + " to " + transTargetState + " w/ Specified TargetState: " + stateID ) )
++		{
++			//--EARLY EXIT--
++			return false;
++		}
++		
++		prevStateId = curStateId;
++		curStateId = transTargetState;
++		Debug.log( name + "(setState) Transitioned from: " + prevStateId + " to " + curStateId );
++		
++		return (curStateId == stateID);
++	}
++	
++	public function isCurStateValid():Bool
++	{
++		return ( curStateId != INVALID_STATE_ID );
++	}
++	
++	public function isStateValid( stateID:StateId ):Bool
++	{
++		return m_stateMap.exists( stateID );
++	}
++	
++	public function setInterruptType( type:InterruptType ):Void
++	{
++		if ( type == INTERRUPTS_ALLOWED )
++		{
++			m_props.set( STATE_INTERRUPTABLE );
++		}
++		else
++		{
++			m_props.unset( STATE_INTERRUPTABLE );
++		}
++	}
++	
++	public function isInterruptible():Bool
++	{
++		return m_props.has( STATE_INTERRUPTABLE );
++	}
++	
++	public function exitCurState( ?curStateExitType:ExitRequestType = null ):Bool
++	{
++		if ( curStateExitType == null )
++		{
++			curStateExitType = EXIT_IF_INTERRUPTIBLE;
++		}
++		
++		if ( isInterruptible() || (curStateExitType == EXIT_FORCEABLY) )
++		{
++			var result:TransResult = exitState();
++			return ( result == TRANS_SUCCESSFUL );
++		}
++		
++		return false;
++	}
++	
++	public function update():Void
++	{
++		if ( !isCurStateValid() )
++		{
++			//--EARLY EXIT--
++			return;
++		}
++		
++		var curStatusId:StateStatusId = m_stateOpMap[ curStateId ]();
++		if ( curStatusId == SS_LEAVE )
++		{
++			exitState();
++		}
++	}
++	
++	/**
++	 * Indicates if the spec'd state has the required StateOpFunc associated with it.
++	 */
++	private function isStateOpVerified( stateId:StateId ):Bool
++	{
++		if ( !isStateValid( stateId ) )
++		{
++			return false;
++		}
++		
++		return m_stateOpMap.exists( stateId );
++	}
++	
++	private function runStateDecisionFunction( targetState:StateId ):StateId
++	{
++		var decisionState:StateId = curStateId;
++		if ( !isCurStateValid() ) { decisionState = targetState; }
++		
++		var transDecisionFunc:StateTransDecisionFunc = ( m_stateTransDecisionMap.exists( decisionState ) )
++										? m_stateTransDecisionMap.get( decisionState )
++										: m_defaultTransDecisionFunc;
++		
++		return transDecisionFunc( targetState );
++	}
++	
++	private function exitState():TransResult
++	{
++		if ( Debug.warn_if( !isCurStateValid(), "( " + name + " ) " + " Can't exit a state because CurState hasn't been set." ) )
++		{
++			//--EARLY EXIT--
++			return TRANS_FAILED;
++		}
++		
++		var result:TransResult = TRANS_SUCCESSFUL;
++		
++		// Fallback to global default state if the target doesn't have one defined.
++		var targetDefaultExitStateId:StateId = m_defaultTransMap.exists( curStateId ) ? m_defaultTransMap.get( curStateId ) : m_defaultStateId;
++		var isTargetStateVerified:Bool = isStateOpVerified( targetDefaultExitStateId );
++		if ( !isTargetStateVerified )
++		{
++			result = TRANS_TO_MACHINE_DEFAULT;
++			targetDefaultExitStateId = m_defaultStateId;
++		}
++		
++		var nextStateId:StateId = runStateDecisionFunction( targetDefaultExitStateId );
++		var isNextStateVerified:Bool = ( (nextStateId == targetDefaultExitStateId) || isStateOpVerified( nextStateId ) );
++		if ( !isNextStateVerified )
++		{
++			result = TRANS_TO_MACHINE_DEFAULT;
++			nextStateId = m_defaultStateId;
++		}
++		
++		var transitionStatus:TransResult = m_transHandlerFunc( nextStateId );
++		
++		//If we go to the original targeted state or we fail going to the next state
++		//note that as the return value; otherwise, preserve the fact that the machine's
++		//default was summoned to be used.
++		if ( result != TRANS_TO_MACHINE_DEFAULT || transitionStatus == TRANS_FAILED )
++		{
++			result = transitionStatus;
++		}
++		
++		prevStateId = curStateId;
++		curStateId = nextStateId;
++		
++		Debug.log( name+  "(exitState) Exiting State: " + prevStateId + " Transitioning from: " + prevStateId + " to " + curStateId);
++		
++		return result;
++	}
++}
+\ No newline at end of file
+Index: FiniteStateMachineTypes.hx
+===================================================================
+--- FiniteStateMachineTypes.hx	(nonexistent)
++++ FiniteStateMachineTypes.hx	(working copy)
+@@ -0,0 +1,85 @@
++//
++// Copyright (C) 2015, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.state;
++
++import haxe.EnumFlags;
++
++
++typedef StateId = Int;
++typedef MachineProperties = EnumFlags< MachinePropBitId >;
++
++typedef StateList = Array< StateId >;
++typedef StateMap = Map< StateId, StateList >;		//!< Maps current states to viable next states.
++typedef TransitionMap = Map< StateId, StateId >;	//!< Maps states to default next state.
++typedef StateOperationsMap = Map< StateId, StateOperationFunc >;
++typedef StateTransDecisionMap = Map< StateId, StateTransDecisionFunc >;
++
++
++// ----- Function typedefs -----
++
++
++//! @note:  StateMachine is expected to have N of these where N is the equivalent to the number of states.
++typedef StateOperationFunc = Void -> StateStatusId;
++
++
++//! @param StateId:  The target state which it's desired to transition to.
++//!					Note: will only transition there if the user defined checks within the decision function evaluate to true
++//! @return StateId: The state which it's been determined that the machine should go to given the 
++//!					the results of the user defined checks within the decision function
++//! @return INVALID_STATE_ID in the event of an irrecoverable error
++typedef StateTransDecisionFunc = StateId -> StateId;
++
++
++//! Handles any prep work for transition from the current state to the spec'd target StateId
++//! @param StateId:  The target state which is the result of calling the StateTransDecisionFunc
++//!                  that the machine is to transition to
++//! @return TransResult:  Indicates how the transition went see TransResult Enumeration
++typedef StateTransitionFunc = StateId -> TransResult;
++
++
++// ----- Enums -----
++
++
++enum StateStatusId
++{
++	SS_CONTINUE;			//!< Indicates the the current state is still in the midst of its process
++	SS_LEAVE;				//!< Indicates that the current state is done, and it's time to go to the next in the tree
++}
++
++enum InterruptType
++{
++	INTERRUPTS_BLOCKED;		//!< The current state of the machine must finish its operation and exit to its default transition
++	INTERRUPTS_ALLOWED;		//!< The current state of the machine can be re-directed or pre-empted to go its known transition point without completing its processing
++}
++
++enum ExitRequestType
++{
++	EXIT_IF_INTERRUPTIBLE;	//!< Exit only if state is in an amenable state or interruptible
++	EXIT_FORCEABLY;			//!< Exit regardless of the status of the current state
++}
++
++enum TransResult
++{
++	TRANS_SUCCESSFUL;
++	TRANS_TO_MACHINE_DEFAULT;
++	TRANS_FAILED;
++}
++
++enum MachinePropBitId
++{
++	//! The current state of the machine can be re-directed or pre-empted to go to its known
++	//! transition point without completing its processing
++	//! @note: OFF BY DEFAULT
++	STATE_INTERRUPTABLE;
++}
+\ No newline at end of file

@@ -1,0 +1,64 @@
+Index: spritesheet/SpritesheetGenerator.py
+===================================================================
+--- spritesheet/SpritesheetGenerator.py	(revision 1041)
++++ spritesheet/SpritesheetGenerator.py	(working copy)
+@@ -14,7 +14,9 @@
+ import os
+ import logging
+ import re
++import random
+ import shutil
++import string
+ import subprocess
+ import sys
+ import time
+@@ -36,9 +38,6 @@
+     # (without this, TP output will be jumbled in with print output)
+     tpLogPath = os.path.abspath( tpLogPath )
+ 
+-    tempDir = os.path.abspath( tempDir )
+-    clearTempDir( tempDir, sourceDir )
+-
+     logging.debug( "    sourceDir    : '" + sourceDir + "'"  )
+     logging.debug( "    tempDir      : '" + tempDir + "'"  )
+     logging.debug( "    sheetDestDir : '" + sheetDestDir + "'"  )
+@@ -47,27 +46,33 @@
+         sheet = spritesheets[ sheetname ]
+         logging.debug( "\n    Making: " + sheet.ID  )
+ 
++        randTempDir = tempDir + ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(10))
++        sys.stderr.write( "\n   in tempDir: '" + randTempDir + "'"  )
++        randTempDir = os.path.abspath( randTempDir )
++        clearTempDir( randTempDir, sourceDir )
++
+         # copy images to a temp directory; this is needed because
+         # TP is not great at pulling individual images in from different dirs
+-        copyFilesToTemp( tempDir, sheet, tpImageNameMod )
++        copyFilesToTemp( randTempDir, sheet, tpImageNameMod )
+ 
+         # set up args
+         sheetDest = sheetDestDir + os.sep + sheetname
+         tpCmd = sheet.manifestData.tpConfig.command
+-        tpArgs = getTpArgs( sheetDest, tpCmd, tempDir )
++        tpArgs = getTpArgs( sheetDest, tpCmd, randTempDir )
+         sheet.jsonFilePath = sheetDest + ".json"
+ 
+         # run TP
+-        runTP( tpArgs, tempDir, tpLogPath )
++        runTP( tpArgs, randTempDir, tpLogPath )
+ 
+         # delete temp, and if we fail try again up to three times
+         for i in range( 0, 3 ):
+             try:
+-                clearTempDir( tempDir, sourceDir )
++                sys.stderr.write( "\n    Cleaning temp dir '" + randTempDir + "'" )
++                clearTempDir( randTempDir, sourceDir )
+                 break
+             except:
+-                logging.debug( "\n    Error clearing the temp dir, waiting 5 seconds before trying again..." )
+-                time.sleep( 5 )
++                sys.stderr.write( "\n    Error clearing the temp dir, waiting 5 seconds before trying again..." )
++                time.sleep( 10 )
+                 continue
+ 
+ 

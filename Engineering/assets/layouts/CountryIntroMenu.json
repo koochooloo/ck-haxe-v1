@@ -1,0 +1,196 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_factPrevious",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factPrevious",
+                "position" : [ 442, 642 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_factNext",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factNext",
+                "position" : [ 1155, 642 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact4",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 804, 756 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact3",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 788, 756 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact2",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 772, 756 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact1",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 756, 756 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "vo_hello",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_sound2",
+                "position" : [ 1206, 503 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "vo_fact",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_sound2",
+                "position" : [ 1208, 587 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_fact",
+            "record" : true,
+            "priority" : 6,
+            "text" : "Bacon ipsum dolor amet fatback capicola andouille frankfurter boudin biltong tri-tip cupim. Jowl picanha sausage, jerky doner frankfurter pancetta tenderloin sirloin beef ribs prosciutto landjaeger venison. ",
+            "inheritable" : { 
+                "position" : [ 471, 543 ],
+                "positionRelative" : false,
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:25",
+                "size" : [ 660, 190 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "CountryName",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -235, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_scrollBounds",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/UI/BlackPixel",
+                "opacity" : 20,
+                "position" : [ 469, 536 ],
+                "scale" : [ 660, 198 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_woodPanel",
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-WoodenPanel",
+                "position" : [ 411, 88 ],
+                "scale" : [ 3, 1.7 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_chef",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "2d/UI/chef/Chef-Backpack",
+                "position" : [ -379, 0 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "scale" : [ 0.7, 0.7 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "countryImage",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "2d/UI/BlackPixel",
+                "position" : [ 472, 128 ],
+                "scale" : [ 650, 360 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_indentedPanel",
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-IndentedPanel",
+                "position" : [ 411, 535 ],
+                "scale" : [ 6, 1.6 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_indentedPanel_top",
+            "priority" : 9,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-IndentedPanelTop",
+                "position" : [ 411, 535 ],
+                "scale" : [ 6, 1.6 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

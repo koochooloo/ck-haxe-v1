@@ -1,0 +1,3 @@
+************* Module MakeHaxeData
+W: 29, 0: TODO: desctiption of tool (fixme)
+R: 89, 4: Method could be a function (no-self-use)

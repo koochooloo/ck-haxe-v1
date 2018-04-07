@@ -1,0 +1,451 @@
+Index: anim/SpritesheetAnim.hx
+===================================================================
+--- anim/SpritesheetAnim.hx	(revision 1302)
++++ anim/SpritesheetAnim.hx	(working copy)
+@@ -17,6 +17,7 @@
+ import com.firstplayable.hxlib.display.OPSprite;
+ import com.firstplayable.hxlib.display.SpriteBoxData;
+ import com.firstplayable.hxlib.display.SpritesheetBounds;
++import com.firstplayable.hxlib.display.VulnerableBoxData;
+ import com.firstplayable.hxlib.display.anim.importers.BehaviorDataWithParams;
+ import openfl.events.Event;
+ import openfl.display.Bitmap;
+@@ -317,4 +318,17 @@
+         }
+         return null;
+     }
++	
++	 /**
++     * Returns a collection of this object's Vulnerable Boxes
++     */
++	public function getVulnerableBoxes():Array<VulnerableBoxData>
++	{
++		if ( m_animSrc != null )
++        {
++            var sprite:OPSprite = cast m_animSrc;
++            return sprite.getVulnerableBoxes(); //< returned as a copy
++        }
++        return null;
++	}
+ }
+\ No newline at end of file
+Index: OPSprite.hx
+===================================================================
+--- OPSprite.hx	(revision 1302)
++++ OPSprite.hx	(working copy)
+@@ -39,6 +39,8 @@
+ 
+ 	private static var ms_showBounds:Bool = false; //< TODO: compiler const?
+ 	private var m_boundsDataShape:Shape;
++	private static var ms_showVulnerable:Bool = true; //< TODO: compiler const?
++	private var m_vulnDataShapes:Array<Shape>;
+ 	
+ 	private var m_img( default, set ):Bitmap = null;
+ 	private var m_userData:SpriteBoxData = null;
+@@ -154,7 +156,53 @@
+ 	}
+ 	
+ 	//-----------------------------------------------------------------------------------------------------------
++	public function getVulnerableBoxes():Array<VulnerableBoxData>
++	{
++		var vulnBoxes:Array<VulnerableBoxData> = [];
++		
++		var animFrameIdx:Int = Params.NO_FRAME;
++		if ( Std.is( bitmapData, BitmapDataWithParams ) )
++		{
++			var bdwp:BitmapDataWithParams = cast bitmapData;
++			animFrameIdx = bdwp.animFrameIndex;
++		}
++		
++		var boxData:SpriteBoxData = getBoxData();
++		var offset:Point = new Point(0, 0);
++		if (boxData != null)
++		{
++			offset = boxData.refPoint;
++		}
++		
++		if ( Std.is( bitmapData, HasParams ) )
++		{
++			var objWithParams:HasParams = cast bitmapData;
++			var params:Params = objWithParams.getParams();
++			if ( params != null )
++			{
++				var vulnParamIter:ParamsIter = params.getAll(Params.VULNERABLE_BOX, animFrameIdx, Params.FRAME_OVERLAP);
++				while (vulnParamIter.hasNext())
++				{
++					var param:Dynamic = vulnParamIter.next();
++					var rect:Rectangle = Params.getParamBox(param);
++					rect.x -= offset.x;
++					rect.y -= offset.y;
++					var pos:Point = Params.getParamVector(param);
++					pos.subtract(offset);
++					var id:Null<Int> = Params.getParamId(param);
++					var frame:Null<Int> = Params.getParamFrame(param);
++					var lastFrame:Null<Int> = Params.getParamLastFrame(param);
++					var nextVulnBox:VulnerableBoxData = new VulnerableBoxData(pos, rect, id, frame, lastFrame);
++					vulnBoxes.push(nextVulnBox);
++				}
++			}
++		}
++		
++		return vulnBoxes;
++	}
+ 	
++	//-----------------------------------------------------------------------------------------------------------
++	
+ 	private function loadDivs( divParamIter:ParamsIter, array:Array<Int> ):Array<Int>
+ 	{
+ 		if ( ( divParamIter == null ) || ! divParamIter.hasNext() )
+@@ -272,50 +320,87 @@
+ 	}
+ 	
+ 	private function updateDebugDrawing():Void
+-	{
+-		if (!ms_showBounds)
++	{		
++		if (ms_showBounds)
+ 		{
+-			return;
++			var boxData:SpriteBoxData = getBoxData();
++			if( ( boxData != null ) && ( boxData.bounds != null ) ) // TODO: draw only refpt if only refpt exists and vice versa for bounds
++			{			
++				if (m_boundsDataShape == null)
++				{
++					m_boundsDataShape = new Shape();
++					addChild(m_boundsDataShape);
++				}
++			
++				var bounds:Rectangle = boxData.bounds;
++				var boundsTopLeftX:Float = bounds.x;
++				var boundsTopLeftY:Float = bounds.y;
++				var refPt:Point = boxData.refPoint;
++				if ( refPt != null )
++				{
++					// Bounds are expressed in a coordinate system relative to the original image top left.
++					boundsTopLeftX -= refPt.x;
++					boundsTopLeftY -= refPt.y;
++				}
++			
++				var boundsAlpha:Float = 0.3;
++				var refPtAlpha:Float = 0.5;
++				var refPtSize:Float = 8.0;
++				
++				m_boundsDataShape.graphics.clear();
++				m_boundsDataShape.blendMode = BlendMode.ADD;
++				m_boundsDataShape.graphics.beginFill( 0x00FF00, boundsAlpha );
++				m_boundsDataShape.graphics.drawRect( boundsTopLeftX, boundsTopLeftY, bounds.width, bounds.height );
++				m_boundsDataShape.graphics.endFill();
++				
++				// Reference point is exactly the same location as self; center around 0.
++				// Only the child image (aka render position) moves with the reference point.
++				//we dont want the ref pt marker to scale with the object
++				m_boundsDataShape.graphics.beginFill( 0xFF0000, refPtAlpha );
++				m_boundsDataShape.graphics.drawRect( -(refPtSize*0.5) / scaleX, -(refPtSize*0.5) / scaleY, refPtSize / scaleX, refPtSize / scaleY );
++				m_boundsDataShape.graphics.endFill();
++			}
+ 		}
+-		var boxData:SpriteBoxData = getBoxData();
+-		if ( ( boxData == null ) || ( boxData.bounds == null ) ) // TODO: draw only refpt if only refpt exists and vice versa for bounds
+-		{
+-			return;
+-		}
+ 		
+-		if (m_boundsDataShape == null)
++		if (ms_showVulnerable)
+ 		{
+-			m_boundsDataShape = new Shape();
+-			addChildAt( m_boundsDataShape, numChildren );
++			if (m_vulnDataShapes == null)
++			{
++				m_vulnDataShapes = [];
++			}
++			
++			for (shape in m_vulnDataShapes)
++			{
++				removeChild(shape);
++			}
++			
++			var vulnBoxes:Array<VulnerableBoxData> = getVulnerableBoxes();
++			if ( vulnBoxes.length > 0 ) // TODO: draw only if vuln boxes exist
++			{
++				var boundsAlpha:Float = 0.3;
++				var refPtAlpha:Float = 0.5;
++				var refPtSize:Float = 8.0;
++				
++				for (box in vulnBoxes)
++				{
++					var bounds:Rectangle = box.bounds;
++					var boundsTopLeftX:Float = bounds.x;
++					var boundsTopLeftY:Float = bounds.y;
++					var refPt:Point = box.refPoint;
++					
++					var nextBox:Shape = new Shape();
++					addChild(nextBox);
++					
++					nextBox.graphics.clear();
++					nextBox.blendMode = BlendMode.ADD;
++					nextBox.graphics.beginFill( 0x80FFFF, boundsAlpha );
++					nextBox.graphics.drawRect( boundsTopLeftX, boundsTopLeftY, bounds.width, bounds.height );
++					nextBox.graphics.endFill();
++					
++					m_vulnDataShapes.push(nextBox);
++				}
++			}
+ 		}
+-	
+-		var bounds:Rectangle = boxData.bounds;
+-		var boundsTopLeftX:Float = bounds.x;
+-		var boundsTopLeftY:Float = bounds.y;
+-		var refPt:Point = boxData.refPoint;
+-		if ( refPt != null )
+-		{
+-			// Bounds are expressed in a coordinate system relative to the original image top left.
+-			boundsTopLeftX -= refPt.x;
+-			boundsTopLeftY -= refPt.y;
+-		}
+-	
+-		var boundsAlpha:Float = 0.3;
+-		var refPtAlpha:Float = 0.5;
+-		var refPtSize:Float = 8.0;
+-		
+-		m_boundsDataShape.graphics.clear();
+-		m_boundsDataShape.blendMode = BlendMode.ADD;
+-		m_boundsDataShape.graphics.beginFill( 0x00FF00, boundsAlpha );
+-		m_boundsDataShape.graphics.drawRect( boundsTopLeftX, boundsTopLeftY, bounds.width, bounds.height );
+-		m_boundsDataShape.graphics.endFill();
+-		
+-		// Reference point is exactly the same location as self; center around 0.
+-		// Only the child image (aka render position) moves with the reference point.
+-		//we dont want the ref pt marker to scale with the object
+-		m_boundsDataShape.graphics.beginFill( 0xFF0000, refPtAlpha );
+-		m_boundsDataShape.graphics.drawRect( -(refPtSize*0.5) / scaleX, -(refPtSize*0.5) / scaleY, refPtSize / scaleX, refPtSize / scaleY );
+-		m_boundsDataShape.graphics.endFill();
+ 	}
+ 	
+ 	//-----------------------------------------------------------------------------------------------------------
+@@ -512,13 +597,26 @@
+ 		onBoxDataOrImageChanged();
+ 		scaleGridInvalidate();
+ 
+-		
+ 		if( m_img != null )
+ 			addChild( m_img );
+-
+-		if (m_boundsDataShape != null)
++		
++		//Handle the debug shapes
++		if (ms_showBounds || ms_showVulnerable)
+ 		{
+-			setChildIndex( m_boundsDataShape, numChildren );
++			//We need to ensure that the debug shapes are drawn on top of m_img
++			//To do this we will swap the first debug shape with m_img.
++			//This is okay because we don't care about the render order of
++			//debug shapes, and this ensures we have: 
++			//[0-N Objects], m_img, [0-N Debug Shapes] as the display order.
++			if (m_boundsDataShape != null)
++			{
++				swapChildren(m_boundsDataShape, m_img);			
++			}
++			else if (m_vulnDataShapes.length > 0
++			&& m_vulnDataShapes[0] != null)
++			{
++				swapChildren(m_vulnDataShapes[0], m_img);	
++			}
+ 		}
+ 
+ 		return m_img;
+@@ -537,6 +635,20 @@
+ 	{
+ 		ms_showBounds = false;
+ 	}
++	
++	//-----------------------------------------------------------------------------------------------------------
++	
++	public static function showSpriteVulnerableBoxes():Void
++	{
++		ms_showVulnerable = true;
++	}
++	
++	//-----------------------------------------------------------------------------------------------------------
++	
++	public static function hideSpriteVulnerableBoxes():Void
++	{
++		ms_showVulnerable = false;
++	}
+ 
+ 	//-----------------------------------------------------------------------------------------------------------
+ 	
+Index: Params.hx
+===================================================================
+--- Params.hx	(revision 1302)
++++ Params.hx	(working copy)
+@@ -60,6 +60,10 @@
+ 	/** Search at NO_FRAME after trying frame, if appropriate. */
+ 	public static inline var FRAME_FALLBACK:Int = 1 << 1;
+ 
++	/** When specifying a frame, find params that overlap that frame (frame <= x <= lastFrame).
++	 * Currently only implemented for getAll.
++	 */
++	public static inline var FRAME_OVERLAP:Int = 1 << 2;
+ 	
+ 	//
+ 	// Members and constructor.
+@@ -119,9 +123,11 @@
+ 	 * Usage example: for ( boxParam in myParams.getAll( "attackBox", curFrame ) )
+ 	 *
+ 	 * Takes the place of populateWith and populateWith2 in ParamsResourceData.
++	 * 
++	 * May take FRAME_OVERLAP
+ 	 *
+ 	 * @return an iterator over the references to all the params at (name,frame);
+-	 *         take care not to modify!
++	 *         take care not to modify! Can't return null.
+ 	 */
+ 	public function getAll( name:String, frame:Int, behaviorFlags:Int = 0 ):ParamsIter
+ 	{
+@@ -411,7 +417,7 @@
+ 	private var paramsValues:Array<Dynamic>;
+ 	private var name:String;
+ 	private var frame:Int;
+-	//private var behaviorFlags:Int;
++	private var behaviorFlags:Int;
+ 	private var iterator:Iterator<Dynamic>;
+ 	private var curr:Dynamic;
+ 	
+@@ -420,7 +426,7 @@
+ 		this.paramsValues = paramsValues;
+ 		this.name = name;
+ 		this.frame = frame;
+-		//this.behaviorFlags = behaviorFlags;
++		this.behaviorFlags = behaviorFlags;
+ 		this.iterator = ( paramsValues != null ) ? paramsValues.iterator() : null;
+ 		this.curr = null;
+ 		findNext();
+@@ -435,6 +441,50 @@
+ 		}
+ 	}
+ 	
++	private function paramFrameMatches( param:Dynamic, frame:Int ):Bool
++	{
++		var paramFrame:Null<Int> = Params.getParamFrame( param );
++		if ( paramFrame == null )
++		{
++			// Null frame matches NO_FRAME.
++			paramFrame = Params.NO_FRAME;
++		}
++		
++		if ( paramFrame == frame )
++		{
++			// Starts on (or is only on) this frame, match.
++			return true;
++		}
++		else
++		{
++			var lookForOverlap:Bool = ( behaviorFlags & Params.FRAME_OVERLAP ) != 0;
++			if ( lookForOverlap )
++			{
++				var paramLastFrame:Null<Int> = Params.getParamLastFrame( param );
++				if ( paramLastFrame != null )
++				{
++					if ( paramFrame <= frame )
++					{
++						// Above bottom.  Below top?
++						if ( frame <= paramLastFrame )
++						{
++							// Below top.
++							return true;
++						}
++						else if ( paramLastFrame == Params.NO_FRAME )
++						{
++							// No top, extends forever.
++							return true;
++						}
++					}
++				}
++			}
++		}
++
++		// No match, and if looking for overlap, no overlap.
++		return false;
++	}
++	
+ 	private function findNext():Void
+ 	{
+ 		if ( this.iterator == null )
+@@ -446,14 +496,9 @@
+ 		{
+ 			var param = iterator.next();
+ 			var paramName:String = Params.getParamName( param );
+-			var paramFrame:Null<Int> = Params.getParamFrame( param );
+-			if ( paramFrame == null )
++
++			if ( ( paramName == name ) && paramFrameMatches( param, frame ) )
+ 			{
+-				// Null frame matches NO_FRAME.
+-				paramFrame = Params.NO_FRAME;
+-			}
+-			if ( ( paramName == name ) && ( paramFrame == frame ) )
+-			{
+ 				curr = param;
+ 				return; // <--- EARLY EXIT --------------------------
+ 			}
+Index: VulnerableBoxData.hx
+===================================================================
+--- VulnerableBoxData.hx	(revision 0)
++++ VulnerableBoxData.hx	(working copy)
+@@ -0,0 +1,54 @@
++//
++// Copyright (C) 2006-2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.display;
++
++import com.firstplayable.hxlib.Debug;
++import com.firstplayable.hxlib.loader.SpriteDataManager;
++import openfl.geom.Point;
++import openfl.geom.Rectangle;
++import spritesheet.data.BehaviorData;
++
++
++class VulnerableBoxData
++{
++	public var refPoint( default, null ):Point;
++	public var bounds( default, null ):Rectangle;
++	public var id( default, null):Int;
++	public var frame(default, null):Int;
++	public var endFrame(default, null):Int;
++
++	public function new( ref:Point, bnds:Rectangle, i:Null<Int>, fr:Null<Int>, endFr:Null<Int> ) 
++	{
++		refPoint = ( ref != null ) ? ref : new Point();
++		bounds = ( bnds != null ) ? bnds : new Rectangle();
++		id = (i != null) ? i : Params.NO_ID;
++		frame = (fr != null) ? fr : Params.NO_FRAME;
++		endFrame = (endFr != null) ? endFr : Params.NO_FRAME;
++	}
++	
++	public function copy():VulnerableBoxData
++	{
++		return new VulnerableBoxData( refPoint.clone(), bounds.clone(), id, frame, endFrame );
++	}
++	
++	public function toString():String
++	{
++		return '[VulnerableBoxData refPoint=$refPoint bounds=$bounds id=$id frame=$frame endFrame=$endFrame]';
++	}
++	
++	public function print():Void
++	{
++		Debug.log( toString() );
++	}
++}
+\ No newline at end of file

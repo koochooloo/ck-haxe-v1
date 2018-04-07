@@ -1,0 +1,3 @@
+\\juggernaut\software\HaXe\android
+
+Has some of the stuff we install using lime setup android, if it is needed.

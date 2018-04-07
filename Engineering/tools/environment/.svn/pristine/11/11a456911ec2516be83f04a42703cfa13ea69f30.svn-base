@@ -1,0 +1,10 @@
+{
+	"name": "lime",
+	"url": "https://github.com/openfl/lime",
+	"license": "MIT",
+	"tags": [],
+	"description": "A foundational Haxe framework for cross-platform development",
+	"version": "5.7.1",
+	"releasenote": "Fixed HTTPRequest error code handling, macOS deployment fix",
+	"contributors": [ "singmajesty" ]
+}

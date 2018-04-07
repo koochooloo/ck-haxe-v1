@@ -1,0 +1,891 @@
+Index: trunk/Engineering/assets/layouts/CountryMenu.json
+===================================================================
+--- trunk/Engineering/assets/layouts/CountryMenu.json	(revision 793)
++++ trunk/Engineering/assets/layouts/CountryMenu.json	(working copy)
+@@ -27,7 +27,7 @@
+             "record" : true,
+             "priority" : 1,
+             "inheritable" : { 
+-                "position" : [ 148, 168 ],
++                "position" : [ 148, 136 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -37,11 +37,22 @@
+                 "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "2d/Buttons/btn_country",
+-                    "position" : [ 63, 61 ],
++                    "position" : [ 76, 85 ],
+                     "visible" : false,
+                     "loadParams" : true
+                 }
+             }, { 
++                "name" : "btn_country2",
++                "record" : true,
++                "id" : 2,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "2d/Buttons/btn_country",
++                    "position" : [ 76, 165 ],
++                    "visible" : false,
++                    "loadParams" : true
++                }
++            }, { 
+                 "name" : "countriesQuit",
+                 "record" : true,
+                 "id" : 5,
+@@ -48,7 +59,7 @@
+                 "priority" : 9,
+                 "inheritable" : { 
+                     "resource" : "2d/Buttons/btn_x",
+-                    "position" : [ 312, -15 ],
++                    "position" : [ 325, 9 ],
+                     "loadParams" : true
+                 }
+             } ],
+@@ -58,7 +69,7 @@
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 120, 30 ],
++                    "position" : [ 133, 54 ],
+                     "visible" : false,
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+@@ -68,6 +79,21 @@
+                     "wrapOverflow" : true
+                 }
+             }, { 
++                "name" : "countryName2",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 133, 134 ],
++                    "visible" : false,
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            }, { 
+                 "name" : "lbl_cSearch",
+                 "record" : true,
+                 "priority" : 11,
+@@ -74,7 +100,7 @@
+                 "text" : "SEARCH",
+                 "stringTable" : "GameStrings",
+                 "inheritable" : { 
+-                    "position" : [ 38, -110 ],
++                    "position" : [ 51, -86 ],
+                     "touchable" : true,
+                     "loadParams" : false,
+                     "color" : [ 20, 20, 20 ],
+@@ -88,7 +114,7 @@
+                 "priority" : 3,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+-                    "position" : [ -11, -24 ],
++                    "position" : [ 2, 0 ],
+                     "scale" : [ 1.3, 1.9 ],
+                     "loadParams" : true
+                 }
+@@ -98,7 +124,7 @@
+                 "priority" : 5,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+-                    "position" : [ 282, 30 ],
++                    "position" : [ 295, 54 ],
+                     "scale" : [ 1, 3.1 ],
+                     "loadParams" : true
+                 }
+@@ -108,7 +134,7 @@
+                 "priority" : 8,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/scrollHandle",
+-                    "position" : [ 285, 72 ],
++                    "position" : [ 298, 96 ],
+                     "loadParams" : true
+                 }
+             }, { 
+@@ -117,49 +143,80 @@
+                 "priority" : 10,
+                 "inheritable" : { 
+                     "resource" : "2d/UI/9patch/9patch-TextInputField_default",
+-                    "position" : [ -11, -118 ],
++                    "position" : [ 2, -94 ],
+                     "scale" : [ 3.3, 1 ],
+                     "loadParams" : true
+                 }
+             } ]
+         }, { 
+-            "name" : "group_country2",
++            "name" : "grp_country3",
+             "record" : true,
+-            "priority" : 4,
++            "priority" : 6,
+             "inheritable" : { 
+-                "position" : [ 165, 112 ],
+-                "visible" : false,
++                "position" : [ 149, 136 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+-                "name" : "btn_country2",
++                "name" : "btn_country3",
+                 "record" : true,
+-                "id" : 2,
+-                "priority" : 1,
++                "id" : 13,
++                "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "2d/Buttons/btn_country",
+-                    "position" : [ 110, 175 ],
+-                    "visible" : false,
++                    "position" : [ 75, 85 ],
+                     "loadParams" : true
+                 }
+             } ],
+             "label" : [ { 
+-                "name" : "countryName2",
++                "name" : "countryName3",
+                 "record" : true,
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 170, 140 ],
+-                    "visible" : false,
++                    "position" : [ 132, 54 ],
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+                     "font" : "/fonts/CarterOne.ttf:18",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 165, 60 ],
++                    "size" : [ 150, 60 ],
+                     "wrapOverflow" : true
+                 }
+             } ]
+         }, { 
++            "name" : "grp_country4",
++            "record" : true,
++            "priority" : 6,
++            "inheritable" : { 
++                "position" : [ 149, 136 ],
++                "loadParams" : false
++            },
++            "button" : [ { 
++                "name" : "btn_country4",
++                "record" : true,
++                "id" : 14,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "2d/Buttons/btn_country",
++                    "position" : [ 75, 165 ],
++                    "loadParams" : true
++                }
++            } ],
++            "label" : [ { 
++                "name" : "countryName4",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 132, 134 ],
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            } ]
++        }, { 
+             "name" : "popup_about",
+             "record" : true,
+             "priority" : 8,
+@@ -241,6 +298,16 @@
+                 "visible" : false,
+                 "loadParams" : true
+             }
++        }, { 
++            "name" : "spr_scrollBounds",
++            "record" : true,
++            "inheritable" : { 
++                "resource" : "2d/UI/WhitePixel",
++                "position" : [ 166, 175 ],
++                "scale" : [ 300, 430 ],
++                "visible" : false,
++                "loadParams" : true
++            }
+         } ]
+     }
+ }
+\ No newline at end of file
+Index: trunk/Engineering/lib/data/Tunables.json
+===================================================================
+--- trunk/Engineering/lib/data/Tunables.json	(revision 793)
++++ trunk/Engineering/lib/data/Tunables.json	(working copy)
+@@ -378,7 +378,7 @@
+       {
+          "name": "USE_PARTIAL_RECIPE_LIST",
+          "type": "Bool",
+-         "value": "false",
++         "value": "true",
+          "tags": [
+             "database"
+          ]
+@@ -386,7 +386,7 @@
+       {
+          "name": "DEFAULT_PAGE_SIZE",
+          "type": "Int",
+-         "value": "100",
++         "value": "1",
+          "tags": [
+             "database"
+          ]
+Index: trunk/Engineering/lib/layouts/Countries Substates/CountryMenu.json
+===================================================================
+--- trunk/Engineering/lib/layouts/Countries Substates/CountryMenu.json	(revision 793)
++++ trunk/Engineering/lib/layouts/Countries Substates/CountryMenu.json	(working copy)
+@@ -27,7 +27,7 @@
+             "record" : true,
+             "priority" : 1,
+             "inheritable" : { 
+-                "position" : [ 148, 168 ],
++                "position" : [ 148, 136 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+@@ -37,11 +37,22 @@
+                 "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "Buttons/btn_country",
+-                    "position" : [ 63, 61 ],
++                    "position" : [ 76, 85 ],
+                     "visible" : false,
+                     "loadParams" : true
+                 }
+             }, { 
++                "name" : "btn_country2",
++                "record" : true,
++                "id" : 2,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "Buttons/btn_country",
++                    "position" : [ 76, 165 ],
++                    "visible" : false,
++                    "loadParams" : true
++                }
++            }, { 
+                 "name" : "countriesQuit",
+                 "record" : true,
+                 "id" : 5,
+@@ -48,7 +59,7 @@
+                 "priority" : 9,
+                 "inheritable" : { 
+                     "resource" : "Buttons/btn_x",
+-                    "position" : [ 312, -15 ],
++                    "position" : [ 325, 9 ],
+                     "loadParams" : true
+                 }
+             } ],
+@@ -58,7 +69,7 @@
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 120, 30 ],
++                    "position" : [ 133, 54 ],
+                     "visible" : false,
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+@@ -68,6 +79,21 @@
+                     "wrapOverflow" : true
+                 }
+             }, { 
++                "name" : "countryName2",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 133, 134 ],
++                    "visible" : false,
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            }, { 
+                 "name" : "lbl_cSearch",
+                 "record" : true,
+                 "priority" : 11,
+@@ -74,7 +100,7 @@
+                 "text" : "SEARCH",
+                 "stringTable" : "GameStrings",
+                 "inheritable" : { 
+-                    "position" : [ 38, -110 ],
++                    "position" : [ 51, -86 ],
+                     "touchable" : true,
+                     "loadParams" : false,
+                     "color" : [ 20, 20, 20 ],
+@@ -88,7 +114,7 @@
+                 "priority" : 3,
+                 "inheritable" : { 
+                     "resource" : "UI/9patch/9patch-DefaultPanel",
+-                    "position" : [ -11, -24 ],
++                    "position" : [ 2, 0 ],
+                     "scale" : [ 1.3, 1.9 ],
+                     "loadParams" : true
+                 }
+@@ -98,7 +124,7 @@
+                 "priority" : 5,
+                 "inheritable" : { 
+                     "resource" : "UI/9patch/9patch-ScrollBarBacking",
+-                    "position" : [ 282, 30 ],
++                    "position" : [ 295, 54 ],
+                     "scale" : [ 1, 3.1 ],
+                     "loadParams" : true
+                 }
+@@ -108,7 +134,7 @@
+                 "priority" : 8,
+                 "inheritable" : { 
+                     "resource" : "UI/scrollHandle",
+-                    "position" : [ 285, 72 ],
++                    "position" : [ 298, 96 ],
+                     "loadParams" : true
+                 }
+             }, { 
+@@ -117,49 +143,80 @@
+                 "priority" : 10,
+                 "inheritable" : { 
+                     "resource" : "UI/9patch/9patch-TextInputField_default",
+-                    "position" : [ -11, -118 ],
++                    "position" : [ 2, -94 ],
+                     "scale" : [ 3.3, 1 ],
+                     "loadParams" : true
+                 }
+             } ]
+         }, { 
+-            "name" : "group_country2",
++            "name" : "grp_country3",
+             "record" : true,
+-            "priority" : 4,
++            "priority" : 6,
+             "inheritable" : { 
+-                "position" : [ 165, 112 ],
+-                "visible" : false,
++                "position" : [ 149, 136 ],
+                 "loadParams" : false
+             },
+             "button" : [ { 
+-                "name" : "btn_country2",
++                "name" : "btn_country3",
+                 "record" : true,
+-                "id" : 2,
+-                "priority" : 1,
++                "id" : 13,
++                "priority" : 7,
+                 "inheritable" : { 
+                     "resource" : "Buttons/btn_country",
+-                    "position" : [ 110, 175 ],
+-                    "visible" : false,
++                    "position" : [ 75, 85 ],
+                     "loadParams" : true
+                 }
+             } ],
+             "label" : [ { 
+-                "name" : "countryName2",
++                "name" : "countryName3",
+                 "record" : true,
+                 "priority" : 7,
+                 "text" : "CountryName",
+                 "inheritable" : { 
+-                    "position" : [ 170, 140 ],
+-                    "visible" : false,
++                    "position" : [ 132, 54 ],
+                     "loadParams" : false,
+                     "color" : [ 7, 3, 0 ],
+                     "font" : "/fonts/CarterOne.ttf:18",
+                     "textAlignment" : [ "left or top", "center" ],
+-                    "size" : [ 165, 60 ],
++                    "size" : [ 150, 60 ],
+                     "wrapOverflow" : true
+                 }
+             } ]
+         }, { 
++            "name" : "grp_country4",
++            "record" : true,
++            "priority" : 6,
++            "inheritable" : { 
++                "position" : [ 149, 136 ],
++                "loadParams" : false
++            },
++            "button" : [ { 
++                "name" : "btn_country4",
++                "record" : true,
++                "id" : 14,
++                "priority" : 7,
++                "inheritable" : { 
++                    "resource" : "Buttons/btn_country",
++                    "position" : [ 75, 165 ],
++                    "loadParams" : true
++                }
++            } ],
++            "label" : [ { 
++                "name" : "countryName4",
++                "record" : true,
++                "priority" : 7,
++                "text" : "CountryName",
++                "inheritable" : { 
++                    "position" : [ 132, 134 ],
++                    "loadParams" : false,
++                    "color" : [ 7, 3, 0 ],
++                    "font" : "/fonts/CarterOne.ttf:18",
++                    "textAlignment" : [ "left or top", "center" ],
++                    "size" : [ 150, 60 ],
++                    "wrapOverflow" : true
++                }
++            } ]
++        }, { 
+             "name" : "popup_about",
+             "record" : true,
+             "priority" : 8,
+@@ -241,6 +298,16 @@
+                 "visible" : false,
+                 "loadParams" : true
+             }
++        }, { 
++            "name" : "spr_scrollBounds",
++            "record" : true,
++            "inheritable" : { 
++                "resource" : "UI/WhitePixel",
++                "position" : [ 166, 175 ],
++                "scale" : [ 300, 430 ],
++                "visible" : false,
++                "loadParams" : true
++            }
+         } ]
+     }
+ }
+\ No newline at end of file
+Index: trunk/Engineering/src/game/ui/states/CountryMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/states/CountryMenu.hx	(revision 793)
++++ trunk/Engineering/src/game/ui/states/CountryMenu.hx	(working copy)
+@@ -27,6 +27,7 @@
+ import game.net.NetAssets;
+ import game.ui.ScrollingManager;
+ import game.ui.SpeckMenu;
++import game.ui.VirtualScrollingMenu;
+ import haxe.ds.Option;
+ import openfl.display.Bitmap;
+ import openfl.display.DisplayObjectContainer;
+@@ -73,7 +74,7 @@
+ 
+ 	// ------ Member vars:
+ 	private var m_countryListPanel:DisplayObjectContainer;
+-	private var m_scrollMenu:ScrollingManager;
++	private var m_scrollMenu:VirtualScrollingMenu;
+ 	private var DEFAULT_SEARCH:String;
+ 	private var m_fromGlobe = false;
+ 	
+@@ -89,16 +90,22 @@
+ 		// Grab country list menu container from paist
+ 		m_countryListPanel = cast getChildByName( "group_countryPanel" );
+ 		
++		var bounds:OPSprite = cast getChildByName( "spr_scrollBounds" );
++		var ref1:DisplayObjectContainer = cast getChildByName( "grp_country3" );
++		var ref2:DisplayObjectContainer = cast getChildByName( "grp_country4" );
++		m_scrollMenu = new VirtualScrollingMenu( bounds, Orientation.VERTICAL, ref1, ref2 );
++		this.addChild( m_scrollMenu );
++		/*
+ 		// Set up the scrolling menu 
+ 		var scrollBorder:DisplayObjectContainer = cast getChildByName( "scroll_bounds" );
+ 		m_scrollMenu = new ScrollingManager( scrollBorder.x, scrollBorder.y, SCROLLWIDTH, SCROLLHEIGHT, m_countryListPanel, "vertical", DISPLAYNUM );
+ 		m_scrollMenu.addScrollBar( cast m_countryListPanel.getChildByName( "scrollHandle" ), cast m_countryListPanel.getChildByName( "spr_scrollBacking" ) );
+ 		m_countryListPanel.addChild( m_scrollMenu );
++		*/
+ 		
+ 		// Enable search bar 
+ 		var searchBar:OPSprite = cast getChildByName( "ui_cSearch" );
+ 		var searchText:TextField = cast getChildByName( "lbl_cSearch" );
+-		
+ 		DEFAULT_SEARCH = searchText.text;
+ 		searchText.selectable = true;
+ 		searchText.type = TextFieldType.INPUT;
+@@ -109,7 +116,7 @@
+ 		sortCountries();
+ 		buildCountryList( DEFAULT_SEARCH );
+ 		
+-		m_scrollMenu.init();
++		//m_scrollMenu.init();
+ 	}
+ 	
+ 	// Sort countries in the list based on availability
+@@ -210,7 +217,7 @@
+ 	
+ 	private function buildCountryList( filter:String ):Void
+ 	{
+-		m_scrollMenu.clear(); 
++		//m_scrollMenu.clear(); 
+ 		m_offset = POSITION_OFFSET;
+ 		
+ 		// Create country buttons/labels for available countries
+@@ -358,7 +365,8 @@
+ 	
+ 	// Create/refresh scrolling list items
+ 	private function drawCountries( filter:String, list:Array< Country >, comingSoon:Bool ):Void
+-	{		
++	{	
++		/*
+ 		// Get paist reference
+ 		var button:GraphicButton = cast m_countryListPanel.getChildByName( "btn_country1" );
+ 		var label:TextField = cast m_countryListPanel.getChildByName( "countryName1" );
+@@ -470,6 +478,7 @@
+ 		}
+ 		
+ 		showMasks();
++		*/
+ 	}
+ 	
+ 	private function showMasks():Void
+Index: trunk/Engineering/src/game/ui/VirtualScrollingItem.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(revision 801)
++++ trunk/Engineering/src/game/ui/VirtualScrollingItem.hx	(working copy)
+@@ -12,10 +12,14 @@
+ ///////////////////////////////////////////////////////////////////////////
+ 
+ package game.ui;
++import away3d.library.assets.BitmapDataAsset;
+ import com.firstplayable.hxlib.display.GraphicButton;
++import com.firstplayable.hxlib.display.OPSprite;
++import openfl.display.Bitmap;
+ import openfl.display.DisplayObjectContainer;
+ import game.ui.VirtualScrollingMenu;
+ import openfl.geom.Point;
++import openfl.text.TextField;
+ 
+ /**
+  *  A container for display objects used in scrolling lists.
+@@ -22,31 +26,64 @@
+  */
+ class VirtualScrollingItem extends DisplayObjectContainer
+ {
+-	public var group(default, null):DisplayObjectContainer;
++	private var refGroup:DisplayObjectContainer;
++	private var group:DisplayObjectContainer;
+ 	private var m_buttons:Array< GraphicButton >;
+ 	
+ 	public function new( displayGroup:DisplayObjectContainer ):Void
+ 	{
+-		group = displayGroup;
++		super(); 
++		
++		refGroup = displayGroup;
++		
++		copyDisplayGroup( refGroup );
+ 	}
+ 	
+-	/**
+-	 *  Loop through display object group and collect GraphicButton objects in m_buttons
+-	 */
+-	public function getButtons():Void
++	/*
++	 * Instantiate a new group of display objects, copied from ref
++	 * */
++	private function copyDisplayGroup( ref:DisplayObjectContainer ):Void
+ 	{
++		group = createDOCFromRef( ref );
+ 		
++		if ( ref.__children.length < 1 )
++		{
++			return;
++		}
++		
++		for ( child in ref.__children )
++		{
++			var className:String = Type.getClassName( Type.getClass(child) );
++			
++			if ( className == Type.getClassName(Type.getClass(GraphicButton)) )
++			{
++				createButtonFromRef( cast (child, GraphicButton) );
++			}
++			else if ( className == Type.getClassName(Type.getClass(TextField)) )
++			{
++				//createTextFromRef( cast (child, TextField) );
++			}
++			else if ( className == Type.getClassName(Type.getClass(OPSprite)) )
++			{
++				//createSpriteFromRef( cast (child, OPSprite) );
++			}
++
++		}
+ 	}
+ 	
++	// ========================================
++	// Scrolling functionality
++	// ========================================
++	
+ 	/*
+ 	 * Move object group some distance in some direction
+ 	 * */
+-	public function reposition( distance:Float, orientation:ScrollingOrientation ):Void
++	public function reposition( distance:Float, orientation:Orientation ):Void
+ 	{
+ 		switch( orientation )
+ 		{
+-			case ScrollingOrientation.HORIZONTAL:	group.x += distance;
+-			case ScrollingOrientation.VERTICAL:		group.y += distance;
++			case Orientation.HORIZONTAL:	group.x += distance;
++			case Orientation.VERTICAL:		group.y += distance;
+ 		}
+ 	}
+ 	
+@@ -64,4 +101,51 @@
+ 		this.parent.removeChild( this );
+ 	}
+ 	
++	// ========================================
++	// Object creation
++	// ========================================
++	
++	private function createButtonFromRef( ref:GraphicButton ):GraphicButton
++	{	
++		var newBtn:GraphicButton = new GraphicButton( ref.upState, 
++													  ref.downState,
++													  ref.overState,
++													  ref.disabledState,
++													  ref.label,
++													  ref.onHit
++													 );
++		newBtn.x = ref.x;
++		newBtn.y = ref.y;
++		newBtn.scaleX = ref.scaleX;
++		newBtn.scaleY = ref.scaleY;
++		newBtn.width = ref.width;
++		newBtn.height = ref.height;
++		newBtn.visible = ref.visible;
++		newBtn.alpha = ref.alpha;
++		
++		m_buttons.push( newBtn );
++		group.addChild( newBtn );
++		
++		return newBtn;
++	}
++	
++	private function createTextFromRef( ref:TextField ):TextField
++	{
++		return null;
++	}
++	
++	private function createSpriteFromRef( ref:OPSprite ):OPSprite
++	{
++		return null;
++	}
++	
++	private function createDOCFromRef( ref:DisplayObjectContainer ):DisplayObjectContainer
++	{
++	   var newDOC:DisplayObjectContainer = new DisplayObjectContainer();
++	   
++	   newDOC.x = ref.x;
++	   newDOC.y = ref.y;
++	   
++	   return newDOC;
++	}
+ }
+\ No newline at end of file
+Index: trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(revision 801)
++++ trunk/Engineering/src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -17,6 +17,7 @@
+ import openfl.display.DisplayObjectContainer;
+ import openfl.events.Event;
+ import openfl.events.MouseEvent;
++import openfl.display.Sprite;
+ 
+ /**
+  * Describes label text, image src, button src(s) to be populated onto an existing set of display objects. 
+@@ -42,7 +43,7 @@
+ 	}
+ }
+ 
+-enum ScrollingOrientation
++enum Orientation
+ {
+ 	HORIZONTAL;
+ 	VERTICAL;
+@@ -55,7 +56,7 @@
+  * 		Vertical forward = items move right
+  * 		Vertical backward = items mvoe left
+  * */
+-enum PanDirection
++enum Direction
+ {
+ 	FORWARD;
+ 	BACKWARD;
+@@ -75,7 +76,7 @@
+ 	// ScrollArea - rectangular sprite drawn over the paist-defined scroll area. Used to detect mouse interaction over an area and to mask scrolling items 
+ 	//		from view when scrolled out of bounds. The scroll area is a 1px sprite in paist scaled to fill the desired scroll bounds in the parent menu. 
+ 	// 		It is passed to this menu via its constructor.
+-	private var m_scrollArea:OPSprite; 
++	private var m_scrollArea:Sprite; 
+ 	
+ 	private var m_dataset:Array< ScrollingData >; // An array of data used to edit VirtualScrollingItems, traversed during scrolling
+ 	private var m_scrollingItems:Array< VirtualScrollingItem >; // An array of the scrolling display object groups
+@@ -85,7 +86,7 @@
+ 	private var m_endPos:Float;  // Pixels - Where items looped to the lower scroll position will be placed (bottom / rightmost pos of the scrollbonds)
+ 	private var m_upperScrollLimit:Float; // Pixels - Top of the scroll bounds, used for max scroll testing
+ 	private var m_lowerScrollLimit:Float; // Pixels - Bottom of the scroll bounds, used for min scroll testing
+-	private var m_orientation:ScrollingOrientation; // Horizontal or vertical
++	private var m_orientation:Orientation; // Horizontal or vertical
+ 	private var m_itemSpacing:Float; // Vertical/horizontal padding space between items, depending on orientation
+ 	private var m_itemSize:Float; // Horizontal = width, vertical = height. List assumes uniform items
+ 	
+@@ -94,12 +95,18 @@
+ 	 * @param scrollBounds - sprite used to define scroll area in paist
+ 	 * @param orientation  - vertical or horizontal
+ 	 */
+-	public function new( scrollBounds:OPSprite, orientation:ScrollingOrientation ) 
++	public function new( scrollBounds:OPSprite, orientation:Orientation, refGroup1:DisplayObjectContainer, refGroup2:DisplayObjectContainer ) 
+ 	{
++		super();
++		
+ 		// ---------------------------------------------------
+ 		// Set member vars
+ 		// ---------------------------------------------------
+ 		
++		m_orientation = orientation; 
++		m_dataset = new Array();
++		m_scrollingItems = new Array();
++		
+ 		// Use bounding sprite to determine scroll limits
+ 		switch ( orientation )
+ 		{
+@@ -120,14 +127,29 @@
+ 		// ---------------------------------------------------
+ 		
+ 		m_scrollArea = new Sprite();
+-		m_scrollArea.graphics.beginFill(0, 0;
+-		m_scrollArea.graphics.drawRect( scrollBounds.scaleX, 
+-										scrollBounds.scaleY, 
+-										scrollBounds.scaleX + scrollBounds.width, 
+-										scrollBounds.scaleY + scrollBounds.height  
++		m_scrollArea.graphics.beginFill(0, 0.5);
++		m_scrollArea.graphics.drawRect( scrollBounds.x, 
++										scrollBounds.y, 
++										scrollBounds.scaleX,
++										scrollBounds.scaleY
+ 									  ); // ScrollBounds is a scale-adjusted 1px sprite in paist, anchored at the top left corner
+ 		m_scrollArea.graphics.endFill();
+ 		this.addChild( m_scrollArea );
++		
++		// ---------------------------------------------------
++		// Init other member vars using paist ref:
++		// - Visisble items
++		// - Item spacing
++		// - Item size
++		// - Start & End pos
++		// - List of scrolling items
++		// ---------------------------------------------------
++		addRef( refGroup1, refGroup2 );
++		
++		// ---------------------------------------------------
++		// Add event listeners
++		// ---------------------------------------------------
++		start();
+ 	}
+ 	
+ 	/**
+@@ -135,7 +157,7 @@
+ 	 *  @param refGroup1 - first display object container in the list
+ 	 *  @param refGroup2 - second display object container in the list
+ 	 */
+-	public function addRef( refGroup1:DisplayObjectContainer, refGroup2:DisplayObjectContainer ):Void
++	private function addRef( refGroup1:DisplayObjectContainer, refGroup2:DisplayObjectContainer ):Void
+ 	{
+ 		// Get ref item spacing & size
+ 		// Use ref size and spacing + scrolling area size to det. visible items
+@@ -164,11 +186,27 @@
+ 		// Number of virtually scrolling display objects should be 2 + visibleItems 
+ 		//		( All that are visible and one just above and below view.)
+ 		var numItems:Int = m_visibleItems + 2;
++		var offset:Float = 0;
+ 		for ( i in 0...numItems)
+ 		{
++			// Increment position
++			switch( m_orientation )
++			{
++				case HORIZONTAL: refGroup1.x += offset;
++				case VERTICAL:   refGroup1.y += offset;
++			}
++			
++			// Create & add scrolling item
+ 			var item = new VirtualScrollingItem( refGroup1 );
+ 			m_scrollingItems.push( item );
++			
++			// Increment offset
++			offset += m_itemSpacing;
+ 		}
++		
++		// Hide ref when we're done using it
++		refGroup1.visible = false; 
++		refGroup2.visible = false;
+ 	}
+ 	
+ 	/**
+@@ -177,12 +215,12 @@
+ 	public function start()
+ 	{
+ 		// Add listeners to menu
+-		this.addEventListener( Event.REMOVED_FROM_STAGE );
++		this.addEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
+ 		
+ 		// Add listeners to the scroll interaction sprite
+ 		m_scrollArea.addEventListener( MouseEvent.MOUSE_UP, onMouseUp ); 
+ 		m_scrollArea.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown ); 
+-		m_scrollArea.addEventListener( MouseEvent.MOUSE_MOVE, onMouseOver );
++		m_scrollArea.addEventListener( MouseEvent.MOUSE_MOVE, onMouseMove );
+ 		m_scrollArea.addEventListener( MouseEvent.MOUSE_OUT, onMouseOut );
+ 		m_scrollArea.addEventListener( Event.ENTER_FRAME, onFrame );
+ 	}
+@@ -215,7 +253,7 @@
+ 		
+ 	}
+ 	
+-	private function onMouseOver( e:MouseEvent ):Void
++	private function onMouseMove( e:MouseEvent ):Void
+ 	{
+ 		
+ 	}
+@@ -251,11 +289,11 @@
+ 	private function dispose():Void
+ 	{
+ 		// Remove listeners from the scroll interaction sprite
+-		m_scrollArea.removeEventListener( MouseEvent.MOUSE_UP ); 
+-		m_scrollArea.removeEventListener( MouseEvent.MOUSE_DOWN ); 
+-		m_scrollArea.removeEventListener( MouseEvent.MOUSE_MOVE );
+-		m_scrollArea.removeEventListener( MouseEvent.MOUSE_OUT);
+-		m_scrollArea.removeEventListener( Event.ENTER_FRAME );
++		m_scrollArea.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp ); 
++		m_scrollArea.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown ); 
++		m_scrollArea.removeEventListener( MouseEvent.MOUSE_MOVE, onMouseMove );
++		m_scrollArea.removeEventListener( MouseEvent.MOUSE_OUT, onMouseOut);
++		m_scrollArea.removeEventListener( Event.ENTER_FRAME, onFrame );
+ 		
+ 		// Remove listeners from items
+ 		// Clear items
+@@ -265,6 +303,6 @@
+ 		}
+ 		
+ 		// Remove event listeners from menu
+-		this.removeEventListener( Event.REMOVED_FROM_STAGE );
++		this.removeEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
+ 	}
+ }
+\ No newline at end of file

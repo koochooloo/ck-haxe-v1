@@ -1,0 +1,410 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "panel" : [ { 
+            "name" : "tut1",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 176, 0 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_1",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 943, 524 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_1",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 943, 729 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut1",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_1",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 488, 532 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "girlHat",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/chef/Chef-Backpack",
+                    "position" : [ 300, 768 ],
+                    "scale" : [ 1.2, 1.2 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ui_tut1",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_topLeft1",
+                    "position" : [ 688, 732 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "tut2",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 320, 136 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_2",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 734, 331 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_2",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 734, 538 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut2",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_2",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 280, 350 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "ui_tut2",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_topLeft1",
+                    "position" : [ 480, 540 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "tut3",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 76, 0 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_3",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 636, 131 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_3",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 635, 338 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut3",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_3",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 180, 146 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "ui_tut3",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_topLeft1",
+                    "position" : [ 380, 340 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "tut4",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 376, 0 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_4",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 804, 130 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_4",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 805, 337 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut4",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_4",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 350, 150 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "ui_tut4",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_topRight1",
+                    "position" : [ 580, 340 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "tut5",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 348, -56 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_5",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 806, 482 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_5",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 803, 690 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut5",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_5",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 350, 500 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "ui_tut5",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_bottomRight2",
+                    "position" : [ 580, 690 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "tut6",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 76, 0 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_6",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 635, 482 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_6",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 635, 688 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut6",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_6",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 180, 496 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "ui_tut6",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_bottomLeft1",
+                    "position" : [ 380, 690 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "tut7",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 176, 0 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_x_7",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 938, 524 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_check_7",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_checkSmall",
+                    "position" : [ 938, 714 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tut7",
+                "record" : true,
+                "priority" : 2,
+                "text" : "TUTORIAL_7",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 488, 524 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 400, 180 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "girlHat",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/chef/Chef-Backpack",
+                    "position" : [ 300, 768 ],
+                    "scale" : [ 1.2, 1.2 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ui_tut7",
+                "priority" : 1,
+                "inheritable" : { 
+                    "resource" : "UI/bubble_topLeft1",
+                    "position" : [ 688, 724 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

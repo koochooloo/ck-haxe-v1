@@ -1,0 +1,259 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "label" : [ { 
+            "name" : "lbl_flag",
+            "record" : true,
+            "priority" : 2,
+            "text" : "filler",
+            "inheritable" : { 
+                "position" : [ 685, 635 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "textAlignment" : [ "center", "center" ],
+                "size" : [ 460, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "priority" : 8,
+            "inheritable" : { 
+                "position" : [ 672, 280 ],
+                "loadParams" : false,
+                "autoSize" : true
+            }
+        }, { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "GUESSTHEFLAG",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 310, 10 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "panel_flag1",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 568, 102 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "countryName1",
+                "record" : true,
+                "priority" : 7,
+                "text" : "CountryName",
+                "inheritable" : { 
+                    "position" : [ 32, 115 ],
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 220, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "countryPanel1",
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 1.1, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "country1",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipesLarge/loading",
+                    "position" : [ 60, 22 ],
+                    "scale" : [ 0.76, 2.2 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "panel_flag2",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 864, 102 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "countryName2",
+                "record" : true,
+                "priority" : 7,
+                "text" : "CountryName",
+                "inheritable" : { 
+                    "position" : [ 32, 115 ],
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 220, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "countryPanel2",
+                "record" : true,
+                "priority" : 4,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 1.1, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "country2",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipesLarge/loading",
+                    "position" : [ 60, 22 ],
+                    "scale" : [ 0.76, 2.2 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "panel_flag3",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 568, 322 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "countryName3",
+                "record" : true,
+                "priority" : 3,
+                "text" : "CountryName",
+                "inheritable" : { 
+                    "position" : [ 40, 119 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 220, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "countryPanel3",
+                "record" : true,
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 1.1, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "country3",
+                "record" : true,
+                "id" : 2,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipesLarge/loading",
+                    "position" : [ 60, 22 ],
+                    "scale" : [ 0.76, 2.2 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "panel_flag4",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 864, 322 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "countryName4",
+                "record" : true,
+                "priority" : 7,
+                "text" : "CountryName",
+                "inheritable" : { 
+                    "position" : [ 32, 115 ],
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 220, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "countryPanel4",
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 1.1, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "country4",
+                "record" : true,
+                "id" : 3,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipesLarge/loading",
+                    "position" : [ 60, 22 ],
+                    "scale" : [ 0.76, 2.2 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "girlHat",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-Backpack",
+                "position" : [ 396, 768 ],
+                "scale" : [ 1.2, 1.2 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_help",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-SpeechBubble",
+                "position" : [ 658, 612 ],
+                "scale" : [ 2, 0.75 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

@@ -1,0 +1,295 @@
+Index: HaxeUtils.py
+===================================================================
+--- HaxeUtils.py	(revision 980)
++++ HaxeUtils.py	(working copy)
+@@ -75,6 +75,27 @@
+     
+     filePtr.write( ctorString )
+ 
++# Writes a Haxe constructor function to filePtr with member parameters/variables
++# members have a name and a type;
++def writeCustomClassConstructor( filePtr, members ):
++    ctorString = INDENT + "public function new("
++    for member in members:
++        parameterName = validateVariableName( member[0] )
++        ctorString += parameterName + ":" + member[1] + ", ";
++    ctorString = ctorString.rstrip( ", " )
++    ctorString += ")" + NEWLINE
++    
++    ctorString += INDENT + "{" + NEWLINE
++    
++    for member in members:
++        fieldName = validateVariableName( member[0] )
++        ctorString += INDENT + INDENT + "this." + fieldName + " = " + fieldName + ";" + NEWLINE
++    
++    ctorString += INDENT + "}" + NEWLINE
++    
++    filePtr.write( ctorString )
++    
++
+ # Writes varName variable to filePtr, with initialValue and isStatic.
+ # Assumes public, and access modifier of "( default, null )"
+ def writeClassVar( filePtr, varName, type, initialValue = None, isStatic = False ):
+@@ -103,15 +124,15 @@
+     PrintUtils.printMsg( "The filter string is: '" + str(dataFilterStr) + "'" );
+ 
+     for colID in keys:
+-            colName = sheetData.columnInfo[ colID ]
+-            if dataFilterStr == None:
+-                    dataFilter[ colID ] = [ colName, colName ]
+-                    PrintUtils.printMsg( "	Including column '" + colName + "'" );
+-            elif dataFilterStr.find( "\"" + colName + "\"" ) != -1:
+-                    dataFilter[ colID ] = [ colName, colName ]
+-                    PrintUtils.printMsg( "	Including column '" + colName + "'" );
+-            else:
+-                    PrintUtils.printMsg( "	WARNING: not including column '" + colName + "'" );
++        colName = sheetData.columnInfo[ colID ]
++        if dataFilterStr == None:
++            dataFilter[ colID ] = [ colName, colName ]
++            PrintUtils.printMsg( "	Including column '" + colName + "'" );
++        elif dataFilterStr.find( "\"" + colName + "\"" ) != -1:
++            dataFilter[ colID ] = [ colName, colName ]
++            PrintUtils.printMsg( "	Including column '" + colName + "'" );
++        else:
++            PrintUtils.printMsg( "	WARNING: not including column '" + colName + "'" );
+ 
+     writeCommentHeader( filePtr )
+     writePackage( filePtr, convertSrcPathToPkg( sheet.exportPath ) )
+@@ -123,6 +144,8 @@
+ 
+     if hasattr( sheet , "columnsAreLists" ):
+         createListsClass( filePtr, sheet, sheetData, dataFilter )
++    elif hasattr( sheet, "useDataConfig" ):
++        createCustomClass( filePtr, sheet, sheetData )
+     else:
+         # If we were not passed a class, make one
+         if qualifiedClass == "":
+@@ -263,6 +286,228 @@
+     
+     filePtr.write( "}" )
+ 
++# Creates custom class based on metadata and data config 
++def createCustomClass( filePtr, sheet, sheetData ):
++    
++    keys = sorted( sheetData.columnInfo.keys() )
++            
++    metadata = [];
++    metadataColumnID = 0;
++    sharedDataColumns = [];
++    dataColumns = [];
++    includeDataColumnTestRow = 0;
++    includeDataColumnTest = "";
++    includeDataRowTestColumn = 0;
++    includeDataRowTest = "";
++
++    #if we have a metadata column, get our metadata
++    if hasattr(sheet, "metadataColumn"):
++
++        #if we have a specific number of metadata rows, get them, otherwise treat all rows as metadata
++        if hasattr(sheet, "numMetadataRows") == False:
++            sheet.numMetadataRows = sheetData.numRows;
++
++        #find id of metadata column
++        for colID in keys:
++            colName = sheetData.columnInfo[ colID ];
++            if colName == sheet.metadataColumn:
++                metadataColumnID = colID;
++                break;
++            
++        
++        for currRow in range( 1, sheet.numMetadataRows):
++            metadata.append(encodeAndReplaceChars( sheetData.sheetData[currRow][metadataColumnID]));
++
++        #get includeDataColumnTestRow, which row to test whether to include set of columns
++        if hasattr(sheet, "includeDataColumnTestRow"):
++            includeDataColumnTestRow = metadata.index(sheet.includeDataColumnTestRow.strip("\""));
++
++        #get includeDataColumnTest, which values mean include
++        if hasattr(sheet, "includeDataColumnTest"):
++            includeDataColumnTest = sheet.includeDataColumnTest;
++
++    #if we have shared data columns, we need to identify them
++    if hasattr(sheet, "sharedDataColumns" ):
++        for colID in keys:
++            colName = sheetData.columnInfo[ colID ];
++            if sheet.sharedDataColumns.find( "\"" + colName + "\"" ) != -1:
++                sharedDataColumns.append([ colName, colID ] );
++                PrintUtils.printMsg( "	Found shared data column '" + colName + "'" );
++
++    #get names of data columns to parse
++    if hasattr(sheet, "dataColumns"):
++        strippedDataColumns = sheet.dataColumns.strip("[ ]");
++        PrintUtils.printMsg(" stripped data columns is: " + strippedDataColumns);
++        dataColumns = strippedDataColumns.split(", ");
++        for index in range(0, len(dataColumns)):
++            dataColumns[index] = dataColumns[index].strip("\"");
++
++        #get data row test column id
++        if hasattr(sheet, "includeDataRowTestColumn"):
++            includeDataRowTestColumn = dataColumns.index(sheet.includeDataRowTestColumn.strip("\""));
++
++        if hasattr(sheet, "includeDataRowTest"):
++            includeDataRowTest = sheet.includeDataRowTest;
++        
++
++    #start writing class 
++    classFileName = sheet.exportFile.rstrip( ".hx" );
++
++    #create field class for data items
++    fieldClassName = classFileName + "Field";
++    writeClassHeader( filePtr, fieldClassName );
++
++    #each field will have a component for each column of data and shared data
++    members = [];
++    memberType = "String";
++    for column in sharedDataColumns:
++        varName = validateVariableName( column[0] );
++        members.append([varName, memberType]);
++        writeClassVar(filePtr, varName, memberType );
++    for column in dataColumns:
++        varName = validateVariableName( column );
++        members.append([varName, memberType]);
++        writeClassVar(filePtr, varName, memberType );
++
++    writeCustomClassConstructor( filePtr, members )
++
++    members = [];
++
++    qualifiedClass = classFileName + "Element";
++    writeClassHeader( filePtr, qualifiedClass );
++
++    #each field in metadata is going to be a class var
++    for field in metadata:
++        varName = validateVariableName( field )
++        members.append([varName, memberType]);
++        writeClassVar( filePtr, varName, memberType )
++        
++
++    #The last class var is an array of field classes that contain all the data elements
++    memberType = "Array<" + fieldClassName + ">";
++    varName = validateVariableName( "data" );
++    members.append([varName, memberType]);
++    writeClassVar( filePtr, varName, memberType);
++    
++    writeCustomClassConstructor( filePtr, members )
++    
++    filePtr.write( "}" )
++    filePtr.write( NEWLINE + NEWLINE )
++    
++
++    unqualifiedClass = qualifiedClass[qualifiedClass.rfind('.') + 1:];
++    
++    writeClassHeader( filePtr, classFileName + "Values" )
++    
++    filePtr.write( INDENT + "public static function getValues():Array<" + unqualifiedClass + ">" + NEWLINE )
++    filePtr.write( INDENT + "{" + NEWLINE )
++    filePtr.write( INDENT + INDENT + "var values:Array<" + unqualifiedClass + "> = new Array<" + unqualifiedClass + ">();" + NEWLINE )
++
++    
++    #go through all the columns now
++    colID = 1;
++    while colID < len(keys):
++        ++colID;
++        colName = sheetData.columnInfo[colID];
++
++        PrintUtils.printMsg( "	Looping through column '" + colName + "'" );
++        
++        #find first data column
++        if colName == dataColumns[0]:
++            curDataSet = [];
++            curDataSet.append(colID);
++            ++colID;
++
++            #find all additional columns for current data set
++            for index in range(1, len(dataColumns)):
++                colName = sheetData.columnInfo[colID];
++                if colName == dataColumns[index]:
++                    curDataSet.append(colID);
++                    ++colID;
++
++            #we have all the columns we need, check whether to include them
++            includeDataSet = True;
++            for column in curDataSet:
++                if sheetData.sheetData[includeDataColumnTestRow][column] != includeDataColumnTest:
++                    includeDataSet = False;
++                    break;
++
++            if includeDataSet == True: 
++                #create dataset var to contain entire object
++                filePtr.write( INDENT + INDENT + "values.push" + NEWLINE )
++                filePtr.write( INDENT + INDENT + "(" + NEWLINE )
++                filePtr.write (INDENT + INDENT + INDENT + "new " + unqualifiedClass + "" + NEWLINE )
++                filePtr.write( INDENT + INDENT + INDENT + "(" + NEWLINE )
++                toWrite = ""
++                for currRow in range(1, len(metadata)):
++                    #fill in metadata values
++                    toWrite += INDENT + INDENT + INDENT + INDENT
++                    metaString = "";
++                    for column in curDataSet:
++                        metaString += sheetData.sheetData[ currRow ][ column ]; 
++                    currValue = encodeAndReplaceChars( metaString );
++                    toWrite += "\"" + currValue + "\"," + NEWLINE
++
++                #set up data array
++                toWrite += INDENT + INDENT + INDENT + INDENT
++                toWrite += "[" + NEWLINE
++                
++                for currRow in range(len(metadata), sheetData.numRows):
++                    #get values for shared data and data columns for this row
++                    #if any column is blank, skip row.
++                    skip = False;
++                    rowValues = [];
++                    for column in sharedDataColumns:
++                        rowVal = sheetData.sheetData[currRow][column[1]];
++                        if rowVal == "":
++                            skip = True;
++                            break;
++                        rowValues.append(rowVal);
++
++                    for column in curDataSet:
++                        rowVal = sheetData.sheetData[currRow][column];
++                        if rowVal == "":
++                            skip = True;
++                            break;
++
++                        #check to see if we're looking at a row include test column
++                        if sheetData.columnInfo[column] == dataColumns[includeDataRowTestColumn]:
++                            #if so, perform row include test
++                            if includeDataRowTest.find(rowVal) == -1:
++                                skip = True;
++                                break;
++                         
++                        rowValues.append(rowVal);
++                    
++                    if skip == True:
++                        continue;
++                    
++                    toWrite = "";
++                    toWrite += INDENT + INDENT + INDENT + INDENT + INDENT
++                    toWrite += "new " + fieldClassName + "" + NEWLINE
++                    toWrite += INDENT + INDENT + INDENT + INDENT + INDENT + "(" + NEWLINE
++
++                    for val in rowValues:
++                        toWrite += INDENT + INDENT + INDENT + INDENT + INDENT + INDENT
++                        currValue = encodeAndReplaceChars( val );
++                        toWrite += "\"" + currValue + "\"," + NEWLINE
++                    toWrite = toWrite.rstrip( "," + NEWLINE )
++                    toWrite += NEWLINE + INDENT +  INDENT + INDENT + INDENT + INDENT + ")" + NEWLINE
++
++                #close array    
++                toWrite += INDENT + INDENT + INDENT + INDENT 
++                toWrite += "]" + NEWLINE
++                filePtr.write( toWrite )
++                filePtr.write( INDENT + INDENT + INDENT + ")" + NEWLINE )    
++                filePtr.write( INDENT + INDENT + ");" + NEWLINE )
++
++
++    filePtr.write( INDENT + INDENT + "return values;" + NEWLINE )
++    filePtr.write( INDENT + "}" + NEWLINE )
++    
++    filePtr.write( "}" )
++#end createCustomClass
++
+ # Encodes Spreadsheet value into "utf-8", and replaces newlines/nested quotations that would break formatting
+ # TODO: these all assume we're not already using escaped characters in the incoming string (eg strings such as "\"blah\"" will break)
+ # TODO: is the newline check sufficient? should there be handling for eg \r\n ?

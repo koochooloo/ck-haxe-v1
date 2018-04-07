@@ -1,0 +1,3360 @@
+<ResourceProject version="3.0">
+  <Head>
+  </Head>
+  <Body>
+    <resources name="Buttons/">
+      <paramDefaults>
+        <paramDefault name="bounds" value="Automatic;Bounds" />
+        <paramDefault name="center" value="Automatic;(Center,Middle)" />
+      </paramDefaults>
+      <resources name="9patch/">
+        <paramDefaults>
+          <paramDefault name="bounds" value="Automatic;Bounds" />
+          <paramDefault name="center" value="Automatic;(Left,Top)" />
+        </paramDefaults>
+        <resource name="9patch-CorrectAnswer_up" path="Buttons/9patch/9patch-CorrectAnswer_up.png" md5="300137ffd6042236eb3e4c6daa19083a">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="128" height="90" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-DefaultAnswer_up" path="Buttons/9patch/9patch-DefaultAnswer_up.png" md5="e15c867be04b4fbcc6fadd093361993c">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="128" height="90" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-DefaultPanel_up" path="Buttons/9patch/9patch-DefaultPanel_up.png" md5="ce30f753ae80e3b214d135df0e43f018">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-DisabledAnswer_up" path="Buttons/9patch/9patch-DisabledAnswer_up.png" md5="837d80f73374fbb947cf850c6637e2f2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="128" height="90" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-WrongAnswer_up" path="Buttons/9patch/9patch-WrongAnswer_up.png" md5="d15449030c838ece33335e25fc2bb79b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="128" height="90" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="UserIcons/">
+        <paramDefaults>
+          <paramDefault name="bounds" value="Automatic;Bounds" />
+          <paramDefault name="center" value="Automatic;(Center,Middle)" />
+        </paramDefaults>
+        <resource name="Blue1_down" path="Buttons/UserIcons/Blue1_down.png" md5="ace3ad2eaf2c244bfa352b97e058aeaf">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue1_over" path="Buttons/UserIcons/Blue1_over.png" md5="ace3ad2eaf2c244bfa352b97e058aeaf">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue1_up" path="Buttons/UserIcons/Blue1_up.png" md5="557e9a5a010af6a013891fed734b4128">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue2_down" path="Buttons/UserIcons/Blue2_down.png" md5="5ee73e904371ebf4ce5c983e676336a5">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue2_over" path="Buttons/UserIcons/Blue2_over.png" md5="5ee73e904371ebf4ce5c983e676336a5">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue2_up" path="Buttons/UserIcons/Blue2_up.png" md5="80636176de85d61f79437c091b268735">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue3_down" path="Buttons/UserIcons/Blue3_down.png" md5="a16d67e732efa976b774a613e8fee678">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue3_over" path="Buttons/UserIcons/Blue3_over.png" md5="a16d67e732efa976b774a613e8fee678">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue3_up" path="Buttons/UserIcons/Blue3_up.png" md5="8bfe2839fb4d1641d689cb50a5f102f9">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue4_down" path="Buttons/UserIcons/Blue4_down.png" md5="bd77b2d4ba3306984929d1f4403a6fcc">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue4_over" path="Buttons/UserIcons/Blue4_over.png" md5="bd77b2d4ba3306984929d1f4403a6fcc">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue4_up" path="Buttons/UserIcons/Blue4_up.png" md5="b1d08b674b4c5471e6ad2434be3823d0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue5_down" path="Buttons/UserIcons/Blue5_down.png" md5="9417b83df72cbcdae816082917bf94e3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue5_over" path="Buttons/UserIcons/Blue5_over.png" md5="9417b83df72cbcdae816082917bf94e3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue5_up" path="Buttons/UserIcons/Blue5_up.png" md5="b9ac31203d85f0b7610b8d2abd634269">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue6_down" path="Buttons/UserIcons/Blue6_down.png" md5="0b467c746b84b55dad5311384e494f35">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue6_over" path="Buttons/UserIcons/Blue6_over.png" md5="0b467c746b84b55dad5311384e494f35">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue6_up" path="Buttons/UserIcons/Blue6_up.png" md5="3737e5aa6436d802c93f3ee3287dcc0a">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue7_down" path="Buttons/UserIcons/Blue7_down.png" md5="e2700cbb6c9ba275178cb0a807f75f1b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue7_over" path="Buttons/UserIcons/Blue7_over.png" md5="e2700cbb6c9ba275178cb0a807f75f1b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue7_up" path="Buttons/UserIcons/Blue7_up.png" md5="aa29e8a7d5f3453dfcc3ce1cf1f06950">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue8_down" path="Buttons/UserIcons/Blue8_down.png" md5="bee8ccdb50db8cf5e1507710b88a80e2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue8_over" path="Buttons/UserIcons/Blue8_over.png" md5="bee8ccdb50db8cf5e1507710b88a80e2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Blue8_up" path="Buttons/UserIcons/Blue8_up.png" md5="e0d89ff10fe8074f38aada01aafcaedc">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown1_down" path="Buttons/UserIcons/Brown1_down.png" md5="ecfaf658a3c22acc28fda4d9fd84f344">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown1_over" path="Buttons/UserIcons/Brown1_over.png" md5="ecfaf658a3c22acc28fda4d9fd84f344">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown1_up" path="Buttons/UserIcons/Brown1_up.png" md5="99f49a7a0738f7f01ed22d8d9b774ec2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown2_down" path="Buttons/UserIcons/Brown2_down.png" md5="fa8638597c29d97dbbdd52b29b99e056">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown2_over" path="Buttons/UserIcons/Brown2_over.png" md5="fa8638597c29d97dbbdd52b29b99e056">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown2_up" path="Buttons/UserIcons/Brown2_up.png" md5="b55fca379ef0dc28eaeb7296bd10902e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown3_down" path="Buttons/UserIcons/Brown3_down.png" md5="0c3f203f9d42d09032ab851fa52e4ba3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown3_over" path="Buttons/UserIcons/Brown3_over.png" md5="0c3f203f9d42d09032ab851fa52e4ba3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown3_up" path="Buttons/UserIcons/Brown3_up.png" md5="6a2369bbf3d8f693e7e00370c6cfd2cb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown4_down" path="Buttons/UserIcons/Brown4_down.png" md5="6059c0eb90aed8ef7dfbd6d396c95095">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown4_over" path="Buttons/UserIcons/Brown4_over.png" md5="6059c0eb90aed8ef7dfbd6d396c95095">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Brown4_up" path="Buttons/UserIcons/Brown4_up.png" md5="afe19b6cc9fe98482aeb875db4cccad1">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green1_down" path="Buttons/UserIcons/Green1_down.png" md5="a8853ffc60b561c0d392677d2d7abe99">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green1_over" path="Buttons/UserIcons/Green1_over.png" md5="a8853ffc60b561c0d392677d2d7abe99">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green1_up" path="Buttons/UserIcons/Green1_up.png" md5="59d14af0a6487a3e90c7128bc7904671">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green2_down" path="Buttons/UserIcons/Green2_down.png" md5="c9bfadc939dff963cf1d65cc5eaede91">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green2_over" path="Buttons/UserIcons/Green2_over.png" md5="c9bfadc939dff963cf1d65cc5eaede91">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green2_up" path="Buttons/UserIcons/Green2_up.png" md5="3fa321d570c432f7adf34ed14170d36b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green3_down" path="Buttons/UserIcons/Green3_down.png" md5="8820d2f25df600fd6b1bcd9cd200444e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green3_over" path="Buttons/UserIcons/Green3_over.png" md5="8820d2f25df600fd6b1bcd9cd200444e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green3_up" path="Buttons/UserIcons/Green3_up.png" md5="de2b83d4e5858e6e23d8b8aaf604f4ea">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green4_down" path="Buttons/UserIcons/Green4_down.png" md5="4fc7429f394624c57d4e4e29cbe40015">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green4_over" path="Buttons/UserIcons/Green4_over.png" md5="4fc7429f394624c57d4e4e29cbe40015">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green4_up" path="Buttons/UserIcons/Green4_up.png" md5="44f3be817105a563ea08b756596d23df">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green5_down" path="Buttons/UserIcons/Green5_down.png" md5="c7f00477fa2612f864be1eaad5ff94d5">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green5_over" path="Buttons/UserIcons/Green5_over.png" md5="c7f00477fa2612f864be1eaad5ff94d5">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green5_up" path="Buttons/UserIcons/Green5_up.png" md5="a48d690fd354fe11af3f7831a1016c34">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green6_down" path="Buttons/UserIcons/Green6_down.png" md5="5ca2e847b2a5fa20dc20854c8fdcbdab">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green6_over" path="Buttons/UserIcons/Green6_over.png" md5="5ca2e847b2a5fa20dc20854c8fdcbdab">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green6_up" path="Buttons/UserIcons/Green6_up.png" md5="adf5c858616d64bbdb9fc7f63658c1e0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green7_down" path="Buttons/UserIcons/Green7_down.png" md5="89f9534e0de63a1bf7772a59d94a02cc">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green7_over" path="Buttons/UserIcons/Green7_over.png" md5="89f9534e0de63a1bf7772a59d94a02cc">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green7_up" path="Buttons/UserIcons/Green7_up.png" md5="d9c90d4727c442060c6ee289ec0b7f6d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green8_down" path="Buttons/UserIcons/Green8_down.png" md5="0eebe23ddf861a95b956ac8f5b5c8d50">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green8_over" path="Buttons/UserIcons/Green8_over.png" md5="0eebe23ddf861a95b956ac8f5b5c8d50">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Green8_up" path="Buttons/UserIcons/Green8_up.png" md5="d4524bbba64841407577a7a9ff972ade">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey1_down" path="Buttons/UserIcons/Grey1_down.png" md5="5f452f98c94ddf8b7ebc45fc5f1325da">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey1_over" path="Buttons/UserIcons/Grey1_over.png" md5="5f452f98c94ddf8b7ebc45fc5f1325da">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey1_up" path="Buttons/UserIcons/Grey1_up.png" md5="434c008fb17c12a98af9cac0c7725b1a">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey2_down" path="Buttons/UserIcons/Grey2_down.png" md5="0ee76d5dc82ae28b6f53495d8000563e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey2_over" path="Buttons/UserIcons/Grey2_over.png" md5="0ee76d5dc82ae28b6f53495d8000563e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey2_up" path="Buttons/UserIcons/Grey2_up.png" md5="1257048b4bac43c1c8e6e782c7b10407">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey3_down" path="Buttons/UserIcons/Grey3_down.png" md5="cc1c6ebeaf63d1437971a7611c590dab">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey3_over" path="Buttons/UserIcons/Grey3_over.png" md5="cc1c6ebeaf63d1437971a7611c590dab">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey3_up" path="Buttons/UserIcons/Grey3_up.png" md5="fbf07001409f122c3bc72b044d44b1eb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey4_down" path="Buttons/UserIcons/Grey4_down.png" md5="1e5da7c240d739266159c3231aea0121">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey4_over" path="Buttons/UserIcons/Grey4_over.png" md5="1e5da7c240d739266159c3231aea0121">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Grey4_up" path="Buttons/UserIcons/Grey4_up.png" md5="7b92dd13461675ce9084c06c20ece28c">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange1_down" path="Buttons/UserIcons/Orange1_down.png" md5="d8961836d7462ce9262d58dae1e582af">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange1_over" path="Buttons/UserIcons/Orange1_over.png" md5="d8961836d7462ce9262d58dae1e582af">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange1_up" path="Buttons/UserIcons/Orange1_up.png" md5="4012c9cef00f76446f9a303ba68b5b7e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange2_down" path="Buttons/UserIcons/Orange2_down.png" md5="8b208b527235c6bcf0d9dbf0340d9d9f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange2_over" path="Buttons/UserIcons/Orange2_over.png" md5="8b208b527235c6bcf0d9dbf0340d9d9f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange2_up" path="Buttons/UserIcons/Orange2_up.png" md5="2ed0cab2e2a9e58166c36af23d4ef978">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange3_down" path="Buttons/UserIcons/Orange3_down.png" md5="61c3bc4886c5e5ef60c2294dca0cb6f8">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange3_over" path="Buttons/UserIcons/Orange3_over.png" md5="61c3bc4886c5e5ef60c2294dca0cb6f8">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange3_up" path="Buttons/UserIcons/Orange3_up.png" md5="59a26349171b5fdf719ef3f0b0488137">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange4_down" path="Buttons/UserIcons/Orange4_down.png" md5="f0c300f720af1429212ad5315c8fbc1f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange4_over" path="Buttons/UserIcons/Orange4_over.png" md5="f0c300f720af1429212ad5315c8fbc1f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Orange4_up" path="Buttons/UserIcons/Orange4_up.png" md5="92bc58bef11d52b3fc2ab152d37f0bc8">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple1_down" path="Buttons/UserIcons/Purple1_down.png" md5="e88d4d54532da3c553f6df7a1d67621f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple1_over" path="Buttons/UserIcons/Purple1_over.png" md5="e88d4d54532da3c553f6df7a1d67621f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple1_up" path="Buttons/UserIcons/Purple1_up.png" md5="d3242173315afb15feb431bf68c89354">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple2_down" path="Buttons/UserIcons/Purple2_down.png" md5="da8aa242ad7bec8b9ab4962d0b6e4fc0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple2_over" path="Buttons/UserIcons/Purple2_over.png" md5="da8aa242ad7bec8b9ab4962d0b6e4fc0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple2_up" path="Buttons/UserIcons/Purple2_up.png" md5="e65d2c13cb27c7b605ea2177260f0be7">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple3_down" path="Buttons/UserIcons/Purple3_down.png" md5="994a06af54a455d397247930b9d4eeea">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple3_over" path="Buttons/UserIcons/Purple3_over.png" md5="994a06af54a455d397247930b9d4eeea">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple3_up" path="Buttons/UserIcons/Purple3_up.png" md5="10f11e8b6c17615c22c2e755da0d9ac6">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple4_down" path="Buttons/UserIcons/Purple4_down.png" md5="9e8e55bc6f456e77f34dafd3244d4243">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple4_over" path="Buttons/UserIcons/Purple4_over.png" md5="9e8e55bc6f456e77f34dafd3244d4243">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Purple4_up" path="Buttons/UserIcons/Purple4_up.png" md5="f94f19325f85d2d203a335bb35e6d906">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red1_down" path="Buttons/UserIcons/Red1_down.png" md5="560064639bee1dc70d05858f36042392">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red1_over" path="Buttons/UserIcons/Red1_over.png" md5="560064639bee1dc70d05858f36042392">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red1_up" path="Buttons/UserIcons/Red1_up.png" md5="bb28afe6168be8635be9dfcdbc0456f2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red2_down" path="Buttons/UserIcons/Red2_down.png" md5="4ab1cca64930db5130d85401d5ceba52">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red2_over" path="Buttons/UserIcons/Red2_over.png" md5="4ab1cca64930db5130d85401d5ceba52">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red2_up" path="Buttons/UserIcons/Red2_up.png" md5="17d85740d53246aa679aca8edcf0abb7">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red3_down" path="Buttons/UserIcons/Red3_down.png" md5="5cdb9f14d649924cec63b7a895cf6aa3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red3_over" path="Buttons/UserIcons/Red3_over.png" md5="5cdb9f14d649924cec63b7a895cf6aa3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red3_up" path="Buttons/UserIcons/Red3_up.png" md5="4eb18e7bddef458292a7841747c0f3ba">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red4_down" path="Buttons/UserIcons/Red4_down.png" md5="53d95beea2a1976a4c80292de7137954">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red4_over" path="Buttons/UserIcons/Red4_over.png" md5="53d95beea2a1976a4c80292de7137954">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red4_up" path="Buttons/UserIcons/Red4_up.png" md5="f5ba13c1b538350ad6eca4b0876250b4">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red5_down" path="Buttons/UserIcons/Red5_down.png" md5="1c8e23e8c0e0b4abf4f28711933b89e9">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red5_over" path="Buttons/UserIcons/Red5_over.png" md5="1c8e23e8c0e0b4abf4f28711933b89e9">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red5_up" path="Buttons/UserIcons/Red5_up.png" md5="45aec6dd79f890bffed70a67a1bd73f8">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red6_down" path="Buttons/UserIcons/Red6_down.png" md5="feb4569000ecc0a219fdd3709569bb8f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red6_over" path="Buttons/UserIcons/Red6_over.png" md5="feb4569000ecc0a219fdd3709569bb8f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red6_up" path="Buttons/UserIcons/Red6_up.png" md5="e81d3acba12ed651a16a81314b567a6d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red7_down" path="Buttons/UserIcons/Red7_down.png" md5="555c0832d771b6cd917b208c3d84c529">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red7_over" path="Buttons/UserIcons/Red7_over.png" md5="555c0832d771b6cd917b208c3d84c529">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red7_up" path="Buttons/UserIcons/Red7_up.png" md5="924b3999ce853dec6422b2efe40f5478">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red8_down" path="Buttons/UserIcons/Red8_down.png" md5="f9ec1d4350a50788cb8ce0f97588ac64">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red8_over" path="Buttons/UserIcons/Red8_over.png" md5="f9ec1d4350a50788cb8ce0f97588ac64">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Red8_up" path="Buttons/UserIcons/Red8_up.png" md5="eb73d15a7cf3e28184053ed2be2427e4">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow1_down" path="Buttons/UserIcons/Yellow1_down.png" md5="3095150ee713d364097d1f02008bf84d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow1_over" path="Buttons/UserIcons/Yellow1_over.png" md5="3095150ee713d364097d1f02008bf84d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow1_up" path="Buttons/UserIcons/Yellow1_up.png" md5="fe9b173643f7b428a705189325496181">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow2_down" path="Buttons/UserIcons/Yellow2_down.png" md5="4f6f9aee118a503b936082ed3270d0fb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow2_over" path="Buttons/UserIcons/Yellow2_over.png" md5="4f6f9aee118a503b936082ed3270d0fb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow2_up" path="Buttons/UserIcons/Yellow2_up.png" md5="eca832ba930e0505043732275af4f982">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow3_down" path="Buttons/UserIcons/Yellow3_down.png" md5="8d76d05b5f05fd7d2f36d716c8cbcdd3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow3_over" path="Buttons/UserIcons/Yellow3_over.png" md5="8d76d05b5f05fd7d2f36d716c8cbcdd3">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow3_up" path="Buttons/UserIcons/Yellow3_up.png" md5="f8ba70e05d89a43e326ce5a674a75d04">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow4_down" path="Buttons/UserIcons/Yellow4_down.png" md5="7ddb9abe1b63ab8d200ebba995ea4fc9">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow4_over" path="Buttons/UserIcons/Yellow4_over.png" md5="7ddb9abe1b63ab8d200ebba995ea4fc9">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow4_up" path="Buttons/UserIcons/Yellow4_up.png" md5="c9fd3431503cf39e7c00d8f8c0245082">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow5_down" path="Buttons/UserIcons/Yellow5_down.png" md5="a6f614daa27a78edd66627f3c1fc500b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow5_over" path="Buttons/UserIcons/Yellow5_over.png" md5="a6f614daa27a78edd66627f3c1fc500b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow5_up" path="Buttons/UserIcons/Yellow5_up.png" md5="61b6a5dee2e50871bc7a616c1337c196">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow6_down" path="Buttons/UserIcons/Yellow6_down.png" md5="8375163403cfeb4f09157e2fd4b44a2a">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow6_over" path="Buttons/UserIcons/Yellow6_over.png" md5="8375163403cfeb4f09157e2fd4b44a2a">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow6_up" path="Buttons/UserIcons/Yellow6_up.png" md5="a7072087737da145bf333aac35a61e79">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow7_down" path="Buttons/UserIcons/Yellow7_down.png" md5="16e9c2b47f82d94ba9f5dd19add7df85">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow7_over" path="Buttons/UserIcons/Yellow7_over.png" md5="16e9c2b47f82d94ba9f5dd19add7df85">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow7_up" path="Buttons/UserIcons/Yellow7_up.png" md5="99a94d92695b79f7a09b7cac63986e6d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow8_down" path="Buttons/UserIcons/Yellow8_down.png" md5="ef76dcde34dfe5279958510bf3554223">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow8_over" path="Buttons/UserIcons/Yellow8_over.png" md5="ef76dcde34dfe5279958510bf3554223">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="66" y="66" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="132" height="132" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Yellow8_up" path="Buttons/UserIcons/Yellow8_up.png" md5="1e4421b84ba606c9637f49c6e32a3c4b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="60" y="60" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="120" height="120" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resource name="AnswerBtnBacking_disabled" path="Buttons/AnswerBtnBacking_disabled.png" md5="ebfa0a285cf769bd6ae0a67626cd0013">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="100" y="98" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="200" height="196" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentBefore_disabled" path="Buttons/AssessmentBefore_disabled.png" md5="24dca0aecbebca467d0da5a7e2e0e3e6">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="104" y="36" paramType="Default" />
+          <box name="bounds" x="1" y="4" width="206" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentBefore_down" path="Buttons/AssessmentBefore_down.png" md5="500554a811a90731adf4480ace3fc0dd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="114" y="41" paramType="Default" />
+          <box name="bounds" x="1" y="6" width="227" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentBefore_over" path="Buttons/AssessmentBefore_over.png" md5="500554a811a90731adf4480ace3fc0dd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="114" y="41" paramType="Default" />
+          <box name="bounds" x="1" y="6" width="227" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentBefore_up" path="Buttons/AssessmentBefore_up.png" md5="ee2b64b91c2f1741cd4d148adaa3bd83">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="104" y="36" paramType="Default" />
+          <box name="bounds" x="1" y="4" width="206" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentEnd_disabled" path="Buttons/AssessmentEnd_disabled.png" md5="760e55eda63e9ae01540c246292bc45d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="104" y="36" paramType="Default" />
+          <box name="bounds" x="1" y="4" width="206" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentEnd_down" path="Buttons/AssessmentEnd_down.png" md5="6108f2ddf000f94b3918158f3faad3f6">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="114" y="41" paramType="Default" />
+          <box name="bounds" x="1" y="6" width="227" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentEnd_over" path="Buttons/AssessmentEnd_over.png" md5="6108f2ddf000f94b3918158f3faad3f6">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="114" y="41" paramType="Default" />
+          <box name="bounds" x="1" y="6" width="227" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentEnd_up" path="Buttons/AssessmentEnd_up.png" md5="f08db053691111cdc7ea6d61ab04cb73">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="104" y="36" paramType="Default" />
+          <box name="bounds" x="1" y="4" width="206" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentMiddle_disabled" path="Buttons/AssessmentMiddle_disabled.png" md5="5edf921073ca4a14db6f8a8aee07f08e">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="104" y="36" paramType="Default" />
+          <box name="bounds" x="1" y="4" width="206" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentMiddle_down" path="Buttons/AssessmentMiddle_down.png" md5="3654dcf9cca1cb095456435a47cd831c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="114" y="41" paramType="Default" />
+          <box name="bounds" x="1" y="6" width="227" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentMiddle_over" path="Buttons/AssessmentMiddle_over.png" md5="3654dcf9cca1cb095456435a47cd831c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="114" y="41" paramType="Default" />
+          <box name="bounds" x="1" y="6" width="227" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="AssessmentMiddle_up" path="Buttons/AssessmentMiddle_up.png" md5="24723c1b5771bd4c70c4587b97cf9226">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="104" y="36" paramType="Default" />
+          <box name="bounds" x="1" y="4" width="206" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_about_over" path="Buttons/btn_about_over.png">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="15" y="32" />
+          <box name="bounds" x="0" y="0" width="230" height="65" />
+        </params>
+      </resource>
+      <resource name="btn_about_up" path="Buttons/btn_about_up.png">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="14" y="29" />
+          <box name="bounds" x="0" y="0" width="230" height="59" />
+        </params>
+      </resource>
+      <resource name="btn_allergens_over" path="Buttons/btn_allergens_over.png" md5="f422a88bb58155b502780a3bdebd1067">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="30" y="27" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="61" height="54" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_allergens_up" path="Buttons/btn_allergens_up.png">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="27" y="24" />
+          <box name="bounds" x="0" y="0" width="300" height="49" />
+        </params>
+      </resource>
+      <resource name="btn_Back_over" path="Buttons/btn_Back_over.png" md5="49c7d7b8ae1982b11f5742fa4915f70b">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="65" y="68" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="130" height="136" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_Back_up" path="Buttons/btn_Back_up.png" md5="09a024e9c1721be007b7695cdb7c7d54">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="59" y="62" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="118" height="124" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_check_down" path="Buttons/btn_check_down.png" md5="30ccb157c7a4b75c21240a73dd3dea28">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="73" y="72" paramType="Default" />
+          <box name="bounds" x="6" y="3" width="135" height="138" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_check_over" path="Buttons/btn_check_over.png" md5="30ccb157c7a4b75c21240a73dd3dea28">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="73" y="72" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="6" y="3" width="135" height="138" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_check_up" path="Buttons/btn_check_up.png" md5="af6432c11d7a1d0cd091dbc64d17abec">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="66" y="65" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="5" y="2" width="123" height="126" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_checkSmall_down" path="Buttons/btn_checkSmall_down.png" md5="2b2400102c32cac7714995c89cc560fe">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="42" y="43" paramType="Default" />
+          <box name="bounds" x="4" y="4" width="76" height="78" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_checkSmall_over" path="Buttons/btn_checkSmall_over.png" md5="2b2400102c32cac7714995c89cc560fe">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="42" y="43" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="4" y="4" width="76" height="78" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_checkSmall_up" path="Buttons/btn_checkSmall_up.png" md5="babc836c42b140cdcc269ad0bb17b2e2">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="37" y="38" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="3" y="3" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_country_up" path="Buttons/btn_country_up.png" md5="940946f58c9539b13b638e291359deee">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="0" y="0" paramType="Automatic;(Left,Top)" />
+          <box name="bounds" x="0" y="0" width="103" height="64" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factDot_down" path="Buttons/btn_factDot_down.png" md5="120dd2c609c56677f2ec7183af823dec">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="5" y="6" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="11" height="13" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factDot_over" path="Buttons/btn_factDot_over.png" md5="4c40d0feecdd743d2f6798e272289338">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="6" y="5" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="1" y="0" width="11" height="11" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factDot_up" path="Buttons/btn_factDot_up.png" md5="e5423437c2d3ad775977526e1787a7cd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="5" y="5" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="11" height="11" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factNext_disabled" path="Buttons/btn_factNext_disabled.png" md5="07b811881bdb27d15b21e616a30dfb58">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="24" y="20" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="48" height="40" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factNext_down" path="Buttons/btn_factNext_down.png" md5="6343d31dc8c5b4d7faefa7ff223d699d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="28" y="24" paramType="Default" />
+          <box name="bounds" x="2" y="3" width="53" height="42" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_factNext_over" path="Buttons/btn_factNext_over.png" md5="6343d31dc8c5b4d7faefa7ff223d699d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="28" y="24" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="3" width="53" height="42" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factNext_up" path="Buttons/btn_factNext_up.png" md5="f3d5ac69b8f5c7078393937ed93ec2dd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="26" y="22" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="2" width="48" height="40" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factPrevious_disabled" path="Buttons/btn_factPrevious_disabled.png" md5="62538c116bf1b403bd7a63eb163cf558">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="25" y="21" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="51" height="42" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factPrevious_over" path="Buttons/btn_factPrevious_over.png" md5="93cb8aed46075ccdfa3246c2ce8c5896">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="28" y="23" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="56" height="46" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_factPrevious_up" path="Buttons/btn_factPrevious_up.png" md5="25d7a51356f834fc211db40757e081b7">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="25" y="21" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="51" height="42" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_favorites_down" path="Buttons/btn_favorites_down.png" md5="61e2f1010edd0163c9f3aef193353b9c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="73" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="147" height="142" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_favorites_over" path="Buttons/btn_favorites_over.png" md5="f6b00d2da1a8b6323813f2d196ba5954">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="81" y="78" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="162" height="156" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_favorites_up" path="Buttons/btn_favorites_up.png" md5="30f037d88756046b45598ad2b95f1490">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="73" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="147" height="142" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_globe_down" path="Buttons/btn_globe_down.png" md5="11f3854df7365e31d2dcfbb9a66fabcd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="70" y="70" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="141" height="140" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_globe_over" path="Buttons/btn_globe_over.png" md5="11f3854df7365e31d2dcfbb9a66fabcd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="70" y="70" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="141" height="140" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_globe_up" path="Buttons/btn_globe_up.png" md5="cbc4a3e418f3892a884b7a3c44fa42a7">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="64" y="63" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="128" height="127" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_info_down" path="Buttons/btn_info_down.png" md5="e05f27c9a52c41a583fc44e123383a2f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="32" y="33" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="65" height="67" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_info_over" path="Buttons/btn_info_over.png" md5="e05f27c9a52c41a583fc44e123383a2f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="32" y="33" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="65" height="67" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_info_up" path="Buttons/btn_info_up.png" md5="29c5786e6f5ff3baba8bf2a9caf294bf">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="29" y="30" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="59" height="61" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_math_over" path="Buttons/btn_math_over.png" md5="6d272cd1cc67347bed5e713d25491c5d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="71" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="142" height="143" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_math_up" path="Buttons/btn_math_up.png" md5="04386bd77a286c7282bc078e0277e99a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="64" y="65" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="129" height="130" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_music_down" path="Buttons/btn_music_down.png" md5="74943c2e96a7fa683fde5cf56da49758">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="70" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="140" height="143" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_music_downover" path="Buttons/btn_music_downover.png" md5="7d1a2fa7545fd9a16c9560bb984d76ae">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="77" y="78" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="154" height="157" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_music_up" path="Buttons/btn_music_up.png" md5="85b7007939ce755d8e7af59a7f99df6f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="70" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="140" height="143" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_music_upover" path="Buttons/btn_music_upover.png" md5="9cc58767f6cd419af449056e92723df9">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="77" y="78" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="154" height="157" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_Next_down" path="Buttons/btn_Next_down.png" md5="9ebc292f17f3bff271d03a6f766c5d5c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="67" y="72" paramType="Default" />
+          <box name="bounds" x="0" y="3" width="135" height="138" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_Next_over" path="Buttons/btn_Next_over.png" md5="9ebc292f17f3bff271d03a6f766c5d5c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="67" y="72" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="3" width="135" height="138" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_Next_up" path="Buttons/btn_Next_up.png" md5="a7ee2168db700203d7082cce88ee9636">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="61" y="65" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="2" width="123" height="126" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_Passport_down" path="Buttons/btn_Passport_down.png" md5="bf623cc1ee513386681e9c27a84b24fc">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="71" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="17" y="4" width="109" height="135" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_Passport_over" path="Buttons/btn_Passport_over.png" md5="bf623cc1ee513386681e9c27a84b24fc">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="71" y="71" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="17" y="4" width="109" height="135" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_Passport_up" path="Buttons/btn_Passport_up.png" md5="51bf12f81828eeef8f2c3935bfccba16">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="64" y="64" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="14" y="2" width="101" height="125" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_recipe_down" path="Buttons/btn_recipe_down.png" md5="10463053b4bb10274dd6c3d9af3633c5">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="109" y="237" paramType="Automatic;(Center,Bottom)" />
+          <box name="bounds" x="6" y="11" width="207" height="227" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_recipe_up" path="Buttons/btn_recipe_up.png" md5="10463053b4bb10274dd6c3d9af3633c5">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="109" y="237" paramType="Automatic;(Center,Bottom)" />
+          <box name="bounds" x="6" y="11" width="207" height="227" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_recipeCategory_down" path="Buttons/btn_recipeCategory_down.png" md5="705ef9d4070a9e12f8dc2fe9562b2f1b">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="124" y="30" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="249" height="60" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_recipeCategory_over" path="Buttons/btn_recipeCategory_over.png" md5="402a6c2b3b50c69525433cf3309b37fc">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="138" y="42" paramType="Default" />
+          <box name="bounds" x="2" y="7" width="273" height="70" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_recipeCategory_up" path="Buttons/btn_recipeCategory_up.png" md5="d8bc665ca27b7aad3e426d5dbf1085af">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="126" y="38" paramType="Default" />
+          <box name="bounds" x="2" y="7" width="248" height="62" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_recipes_down" path="Buttons/btn_recipes_down.png" md5="39a897615f5b7811ff191d23ae628ca2">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="67" y="72" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="3" width="135" height="138" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_recipes_over" path="Buttons/btn_recipes_over.png" md5="39a897615f5b7811ff191d23ae628ca2">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="67" y="72" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="3" width="135" height="138" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_recipes_up" path="Buttons/btn_recipes_up.png" md5="43d6957bcfdc4cd37ba845e648fdbcfe">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="61" y="65" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="2" width="123" height="126" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_refresh_down" path="Buttons/btn_refresh_down.png" md5="09ddff4d391ed0a0f11de184b073a309">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_refresh_over" path="Buttons/btn_refresh_over.png" md5="09ddff4d391ed0a0f11de184b073a309">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_refresh_up" path="Buttons/btn_refresh_up.png" md5="0366d5588848349232ffb3499a36d3ec">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="36" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_settings_down" path="Buttons/btn_settings_down.png" md5="3feea03f4896eafbb2ac83dca5470988">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="69" y="72" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="3" width="135" height="138" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_settings_over" path="Buttons/btn_settings_over.png" md5="3feea03f4896eafbb2ac83dca5470988">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="69" y="72" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="3" width="135" height="138" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_settings_up" path="Buttons/btn_settings_up.png" md5="00719b322623a32b2d86b20460f12b94">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="63" y="65" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="2" width="123" height="126" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_socialFb_down" path="Buttons/btn_socialFb_down.png" md5="719e6bb753aaf9372ca1519ab78311b3">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="43" paramType="Default" />
+          <box name="bounds" x="2" y="4" width="76" height="78" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_socialFb_over" path="Buttons/btn_socialFb_over.png" md5="719e6bb753aaf9372ca1519ab78311b3">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="43" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="4" width="76" height="78" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_socialFb_up" path="Buttons/btn_socialFb_up.png" md5="2caaa0fe29b530c710627281e0eb9ffd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="38" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="3" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_socialGPlus_down" path="Buttons/btn_socialGPlus_down.png" md5="9ee84c03cec8a18488460aeb924c3e64">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_socialGPlus_over" path="Buttons/btn_socialGPlus_over.png" md5="9ee84c03cec8a18488460aeb924c3e64">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_socialGPlus_up" path="Buttons/btn_socialGPlus_up.png" md5="0a9957d479d458646b3931dc57596a1f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="36" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_socialTwitter_down" path="Buttons/btn_socialTwitter_down.png" md5="cd1a5220ac2ec07fcda4b6e4f7777a3c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="43" paramType="Default" />
+          <box name="bounds" x="2" y="4" width="76" height="78" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_socialTwitter_over" path="Buttons/btn_socialTwitter_over.png" md5="cd1a5220ac2ec07fcda4b6e4f7777a3c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="43" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="4" width="76" height="78" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_socialTwitter_up" path="Buttons/btn_socialTwitter_up.png" md5="854d741b72f149978d85e0923c196ad4">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="38" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="3" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound_down" path="Buttons/btn_sound_down.png" md5="77b5f7362e860d690ab3ae595d1873ce">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="36" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="73" height="73" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound_downover" path="Buttons/btn_sound_downover.png" md5="998d3f69f9949d8e80e07658b04ef005">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="80" height="80" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound_up" path="Buttons/btn_sound_up.png" md5="d56ec79df1bee52c880b598c81799901">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="24" y="29" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="48" height="59" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound_upover" path="Buttons/btn_sound_upover.png" md5="279f6498b598f300f765e7a48bfa76c7">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="26" y="32" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="53" height="65" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound2_down" path="Buttons/btn_sound2_down.png" md5="0028fdf6ab1e0a67c329d6a59a169a07">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="23" y="21" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="3" y="3" width="41" height="37" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound2_over" path="Buttons/btn_sound2_over.png" md5="0028fdf6ab1e0a67c329d6a59a169a07">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="23" y="21" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="3" y="3" width="41" height="37" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_sound2_up" path="Buttons/btn_sound2_up.png" md5="766e3a3f05ab4422bbe0f67dc4a26c6c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="21" y="19" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="2" width="39" height="34" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_store_disabled" path="Buttons/btn_store_disabled.png" md5="54ce63b673724f7d55070210462a2744">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="36" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_store_down" path="Buttons/btn_store_down.png" md5="c641f750f7df89373c6866b45c151bfc">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_store_over" path="Buttons/btn_store_over.png" md5="c641f750f7df89373c6866b45c151bfc">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_store_up" path="Buttons/btn_store_up.png" md5="78ca3598f3adcfc4c170457ce46b469c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="36" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_support_over" path="Buttons/btn_support_over.png" md5="465df9e8478a3109ebac19b760214563">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="24" y="33" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="48" height="67" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_support_up" path="Buttons/btn_support_up.png">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="22" y="30" />
+          <box name="bounds" x="0" y="0" width="280" height="61" />
+        </params>
+      </resource>
+      <resource name="btn_takeAction_down" path="Buttons/btn_takeAction_down.png" md5="fd59223421f48fa9fb903b3aab0e11da">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="292" y="93" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="584" height="186" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="btn_takeAction_over" path="Buttons/btn_takeAction_over.png" md5="fd59223421f48fa9fb903b3aab0e11da">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="292" y="93" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="584" height="186" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_takeAction_up" path="Buttons/btn_takeAction_up.png" md5="ccb65d138794deb19317a25b04c93903">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="265" y="84" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="531" height="169" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_tutorial_over" path="Buttons/btn_tutorial_over.png" md5="2fc46f52ab656385929ac4e8f876f552">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="22" y="27" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="45" height="54" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_tutorial_up" path="Buttons/btn_tutorial_up.png">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="20" y="24" />
+          <box name="bounds" x="0" y="0" width="270" height="49" />
+        </params>
+      </resource>
+      <resource name="btn_x_down" path="Buttons/btn_x_down.png" md5="234f025391db35d24133e25456ba047e">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_x_over" path="Buttons/btn_x_over.png" md5="234f025391db35d24133e25456ba047e">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="40" y="40" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="76" height="79" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btn_x_up" path="Buttons/btn_x_up.png" md5="4c5d6c3f871190c84c92aaf30f518eb2">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="36" y="36" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="2" y="1" width="69" height="71" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="btnComingSoon_up" path="Buttons/btnComingSoon_up.png" md5="b672931179d5e3702746a49aafde738f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="276" y="86" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="552" height="172" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="FreeVersion_down" path="Buttons/FreeVersion_down.png" md5="5fa053417f37143e2cc0c3dabc90394d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="161" y="44" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="322" height="89" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="FreeVersion_over" path="Buttons/FreeVersion_over.png" md5="5fa053417f37143e2cc0c3dabc90394d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="161" y="44" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="322" height="89" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="FreeVersion_up" path="Buttons/FreeVersion_up.png" md5="7e0c735ce5016e203cd8eaf82bee141b">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="146" y="41" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="292" height="82" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="ImageAnswer_disabled" path="Buttons/ImageAnswer_disabled.png" md5="a242e80feae351d79eafb8d8fd543c4f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="102" y="99" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="200" height="196" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="ImageCorrectAnswer_up" path="Buttons/ImageCorrectAnswer_up.png" md5="314f18b703a98f1df38221d3c5a2139c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="102" y="99" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="200" height="196" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="ImageDefaultAnswer_down" path="Buttons/ImageDefaultAnswer_down.png" md5="7217b41b44dc65a718b44475eb4e4ed6">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="112" y="109" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="220" height="216" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="ImageDefaultAnswer_over" path="Buttons/ImageDefaultAnswer_over.png" md5="7217b41b44dc65a718b44475eb4e4ed6">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="112" y="109" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="220" height="216" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="ImageDefaultAnswer_up" path="Buttons/ImageDefaultAnswer_up.png" md5="40864e74da5a248581698f5f44092343">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="102" y="99" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="200" height="196" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="ImageWrongAnswer_up" path="Buttons/ImageWrongAnswer_up.png" md5="4dd386c55b7b48be0f5bb1e56279f281">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="102" y="99" paramType="Default" />
+          <box name="bounds" x="2" y="1" width="200" height="196" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="Login_down" path="Buttons/Login_down.png" md5="762cdcf4149993ad43f8a756acb65a3d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="92" y="34" paramType="Default" />
+          <box name="bounds" x="1" y="2" width="182" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="Login_over" path="Buttons/Login_over.png" md5="762cdcf4149993ad43f8a756acb65a3d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="92" y="34" paramType="Default" />
+          <box name="bounds" x="1" y="2" width="182" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="Login_up" path="Buttons/Login_up.png" md5="deed171b5833709b3dd73beb1319775d">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="83" y="31" paramType="Default" />
+          <box name="bounds" x="2" y="2" width="163" height="58" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="No_down" path="Buttons/No_down.png" md5="7371b873f98e2e01e433d214d6463d50">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="81" y="34" paramType="Default" />
+          <box name="bounds" x="1" y="2" width="161" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="No_over" path="Buttons/No_over.png" md5="7371b873f98e2e01e433d214d6463d50">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="81" y="34" paramType="Default" />
+          <box name="bounds" x="1" y="2" width="161" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="No_up" path="Buttons/No_up.png" md5="18ea34343a085fc3bc3e194e67a94336">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="74" y="31" paramType="Default" />
+          <box name="bounds" x="2" y="2" width="144" height="58" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="PanelClose_down" path="Buttons/PanelClose_down.png" md5="247c13c65e9ae1af01523dafeb74592a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="48" y="26" paramType="Default" />
+          <box name="bounds" x="2" y="4" width="92" height="45" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="PanelClose_over" path="Buttons/PanelClose_over.png" md5="247c13c65e9ae1af01523dafeb74592a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="48" y="26" paramType="Default" />
+          <box name="bounds" x="2" y="4" width="92" height="45" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="PanelClose_up" path="Buttons/PanelClose_up.png" md5="59b48700b47f27d2c408590c4ec409fd">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="43" y="23" paramType="Default" />
+          <box name="bounds" x="2" y="3" width="83" height="41" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="PanelExpand_down" path="Buttons/PanelExpand_down.png" md5="75e9c2776cf7201d574ce02e16100e9a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="48" y="26" paramType="Default" />
+          <box name="bounds" x="2" y="4" width="92" height="45" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="PanelExpand_over" path="Buttons/PanelExpand_over.png" md5="75e9c2776cf7201d574ce02e16100e9a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="48" y="26" paramType="Default" />
+          <box name="bounds" x="2" y="4" width="92" height="45" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="PanelExpand_up" path="Buttons/PanelExpand_up.png" md5="7d0b70a51409fb748d47e8231ddda9a9">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="43" y="23" paramType="Default" />
+          <box name="bounds" x="2" y="3" width="83" height="41" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="SchoolVersion_down" path="Buttons/SchoolVersion_down.png" md5="88cd2854929918fc14dce99d83e540f9">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="161" y="44" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="322" height="89" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="SchoolVersion_over" path="Buttons/SchoolVersion_over.png" md5="88cd2854929918fc14dce99d83e540f9">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="161" y="44" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="322" height="89" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="SchoolVersion_up" path="Buttons/SchoolVersion_up.png" md5="b6d0f5013716499cced4a97feb103555">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="146" y="41" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="292" height="82" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="Yes_down" path="Buttons/Yes_down.png" md5="0814d39fcc9429f506c54b55403e00a5">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="81" y="34" paramType="Default" />
+          <box name="bounds" x="1" y="2" width="161" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="Yes_over" path="Buttons/Yes_over.png" md5="0814d39fcc9429f506c54b55403e00a5">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="81" y="34" paramType="Default" />
+          <box name="bounds" x="1" y="2" width="161" height="65" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="Yes_up" path="Buttons/Yes_up.png" md5="f4ee9779bd181d9c44c276b306a08230">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="74" y="31" paramType="Default" />
+          <box name="bounds" x="2" y="2" width="144" height="58" paramType="Default" />
+        </params>
+      </resource>
+    </resources>
+  </Body>
+</ResourceProject>

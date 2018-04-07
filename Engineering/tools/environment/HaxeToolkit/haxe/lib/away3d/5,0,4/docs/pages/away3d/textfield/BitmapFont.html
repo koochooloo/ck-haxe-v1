@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><!-- use theme color or fallback -->
+<!--use textcolor from settings, otherwise create a contrasting color to theme color-->
+<head><meta charset="utf-8"/><link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/><link href="../../bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/><link href="../../bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/><link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic" rel="stylesheet" type="text/css"/><link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,600italic,400" rel="stylesheet" type="text/css"/><link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet" type="text/css"/><script src="../../jquery-1.9.1.min.js"></script><script src="../../bootstrap/js/bootstrap.min.js"></script><script src="../../bootstrap/js/bootstrap-select.min.js"></script><link href="../../styles.css" rel="stylesheet"/><link href="../../haxe-nav.css" rel="stylesheet"/><script type="text/javascript">var dox = {rootPath: "../../",platforms: ["Linux","Android","Windows","iOS","HTML5","Neko","macOS"]};</script><script type="text/javascript" src="../../nav.js"></script><script type="text/javascript" src="../../index.js"></script><link rel="icon" href="../../favicon.ico" type="image/x-icon"></link><title>away3d.textfield.BitmapFont - Away3D API Reference</title><meta name="description" content="The BitmapFont class parses bitmap font files and arranges the glyphs
+&lt;em&gt;  in the form of a text.
+&lt;/em&gt;
+&lt;em&gt;  The class parses the Xml format as it is used in the 
+&lt;/em&gt;  &lt;a href="http://www.angelcode.com/products/bmfont/"&gt;AngelCode Bitmap Font Generator&lt;/a&gt; or
+&lt;em&gt;  the &lt;a href="http://glyphdesigner.71squared.com/"&gt;Glyph Designer&lt;/a&gt;. 
+&lt;/em&gt;  This is what the file format looks like:
+&lt;em&gt;
+&lt;/em&gt;  &lt;pre&gt; 
+&lt;em&gt;  &amp;lt;font&amp;gt;
+&lt;/em&gt;    &amp;lt;info face="BranchingMouse" size="40" /&amp;gt;
+&lt;em&gt;    &amp;lt;common lineHeight="40" /&amp;gt;
+&lt;/em&gt;    &amp;lt;pages&amp;gt;  &amp;lt;!-- currently, only one page is supported --&amp;gt;
+&lt;em&gt;      &amp;lt;page id="0" file="texture.png" /&amp;gt;
+&lt;/em&gt;    &amp;lt;/pages&amp;gt;
+&lt;em&gt;    &amp;lt;chars&amp;gt;
+&lt;/em&gt;      &amp;lt;char id="32" x="60" y="29" width="1" height="1" xoffset="0" yoffset="27" xadvance="8" /&amp;gt;
+&lt;em&gt;      &amp;lt;char id="33" x="155" y="144" width="9" height="21" xoffset="0" yoffset="6" xadvance="9" /&amp;gt;
+&lt;/em&gt;    &amp;lt;/chars&amp;gt;
+&lt;em&gt;    &amp;lt;kernings&amp;gt; &amp;lt;!-- Kerning is optional --&amp;gt;
+&lt;/em&gt;      &amp;lt;kerning first="83" second="83" amount="-4"/&amp;gt;
+&lt;em&gt;    &amp;lt;/kernings&amp;gt;
+&lt;/em&gt;  &amp;lt;/font&amp;gt;
+&lt;em&gt;  &lt;/pre&gt;
+&lt;/em&gt;&lt;br /&gt;
+&lt;em&gt;  Pass an instance of this class to the method &lt;code&gt;registerBitmapFont&lt;/code&gt; of the
+&lt;/em&gt;  TextField class. Then, set the &lt;code&gt;fontName&lt;/code&gt; property of the text field to the 
+&lt;em&gt;  &lt;code&gt;name&lt;/code&gt; value of the bitmap font. This will make the text field use the bitmap
+&lt;/em&gt;  font."/></head><body><style>
+.navbar .brand {
+	display: inline-block;
+	float: none;
+	text-shadow: 0 0 0 transparent;
+</style><nav class="nav"><div class="navbar"><div class="navbar-inner" style="background:#FAFAFA; border-bottom:1px solid rgba(0,0,0,.09)"><div class="container"><a class="brand" style="color:#000000" href="../../">Away3D API Reference</a></div></div></div></nav><div class="container main-content"><div class="row-fluid"><div class="span3"><div class="well sidebar-nav"><form class="form-search" id="searchForm"><div class="input-prepend input-block-level"><span class="add-on"><i class="icon-search"></i></span><input id="search" type="text" placeholder="Search" autocomplete="off"/></div></form><div class="dropdown"><select id="select-platform" class="selectpicker" title="Filter by platform" data-width="100%"><option value="all" selected="true">All Platforms</option><option>Linux</option><option>Android</option><option>Windows</option><option>iOS</option><option>HTML5</option><option>Neko</option><option>macOS</option></select></div></div><div class="well sidebar-nav"><div id="nav"></div></div></div><div class="span9"><div class="page-header"><span class="viewsource"><a href="https://github.com/openfl/away3d/tree/master/away3d/textfield/BitmapFont.hx" class="btn btn-medium"><i class="fa fa-eye"></i> View source</a></span><h1><small>class</small> BitmapFont</h1><h4><small>package <a href="../../away3d/textfield/index.html">away3d.textfield</a></small></h4>    <p class="availability"><hr/><em>Available on  all platforms</em></p></div><div class="body"><div class="doc doc-main"><div class="indent"><p>The BitmapFont class parses bitmap font files and arranges the glyphs
+<em>  in the form of a text.
+</em>
+<em>  The class parses the Xml format as it is used in the 
+</em>  <a href="http://www.angelcode.com/products/bmfont/">AngelCode Bitmap Font Generator</a> or
+<em>  the <a href="http://glyphdesigner.71squared.com/">Glyph Designer</a>. 
+</em>  This is what the file format looks like:
+<em>
+</em>  <pre> 
+<em>  &lt;font&gt;
+</em>    &lt;info face="BranchingMouse" size="40" /&gt;
+<em>    &lt;common lineHeight="40" /&gt;
+</em>    &lt;pages&gt;  &lt;!-- currently, only one page is supported --&gt;
+<em>      &lt;page id="0" file="texture.png" /&gt;
+</em>    &lt;/pages&gt;
+<em>    &lt;chars&gt;
+</em>      &lt;char id="32" x="60" y="29" width="1" height="1" xoffset="0" yoffset="27" xadvance="8" /&gt;
+<em>      &lt;char id="33" x="155" y="144" width="9" height="21" xoffset="0" yoffset="6" xadvance="9" /&gt;
+</em>    &lt;/chars&gt;
+<em>    &lt;kernings&gt; &lt;!-- Kerning is optional --&gt;
+</em>      &lt;kerning first="83" second="83" amount="-4"/&gt;
+<em>    &lt;/kernings&gt;
+</em>  &lt;/font&gt;
+<em>  </pre>
+</em><br />
+<em>  Pass an instance of this class to the method <code>registerBitmapFont</code> of the
+</em>  TextField class. Then, set the <code>fontName</code> property of the text field to the 
+<em>  <code>name</code> value of the bitmap font. This will make the text field use the bitmap
+</em>  font.</p></div></div><h3 class="section">Constructor</h3><div class="fields"><div class="field "><a name="new"></a><h3><p><code><a href="#new"><span class="identifier">new</span></a> (<span style="white-space:nowrap">?texture:<a class="type" title="TextureMaterial is a single-pass material that uses a texture to define the surface's diffuse reflection colour (albedo)." href="../../away3d/materials/TextureMaterial.html">TextureMaterial</a>,</span> <span style="white-space:nowrap">?fontXml:<span class="type">Xml</span></span>)</code></p></h3><div class="doc"><p>Creates a bitmap font by parsing an Xml file and uses the specified texture. </p>
+<pre><code> *  If you don't pass any data, the "mini" font will be created.
+</code></pre></div></div></div><h3 class="section">Variables</h3><div class="fields"><div class="field "><a name="baseline"></a><h3><p><code><a href="../../away3d/textfield/BitmapFont.html#baseline"><span class="identifier">baseline</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p>The baseline of the font. This property does not affect text rendering;</p>
+<pre><code> *  it's just an information that may be useful for exact text placement.
+</code></pre></div></div><div class="field "><a name="fontMaterial"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/textfield/BitmapFont.html#fontMaterial"><span class="identifier">fontMaterial</span></a>:<a class="type" title="TextureMaterial is a single-pass material that uses a texture to define the surface's diffuse reflection colour (albedo)." href="../../away3d/materials/TextureMaterial.html">TextureMaterial</a></code></p></h3><div class="doc"><p>The underlying texture that contains all the chars.</p></div></div><div class="field "><a name="lineHeight"></a><h3><p><code><a href="../../away3d/textfield/BitmapFont.html#lineHeight"><span class="identifier">lineHeight</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p>The height of one line in points.</p></div></div><div class="field "><a name="name"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/textfield/BitmapFont.html#name"><span class="identifier">name</span></a>:<span class="type">String</span></code></p></h3><div class="doc"><p>The name of the font as it was parsed from the font file.</p></div></div><div class="field "><a name="offsetX"></a><h3><p><code><a href="../../away3d/textfield/BitmapFont.html#offsetX"><span class="identifier">offsetX</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p>An offset that moves any generated text along the x-axis (in points).</p>
+<pre><code> *  Useful to make up for incorrect font data. @default 0.
+</code></pre></div></div><div class="field "><a name="offsetY"></a><h3><p><code><a href="../../away3d/textfield/BitmapFont.html#offsetY"><span class="identifier">offsetY</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p>An offset that moves any generated text along the y-axis (in points).</p>
+<pre><code> *  Useful to make up for incorrect font data. @default 0.
+</code></pre></div></div><div class="field "><a name="size"></a><h3><p><code><span class="label">read only</span><a href="../../away3d/textfield/BitmapFont.html#size"><span class="identifier">size</span></a>:<span class="type">Float</span></code></p></h3><div class="doc"><p>The native size of the font.</p></div></div></div><h3 class="section">Methods</h3><div class="fields"><div class="field "><a name="addChar"></a><h3><p><code><a href="#addChar"><span class="identifier">addChar</span></a> (<span style="white-space:nowrap">charID:<span class="type">Int</span>,</span> <span style="white-space:nowrap">bitmapChar:<a class="type" title="A BitmapChar contains the information about one char of a bitmap font." href="../../away3d/textfield/BitmapChar.html">BitmapChar</a></span>):<span class="type">Void</span></code></p></h3><div class="doc"><p>Adds a bitmap char with a certain character ID.</p></div></div><div class="field "><a name="dispose"></a><h3><p><code><a href="#dispose"><span class="identifier">dispose</span></a> ():<span class="type">Void</span></code></p></h3><div class="doc"><p>Disposes the texture of the bitmap font!</p></div></div><div class="field "><a name="fillBatched"></a><h3><p><code><a href="#fillBatched"><span class="identifier">fillBatched</span></a> (<span style="white-space:nowrap">data:<span class="type">Vector</span>&lt;<span class="type">Float</span>&gt;,</span> <span style="white-space:nowrap">indices:<span class="type">Vector</span>&lt;<span class="type">UInt</span>&gt;,</span> <span style="white-space:nowrap">width:<span class="type">Float</span>,</span> <span style="white-space:nowrap">height:<span class="type">Float</span>,</span> <span style="white-space:nowrap">text:<span class="type">String</span>,</span> <span style="white-space:nowrap">fontSize:<span class="type">Float</span> = -1,</span> <span style="white-space:nowrap">hAlign:<span class="type">String</span> = "center",</span> <span style="white-space:nowrap">vAlign:<span class="type">String</span> = "center",</span> <span style="white-space:nowrap">autoScale:<span class="type">Bool</span> = true,</span> <span style="white-space:nowrap">kerning:<span class="type">Bool</span> = true,</span> <span style="white-space:nowrap">letterSpacing:<span class="type">Float</span> = 0</span>):<span class="type">Void</span></code></p></h3><div class="doc"><p>Draws text into a Geometry.</p></div></div><div class="field "><a name="getChar"></a><h3><p><code><a href="#getChar"><span class="identifier">getChar</span></a> (<span style="white-space:nowrap">charID:<span class="type">Int</span></span>):<a class="type" title="A BitmapChar contains the information about one char of a bitmap font." href="../../away3d/textfield/BitmapChar.html">BitmapChar</a></code></p></h3><div class="doc"><p>Returns a single bitmap char with a certain character ID.</p></div></div><div class="field "><a name="getCharIDs"></a><h3><p><code><a href="#getCharIDs"><span class="identifier">getCharIDs</span></a> (<span style="white-space:nowrap">?result:<span class="type">Vector</span>&lt;<span class="type">Int</span>&gt;</span>):<span class="type">Vector</span>&lt;<span class="type">Int</span>&gt;</code></p></h3><div class="doc"><p>Returns a vector containing all the character IDs that are contained in this font.</p></div></div><div class="field "><a name="getMaterialClone"></a><h3><p><code><a href="#getMaterialClone"><span class="identifier">getMaterialClone</span></a> ():<a class="type" title="TextureMaterial is a single-pass material that uses a texture to define the surface's diffuse reflection colour (albedo)." href="../../away3d/materials/TextureMaterial.html">TextureMaterial</a></code></p></h3><div class="doc"><p></p></div></div><div class="field "><a name="hasChars"></a><h3><p><code><a href="#hasChars"><span class="identifier">hasChars</span></a> (<span style="white-space:nowrap">text:<span class="type">String</span></span>):<span class="type">Bool</span></code></p></h3><div class="doc"><p>Checks whether a provided string can be displayed with the font.</p></div></div></div><h3 class="section">Static variables</h3><div class="fields"><div class="field "><a name="MINI"></a><h3><p><code><span class="label">static</span><a href="../../away3d/textfield/BitmapFont.html#MINI"><span class="identifier">MINI</span></a>:<span class="type">String</span><span> = "mini"</span></code></p></h3><div class="doc"><p>The font name of the embedded minimal bitmap font. Use this e.g. for debug output.</p></div></div><div class="field "><a name="NATIVE_SIZE"></a><h3><p><code><span class="label">static</span><a href="../../away3d/textfield/BitmapFont.html#NATIVE_SIZE"><span class="identifier">NATIVE_SIZE</span></a>:<span class="type">Int</span><span> = -1</span></code></p></h3><div class="doc"><p>Use this constant for the <code>fontSize</code> property of the TextField class to </p>
+<pre><code> *  render the bitmap font in exactly the size it was created.
+</code></pre></div></div></div></div></div></div></div><footer class="section site-footer" style="background:#FAFAFA"><div class="container"><div class="copyright"><p style="color:#000000">This documentation is generated for version 1.8</p><p style="color:#000000">&copy; 2017 &nbsp;</p></div></div></footer><script src="../..//highlighter.js"></script><link href="../../highlighter.css" rel="stylesheet"/></body></html>

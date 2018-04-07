@@ -1,0 +1,160 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_submit",
+            "record" : true,
+            "id" : 1,
+            "priority" : 22,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/Yes",
+                "position" : [ 693, 504 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_feedback",
+            "record" : true,
+            "priority" : 8,
+            "text" : "ACCOUNT_SUCCESS",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 240, 425 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 900, 60 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_title",
+            "priority" : 15,
+            "text" : "TEACHER_CREATE",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 364, 226 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "center" ],
+                "size" : [ 640, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_teacher",
+            "record" : true,
+            "priority" : 21,
+            "text" : "TEACHER_ID",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ -899, 295 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "touchable" : true,
+                "loadParams" : false,
+                "color" : [ 20, 20, 20 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "size" : [ 450, 45 ]
+            }
+        }, { 
+            "name" : "lbl_grade",
+            "record" : true,
+            "priority" : 21,
+            "text" : "TEACHER_GRADE",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ -899, 371 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "touchable" : true,
+                "loadParams" : false,
+                "color" : [ 20, 20, 20 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "size" : [ 450, 45 ]
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_login_panel",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+                "position" : [ 309, 208 ],
+                "scale" : [ 3, 1.35 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_logo",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "2d/UI/TitleLogo",
+                "position" : [ 0, 202 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "scale" : [ 0.75, 0.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_teacher",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-TextInputField_default",
+                "position" : [ -926, 288 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "scale" : [ 5, 1 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_grade",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-TextInputField_default",
+                "position" : [ -926, 364 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "scale" : [ 5, 1 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_4by3_guide",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "opacity" : 15,
+                "position" : [ 178, 0 ],
+                "scale" : [ 1024, 768 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

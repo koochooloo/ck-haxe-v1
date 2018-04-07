@@ -1,0 +1,12 @@
+<ResourceProject version="3.0">
+  <Head>
+  </Head>
+  <Body>
+    <resources name="TitleScreen/">
+      <paramDefaults>
+        <paramDefault name="bounds" value="Automatic;Bounds" />
+        <paramDefault name="center" value="Automatic;(Center,Bottom)" />
+      </paramDefaults>
+    </resources>
+  </Body>
+</ResourceProject>

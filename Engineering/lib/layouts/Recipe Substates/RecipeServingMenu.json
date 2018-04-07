@@ -1,0 +1,200 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_gplus",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_socialGPlus",
+                "position" : [ 1142, 443 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_twitter",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_socialTwitter",
+                "position" : [ 1142, 347 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fb",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_socialFb",
+                "position" : [ 1142, 251 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "vo_enjoy",
+            "record" : true,
+            "priority" : 6,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_sound2",
+                "position" : [ 142, 230 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "vo_fact",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_sound2",
+                "position" : [ 1133, 680 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_favorite",
+            "record" : true,
+            "priority" : 21,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_favorites",
+                "position" : [ 1068, 560 ],
+                "scale" : [ 0.8, 0.8 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_pageRight",
+            "record" : true,
+            "priority" : 50,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_factNext",
+                "position" : [ 1078, 352 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_pageLeft",
+            "record" : true,
+            "priority" : 50,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_factPrevious",
+                "position" : [ 634, 353 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_enjoy",
+            "record" : true,
+            "priority" : 5,
+            "text" : "TEST",
+            "inheritable" : { 
+                "position" : [ 166, 121 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "size" : [ 300, 210 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "RECIPE_SERVE",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_instructions",
+            "record" : true,
+            "priority" : 10,
+            "text" : "Caramels bear claw sugar plum chocolate. Jelly beans wafer cookie bonbon danish croissant dessert gummi bears. Gingerbread chocolate bar cheesecake liquorice halvah chocolate.",
+            "inheritable" : { 
+                "position" : [ 636, 597 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 440, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_chef",
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-spoon",
+                "position" : [ -237, -20 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "scale" : [ 0.8, 0.8 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "bubble",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-SpeechBubble",
+                "position" : [ 163, 116 ],
+                "scale" : [ 1.2, 1 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_indentedPanel",
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-IndentedPanel",
+                "position" : [ 618, 592 ],
+                "scale" : [ 3.7, 1.3 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_woodPanel",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-WoodenPanel",
+                "position" : [ -65, -273 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 1.85, 1.85 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "recipeImage",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/BlackPixel",
+                "position" : [ 656, 150 ],
+                "scale" : [ 400, 400 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

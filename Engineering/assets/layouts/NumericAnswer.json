@@ -1,0 +1,63 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "ref_answer",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/ImageDefaultAnswer",
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_answer",
+            "priority" : 10,
+            "inheritable" : { 
+                "opacity" : 30,
+                "position" : [ -75, -86 ],
+                "loadParams" : false,
+                "color" : [ 14, 9, 4 ],
+                "font" : "/fonts/CarterOne.ttf:100",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 150, 150 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_correct_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/CorrectAnswer",
+                "position" : [ 1, 76 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_wrong_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WrongAnswer",
+                "position" : [ 1, 76 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

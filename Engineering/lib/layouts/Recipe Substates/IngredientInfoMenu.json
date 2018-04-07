@@ -1,0 +1,117 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_next",
+            "record" : true,
+            "id" : 2,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_check",
+                "position" : [ -80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomRight",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_back",
+            "record" : true,
+            "id" : 4,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Back",
+                "position" : [ 80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_info",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_info",
+                "position" : [ 80, 80 ],
+                "scale" : [ 1.25, 1.25 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "vo_hello",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_sound2",
+                "position" : [ 1174, 215 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_about",
+            "record" : true,
+            "priority" : 1,
+            "text" : "Turnip greens yarrow ricebean rutabaga endive cauliflower sea lettuce kohlrabi amaranth water spinach avocado daikon napa cabbage asparagus winter purslane kale. Celery potato scallion desert raisin horseradish spinach carrot soko. Lotus root water spinach fennel kombu maize bamboo shoot green bean swiss chard seakale pumpkin onion chickpea gram corn pea. Brussels sprout coriander water chestnut gourd swiss chard wakame kohlrabi beetroot carrot watercress. Corn amaranth salsify bunya nuts nori azuki bean chickweed potato bell pepper artichoke.",
+            "inheritable" : { 
+                "position" : [ 599, 42 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "size" : [ 550, 360 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_ingredient",
+            "record" : true,
+            "priority" : 10,
+            "text" : "ingredient",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 128, 41 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "size" : [ 430, 150 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "chef",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-spoon",
+                "position" : [ 460, 855 ],
+                "scale" : [ 1.5, 1.5 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "bubble",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-SpeechBubble",
+                "position" : [ 560, 32 ],
+                "scale" : [ 2.5, 1.8 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

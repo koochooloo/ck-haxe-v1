@@ -1,0 +1,107 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_factNext",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factNext",
+                "position" : [ 1064, 704 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_factPrevious",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factPrevious",
+                "position" : [ 304, 704 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact1",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 656, 730 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact2",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 672, 730 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact3",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 688, 730 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_fact4",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factDot",
+                "position" : [ 704, 730 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_fact",
+            "record" : true,
+            "priority" : 1,
+            "text" : "Bacon ipsum dolor amet fatback capicola andouille frankfurter boudin biltong tri-tip cupim. Jowl picanha sausage, jerky doner frankfurter pancetta tenderloin sirloin beef ribs prosciutto landjaeger venison. ",
+            "inheritable" : { 
+                "position" : [ 343, 642 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:18",
+                "size" : [ 700, 80 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 5,
+            "text" : "CountryName",
+            "inheritable" : { 
+                "position" : [ 376, 48 ],
+                "loadParams" : false,
+                "color" : [ 1, 4, 14 ],
+                "font" : "/fonts/angrybirds-regular.ttf:72",
+                "size" : [ 800, 100 ]
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_sky2",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

@@ -1,0 +1,89 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "label" : [ { 
+            "name" : "lbl_week",
+            "record" : true,
+            "priority" : 15,
+            "text" : "Week 1",
+            "inheritable" : { 
+                "opacity" : 20,
+                "position" : [ -50, -51 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:18",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 100, 50 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_country",
+            "record" : true,
+            "priority" : 15,
+            "text" : "STAMP",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -50, -27 ],
+                "visible" : false,
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 100, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_stamp",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamp-Italy",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_unlock",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "UI/passport/StampField_glow",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_stamper_vfx",
+            "record" : true,
+            "priority" : 19,
+            "inheritable" : { 
+                "resource" : "UI/passport/vfx_stamp",
+                "position" : [ -6, 80 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_stamper",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "UI/passport/Stamper",
+                "position" : [ 2, -20 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

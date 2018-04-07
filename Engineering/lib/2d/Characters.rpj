@@ -1,0 +1,48 @@
+<ResourceProject version="3.0">
+  <Head>
+  </Head>
+  <Body>
+    <resources name="Characters/">
+      <paramDefaults>
+        <paramDefault name="bounds" value="Automatic;Bounds" />
+        <paramDefault name="center" value="Automatic;(Center,Bottom)" />
+      </paramDefaults>
+      <resource name="girl_hat_1" path="Characters/girl_hat_1.png" md5="4f1d224122f670f0f024ef3e0a6b0ed9">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="232" y="666" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="465" height="667" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="girl_hat_2" path="Characters/girl_hat_2.png" md5="6717467b05979a1b3030acf653d63cea">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="134" y="414" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="268" height="415" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="girl_noHat_1" path="Characters/girl_noHat_1.png" md5="88bbbb70097522c695c24bd6c7b2fb42">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="204" y="452" paramType="Default" />
+          <box name="bounds" x="16" y="20" width="377" height="433" paramType="Default" />
+        </params>
+      </resource>
+    </resources>
+  </Body>
+</ResourceProject>

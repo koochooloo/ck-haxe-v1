@@ -1,0 +1,77 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_next",
+            "record" : true,
+            "id" : 13,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Next",
+                "position" : [ -80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomRight",
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_completed",
+            "priority" : 15,
+            "text" : "ASSESS_DONE",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 364, 556 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "center" ],
+                "size" : [ 640, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_panel",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-DefaultPanel",
+                "position" : [ 267, 516 ],
+                "scale" : [ 3.25, 0.6 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_character",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-spoon",
+                "position" : [ 0, 501 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : true
+            }
+        } ]
+    }
+}

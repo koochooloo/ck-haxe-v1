@@ -1,0 +1,133 @@
+Index: firstplayable/hxlib/display/OPSprite.hx
+===================================================================
+--- firstplayable/hxlib/display/OPSprite.hx	(revision 1011)
++++ firstplayable/hxlib/display/OPSprite.hx	(working copy)
+@@ -14,6 +14,7 @@
+ package com.firstplayable.hxlib.display;
+ import openfl.display.BitmapData;
+ import openfl.display.Bitmap;
++import openfl.display.BlendMode;
+ import openfl.display.DisplayObject;
+ import openfl.display.DisplayObjectContainer;
+ import openfl.display.Sprite;
+@@ -20,8 +21,8 @@
+ import openfl.geom.Matrix;
+ import openfl.geom.Point;
+ import openfl.geom.Rectangle;
++import openfl.display.Shape;
+ 
+-
+ /**
+  * DisplayObjectContainer that is meant to work with RPJ data from Oriolo. 
+  * Currently supports bounding boxes and reference points. 
+@@ -30,8 +31,9 @@
+ class OPSprite extends DisplayObjectContainer
+ {
+ 	private static var __tempBounds = new Rectangle ();
+-	
++
+ 	private static var ms_showBounds:Bool = false; //< TODO: compiler const?
++	private var m_boundsDataShape:Shape;
+ 	
+ 	private var m_img( default, set ):Bitmap = null;
+ 	private var m_userData:SpriteBoxData = null;
+@@ -52,9 +54,11 @@
+ 	public function new( ?img:Bitmap, ?boxData:SpriteBoxData ) 
+ 	{
+ 		super();
++
+ 		smoothing = ( img != null ) ? img.smoothing : false;
+ 		m_img = img;
+-		updateBounds( boxData );
++
++		updateBounds( boxData );	
+ 	}
+ 	
+ 	//-----------------------------------------------------------------------------------------------------------
+@@ -133,19 +137,46 @@
+ 			}
+ 		}
+ 		
+-		// Draw the new bounding box (TODO PARAMS)
+-		//var bounds:Rectangle = boxData.bounds;
+-		//m_hit.graphics.beginFill( 0x00FF00 );
+-		//m_hit.graphics.drawRect( bounds.x, bounds.y, bounds.width, bounds.height );
+-		//m_hit.graphics.endFill();
+-		
+ 		// Debug drawing
+-		//if ( m_hit.visible != ms_showBounds )
+-		//{
+-		//	m_hit.visible = ms_showBounds;
+-		//}
++		updateDebugDrawing();
+ 	}
+ 	
++	private function updateDebugDrawing():Void
++	{
++		if (!ms_showBounds)
++		{
++			return;
++		}
++		var boxData:SpriteBoxData = getBoxData();		
++		if (boxData == null)
++		{
++			return;
++		}
++		
++		if (m_boundsDataShape == null)
++		{
++			m_boundsDataShape = new Shape();
++			addChildAt( m_boundsDataShape, numChildren );
++		}
++	
++		var bounds:Rectangle = boxData.bounds;
++	
++		var boundsAlpha:Float = 0.3;
++		var refPtAlpha:Float = 0.5;
++		var refPtSize:Float = 8.0;
++		
++		m_boundsDataShape.graphics.clear();
++		m_boundsDataShape.blendMode = BlendMode.ADD;
++		m_boundsDataShape.graphics.beginFill( 0x00FF00, boundsAlpha );
++		m_boundsDataShape.graphics.drawRect( (bounds.x + m_img.x), (bounds.y + m_img.y), bounds.width, bounds.height );
++		m_boundsDataShape.graphics.endFill();
++		
++		//we dont want the ref pt marker to scale with the object
++		m_boundsDataShape.graphics.beginFill( 0xFF0000, refPtAlpha );
++		m_boundsDataShape.graphics.drawRect( -(refPtSize*0.5) / scaleX, -(refPtSize*0.5) / scaleY, refPtSize / scaleX, refPtSize / scaleY );
++		m_boundsDataShape.graphics.endFill();		
++	}
++	
+ 	//-----------------------------------------------------------------------------------------------------------
+ 
+ 	override private function __getBounds (rect:Rectangle, matrix:Matrix):Void {
+@@ -311,6 +342,11 @@
+ 		onBoxDataOrImageChanged();
+ 		addChild( m_img );
+ 
++		if (m_boundsDataShape != null)
++		{
++			setChildIndex( m_boundsDataShape, numChildren );
++		}
++
+ 		return m_img;
+ 	}
+ 	
+@@ -335,4 +371,16 @@
+ 		scaleX = size;
+ 		scaleY = size;
+ 	}
++
++	private override function set_scaleY(value:Float):Float {
++		var ret:Float = super.set_scaleY(value);
++		updateDebugDrawing();
++		return value;		
++	}
++	
++	private override function set_scaleX(value:Float):Float {
++		var ret:Float = super.set_scaleX(value);
++		updateDebugDrawing();
++		return value;		
++	}	
+ }
+\ No newline at end of file

@@ -1,0 +1,94 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "ref_answer_one",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/AnswerBtnBacking",
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_answer",
+            "priority" : 10,
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -75, -77 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 150, 150 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_answer_number",
+            "priority" : 10,
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -75, -43 ],
+                "visible" : false,
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:64",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 150, 150 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_question_imgref",
+            "priority" : 18,
+            "inheritable" : { 
+                "resource" : "2d/UI/imgref/AnswerImgRef",
+                "position" : [ 1, 71 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_correct_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/CorrectAnswer",
+                "position" : [ 1, 76 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_wrong_answer",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WrongAnswer",
+                "position" : [ 1, 76 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

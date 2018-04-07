@@ -1,0 +1,8 @@
+************* Module SourceMapper
+W: 45, 0: TODO canonical (realpath?) (fixme)
+W:110, 0: TODO canonical (realpath?) (fixme)
+W:149, 0: TODO: avoid conversion to RGBA, it's costly (fixme)
+W:195, 0: TODO: need to modify params for off-by-one trim? (fixme)
+R:125, 0: Too many local variables (26/15) (too-many-locals)
+R:125, 0: Too many branches (21/12) (too-many-branches)
+R:125, 0: Too many statements (54/50) (too-many-statements)

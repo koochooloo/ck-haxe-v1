@@ -1,0 +1,86 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_yes",
+            "record" : true,
+            "id" : 1,
+            "priority" : 15,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/Yes",
+                "position" : [ 783, 482 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_no",
+            "record" : true,
+            "priority" : 15,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/No",
+                "position" : [ 588, 482 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_message",
+            "record" : true,
+            "priority" : 15,
+            "text" : "LOGIN_POPUP",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 483, 267 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 400, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "spr_screenDarkening",
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "2d/UI/BlackPixel",
+                "opacity" : 20,
+                "scale" : [ 1366, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_login_panel",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+                "position" : [ 422, 232 ],
+                "scale" : [ 2, 1 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_student",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/UserIcons/Red1",
+                "position" : [ 683, 380 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

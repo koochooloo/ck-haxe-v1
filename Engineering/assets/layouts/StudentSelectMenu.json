@@ -1,0 +1,141 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_red",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/UserIcons/Red1",
+                "position" : [ 248, 224 ],
+                "scale" : [ 0.9, 0.9 ],
+                "touchable" : false,
+                "visible" : false,
+                "loadParams" : true,
+                "enabled" : false
+            }
+        }, { 
+            "name" : "btn_yellow",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/UserIcons/Yellow1",
+                "position" : [ 248, 354 ],
+                "scale" : [ 0.9, 0.9 ],
+                "touchable" : false,
+                "visible" : false,
+                "loadParams" : true,
+                "enabled" : false
+            }
+        }, { 
+            "name" : "btn_blue",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/UserIcons/Blue1",
+                "position" : [ 248, 484 ],
+                "scale" : [ 0.9, 0.9 ],
+                "touchable" : false,
+                "visible" : false,
+                "loadParams" : true,
+                "enabled" : false
+            }
+        }, { 
+            "name" : "btn_green",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/UserIcons/Green1",
+                "position" : [ 248, 614 ],
+                "scale" : [ 0.9, 0.9 ],
+                "touchable" : false,
+                "visible" : false,
+                "loadParams" : true,
+                "enabled" : false
+            }
+        } ],
+        "label" : [ { 
+            "name" : "headerText_class",
+            "record" : true,
+            "priority" : 8,
+            "text" : "LOGIN_STUDENT_TITLE",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ]
+            }
+        }, { 
+            "name" : "lbl_instructions",
+            "record" : true,
+            "priority" : 10,
+            "text" : "LOGIN_STUDENT_TEXT",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 0, 104 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 1366, 100 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_grade",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 0, 64 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 1366, 100 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_4by3_guide",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "opacity" : 15,
+                "position" : [ 178, 0 ],
+                "scale" : [ 1024, 768 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

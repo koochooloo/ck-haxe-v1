@@ -1,0 +1,10 @@
+{
+    "key": "1LZs7_jT4ixS5t_f5NDbCVAEoUDYlpRPj",
+    "target_directory": "../drive_s3_copy/audio/",
+    "valid_mime_types": [
+			"audio/ogg",
+			"application/ogg",
+			"audio/x-wav",
+			"audio/mpeg"
+    ]
+}

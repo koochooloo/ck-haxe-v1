@@ -1,0 +1,156 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "panel" : [ { 
+            "name" : "panel_settings",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "position" : [ 150, 550 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_sound",
+                "record" : true,
+                "id" : 4,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound",
+                    "position" : [ 50, -20 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_about",
+                "record" : true,
+                "id" : 3,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_about",
+                    "position" : [ 50, -100 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_support",
+                "record" : true,
+                "id" : 2,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_support",
+                    "position" : [ 50, -180 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_tutorial",
+                "record" : true,
+                "id" : 1,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_tutorial",
+                    "position" : [ 50, -260 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_allergens",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_allergens",
+                    "position" : [ 50, -340 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_fb",
+                "record" : true,
+                "id" : 5,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_socialFb",
+                    "position" : [ 300, 20 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_twitter",
+                "record" : true,
+                "id" : 6,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_socialTwitter",
+                    "position" : [ 400, 20 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_gplus",
+                "record" : true,
+                "id" : 7,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_socialGPlus",
+                    "position" : [ 500, 20 ],
+                    "loadParams" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "panel_settingsImg",
+                "priority" : 2,
+                "inheritable" : { 
+                    "resource" : "UI/panel_settings",
+                    "position" : [ 48, 64 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsSupport",
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/settingsSupport",
+                    "position" : [ 210, -155 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsTutorial",
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/settingsTutorial",
+                    "position" : [ 210, -240 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsAllergens",
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/settingsAllergens",
+                    "position" : [ 220, -320 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "settingsAbout",
+                "priority" : 23,
+                "inheritable" : { 
+                    "resource" : "UI/settingsAbout",
+                    "position" : [ 190, -80 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

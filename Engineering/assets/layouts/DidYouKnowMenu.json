@@ -1,0 +1,77 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "vo_fact",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_sound2",
+                "position" : [ 237, 304 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_takeAction",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_takeAction",
+                "position" : [ 576, 624 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_info",
+            "record" : true,
+            "priority" : 1,
+            "text" : "filler",
+            "inheritable" : { 
+                "position" : [ 298, 136 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "size" : [ 560, 300 ]
+            }
+        }, { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "DIDYOUKNOW",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_didyouknow",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

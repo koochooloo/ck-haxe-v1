@@ -1,0 +1,425 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "borderPanel" : [ { 
+            "name" : "scroll_bounds",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "position" : [ 200, 160 ],
+                "boundingBox" : [ 0, 0, 1100, 600 ]
+            }
+        } ],
+        "button" : [ { 
+            "name" : "btn_globe",
+            "record" : true,
+            "priority" : 7,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_globe",
+                "position" : [ 264, 80 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "noFavoritesText",
+            "record" : true,
+            "priority" : 5,
+            "text" : "NO_FAVORITES",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 376, 224 ],
+                "visible" : false,
+                "loadParams" : false,
+                "font" : "/fonts/angrybirds-regular.ttf:48",
+                "size" : [ 800, 100 ]
+            }
+        }, { 
+            "name" : "headerText_recipes",
+            "record" : true,
+            "priority" : 8,
+            "text" : "FAVORITES",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_rSearch",
+            "record" : true,
+            "priority" : 10,
+            "text" : "SEARCH",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ -377, 58 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "touchable" : true,
+                "loadParams" : false,
+                "color" : [ 20, 20, 20 ],
+                "font" : "/fonts/CarterOne.ttf:24",
+                "size" : [ 230, 45 ]
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "group_favorite1",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 200, 168 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe1",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_recipe",
+                    "position" : [ 105, 226 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x1",
+                "record" : true,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 188, 215 ],
+                    "scale" : [ 0.6, 0.6 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name1",
+                "record" : true,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 5, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:16",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 200, 40 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image1",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipes/placeholder",
+                    "position" : [ 105, 205 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_favorite2",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 472, 168 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe2",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_recipe",
+                    "position" : [ 105, 226 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x2",
+                "record" : true,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 188, 215 ],
+                    "scale" : [ 0.6, 0.6 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name2",
+                "record" : true,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 5, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:16",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 200, 40 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image2",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipes/placeholder",
+                    "position" : [ 105, 205 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_favorite3",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 744, 168 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe3",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_recipe",
+                    "position" : [ 105, 226 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x3",
+                "record" : true,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 188, 215 ],
+                    "scale" : [ 0.6, 0.6 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name3",
+                "record" : true,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 5, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:16",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 200, 40 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image3",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipes/placeholder",
+                    "position" : [ 105, 205 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_favorite4",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 200, 428 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe4",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_recipe",
+                    "position" : [ 105, 226 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x4",
+                "record" : true,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 188, 215 ],
+                    "scale" : [ 0.6, 0.6 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name4",
+                "record" : true,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 5, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:16",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 200, 40 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image4",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipes/placeholder",
+                    "position" : [ 105, 205 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_favorite5",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 472, 428 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe5",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_recipe",
+                    "position" : [ 105, 226 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x5",
+                "record" : true,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 188, 215 ],
+                    "scale" : [ 0.6, 0.6 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name5",
+                "record" : true,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 5, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:16",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 200, 40 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image5",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipes/placeholder",
+                    "position" : [ 105, 205 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_favorite6",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 744, 428 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_recipe6",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_recipe",
+                    "position" : [ 105, 226 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x6",
+                "record" : true,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 188, 215 ],
+                    "scale" : [ 0.6, 0.6 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_Name6",
+                "record" : true,
+                "priority" : 5,
+                "text" : "NAME",
+                "inheritable" : { 
+                    "opacity" : 20,
+                    "position" : [ 5, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:16",
+                    "textAlignment" : [ "center", "center" ],
+                    "size" : [ 200, 40 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "image6",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/recipes/placeholder",
+                    "position" : [ 105, 205 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_cSearch",
+            "record" : true,
+            "priority" : 9,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-TextInputField_default",
+                "position" : [ -396, 50 ],
+                "positionRelative" : false,
+                "origin" : "topRight",
+                "scale" : [ 3.5, 1 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

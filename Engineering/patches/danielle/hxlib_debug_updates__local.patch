@@ -1,0 +1,148 @@
+Index: lib/data/Tunables.json
+===================================================================
+--- lib/data/Tunables.json	(revision 30)
++++ lib/data/Tunables.json	(working copy)
+@@ -14,7 +14,7 @@
+       {
+          "name": "DEBUG_TUNABLES",
+          "type": "Bool",
+-         "value": "false",
++         "value": "true",
+          "tags": [
+             "debug"
+          ]
+@@ -55,6 +55,39 @@
+             "debug",
+             "ui__"
+          ]
++      },
++      {
++         "name": "VERSIONSTAMP_COLOR",
++         "type": "Int",
++         "value": "11184640",
++         "tags": [
++            "debug",
++            "ui__"
++         ]
++      },
++      {
++         "name": "VERSIONSTAMP_POSITION",
++         "type": "String",
++         "value": "BOTTOM_LEFT",
++         "tags": [
++            "debug",
++            "ui__"
++         ]
++      },
++      {
++         "name": "SHOW_VERSIONSTAMP",
++         "type": "Bool",
++         "value": "true",
++         "tags": [
++            "debug",
++            "ui__"
++         ]
++      },
++      {
++         "name": "VERSIONSTAMP_SIZE",
++         "type": "Int",
++         "value": "24",
++         "tags": []
+       }
+    ]
+ }
+\ No newline at end of file
+Index: src/game/init/Display.hx
+===================================================================
+--- src/game/init/Display.hx	(revision 30)
++++ src/game/init/Display.hx	(working copy)
+@@ -15,6 +15,8 @@
+ 
+ import com.firstplayable.hxlib.app.Application;
+ import com.firstplayable.hxlib.Debug;
++import com.firstplayable.hxlib.debug.DebugDefs;
++import com.firstplayable.hxlib.debug.events.RefreshUIEvent;
+ import com.firstplayable.hxlib.debug.tunables.Tunables;
+ import com.firstplayable.hxlib.display.GameDisplay;
+ import com.firstplayable.hxlib.display.LayerName;
+@@ -84,6 +86,7 @@
+ 		GameDisplay.addLayer( LayerName.FOREGROUND, makeGameLayer() );
+ 		GameDisplay.addLayer( LayerName.HUD, makeGameLayer() );
+ 		GameDisplay.addLayer( LayerName.DEBUG, makeGameLayer() );
++		GameDisplay.addLayer( LayerName.BUILDSTAMP, makeGameLayer() );
+ 		
+ 		printDebugInfo();
+ 		addBuildstamp();
+@@ -157,15 +160,15 @@
+ 	
+ 	private static function addBuildstamp():Void
+ 	{
+-		ms_versionStamp = new Version();
++		//ms_versionStamp = new Version();
+ 		
+ #if !build_shipping
+-		var format:TextFormat = ms_versionStamp.getTextFormat();
+-		format.size = 24;
+-		ms_versionStamp.setTextFormat( format );
+-		
+-		ms_versionStamp.y = Application.app.targetSize.y - ms_versionStamp.height - 10;
+-		GameDisplay.attach( LayerName.DEBUG, ms_versionStamp );
++		//var format:TextFormat = ms_versionStamp.getTextFormat();
++		//format.size = 24;
++		//ms_versionStamp.setTextFormat( format );
++		//
++		//ms_versionStamp.y = Application.app.targetSize.y - ms_versionStamp.height - 10;
++		//GameDisplay.attach( LayerName.DEBUG, ms_versionStamp );
+ #end
+ 	}
+ 	
+@@ -177,11 +180,11 @@
+ 			return;
+ 		}
+ 		
+-		if ( ms_versionStamp == null )
+-		{
+-			addBuildstamp();
+-		}
+-		
+-		ms_versionStamp.text = Version.versionInfo + '\t' + SpeckGlobals.saveProfile.getCurrentStateString();
++		//if ( ms_versionStamp == null )
++		//{
++			//addBuildstamp();
++		//}
++		//
++		//ms_versionStamp.text = Version.versionInfo + '\t' + SpeckGlobals.saveProfile.getCurrentStateString();
+ 	}
+ }
+\ No newline at end of file
+Index: src/Main.hx
+===================================================================
+--- src/Main.hx	(revision 30)
++++ src/Main.hx	(working copy)
+@@ -22,10 +22,13 @@
+ import com.firstplayable.hxlib.app.Application;
+ import com.firstplayable.hxlib.app.MainLoop;
+ import com.firstplayable.hxlib.audio.WebAudio;
++import com.firstplayable.hxlib.debug.DebugDefs;
++import com.firstplayable.hxlib.debug.events.RefreshUIEvent;
+ import com.firstplayable.hxlib.debug.tunables.Tunables;
+ import com.firstplayable.hxlib.display.GameDisplay;
+ import com.firstplayable.hxlib.display.LayerName;
+ import com.firstplayable.hxlib.state.StateManager;
++import com.firstplayable.hxlib.utils.Version;
+ import com.firstplayable.hxlib.utils.json.GlobalTable;
+ import game.def.CheatDefs;
+ import game.def.GameState;
+@@ -85,6 +88,12 @@
+ 			#end
+ 		}
+ 		
++		if ( Tunables.SHOW_VERSIONSTAMP )
++		{
++			//Version.shown = true;
++			DebugDefs.debugEventTarget.dispatchEvent( new RefreshUIEvent() );
++		}
++		
+ 		//================================================
+ 		//Debug and Cheat setup
+ 		//================================================

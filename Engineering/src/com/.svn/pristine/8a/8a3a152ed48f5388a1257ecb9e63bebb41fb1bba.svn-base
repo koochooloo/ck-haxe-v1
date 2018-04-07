@@ -1,0 +1,348 @@
+Index: firstplayable/hxlib/test/MathUtilsTest.hx
+===================================================================
+--- firstplayable/hxlib/test/MathUtilsTest.hx	(revision 0)
++++ firstplayable/hxlib/test/MathUtilsTest.hx	(working copy)
+@@ -0,0 +1,99 @@
++package;
++
++import massive.munit.Assert;
++import com.firstplayable.hxlib.utils.MathUtils;
++import openfl.geom.Point;
++
++class MathUtilsTest 
++{
++	@Test
++	public function testAbsInt():Void
++	{
++	   Assert.areEqual(0, MathUtils.absInt(0));
++	   Assert.areEqual(-0, MathUtils.absInt(0));
++	   Assert.areEqual(2, MathUtils.absInt(2));
++	   Assert.areEqual(2, MathUtils.absInt(-2));
++	   Assert.areEqual(-2, -MathUtils.absInt(2));
++	   Assert.areEqual(-2, -MathUtils.absInt(-2));
++   }
++   
++   @Test
++   public function testFloatEqual():Void
++   {
++      Assert.isTrue(MathUtils.floatEqual(0.0, 0.000001));
++      Assert.isTrue(MathUtils.floatEqual(0.0, -0.000001));
++      Assert.isTrue(MathUtils.floatEqual(10000.0, 10000.00001));
++      Assert.isTrue(MathUtils.floatEqual(-10000.0, -10000.00001));
++      Assert.isFalse(MathUtils.floatEqual(10000.0, -10000.00001));
++      Assert.isFalse(MathUtils.floatEqual(-10000.0, 10000.00001));
++      Assert.isFalse(MathUtils.floatEqual(1000000.0, 1.01));
++      Assert.isFalse(MathUtils.floatEqual(100000.0, 0.0001));
++      Assert.isFalse(MathUtils.floatEqual(10000000.0, 0.0001));
++      Assert.isFalse(MathUtils.floatEqual(1000000000.0, 0.0001));
++
++      Assert.isFalse(MathUtils.floatEqual(1.0e4000, 1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(1.0e4000, -1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e4000, 1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e4000, -1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(1.0e-4000, 1.0e4000));
++      Assert.isFalse(MathUtils.floatEqual(1.0e-4000, -1.0e4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e-4000, 1.0e4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e-4000, -1.0e4000));
++   }
++
++   @Test
++   public function testLerp():Void
++   {
++      var p:Point = MathUtils.lerp(new Point(0,0), new Point(100,0), 0.5);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 0));
++
++      p = MathUtils.lerp(new Point(100,100), new Point(50,50), 0.5);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 75));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 75));
++
++      p = MathUtils.lerp(new Point(100,-100), new Point(50,50), 0.0);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 100));
++      Assert.isTrue(MathUtils.floatEqual(p.y, -100));
++
++      p = MathUtils.lerp(new Point(100,-100), new Point(50,50), 1.0);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++   }
++   
++   @Test
++   public function testProject():Void
++   {
++      var p:Point = MathUtils.project(new Point(50,50), new Point(0,100));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 0));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.project(new Point(50,50), new Point(50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.project(new Point(50,50), new Point(-50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 0));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 0));
++   }
++
++   @Test
++   public function testReflect():Void
++   {
++      var p:Point = MathUtils.reflect(new Point(50,50), new Point(0,100));
++      Assert.isTrue(MathUtils.floatEqual(p.x, -50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.reflect(new Point(50,50), new Point(50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.reflect(new Point(50,50), new Point(-50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, -50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, -50));
++      
++      p = MathUtils.reflect(new Point(-50,0), new Point(1,1));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 0));
++      Assert.isTrue(MathUtils.floatEqual(p.y, -50));
++   }
++}
+\ No newline at end of file
+Index: firstplayable/hxlib/test/ShuffleBagTest.hx
+===================================================================
+--- firstplayable/hxlib/test/ShuffleBagTest.hx	(revision 0)
++++ firstplayable/hxlib/test/ShuffleBagTest.hx	(working copy)
+@@ -0,0 +1,63 @@
++package;
++
++import massive.munit.Assert;
++import com.firstplayable.hxlib.utils.ShuffleBag;
++
++class ShuffleBagTest 
++{
++	static var SHUFFLE_MIN:Int = 3;
++	static var SHUFFLE_MAX:Int = 8;
++	static var SHUFFLE_LOOPS:Int = 3;
++	
++	@Test
++	public function testIntBag():Void
++	{
++	   var testBag:ShuffleBag<Int> = new ShuffleBag<Int>();
++	   for (i in SHUFFLE_MIN ... SHUFFLE_MAX)
++	   {
++	      testBag.add(i);
++	   }
++
++      var prev:Int = SHUFFLE_MAX;
++
++      for (j in 0 ... SHUFFLE_LOOPS)
++      {
++         var usedBits:Array<Bool> = new Array<Bool>();
++         for (i in SHUFFLE_MIN ... SHUFFLE_MAX)
++         {
++            usedBits[i] = false;
++         }         
++         
++         for (i in SHUFFLE_MIN ... SHUFFLE_MAX)
++         {
++            var t:Int = testBag.next();
++            Assert.isTrue(prev != t);
++            Assert.isTrue(usedBits[t] == false);
++            usedBits[t] = true;
++
++            prev = t;
++         }
++      }
++   }	
++	
++	@Test
++	public function testStringBag():Void
++	{
++	   var strBag:ShuffleBag<String> = new ShuffleBag<String>();
++      strBag.add("A");
++      strBag.add("B");
++      strBag.add("C");
++      strBag.add("D");
++      strBag.add("E");
++      strBag.add("F");	
++      
++      var prev:String = "";
++		for ( i in 0...10 )
++		{
++		   var t:String = strBag.next();
++		   Assert.isTrue(t != prev);
++		   prev = t;
++		}
++   }
++	
++}
+\ No newline at end of file
+Index: firstplayable/hxlib/test/MathUtilsTest.hx
+===================================================================
+--- firstplayable/hxlib/test/MathUtilsTest.hx	(revision 0)
++++ firstplayable/hxlib/test/MathUtilsTest.hx	(working copy)
+@@ -0,0 +1,99 @@
++package;
++
++import massive.munit.Assert;
++import com.firstplayable.hxlib.utils.MathUtils;
++import openfl.geom.Point;
++
++class MathUtilsTest 
++{
++	@Test
++	public function testAbsInt():Void
++	{
++	   Assert.areEqual(0, MathUtils.absInt(0));
++	   Assert.areEqual(-0, MathUtils.absInt(0));
++	   Assert.areEqual(2, MathUtils.absInt(2));
++	   Assert.areEqual(2, MathUtils.absInt(-2));
++	   Assert.areEqual(-2, -MathUtils.absInt(2));
++	   Assert.areEqual(-2, -MathUtils.absInt(-2));
++   }
++   
++   @Test
++   public function testFloatEqual():Void
++   {
++      Assert.isTrue(MathUtils.floatEqual(0.0, 0.000001));
++      Assert.isTrue(MathUtils.floatEqual(0.0, -0.000001));
++      Assert.isTrue(MathUtils.floatEqual(10000.0, 10000.00001));
++      Assert.isTrue(MathUtils.floatEqual(-10000.0, -10000.00001));
++      Assert.isFalse(MathUtils.floatEqual(10000.0, -10000.00001));
++      Assert.isFalse(MathUtils.floatEqual(-10000.0, 10000.00001));
++      Assert.isFalse(MathUtils.floatEqual(1000000.0, 1.01));
++      Assert.isFalse(MathUtils.floatEqual(100000.0, 0.0001));
++      Assert.isFalse(MathUtils.floatEqual(10000000.0, 0.0001));
++      Assert.isFalse(MathUtils.floatEqual(1000000000.0, 0.0001));
++
++      Assert.isFalse(MathUtils.floatEqual(1.0e4000, 1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(1.0e4000, -1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e4000, 1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e4000, -1.0e-4000));
++      Assert.isFalse(MathUtils.floatEqual(1.0e-4000, 1.0e4000));
++      Assert.isFalse(MathUtils.floatEqual(1.0e-4000, -1.0e4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e-4000, 1.0e4000));
++      Assert.isFalse(MathUtils.floatEqual(-1.0e-4000, -1.0e4000));
++   }
++
++   @Test
++   public function testLerp():Void
++   {
++      var p:Point = MathUtils.lerp(new Point(0,0), new Point(100,0), 0.5);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 0));
++
++      p = MathUtils.lerp(new Point(100,100), new Point(50,50), 0.5);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 75));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 75));
++
++      p = MathUtils.lerp(new Point(100,-100), new Point(50,50), 0.0);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 100));
++      Assert.isTrue(MathUtils.floatEqual(p.y, -100));
++
++      p = MathUtils.lerp(new Point(100,-100), new Point(50,50), 1.0);
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++   }
++   
++   @Test
++   public function testProject():Void
++   {
++      var p:Point = MathUtils.project(new Point(50,50), new Point(0,100));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 0));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.project(new Point(50,50), new Point(50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.project(new Point(50,50), new Point(-50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 0));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 0));
++   }
++
++   @Test
++   public function testReflect():Void
++   {
++      var p:Point = MathUtils.reflect(new Point(50,50), new Point(0,100));
++      Assert.isTrue(MathUtils.floatEqual(p.x, -50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.reflect(new Point(50,50), new Point(50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, 50));
++
++      p = MathUtils.reflect(new Point(50,50), new Point(-50,50));
++      Assert.isTrue(MathUtils.floatEqual(p.x, -50));
++      Assert.isTrue(MathUtils.floatEqual(p.y, -50));
++      
++      p = MathUtils.reflect(new Point(-50,0), new Point(1,1));
++      Assert.isTrue(MathUtils.floatEqual(p.x, 0));
++      Assert.isTrue(MathUtils.floatEqual(p.y, -50));
++   }
++}
+\ No newline at end of file
+Index: firstplayable/hxlib/test/ShuffleBagTest.hx
+===================================================================
+--- firstplayable/hxlib/test/ShuffleBagTest.hx	(revision 0)
++++ firstplayable/hxlib/test/ShuffleBagTest.hx	(working copy)
+@@ -0,0 +1,63 @@
++package;
++
++import massive.munit.Assert;
++import com.firstplayable.hxlib.utils.ShuffleBag;
++
++class ShuffleBagTest 
++{
++	static var SHUFFLE_MIN:Int = 3;
++	static var SHUFFLE_MAX:Int = 8;
++	static var SHUFFLE_LOOPS:Int = 3;
++	
++	@Test
++	public function testIntBag():Void
++	{
++	   var testBag:ShuffleBag<Int> = new ShuffleBag<Int>();
++	   for (i in SHUFFLE_MIN ... SHUFFLE_MAX)
++	   {
++	      testBag.add(i);
++	   }
++
++      var prev:Int = SHUFFLE_MAX;
++
++      for (j in 0 ... SHUFFLE_LOOPS)
++      {
++         var usedBits:Array<Bool> = new Array<Bool>();
++         for (i in SHUFFLE_MIN ... SHUFFLE_MAX)
++         {
++            usedBits[i] = false;
++         }         
++         
++         for (i in SHUFFLE_MIN ... SHUFFLE_MAX)
++         {
++            var t:Int = testBag.next();
++            Assert.isTrue(prev != t);
++            Assert.isTrue(usedBits[t] == false);
++            usedBits[t] = true;
++
++            prev = t;
++         }
++      }
++   }	
++	
++	@Test
++	public function testStringBag():Void
++	{
++	   var strBag:ShuffleBag<String> = new ShuffleBag<String>();
++      strBag.add("A");
++      strBag.add("B");
++      strBag.add("C");
++      strBag.add("D");
++      strBag.add("E");
++      strBag.add("F");	
++      
++      var prev:String = "";
++		for ( i in 0...10 )
++		{
++		   var t:String = strBag.next();
++		   Assert.isTrue(t != prev);
++		   prev = t;
++		}
++   }
++	
++}
+\ No newline at end of file

@@ -1,0 +1,145 @@
+Index: firstplayable/hxlib/loader/ResMan.hx
+===================================================================
+--- firstplayable/hxlib/loader/ResMan.hx	(revision 1424)
++++ firstplayable/hxlib/loader/ResMan.hx	(working copy)
+@@ -23,6 +23,11 @@
+ import flash.events.IEventDispatcher;
+ import haxe.Json;
+ import haxe.ds.StringMap;
++#if (js && html5)
++import js.html.CanvasElement;
++#end
++import lime.graphics.Image;
++import lime.graphics.utils.ImageCanvasUtil;
+ import openfl.Assets.AssetType;
+ import openfl.Lib;
+ import openfl.display.Bitmap;
+@@ -1364,15 +1369,127 @@
+ 		return path;
+ 	}
+ 	
++	private static var canvasHasDispose:Null<Bool> = null;
++
++	@:access( lime.graphics.ImageBuffer )
++	private static function disposeBitmapData( bmd:BitmapData ):Void
++	{
++		// If we already know we don't support dispose, exit early.
++		if ( ( canvasHasDispose != null ) && ( canvasHasDispose == false ) )
++		{
++			return;
++		}
++
++		if ( bmd == null )
++		{
++			return;
++		}
++		
++		var img:Image = bmd.image;
++		if ( img == null )
++		{
++			return;
++		}
++		
++		if ( img.buffer == null )
++		{
++			return;
++		}
++
++		#if (js && html5)
++		
++		// Grab a reference to the canvas.
++		var canvas:CanvasElement = img.buffer.__srcCanvas;
++		if ( canvas == null )
++		{
++			return;
++		}
++
++		// First time through?  Check if CanvasElement.dispose is available.
++		if ( canvasHasDispose == null )
++		{
++			canvasHasDispose = untyped __js__("typeof {0} === 'function'", untyped(canvas.dispose));
++		}
++		
++		
++		// An attempt to play it safe: in case anything else shares this,
++		// we need to be able to resurrect the canvas,
++		// so convert back to uint8 data.
++		// This is costly, so we'd prefer not to do it if there's a way around.
++		//
++		// ...also it doesn't work: Image.type=CANVAS implies __srcCanvas and
++		// __srcContext are around, and it doesn't automatically recreate them
++		// without an explicit convertToCanvas.
++		// So it's only here to jog Canvas+'s GC, if it's enabled =(
++		//trace( "img.buffer.data is: " + img.buffer.data );
++		//trace( "img.buffer.__srcImageData is: " + img.buffer.__srcImageData );
++		//ImageCanvasUtil.convertToData( img );
++		
++		// Force throw away the canvas and context, convertToData
++		// usually does this for us but not always.
++		img.buffer.__srcCanvas = null;
++		img.buffer.__srcContext = null;
++
++		
++		if ( canvasHasDispose )
++		{
++			untyped __js__("console.log({0});", "Disposing ImageBuffer <canvas>");
++			untyped(canvas).dispose();
++		}
++		
++		#else // non-js/non-html5
++		canvasHasDispose = false;
++		#end
++		
++	}
++
++	@:access( spritesheet.Spritesheet )
++	private static function disposeSpritesheet( ss:Spritesheet ):Void
++	{
++		// If we already know we don't support dispose, exit early.
++		if ( ( canvasHasDispose != null ) && ( canvasHasDispose == false ) )
++		{
++			return;
++		}
++		
++		if ( ss == null )
++		{
++			return;
++		}
++
++		var ssImg = ss.sourceImage != null ? ss.sourceImage.image : null;
++
++		// Dispose of sub-images, we'll
++		// be recreating them as needed later.
++		if ( ss.frames != null )
++		{
++			for ( frame in ss.frames )
++			{
++				var bmd:BitmapData = frame.bitmapData;
++				var bmdImage:Image = bmd != null ? bmd.image : null;
++				if ( bmdImage != ssImg )
++				{
++					disposeBitmapData( bmd );
++				}
++			}
++		}
++	}
++	
+ 	/** Release any cached data that we can safely recreate. **/
+ 	public function clearCachedData():Void
+ 	{
+-		//log( "ResMan: clearCachedData" );
++		log( "ResMan: clearCachedData" );
+ 		
++
++		
+ 		for ( res in m_assets )
+ 		{
+ 			if ( ( res != null ) && Std.is( res.content, Spritesheet ) )
+ 			{
++				// Dispose of any canvases, if appropriate.
++				var ss:Spritesheet = res.content;
++				disposeSpritesheet( ss );					
++				
+ 				// Release whole Spritesheet, including
+ 				// behavior (BitmapDataWithParams) caches,
+ 				// and frame (BitmapData) caches.

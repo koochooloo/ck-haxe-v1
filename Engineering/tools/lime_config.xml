@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	
+	<section id="defines">
+		
+		<set name="ANDROID_SETUP" value="true" />
+		<set name="ANDROID_NDK_ROOT" value="C:\android-variants\speck\ndk" />
+		<set name="ANDROID_NDK_DIR" value="HOME/SDKs/" />
+		<set name="ANT_HOME" value="HOME/SDKs//ant" />
+		<set name="SDK_ROOT" value="HOME/SDKs/" />
+		<set name="ANDROID_SDK" value="C:\android-variants\speck\sdk" />
+		<set name="JAVA_HOME" value="C:\Program Files\Java\jdk1.8.0_101" />
+		
+	</section>
+	
+</config>

@@ -1,0 +1,136 @@
+Index: cms/GameData.hx
+===================================================================
+--- cms/GameData.hx	(revision 691)
++++ cms/GameData.hx	(working copy)
+@@ -26,6 +26,10 @@
+ 	private var m_grades:Dataset<Grade>;
+ 	private var m_weeks:Dataset<Int>;
+ 	
++	private var m_country:Option<String>;
++	private var m_recipe:Option<String>;
++	private var m_curriculum:Option<Curriculum>;
++	
+ 	private var m_questions:Option<Dataset<Question>>;
+ 	
+ 	private function new(sheets:Dataset<QuestionSheet>, grades:Dataset<Grade>, weeks:Dataset<Int>)
+@@ -34,18 +38,11 @@
+ 		m_grades = grades;
+ 		m_weeks = weeks;
+ 		
+-		if ( FlowController.data.currentCurriculum == null ) // Accessed through the Templates shortcut
+-		{
+-			updateQuestions();
+-		}
+-		else // Accessed through pilot flow
+-		{
+-			switch ( FlowController.data.currentCurriculum )
+-			{
+-				case Curriculum.SOCIAL_STUDIES:		updateQuestionsSocialStudies();
+-				case Curriculum.MATH_AND_SCIENCE:   updateQuestionsMathScience();
+-			}
+-		}
++		m_country = None;
++		m_recipe = None;
++		m_curriculum = None;
++		
++		updateQuestions();
+ 	}
+ 	
+ 	public function goToNextSheet():Void
+@@ -137,48 +134,51 @@
+ 	
+ 	private function updateQuestions():Void
+ 	{
+-		var data:Array<Question> = 
+-			QuestionDatabase.instance.query()
+-				.inSheet(m_sheets.item)
+-				.forGrade(m_grades.item)
+-				.forWeek(m_weeks.item)
+-				.finish();
++		var query:QuestionQuery = QuestionDatabase.instance.query()
++			.inSheet(m_sheets.item)
++			.forGrade(m_grades.item)
++			.forWeek(m_weeks.item);
++			
++		m_country.flatMap(function(country){
++			query.aboutCountry(country);
++			return Some(country);
++		});
++		
++		m_recipe.flatMap(function(recipe){
++			query.aboutRecipe(recipe);
++			return Some(recipe);
++		});
++		
++		m_curriculum.flatMap(function(curriculum){
++			query.withCurriculum(curriculum);
++			return Some(curriculum);
++		});
++				
+ 		m_questions = Dataset.make(data);
+ 	}
+ 	
+-	private function updateQuestionsSocialStudies():Void 
++	public static function makeWith(sheet:QuestionSheet, grade:Grade, week:Int):Option<GameData>
+ 	{
+-		var data:Array<Question> = 
+-		QuestionDatabase.instance.query()
+-				.withCurriculum( Curriculum.SOCIAL_STUDIES )
+-				.aboutCountry( FlowController.data.selectedCountry.name )
+-				.finish();
+-		m_questions = Dataset.make(data);
++		return makeWithMultiple([sheet], [grade], [week]);
+ 	}
+ 	
+-	private function updateQuestionsMathScience():Void
++	public static function makeWithMultiple(sheets:Array<QuestionSheet>, grades:Array<Grade>, weeks:Array<Int>):Option<GameData>
+ 	{
+-		var data:Array<Question> = 
+-			QuestionDatabase.instance.query()
+-				.withCurriculum( Curriculum.MATH_AND_SCIENCE )
+-				.aboutRecipe( FlowController.data.selectedRecipe.name )
+-				.finish();
+-		m_questions = Dataset.make(data);
+-	}
+-	
+-	public static function make():Option<GameData>
+-	{
+-		var sheetsData:Array<QuestionSheet> = AbstractEnumTools.getValues(QuestionSheet);
+-		var gradesData:Array<Grade> = AbstractEnumTools.getValues(Grade);
+-		var weeksData:Array<Int> = [for (i in 1...11) i];
+-		
+-		return Dataset.make(sheetsData).flatMap(function(sheets){
+-			return Dataset.make(gradesData).flatMap(function(grades){
+-				return Dataset.make(weeksData).flatMap(function(weeks){
+-					var data = new GameData(sheets, grades, weeks);
++		return Dataset.make(sheets).flatMap(function(sheetsDataset){
++			return Dataset.make(grades).flatMap(function(gradesDataset){
++				return Dataset.make(weeks).flatMap(function(weeksDataset){
++					var data = new GameData(sheetsDataset, gradesDataset, weeksDataset);
+ 					return Some(data);
+ 				});
+ 			});
+ 		});
+ 	}
++	
++	public static function make():Option<GameData>
++	{
++		var sheets:Array<QuestionSheet> = AbstractEnumTools.getValues(QuestionSheet);
++		var grades:Array<Grade> = AbstractEnumTools.getValues(Grade);
++		var weeks:Array<Int> = [for (i in 1...11) i];
++		return makeWithMultiple(sheets, grades, weeks);
++	}
+ }
+\ No newline at end of file
+Index: states/QuestionState.hx
+===================================================================
+--- states/QuestionState.hx	(revision 691)
++++ states/QuestionState.hx	(working copy)
+@@ -48,7 +48,6 @@
+ 		
+ 		SpeckGlobals.event.addEventListener(QuestionEvents.COMPLETE, onComplete);
+ 		
+-		// TODO: Pull questions appropriately
+ 		GameData.make().flatMap(function(data){
+ 			m_controller = new QuestionController(data);
+ 			m_controller.start();

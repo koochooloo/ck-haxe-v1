@@ -1,0 +1,74 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "label" : [ { 
+            "name" : "lbl_loadingQuips",
+            "record" : true,
+            "priority" : 1,
+            "text" : "WELCOME",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "position" : [ 577, 608 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "size" : [ 600, 78 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_welcome",
+            "record" : true,
+            "priority" : 20,
+            "text" : "WELCOME",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "position" : [ 555, 292 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/CarterOne.ttf:64",
+                "textAlignment" : [ "center", "center" ],
+                "size" : [ 640, 230 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "girlHat",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/UI/chef/Chef-Backpack",
+                "position" : [ 374, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_help",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-SpeechBubble",
+                "position" : [ 555, 290 ],
+                "scale" : [ 2.5, 1 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

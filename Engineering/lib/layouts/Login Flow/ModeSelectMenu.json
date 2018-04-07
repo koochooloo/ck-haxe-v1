@@ -1,0 +1,88 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_school_version",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/SchoolVersion",
+                "position" : [ 0, 18 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_free_version",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/FreeVersion",
+                "position" : [ 0, 129 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_message",
+            "record" : true,
+            "priority" : 10,
+            "text" : "Select a Mode!",
+            "stringTable" : "Gamestrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 432, 303 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:30",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 500, 80 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_login_panel",
+            "record" : true,
+            "priority" : 3,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-DefaultPanel",
+                "position" : [ 260, 270 ],
+                "scale" : [ 3.15, 1.25 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_logo",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/TitleLogo",
+                "position" : [ 0, 261 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : true
+            }
+        } ]
+    }
+}

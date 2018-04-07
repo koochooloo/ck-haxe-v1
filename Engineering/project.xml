@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<!-- NMML reference: https://gist.github.com/1763850 -->
+
+	<!-- metadata, make sure 'package' is at least 3 segments (ie. com.mycompany.myproject) -->
+	<meta title="Koochooloo" package="com.firstplayable.speck" version="1.0.4" company="1st Playable" />
+	<certificate team-id="YYSX9L5KLV" />
+
+	<!-- output -->
+	<app main="Main" file="speck" path="bin" />
+
+	<window background="#000000" fps="48" />
+	<window width="0" height="0" unless="mobile" />
+	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
+
+	<!-- classpath, haxe libs -->
+	<source path="src" />
+	<haxelib name="openfl" version="6.2.2" />
+	<haxelib name="actuate" version="1.8.6" />
+	<haxelib name="hxcpp" version="3.4.188" />
+	<haxelib name="random" version="1.4.1" />
+	<haxelib name="spritesheet" version="1.2.0" />
+	<haxelib name="away3d" version="5.0.4" />
+	<haxelib name="parsihax" version="2.0.0" />
+	<haxelib name="zame-particles" />
+
+    <include path="extensions/AmazonWebServices" if="ios" />
+
+	<!-- assets -->
+	<assets path="assets/2d" rename="2d" exclude="*.json" embed="false" />
+	<assets path="assets/3d" rename="3d" embed="false" />
+	<assets path="assets/sounds" rename="snd" embed="false" />
+	<assets path="assets/fonts" rename="fnt" embed="false" />
+	<assets path="assets/data/lib" rename="lib" embed="false" />
+	<assets path="assets/cms" rename="cms" embed="false" />
+
+	<!-- icons -->
+	<icon path="assets/icons/icon48.png" size="48" /> <!-- iOS & Android -->
+	<icon path="assets/icons/icon72.png" size="72" /> <!-- Android -->
+	<icon path="assets/icons/icon76.png" size="76" /> <!-- iOS -->
+	<icon path="assets/icons/icon80.png" size="80" /> <!-- iOS -->
+	<icon path="assets/icons/icon96.png" size="96" /> <!-- Android -->
+	<icon path="assets/icons/icon120.png" size="120" /> <!-- iOS -->
+	<icon path="assets/icons/icon144.png" size="144" /> <!-- Android -->
+	<icon path="assets/icons/icon152.png" size="152" /> <!-- iOS -->
+	<icon path="assets/icons/icon167.png" size="167" /> <!-- iOS -->
+	<icon path="assets/icons/icon180.png" size="180" /> <!-- iOS -->
+	<icon path="assets/icons/icon192.png" size="192" /> <!-- Android -->
+	<icon path="assets/icons/icon512.png" size="512" /> <!-- Android -->
+	<icon path="assets/icons/icon1024.png" size="1024" /> <!-- iOS -->
+
+	<!-- android settings -->
+	<!--<android gradle-version="2.14" />-->
+	<android minimum-sdk-version="19" target-sdk-version="19" /> <!-- TODO min/target -->
+	<android permission="android.permission.INTERNET" /> <!-- TODO permissions -->
+	<android permission="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<android permission="android.permission.READ_EXTERNAL_STORAGE" />
+	<!-- note: if password is omitted, SDK will prompt for it with every build -->
+	<!--<certificate path="cert/and_release.keystore" alias="OUR_ALIAS" password="mypassword" if="android" unless="debug" />-->
+	<!--<template
+		path="lib/templates/AndroidManifest.xml"
+		rename="AndroidManifest.xml"
+		if="android"
+	/>-->
+	<template path="assets/data/index.html" rename="index.html" />
+	<!--<template
+		path="lib/templates/src/com/firstplayable/baobab/MainActivity.java"
+		rename="src/com/firstplayable/baobab/MainActivity.java"
+		if="android"
+	/>-->
+	<template path="assets/data/html2canvasproxy.php" rename="html2canvasproxy.php" /> <!-- TODO remove, stale? -->
+	<assets path="assets/data/gamecontent" rename="data" embed="false" />
+
+	<!-- <template path="assets/data/favicon.ico" rename="favicon.ico" /> -->
+
+	<!-- compiler additions -->
+	<haxedef name="haxeJSON" /> <!-- TODO remove for perf, see Json.hx in std -->
+
+	<!-- DUMP - emit AST (abstract syntax tree) -->
+	<!--<haxedef name="dump" />-->
+
+	<!-- optimize output -->
+	<!-- <haxeflag name="-dce full" /> -->
+
+	<!-- compiler flags -->
+	<haxeflag name="-resource" value="assets/data/version.txt@version" />
+
+	<!-- telemetry - use with hxScout -->
+	<!-- update your IP below, and build with
+		`openfl build android -debug -Dtelemetry`
+		from Engineering after running tools\cmd_environment.bat -->
+	<!-- DISABLED
+	<haxedef name="telemetry" />
+	<config:hxtelemetry host="192.168.3.78" allocations="true" />
+	END DISABLED -->
+
+</project>

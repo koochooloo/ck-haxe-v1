@@ -1,0 +1,528 @@
+{
+    "type": "query results",
+    "query": "SELECT COUNTRYNAME, COUNTRYID, ZDONATE, ZURL FROM ZCOUNTRYCHARITY, (SELECT ZNAME AS COUNTRYNAME, Z_PK AS COUNTRYID FROM ZCOUNTRY) WHERE COUNTRYID = ZCOUNTRY",
+    "columns": [
+        {
+            "displayName": "COUNTRYNAME",
+            "name": "COUNTRYNAME",
+            "database": null,
+            "table": "ZCOUNTRY",
+            "type": ""
+        },
+        {
+            "displayName": "COUNTRYID",
+            "name": "COUNTRYID",
+            "database": null,
+            "table": "ZCOUNTRY",
+            "type": ""
+        },
+        {
+            "displayName": "ZDONATE",
+            "name": "ZDONATE",
+            "database": null,
+            "table": "ZCOUNTRYCHARITY",
+            "type": ""
+        },
+        {
+            "displayName": "ZURL",
+            "name": "ZURL",
+            "database": null,
+            "table": "ZCOUNTRYCHARITY",
+            "type": ""
+        }
+    ],
+    "rows": [
+        [
+            "Argentina",
+            10,
+            "Argentina suffers from high inflation. Inflation means that the cost of goods and services goes up quickly. For instance if a piece of candy costs $1.00 today, with inflation it will cost $1.50 next week.",
+            "http:\/\/momvesting.com\/content\/teaching-kids-about-inflation"
+        ],
+        [
+            "Australia",
+            16,
+            "The sun is much stronger in Australia, so kids always have to wear sunscreen outside. They stay out of the sun in the middle of the day because it’s so easy to get sunburned. Hats are a required part of all school uniforms! It is especially important to protect your skin from the sun to keep your skin healthy.",
+            "http:\/\/www.sunsmart.com.au\/"
+        ],
+        [
+            "Australia",
+            16,
+            "Sixty percent of Australians are obese. This makes Australia one of the most overweight countries in the world, right behind America, with over sixty-seven percent. Even though Australia is an outdoors country, people have started unhealthy habits over the last few decades.",
+            "http:\/\/www.choosemyplate.gov"
+        ],
+        [
+            "Australia",
+            16,
+            "Australia is facing a drought like the one in California, monthly rainfall is dropping below average in certain areas. A drought is an extended period of unusually dry weather when there is not enough rain. The lack of rainfall can cause a variety of problems for local communities, including damage to crops and a shortage of drinking water. These effects can lead to devastating economic and social problems.",
+            "http:\/\/www.bom.gov.au\/climate\/drought\/"
+        ],
+        [
+            "Belgium",
+            20,
+            "Like many European countries, Belgium is composed of a large number of immigrants.  Immigrants are people that move from one country into another. Imagine abandoning  your language, culture, and way of life! That’s why many kids can have a hard time  adjusting to these new countries.",
+            "http:\/\/www.knowyourcountry.com\/belgium1111.html"
+        ],
+        [
+            "Belgium",
+            20,
+            "In Belgium, children with a physical or mental handicap do not have the same opportunities as others. Typically, they do not have access to regular schooling. Often children with physical and mental handicaps in Belgium are discriminated against and kept isolated from other people.",
+            "http:\/\/www.humanium.org\/en\/belgium\/"
+        ],
+        [
+            "Brazil",
+            33,
+            "Brazil has 339 threatened wildlife species, from mammals, amphibians, to birds. This includes 124 birds, the highest number of any country in the world. Humans have cut down over 20% of the Amazon rainforest in the last 40 years, thus destroying many species’ habitats and homes. At the rate we are cutting down the Amazon forest, many species will be extinct in the near future.",
+            "http:\/\/www.rainforestmaker.org\/lawyer-attorney-1685592.html#foryourself"
+        ],
+        [
+            "Brazil",
+            33,
+            "In Brazil, 1 in 4 people live below the poverty line. Most of the people in Brazil live in cities (80%). In these cities, people with a lot of money often live right near the people that don’t have enough money for necessary things like food. The poor areas of the city are called favelas. Children living in favelas often have problems relating to health, food, access to water and education.",
+            "http:\/\/www.humanium.org\/en\/brazil\/"
+        ],
+        [
+            "China",
+            42,
+            "Pollution in China is a really big problem. Not only does it negatively impact the environment, it is unsafe for the people living there. Pollution affects safe and clean drinking water, clean air to breath, and soil to grow food in. Why is it important to protect our environment from pollution? What are some things you can do to keep your environment clean and safe?",
+            "http:\/\/www.greenpeace.org\/eastasia\/campaigns\/air-pollution\/solutions\/"
+        ],
+        [
+            "Egypt",
+            64,
+            "Did you know that more than 25% of the Egyptian population lives under the poverty line? This means that they do not have enough money to buy all the food and necessities they need, and often times go hungry.",
+            "https:\/\/www.egyptianfoodbank.com\/en"
+        ],
+        [
+            "Egypt",
+            64,
+            "Did you know that Egypt has been plagued with numerous power failures? These power outages can last for hours at a time, leaving the people in Egypt with no access to electricity.",
+            "https:\/\/www.pacificpower.net\/foundation"
+        ],
+        [
+            "France",
+            72,
+            "France has the highest rate of autism in Western Europe. Autism happens when someone’s brain develops differently, which can make it harder for kids to talk, listen, and play. Even though autism has to do with the way the brain develops, France sees it as a mental illness, meaning there are many misunderstandings about autism in France. How can you learn more about autism and be supportive?",
+            "http:\/\/www.autismspeaks.org\/what-autism"
+        ],
+        [
+            "Germany",
+            57,
+            "Like many European countries, Germany is composed of a large number of immigrants. Immigrants are people that move from one country into another for better opportunities, like a safer place to raise their families or to a place with more jobs. Imagine abandoning your language, culture, and way of life. Many immigrant children who now live in Germany have a hard time adjusting to their new life and school. Would it be hard to adjust to a new school where you might not speak the same language as the rest of the kids? How would you help someone in your class have an easier time if they were an immigrant?",
+            "http:\/\/www.young-germany.de\/topic\/live\/settle-in-adjust\/immigrant-children"
+        ],
+        [
+            "Greece",
+            84,
+            "A special type of sea turtle, the caretta-caretta lives in the Greek waters?   This turtle can be as long as 83 inches and as big as 300 lbs! Unfortunately a caretta-caretta’s life is not easy! She has to come out to the shore to make a nest in the sand for her eggs. The trip to the shore is dangerous because boats might injure them, fishermen might catch them and other bigger fish and sharks might eat them.",
+            "http:\/\/wwf.panda.org\/what_we_do\/endangered_species\/marine_turtles\/loggerhead_turtle\/"
+        ],
+        [
+            "India",
+            98,
+            "19% of kids in India do not know how to read or write by the time they reach the age 15. Sometimes it is because they don’t have a school or education facility nearby. In other cases, their parents don’t have the means to support them, so they need to work instead of going to school.",
+            "http:\/\/smallstepsfoundation.org\/"
+        ],
+        [
+            "India",
+            98,
+            "In India, around 46% of all children under the age of three are too small for their age; 47% are underweight. Many of these children are severely malnourished, due to lack of food available to them.",
+            "http:\/\/www.unicef.org\/india\/children_2356.htm"
+        ],
+        [
+            "India",
+            98,
+            "India has the second largest population in the world. Its large population has stressed planned water resources. In many areas there is a lack of clean drinking water due to pollution, as well as drought. There are many water conservation programs that are being run by the government to solve this issue. What are some ways to stop water pollution?",
+            "http:\/\/water.org\/country\/india"
+        ],
+        [
+            "Israel",
+            104,
+            "In Israel, streams, rivers and underground water sources are endangered by industrial and municipal sewage. Pollution taints almost all the country\\'s rivers and streams. Even though there are rules in place to prevent pollution, the water is still being contaminated. In the most populated cities like Tel Aviv and Haifa, the situation is even worse, as sewage treatment plants cannot clean the water quick enough for the needs of fast-growing cities and towns. Unclean water is harmful to the health of humans and other animals.",
+            "http:\/\/www.reduce.org\/"
+        ],
+        [
+            "Italy",
+            105,
+            "According to a report by UNICEF (United Nations Children’s Fund), Italy has the highest percentage of children living below the poverty line in all 25 European countries. Children in Italy’s poorest regions wake up hungry. Some have never used a computer because the schools can’t afford them in the classrooms. Many don’t go to school at all, or when they do, they drop out, hoping to find jobs. What are something you can do to help?",
+            "http:\/\/www.unicef.org\/infobycountry\/italy_contact.html"
+        ],
+        [
+            "Japan",
+            109,
+            "Japan burns close to two thirds of its waste in municipal and industrial incinerators. By some estimates, 70% of the world's waste incinerators are located in Japan. As a result, Japan has higher levels of dioxin in its air than any other G20 nation.",
+            "http:\/\/epa.gov\/oaqps001\/peg_caa\/reduce.html"
+        ],
+        [
+            "Switzerland",
+            40,
+            "The average ecological footprint of the Swiss is 5 global hectares per capita (gha). Their biocapacity is 1.2 gha. This means that Switzerland’s footprint is more than 4 times its capacity. The ecological footprint is a way to describe how much water, food, transportation and energy people use, and how much waste they produce.  It means that we are using resources faster than we can replace them, so we will eventually run out. What can you do to improve your ecological footprint?",
+            "http:\/\/www.myfootprint.org"
+        ],
+        [
+            "Slovakia",
+            196,
+            "Minorities in Slovakia, like the Romani people, are affected by poverty. Most of them have no access to electricity, running water, or sewer systems. Romani children struggle because of the absence of good nutrition and most don’t have the opportunity to attend regular schools, so the programs are not challenging and they often don’t finish secondary school or go on to college. How can you help?",
+            "http:\/\/www.humanium.org\/en\/slovakia\/"
+        ],
+        [
+            "Uganda",
+            216,
+            "Many children in Uganda don\\'t get enough food to eat day to day.  Inadequate nutrition at a young age prevents children from developing properly, both physically and cognitively. Would it be hard for you to concentrate at school if you were hungry? How can we help kids get enough food?",
+            "http:\/\/www.projecthavehope.org\/about-us\/info-on-uganda\/childrens-issues-in-uganda.html"
+        ],
+        [
+            "Spain",
+            66,
+            "Spain recently experienced a financial crisis. This means, that a lot of children\\'s moms and dads are unable to get jobs because there are not enough available. When parents are not able to find a job, it is hard for them to provide enough food for their families. This means many children your age in Spain are not eating properly because their parents do not have enough money to buy fresh, nutritious food. What are some things families can do to provide more food? What can you do to help?",
+            "http:\/\/www.change.org\/organizations\/save_the_children_spain"
+        ],
+        [
+            "United Kingdom",
+            76,
+            "Obesity is a serious problem in England. National surveys in England suggest about 30% of children between the ages of 2-15 are overweight, while 14-20% are obese. England has the highest rate of child obesity in Western Europe. Children with obesity have a higher chance of developing problems such as diabetes and asthma. What are some things children and their parents can do together to stay healthy and fit?",
+            "http:\/\/www.mendcentral.org\/"
+        ],
+        [
+            "Russia",
+            179,
+            "Russia is one of the most polluted countries in the world. Air pollution can be caused by cars, trains, planes and factories. Polluted air is bad for people and animals to breathe and can make them sick. 17% of children in Russia get sick every year from pollution.",
+            "http:\/\/epa.gov\/oaqps001\/peg_caa\/reduce.html"
+        ],
+        [
+            "Kenya",
+            111,
+            "Water scarcity in Kenya has been an issue for decades, as only a small percentage of the country\\'s land is optimal for agriculture, and the year-round climate is predominantly arid. A recent natural disaster also caused major soil degradation and refugee displacement throughout the country. Kenya\\'s natural water resources also do not provide an equitable delivery of water to the various regions of the country and the country\\'s water basins do not reach an equitable area of the country. This leaves most of the population without any fresh water. Rapid urbanization has also pushed poor urban dwellers to the slums, where there is no water or sanitation, and overcrowding exacerbates the already hazardous health conditions.",
+            "http:\/\/thewaterproject.org\/water-in-crisis-kenya"
+        ],
+        [
+            "Turkey",
+            213,
+            "Elementary schools do not receive enough money in Turkey to hire enough teachers and ensure all of the students have everything they need. Classes can be overcrowded and kids are falling behind in their education. Why is having a good education important? What are tools you need to succeed in school? Would it be hard to do well in school if you did not have one of these tools?",
+            "http:\/\/www.oecd.org\/edu\/highlightsturkey.htm"
+        ],
+        [
+            "Nicaragua",
+            156,
+            "In Nicaragua, almost 1 out of every 2 children live below the poverty line. This means that they don’t have many of the basic things they need to live. Some of these things include, a house to live in, a school to attend, and the ability to see a doctor when they are sick. Because of this, 15% of children are forced to work to help their families survive. They are often engaging in very dangerous forms of work where they can be seriously injured. Also, many schools are not in good condition and need to be rebuilt.",
+            "http:\/\/bit.ly\/1uB1CvS"
+        ],
+        [
+            "Ivory Coast",
+            43,
+            "Ivory Coast is one of the poorest countries in the world today. About 50% of the population is below the poverty line and lacks an education. Do you think getting an education is important?",
+            "http:\/\/www.savethechildren.org\/site\/c.8rKLIXMGIpI4E\/b.6747677\/"
+        ],
+        [
+            "United States",
+            219,
+            "America is known for its incredible prosperity, however there are still a lot of families that do not have enough money to buy proper food for their families. Currently in America there are 16 million children who are not getting enough food to eat each day. How can we help children get enough to eat? What are some things you can your family can do to help?",
+            "http:\/\/actioncenter.nokidhungry.org\/"
+        ],
+        [
+            "Peru",
+            167,
+            "About 34% of children in Peru must work in order to help their families. Most children have difficult, exhausting, and sometimes extremely dangerous work. They don\\'t earn very much money for the work that they do. What are some opportunities can we give kids so they stay safe?",
+            "http:\/\/www.aldeasinfantiles.org.pe\/"
+        ],
+        [
+            "Philippines",
+            168,
+            "One of the strongest storms ever recorded, Typhoon Haiyan, destroyed many cities and towns in the Philippines in November 2013. A typhoon occurs when there is some sort of weather disturbance, combined with tropical oceans, moisture, and light winds. If they continue long enough, they can mix together and create violent winds, soaking rains, huge waves and floods ­ which is a typhoon.\nMaybe you are wondering if there can be a typhoon where you live. Maybe you have heard of other types of storms ­ like hurricanes and cyclones. Typhoons, hurricanes, and cyclones are actually all the same thing. Different names for these storms are used in different places. In the Northwest Pacific Ocean, these storms are called “typhoons.” In the Atlantic Ocean and Northeast Pacific Ocean, the term “hurricane” is used. “Cyclones” occur in the South Pacific Ocean and Indian Ocean.",
+            "http:\/\/www.nhc.noaa.gov\/prepare\/ready.php"
+        ],
+        [
+            "Philippines",
+            168,
+            "Malnutrition remains a health problem despite government assistance in the form of Nutripaks (consisting of indigenous foods such as mung beans and powdered shrimp) that are made available for infants, children, and pregnant women. Malnutrition is the result of other factors, including socioeconomic challenges like high unemployment. In the Philippines, over 2.9 million people are struggling to obtain stable employment; a rate that has increased from 6.8 percent in 2012, to over 7.1 percent in 2014. Moreover, due to high food prices, 28 million people cannot even afford to purchase enough food to satisfy their family’s food needs.",
+            "http:\/\/www.actionagainsthunger.org\/hunger"
+        ],
+        [
+            "Hungary",
+            95,
+            "In Hungary, there is a group of people known as the Roma (Gypsies) who live, work, and attend school alongside other Hungarians. However, the gypsies are very poor and do not have as much access to basic needs, like healthcare and food, as the rest of the Hungarian population. Children in the gypsy community do not attend school for as long as non-gypsy children, so they have less education when trying to find jobs later in life. How would you help inspire a classmate to stay in school? What are some things you could do you help him\/her?",
+            "http:\/\/www.humanium.org\/en\/hungary\/"
+        ],
+        [
+            "Czech Republic",
+            1,
+            "Drinking water and much of the country's soil are contaminated with heavy metals and other industrial and agricultural wastes.\nEnsuring water quality and its sufficient quantity is important not only for human consumption but also in the context of landscape protection, biodiversity protection and ecosystem services. What can we do to conserve water and keep it clean?",
+            "http:\/\/wateruseitwisely.com\/100-ways-to-conserve\/"
+        ],
+        [
+            "Japan",
+            109,
+            "In Japan there is a lot of inequality between men and women. Only 67% of college-educated women are currently employed in Japan, and many of them are only able to obtain low-paying, part-time jobs. The workforce is mainly dominated by men and many women are not supported in businesses.",
+            "http:\/\/www.cwaj.org\/Donations\/donations.html"
+        ],
+        [
+            "Bosnia and Herzegovina",
+            27,
+            "National primary school attendance rates are at 93 percent, but only one third of Roma children attend classes. Drop-out rates are high among rural children. Students with special needs are often excluded from the education system. Write letters to kids in Bosnia encouraging them to go to school.",
+            "http:\/\/www.worldvision.org\/our-impact\/country-profiles\/bosnia"
+        ],
+        [
+            "Morocco",
+            131,
+            "Only 56% of the population is able to read in Morocco. How important is reading to you?",
+            "http:\/\/www.unesco.org\/new\/en\/dakar\/education\/literacy\/"
+        ],
+        [
+            "Norway",
+            159,
+            "Norway is one of the best countries a kid could ever live in. Yet, Norway’s population, like that of many other countries, has a number of minority groups that includes Kvens, the Sámi, and Romanies. These minorities often face discrimination in Norway. Do you know what discrimination is? What are some ways to celebrate different cultures?",
+            "http:\/\/www.ohchr.org\/EN\/HRBodies\/CERD\/Pages\/CERDIndex.aspx"
+        ],
+        [
+            "Iran",
+            101,
+            "Tehran, the capital city of Iran, has a big problem with air pollution. Some days schools have to be closed and people are asked to stay inside their homes due to the poor air quality. How can people help to improve the problem with air pollution?",
+            "http:\/\/en.wikipedia.org\/wiki\/Health_care_in_Iran#Air_pollution"
+        ],
+        [
+            "Austria",
+            17,
+            "Obesity has more than doubled in Austria, affecting the habits of children nationwide. Instead of having active, healthy lifestyles, these kids are eating unhealthy and remaining greatly inactive, which can lead to many health problems like heart disease and diabetes in the future. What foods are healthy? Which foods are not? What types of exercise can you do to get more active?",
+            "http:\/\/www.cyh.com\/HealthTopics\/HealthTopicDetailsKids.aspx?p=335&np=152&id=2462"
+        ],
+        [
+            "Chile",
+            41,
+            "Even though Chile is considered one of the most stable countries in the world, children still face problems with rights and equality. Poor families struggle to provide the necessary healthcare for their kids. Find out more here and donate to support children\\\\\\'s rights in chile.",
+            "http:\/\/www.humanium.org\/en\/chile\/"
+        ],
+        [
+            "Denmark",
+            60,
+            "98% of all children in Denmark attend daycare starting at age one and up until they are ready to start school at age six. Because there are so many kids who need daycare, many centers are overcrowded and children don’t receive the attention they need. What are some things you would suggest parents do at home with their children after daycare in order to help them learn?",
+            "http:\/\/www.unicef.org\/"
+        ],
+        [
+            "Finland",
+            69,
+            "In general, kids have a really good time in Finland. Every kid has the right to a free education, medicine, and food.  But some kids who come from different countries or look different are bullied in schools.  What should you do if your friend is getting bullied?",
+            "http:\/\/www.stopbullying.gov\/kids\/"
+        ],
+        [
+            "South Korea",
+            116,
+            "Going to a good school in South Korea is very competitive. A lot of pressure is put on young children in order to go to a top ranked school, and it can get pretty stressful. How do you handle school when it gets tough? What are some things you would recommend children in South Korea do in order to not be too stressed about getting into a top school?",
+            "http:\/\/www.humanium.org\/en\/south-korea\/"
+        ],
+        [
+            "Mexico",
+            136,
+            "A lot of children in Mexico live in poverty and they need to walk many miles to attend school, especially in low populated areas, also known as rural areas.",
+            "http:\/\/soles4souls.org\/get-involved?gclid=CjwKEAiAgranBRDitfSQk_P7vnMSJAAhx5G5Z6C4LUgnXUJ6Ata74DiGz6DHxLjt9o_TcihKiKFEbBoCBLHw_wcB"
+        ],
+        [
+            "Senegal",
+            183,
+            "Senegal has poor sanitation practices which causes kids to get sick more often. What are some things you do during the day to keep you body clean? Educate kids about sanitation and the ways to help kids to practice good sanitation.",
+            "http:\/\/www.actionagainsthunger.org\/impact\/water-sanitation-hygiene"
+        ],
+        [
+            "Singapore",
+            184,
+            "Singapore is one of the most ideal places for kids to live. However, many kids choose or are made to work as early as age 12, before the last year of mandatory schooling (14 years old). What do you think about this? Do you think it is ok for kids to quit school to work?",
+            "http:\/\/www.humanium.org\/en\/donation\/"
+        ],
+        [
+            "Thailand",
+            206,
+            "Even though Thailand is not a poor country, they still have millions of families living in poverty. Children are without families and are helpless. How would you feel if you did not have a family? Would you like to help sponsor a child?",
+            "http:\/\/www.thaichildrenstrust.org.uk\/"
+        ],
+        [
+            "Vietnam",
+            226,
+            "In Vietnam, there is an issue with children not getting the proper food and nutrition they need on a daily basis. Would it be hard to live your daily life if you were always hungry? What are some ways you can help children in Vietnam who need more access to food?",
+            "http:\/\/www.childrenofvietnam.org\/"
+        ],
+        [
+            "Canada",
+            39,
+            "School is very important to attend, but many Canadian schools are very poor and cannot afford special tools and equipment needed to make a better learning experience for children. Sometimes they don' t have enough pen or paper. What are ways you could do fun projects without spending a lot of money?",
+            "http:\/\/www.uwlm.ca\/wp-content\/uploads\/2015\/07\/Issues-Affecting-the-Well-Being-of-Canadian-Children-in-the-Middle-Years.pdf"
+        ],
+        [
+            "Poland",
+            171,
+            "Did you know that Poland has the second most polluted air in Europe? Does anyone know what air pollution is? It can do damage to your lungs without you even knowing! Find out what you can do to help aid the fight against pollution.",
+            "http:\/\/des.nh.gov\/organization\/divisions\/air\/tsb\/ams\/aqmdp\/share.htm"
+        ],
+        [
+            "Ireland",
+            100,
+            "12% of children in Ireland live in poverty. They lack adequate basic housing, food, and education opportunities, putting them at risk for health problems and falling behind in school. How can you and your family help children living in poverty?",
+            "http:\/\/barnardos.ie\/index.html"
+        ],
+        [
+            "Albania",
+            7,
+            "Albania is considered one of the poorest countries in the world, with many of its people living on under $2 a day. Do you think it is possible for you and your family to live on $2 a day? What would you have to change about your day in order to make up for that?",
+            "http:\/\/borgenproject.org\/"
+        ],
+        [
+            "Afghanistan",
+            4,
+            "Afghanistan is one of the poorest countries in the world. Families struggle to make enough money to put food on the table and send their children to school. Since good nutrition and attending school are important for ending poverty, how can we help children in Afghanistan get a better start in life?",
+            "http:\/\/www.humanium.org\/en\/afghanistan\/"
+        ],
+        [
+            "South Africa",
+            231,
+            "South Africa's education system is on the rise in order to help children pass exams, but it still lacks certain important materials and components. About 80% of students in South Africa do not have a library to go to. Why is having a library available important for your education?",
+            "https:\/\/educationafrica.org\/donate\/"
+        ],
+        [
+            "Tunisia",
+            212,
+            "Though Tunisia is reaching a higher standard of living as a country, there are still some issues in the country. One of them is the high unemployment rate for young people aged 15-24. Getting a good job out of school can help you succeed later on in life. If their are not jobs available, it can cause problems in your future. What are some jobs you know of that older kids can do?",
+            "http:\/\/www.tunisia-aid.org\/makeadonation.html"
+        ],
+        [
+            "Tonga",
+            210,
+            "Although the number of poor families has gone down, some families in Tonga still have a hard time making enough money to feed their families everyday. Children have to drop out of school to start working in order to help support their families and brothers and sisters. Since going to school is very important, what are some things children in Tonga can do to stay in school and help their family? How would you help?",
+            "http:\/\/www.humanium.org\/en\/tonga\/"
+        ],
+        [
+            "Algeria",
+            62,
+            "Algeria has a high rate of poverty, with many families living on less than $2 a day. It can be hard to provide everything a family needs on that little money. Could your family live on $2 a day? What things would you have to change in your life for that to work?",
+            "http:\/\/www.humanium.org\/en\/algeria\/"
+        ],
+        [
+            "Netherlands",
+            158,
+            "Over 94% of the population uses the internet in the Netherlands. While the internet is a great resource for children to learn to use, children need to learn safety rules about how to properly use the internet and parents need to make sure they have the right tools to help their kids safely go online. The Netherlands has done a good job to provide families with safety tools and participates in Safer Internet Day to raise awareness to the importance of internet safety. Do you use the internet at school or at home? What are some safety tools you and your parents have put together?",
+            "http:\/\/www.saferinternetday.org\/web\/netherlands\/homehttp:\/\/www.humanium.org\/en\/poor-children\/"
+        ],
+        [
+            "New Zealand",
+            162,
+            "One in four kids in New Zealand lives in poverty. They go without the basic things we take for granted every day, like enough food or clean clothes. This can make learning and doing well in school really hard for them.",
+            "http:\/\/www.kidscan.org.nz\/our-work\/nz-child-poverty"
+        ],
+        [
+            "Angola",
+            5,
+            "40% of the Angolan population lives below the poverty line. This problem create large disparities between Angolans. Most of the population must fight to survive while a small few hoard most of the country’s wealth. This very disparate economy is mainly the result of the oil trade. Children are most affected by the outcomes of poverty.",
+            "http:\/\/www.humanium.org\/en\/angola\/"
+        ],
+        [
+            "Portugal",
+            174,
+            "One in five children live below the poverty line in Portugal. Their parents have a hard time finding jobs, making it hard for them to provide enough food and basic resources for their families. What are some important things your parents provide for you that you need to live? What would happen if they couldn’t provide those for you anymore? How can you help other kids living in poverty?",
+            "http:\/\/www.humanium.org\/en\/portugal\/"
+        ],
+        [
+            "Kuwait",
+            117,
+            "The legal minimum age of marriage for girls in Kuwait is 15, as opposed to being 17 for boys. For girls, getting married at such a young age raises the risk of them cutting their education short. This leads to less possibility for them in the future. Do you think it is fair that girls have a lower minimum age for marriage than boys? Do you think girls should have to give up their education to get married?",
+            "http:\/\/www.humanium.org\/en\/kuwait\/"
+        ],
+        [
+            "Mongolia",
+            143,
+            "In Mongolia, 36% of the population is living below the poverty line. Mongolian children suffer as their parents are unable to provide basic resources for them to meet their needs in regards to health, nutrition, hygiene, and education. What are things you need in order to take care of your health, nutrition, hygiene and education? Do your parents help provide these for you? How can you help others meet these basic needs?",
+            "http:\/\/www.humanium.org\/en\/mongolia\/"
+        ],
+        [
+            "Madagascar",
+            134,
+            "Due the need of trees for lumber and charcoal, Madagascar’s rainforests are being cut down. Madagascar is home to many rare species, including the lemur. If the rainforest is cleared, the lemurs and other species will lose their home and face extinction. What can we do to preserve rainforest? What can you do to help the lemurs?",
+            "http:\/\/www.worldwildlife.org\/places\/madagascar"
+        ],
+        [
+            "Indonesia",
+            96,
+            "One third of the population in Indonesia lives below the poverty line. Because the country is divided into 13,000 islands, it has been difficult for the government to improve the living conditions of families. Many children who live on the remote islands have limited access to food, water, and healthcare. How do you think health care and food assistance could reach the children on remote islands in Indonesia?",
+            "http:\/\/www.humanium.org\/en\/indonesia\/"
+        ],
+        [
+            "Iraq",
+            102,
+            "Iraq has a very high rate of poverty, at 23% of the population living on under $2 a day. Living in poverty makes it difficult for children to attend school, receive health care, and get enough food to eat. Malnutrition is one of the biggest problems for children living in poverty. How would your life be different if your family only had $2 to live on per day? What are some things you would do to try to help your family?",
+            "http:\/\/www.unicef.org\/iraq"
+        ],
+        [
+            "Kazakhstan",
+            110,
+            "In Kazakhstan, most of the schools are becoming private, which means you have to pay to go to school. Public schooling is becoming less and less common. Do you attend a public or private school? Do you know the difference? How would you feel if your family could not afford to put you at school?",
+            "https:\/\/www.opensocietyfoundations.org\/about\/offices-foundations\/soros-foundation-kazakhstan"
+        ],
+        [
+            "Sweden",
+            198,
+            "Swedish children and teenagers are becoming increasingly affected by obesity. A study from 2011, the first of its kind to be carried out in the country, revealed that 17% of children of 7-9 years of age were overweight and 3% were obese. Do you know what obesity is? What are some ways to combat obesity?",
+            "http:\/\/www.mayoclinic.org\/diseases-conditions\/obesity\/basics\/definition\/con-20014834"
+        ],
+        [
+            "Pakistan",
+            164,
+            "Only 71% of children attend primary school in Pakistan, which means that 23 million children are not getting an education. Boys also attend school more often than girls, so girls are not getting the same opportunities as boys. Why is getting an education important? Do you think it is fair that more boys get to go to school than girls? What are some ways to make getting an education more equal?",
+            "http:\/\/www.humanium.org\/en\/pakistan\/"
+        ],
+        [
+            "Turkmenistan",
+            208,
+            "Although education is free for children in Turkmenistan, many kids don’t have access to a school, especially in remote areas. The schools that are in the rural areas have a shorter school year though, since these children have to help their families in the fields to harvest cotton. During harvest, they don’t get paid or get to attend school. Why is going to school important? Is it fair that kids in the rural areas do not to get to attend school for as long? What are some of your ideas on how to fix this?",
+            "http:\/\/www.humanium.org\/en\/turkmenistan\/"
+        ],
+        [
+            "Armenia",
+            11,
+            "Children in Armenia don’t have reliable access to healthcare and regular doctors. They suffer from many illnesses due to this, which makes them miss school. How would you feel if you were really sick and couldn’t go see a doctor to get better? How can you help kids in Armenia?",
+            "http:\/\/www.worldvision.org\/our-impact\/country-profiles\/armenia"
+        ],
+        [
+            "Ukraine",
+            217,
+            "Ukraine is involved in a lot of political tension and still recovering from war and economic crises. This has caused a lot of hardships for many families, many who live on just $150 per month. How would you and your family live on $150 a month? What would you have to give up in order to make this work?",
+            "http:\/\/www.humanium.org\/en\/ukraine\/"
+        ],
+        [
+            "Dominican Republic",
+            61,
+            "Even though 92% of all children attend first through eighth grade, there is a problem of failing. Sometimes, if they are not doing well in school, they will drop out in order to find paid work. Why is staying in school to finish your education important?",
+            "http:\/\/www.unicef.org\/republicadominicana\/english\/children_9504.html"
+        ],
+        [
+            "Nigeria",
+            155,
+            "31%  of Nigerian children aged 5 to 14 years old have to work in order to help their families. Many children work dangerous jobs that don't pay a lot of money. Because children have to work, millions are missing out on their education. What are ways the children can help their parents but still stay in school?",
+            "http:\/\/www.unicef.org\/wcaro\/WCARO_Nigeria_Factsheets_ChildLabour.pdf"
+        ],
+        [
+            "Austria",
+            17,
+            "One in ten children in Austria is living in poverty. This means that they may not get enough food to eat in the day, or have basic things they need to live comfortably. It can be hard for children to focus in school when they are worried about where they might get their next meal, or even where they are going to sleep that night. What do you know about poverty? What are some things you and your family can do to help those living in poverty?",
+            "http:\/\/borgenproject.org\/poverty-austria\/"
+        ],
+        [
+            "Romania",
+            178,
+            "There are lots of big buildings and big factories in Romania that make the air and water dirty. The pollution from these factories makes it hard for the people of Romania to farm and have clean air. If water gets too dirty, we cannot drink it or use it for growing plants and crops. This is happening in Romania. What are ways we can keep our water safe and clean? How can we use cleaner sources of energy?",
+            "http:\/\/naturvernforbundet.no\/international\/environmental-issues-in-romania\/category944.htm"
+        ],
+        [
+            "Cuba",
+            52,
+            "In Cuba, approximately 10% of the population lives below the poverty-line.  Sometimes children go home not knowing if they will get to eat. It is important to not let anything go to waste. However, even poor Cubans still have access to basic services such as healthcare, education, and clean water. What are ways you can help save your food so it does not go to waste?",
+            "http:\/\/www.humanium.org\/en\/cuba\/"
+        ],
+        [
+            "Malta",
+            140,
+            "Malta has one of the highest rates of child obesity in the world. Obesity is what doctors call it when you have too much fat in your body. Obesity can lead to serious health problems. How would you help other children so you could help them to prevent obesity? What do you recommend obese children to do?",
+            "http:\/\/www.letsmove.gov"
+        ],
+        [
+            "Lebanon",
+            119,
+            "More than 3,000 children between the ages of 10-13 work in Lebanon. UNICEF reported child labor as a serious issue in the country. Why do you think these children need to work at such a young age?",
+            "http:\/\/www.savethechildren.org\/site\/c.8rKLIXMGIpI4E\/b.6153137\/k.C268\/Lebanon.htm"
+        ]
+    ]
+}

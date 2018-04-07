@@ -1,0 +1,83 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "panel" : [ { 
+            "name" : "pnl_story_compact",
+            "priority" : 5,
+            "inheritable" : { 
+                "position" : [ 201, 23 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_story_vo",
+                "record" : true,
+                "id" : 16,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_sound2",
+                    "position" : [ 46, 66 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_expand",
+                "record" : true,
+                "id" : 14,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/PanelExpand",
+                    "position" : [ 492, 231 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_story",
+                "record" : true,
+                "priority" : 10,
+                "text" : "Question text.",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 85, 46 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 850, 150 ],
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_question_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 3.85, 0.9 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_question_panel_header",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "2d/UI/headers/StoryRibbon",
+                    "position" : [ 493, 45 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ]
+    }
+}

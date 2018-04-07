@@ -1,0 +1,235 @@
+Index: firstplayable/hxlib/debug/DebugDefs.hx
+===================================================================
+--- firstplayable/hxlib/debug/DebugDefs.hx	(revision 1498)
++++ firstplayable/hxlib/debug/DebugDefs.hx	(working copy)
+@@ -13,6 +13,8 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug;
++import com.firstplayable.hxlib.debug.tunables.eventHandlers.VersionUpdateHandler;
++import com.firstplayable.hxlib.utils.Version;
+ import com.firstplayable.hxlib.debug.tunables.eventHandlers.WebAudioUpdateHandler;
+ import com.firstplayable.hxlib.audio.WebAudio;
+ import com.firstplayable.hxlib.debug.tunables.eventHandlers.TunableEventHandlers;
+@@ -63,6 +65,7 @@
+ 	 */
+ 	public static var eventHandlers:StringMap<TunableEventHandlers> = [
+ 		Type.getClassName(OPSprite) => new OPSpriteUpdateHandler(),
++		Type.getClassName(Version) => new VersionUpdateHandler(),
+ 		Type.getClassName(WebAudio) => new WebAudioUpdateHandler()
+ 	];
+ 	
+Index: firstplayable/hxlib/debug/tunables/eventHandlers/VersionUpdateHandler.hx
+===================================================================
+--- firstplayable/hxlib/debug/tunables/eventHandlers/VersionUpdateHandler.hx	(nonexistent)
++++ firstplayable/hxlib/debug/tunables/eventHandlers/VersionUpdateHandler.hx	(working copy)
+@@ -0,0 +1,43 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++#if (debug || build_cheats)
++package com.firstplayable.hxlib.debug.tunables.eventHandlers;
++import com.firstplayable.hxlib.utils.Version;
++import com.firstplayable.hxlib.utils.Version.PositionFlag;
++import openfl.display.DisplayObjectContainer;
++import openfl.display.DisplayObject;
++import openfl.Lib;
++import openfl.display.Stage;
++import haxe.EnumTools;
++import com.firstplayable.hxlib.debug.events.TunableUpdatedEvent;
++
++/**
++ * Class that handles updating Version settings (ie show/hide buildstamp) when appropriate Tunables change.
++ */
++class VersionUpdateHandler extends PropertyUpdateHandler
++{
++	public function new() 
++	{
++		var tunableToFieldMap:Map<String, String> = [
++			"VERSIONSTAMP_COLOR" => "color",
++			"VERSIONSTAMP_POSITION" => "stampPosition",
++			"VERSIONSTAMP_SIZE" => "size",
++			"SHOW_VERSIONSTAMP" => "shown"
++		];
++		//Version.instance.x = 10;
++		super(Version, tunableToFieldMap);
++	}
++	
++}
++#end
+Index: firstplayable/hxlib/utils/Version.hx
+===================================================================
+--- firstplayable/hxlib/utils/Version.hx	(revision 1498)
++++ firstplayable/hxlib/utils/Version.hx	(working copy)
+@@ -13,10 +13,25 @@
+ package com.firstplayable.hxlib.utils;
+ 
+ import com.firstplayable.hxlib.Debug.*;
++import com.firstplayable.hxlib.app.Application;
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import com.firstplayable.hxlib.display.GameDisplay;
++import com.firstplayable.hxlib.display.LayerName;
+ import haxe.macro.Compiler;
+ import openfl.text.TextField;
+ import openfl.text.TextFieldAutoSize;
++import openfl.text.TextFormat;
+ 
++enum PositionFlag
++{
++	TOP_LEFT;
++	TOP_CENTERED;
++	TOP_RIGHT;
++	BOTTOM_LEFT;
++	BOTTOM_CENTERED;
++	BOTTOM_RIGHT;
++}
++
+ /**
+ 	A singleton class for tracking build version info, based 
+ 	on dslib/core/util/Version. Reads info from assets/Version.txt 
+@@ -40,16 +55,36 @@
+  */
+ class Version extends TextField
+ {
+-	public static var versionInfo( get, null ):String = "";
+-	public static function get_versionInfo():String
++	private static inline var DEFAULT_PADDING_VAL:Int = 10;
++	
++	public static var instance(get, null):Version;
++	private static function get_instance():Version
+ 	{
+-		if ( versionInfo == "" )
++		if ( instance == null )
+ 		{
+-			new Version();
++			instance = new Version();
+ 		}
+-		return versionInfo;
++		return instance;
+ 	}
+ 	
++	public static var versionInfo( default, null ):String;
++	
++	public static var color( null, set ):Int;
++	private static function set_color( c:Int ):Int
++	{
++		instance.textColor = c;
++		return color = c;
++	}
++	
++	public static var size( null, set ):Int;
++	private static function set_size( s:Int ):Int
++	{
++		var format:TextFormat = instance.getTextFormat();
++		format.size = s;
++		instance.setTextFormat( format );
++		return size = s;
++	}
++	
+ 	//TODO: convert properties to proper types? ie, Int
+ 	// Returns the svn version of the build (ie 845:896M)
+ 	public var svnRev(default, null):String = "0";
+@@ -73,21 +108,80 @@
+ 	public var buildName(default,null):String = "";
+ 
+ 	// denotes if a local build (true) or a jenkins build (false)
+-	public var isLocal(default,null):Bool;
++	public var isLocal(default, null):Bool;
+ 	
++	public static var stampPosition(default, set):PositionFlag;
++	private static function set_stampPosition( pos:PositionFlag ):PositionFlag
++	{
++		trace( pos );
++		trace( pos.getIndex() );
++		
++		// set y pos
++		if ( pos == TOP_CENTERED || pos == TOP_LEFT || pos == TOP_RIGHT )
++		{
++			trace("sanity top");
++			instance.y = DEFAULT_PADDING_VAL;
++		}
++		else
++		{
++			trace("sanity bottom");
++			instance.y = Application.app.targetSize.y - instance.height - DEFAULT_PADDING_VAL;
++		}
++		
++		// set x pos
++		if ( pos == TOP_LEFT || pos == BOTTOM_LEFT )
++		{
++			trace("sanity left");
++			instance.autoSize = TextFieldAutoSize.LEFT;
++			instance.x = DEFAULT_PADDING_VAL;
++		}
++		else if ( pos == TOP_CENTERED || pos == TOP_CENTERED )
++		{
++			trace("sanity center");
++			instance.autoSize = TextFieldAutoSize.CENTER;
++			instance.x = (Application.app.targetSize.x / 2) - (instance.width / 2);
++		}
++		else
++		{
++			
++			trace("sanity right");
++			instance.autoSize = TextFieldAutoSize.RIGHT;
++			instance.x = Application.app.targetSize.x - instance.width - DEFAULT_PADDING_VAL;
++		}
++		
++		return stampPosition = pos;
++	}
++	
++	public static var shown(default, set):Bool = false;
++	private static function set_shown(value:Bool):Bool 
++	{
++		trace('toggling the showing of the Version');
++		instance.visible = value;
++		
++		if ( value )
++		{
++			GameDisplay.attach( LayerName.BUILDSTAMP, instance );
++		}
++		else
++		{
++			GameDisplay.remove( LayerName.BUILDSTAMP, instance );
++		}
++		return shown = value;
++	}
++	
+ 	/**
+ 	 * Constructs a new Version object, which is a text field to be added to the stage.
+ 	 * @param	x		pos
+ 	 * @param	y		pos
+-	 * @param	color	text color
++	 * @param	c		text color
+ 	 */
+-	public function new( x:Float = 10, y:Float = 10, color:Int = 0x000000 ) 
++	public function new( x:Float = DEFAULT_PADDING_VAL, y:Float = DEFAULT_PADDING_VAL, c:Int = 0x000000 ) 
+ 	{
+ 		super();
+ 		
+ 		this.x = x;
+ 		this.y = y;
+-		textColor = color;
++		textColor = c;
+ 		autoSize = TextFieldAutoSize.LEFT;
+ 		selectable = false;
+ 		
+@@ -154,6 +248,8 @@
+ 			text = "v" + buildVersion + "." + buildNum + "-" + buildType + "	" + buildTime;
+ 		}
+ 		
++		trace( "Sanity: Here's our build stamp: " + text );
++		
+ 		versionInfo = text;
+ 	}
+ 	

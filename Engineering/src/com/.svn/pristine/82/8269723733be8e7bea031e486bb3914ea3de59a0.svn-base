@@ -1,0 +1,1670 @@
+Index: debug/tunables/TunableDefs.hx
+===================================================================
+--- debug/tunables/TunableDefs.hx	(revision 1409)
++++ debug/tunables/TunableDefs.hx	(working copy)
+@@ -79,12 +79,20 @@
+ 	public static inline var LOCKED_TAG:String = "locked__";
+ 	
+ 	/**
++	 * The tag given to variables tied to UI settings.
++	 * Changing values with this tag sends a RefreshUIEvent
++	 * which will cause subscribed UI elements to change.
++	 */
++	public static inline var UI_TAG:String = "ui__";
++	
++	/**
+ 	 * Collection of tags always included in tunables.
+ 	 * Have special handling associated with them.
+ 	 */
+ 	public static var BUILTIN_TAGS:Array<String> = [
+ 		DELETION_TAG,
+-		LOCKED_TAG
++		LOCKED_TAG,
++		UI_TAG
+ 	];
+ 	
+ 	/**
+Index: debug/tunables/tunableItems/NewTunableItem.hx
+===================================================================
+--- debug/tunables/tunableItems/NewTunableItem.hx	(revision 1409)
++++ debug/tunables/tunableItems/NewTunableItem.hx	(working copy)
+@@ -13,6 +13,7 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.tunables.tunableItems;
++import com.firstplayable.hxlib.events.RefreshUIEvent;
+ import com.firstplayable.hxlib.debug.tunables.ui.UIDefs;
+ import com.firstplayable.hxlib.debug.tunables.TunableDefs.TunablesVariable;
+ import com.firstplayable.hxlib.debug.tunables.ui.TunableTextField;
+@@ -61,20 +62,28 @@
+ 		var curX:Float = initialFieldWidth + (UIDefs.TUNABLES_UI_OUTLINE_SIZE/2) + (UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE/2);
+ 		
+ 		//Save button
+-		m_saveButton = new AddItemButton(TunablesMenu.BUTTON_SIZE);
++		m_saveButton = new AddItemButton();
+ 		addChild(m_saveButton);
+ 		m_saveButton.x = curX;
+-		curX += TunablesMenu.BUTTON_SIZE + TunableItem.TUNABLES_UI_ITEM_BTN_GAP + UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE;
++		curX += UIDefs.TUNABLES_UI_BTN_SIZE + TunableItem.TUNABLES_UI_ITEM_BTN_GAP + UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE;
+ 		m_saveButton.y = UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE / 2;
+ 		m_saveButton.addEventListener(MouseEvent.CLICK, onSaveClicked);
+ 		
+ 		//Delete button
+-		m_deleteButton = new RemoveItemButton(TunablesMenu.BUTTON_SIZE);
++		m_deleteButton = new RemoveItemButton();
+ 		addChild(m_deleteButton);
+ 		m_deleteButton.x = curX;
+-		curX += TunablesMenu.BUTTON_SIZE;
++		curX += UIDefs.TUNABLES_UI_BTN_SIZE;
+ 		m_deleteButton.y = UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE / 2;
+ 		m_deleteButton.addEventListener(MouseEvent.CLICK, onRemoveClicked);
++		
++		//Remove the reset button.
++		if (m_resetButton != null)
++		{
++			removeChild(m_resetButton);
++			m_resetButton.removeEventListener(MouseEvent.CLICK, onResetClicked);
++			m_resetButton = null;
++		}
+ 	}
+ 	
+ 	override public function release():Void
+@@ -130,6 +139,28 @@
+ 		m_parentMenu.removeNewTunable(this);
+ 	}
+ 	
++	/**
++	 * Updates appearance
++	 * @param	e
++	 */
++	override public function onRefreshUI(e:RefreshUIEvent):Void
++	{
++		super.onRefreshUI(e);
++		
++		//Add the buttons
++		var curX:Float = fieldSpace + (UIDefs.TUNABLES_UI_OUTLINE_SIZE/2) + (UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE/2);
++		
++		//Save button
++		m_saveButton.x = curX;
++		curX += UIDefs.TUNABLES_UI_BTN_SIZE + TunableItem.TUNABLES_UI_ITEM_BTN_GAP + UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE;
++		m_saveButton.y = UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE / 2;
++		
++		//Delete button
++		m_deleteButton.x = curX;
++		curX += UIDefs.TUNABLES_UI_BTN_SIZE;
++		m_deleteButton.y = UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE / 2;
++	}
++	
+ 	//================================================================
+ 	// Validation
+ 	//================================================================
+Index: debug/tunables/tunableItems/TunableItem.hx
+===================================================================
+--- debug/tunables/tunableItems/TunableItem.hx	(revision 1409)
++++ debug/tunables/tunableItems/TunableItem.hx	(working copy)
+@@ -13,6 +13,10 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.tunables.tunableItems;
++import com.firstplayable.hxlib.audio.VolumeInfo;
++import com.firstplayable.hxlib.events.RefreshUIEvent;
++import openfl.events.MouseEvent;
++import com.firstplayable.hxlib.debug.tunables.ui.UndoButton;
+ import com.firstplayable.hxlib.debug.tunables.ui.UIDefs;
+ import com.firstplayable.hxlib.debug.tunables.TunableDefs.TunablesVariable;
+ import com.firstplayable.hxlib.debug.tunables.ui.TunableTextField;
+@@ -53,14 +57,7 @@
+ 	public static var TUNABLES_UI_FIELD_WIDTH_NAME(get, null):Float;
+ 	public static function get_TUNABLES_UI_FIELD_WIDTH_NAME():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_FIELD_WIDTH_NAME"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_FIELD_WIDTH_NAME");
+-		}
+-		else
+-		{
+-			return 0.35;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_FIELD_WIDTH_NAME", 0.35);
+ 	}
+ 	
+ 	/**
+@@ -69,14 +66,7 @@
+ 	public static var TUNABLES_UI_FIELD_WIDTH_VALUE(get, null):Float;
+ 	public static function get_TUNABLES_UI_FIELD_WIDTH_VALUE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_FIELD_WIDTH_VALUE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_FIELD_WIDTH_VALUE");
+-		}
+-		else
+-		{
+-			return 0.1;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_FIELD_WIDTH_VALUE", 0.1);
+ 	}
+ 	
+ 	/**
+@@ -85,14 +75,7 @@
+ 	public static var TUNABLES_UI_FIELD_WIDTH_TYPE(get, null):Float;
+ 	public static function get_TUNABLES_UI_FIELD_WIDTH_TYPE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_FIELD_WIDTH_TYPE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_FIELD_WIDTH_TYPE");
+-		}
+-		else
+-		{
+-			return 0.15;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_FIELD_WIDTH_TYPE", 0.15);
+ 	}
+ 	
+ 	/**
+@@ -101,14 +84,7 @@
+ 	public static var TUNABLES_UI_FIELD_WIDTH_TAGS(get, null):Float;
+ 	public static function get_TUNABLES_UI_FIELD_WIDTH_TAGS():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_FIELD_WIDTH_TAGS"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_FIELD_WIDTH_TAGS");
+-		}
+-		else
+-		{
+-			return 0.4;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_FIELD_WIDTH_TAGS", 0.4);
+ 	}
+ 	
+ 	/**
+@@ -117,14 +93,7 @@
+ 	public static var TUNABLES_UI_ITEM_BTN_GAP(get, null):Float;
+ 	public static function get_TUNABLES_UI_ITEM_BTN_GAP():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_ITEM_BTN_GAP"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_ITEM_BTN_GAP");
+-		}
+-		else
+-		{
+-			return 4.0;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_ITEM_BTN_GAP", 4.0);
+ 	}
+ 	
+ 	//==================================
+@@ -137,11 +106,18 @@
+ 	private var m_name:String;
+ 	private var m_type:String;
+ 	private var m_value:Dynamic;
++	private var m_originalValue:Dynamic;	//value of this item when the item was created.
+ 	private var m_tags:Array<String>;
+ 	
++	//The container that holds the elements in this item.
++	private var m_container:Shape;
++	
+ 	//The text fields for this item
+ 	private var m_textFields:Array<TunableTextField>;
+ 	
++	// undo button to reset value to original state.
++	private var m_resetButton:UndoButton;
++	
+ 	//================================================================
+ 	// Data Properties
+ 	//================================================================
+@@ -180,6 +156,10 @@
+ 		m_value = variable.value;
+ 		m_tags = variable.tags;
+ 		
++		m_container = new Shape();
++		addChild(m_container);
++		
++		//Create the text fields
+ 		m_textFields = [];
+ 		var fields:Array<TunableItemFields> = EnumTools.createAll(TunableItemFields);
+ 		for (field in fields)
+@@ -188,6 +168,8 @@
+ 			m_textFields.push(newTextField);
+ 		}
+ 		
++		m_resetButton = null;
++		
+ 		m_inited = false;
+ 	
+ 		//Create the container
+@@ -200,6 +182,7 @@
+ 		
+ 		var initialFieldWidth:Float = m_initialWidth - buttonSpace;
+ 		
++		//position the fields
+ 		var curX:Float = 0;
+ 		for (field in m_textFields)
+ 		{
+@@ -207,6 +190,14 @@
+ 			curX += field.width;
+ 		}
+ 		
++		//Create the reset button
++		m_resetButton = new UndoButton();
++		addChild(m_resetButton);
++		m_resetButton.x = initialFieldWidth + UIDefs.TUNABLES_UI_BTN_SIZE + TunableItem.TUNABLES_UI_ITEM_BTN_GAP + (UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE * 1.5);
++		m_resetButton.y = UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE / 2;
++		m_resetButton.addEventListener(MouseEvent.CLICK, onResetClicked);
++		m_resetButton.visible = false;
++		
+ 		m_inited = true;
+ 	}
+ 	
+@@ -215,6 +206,13 @@
+ 	 */
+ 	public function release():Void
+ 	{	
++		if (m_resetButton != null)
++		{
++			removeChild(m_resetButton);
++			m_resetButton.removeEventListener(MouseEvent.CLICK, onResetClicked);
++		}
++		m_resetButton = null;
++		
+ 		for (field in m_textFields)
+ 		{
+ 			field.removeEventListener(FocusEvent.FOCUS_OUT, onDefocusTextField);
+@@ -225,6 +223,9 @@
+ 		}
+ 		m_textFields = [];
+ 		
++		removeChild(m_container);
++		m_container = null;
++		
+ 		m_tags = [];
+ 		
+ 		m_inited = false;
+@@ -231,19 +232,99 @@
+ 	}
+ 	
+ 	/**
++	 * Updates appearance
++	 * @param	e
++	 */
++	public function onRefreshUI(e:RefreshUIEvent):Void
++	{
++		updateContainer();
++		
++		//position the fields
++		var curX:Float = 0;
++		for (field in m_textFields)
++		{
++			field.onRefreshUI(e);
++			positionField(field, fieldSpace, curX);
++			curX += field.width;
++		}
++		
++		//update the reset button
++		if (m_resetButton != null)
++		{
++			m_resetButton.x = fieldSpace + UIDefs.TUNABLES_UI_BTN_SIZE + TUNABLES_UI_ITEM_BTN_GAP + (UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE * 1.5);
++			m_resetButton.y = UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE / 2;
++		}
++	}
++	
++	/**
+ 	 * Updates the container that represents the whole item.
+ 	 */
+ 	public function updateContainer():Void
++	{		
++		m_container.graphics.clear();
++		m_container.blendMode = BlendMode.ADD;
++		m_container.graphics.lineStyle(UIDefs.TUNABLES_UI_OUTLINE_SIZE, UIDefs.TUNABLES_UI_OUTLINE_COLOR);
++		m_container.graphics.beginFill(UIDefs.TUNABLES_UI_BG_COLOR);
++		
++		m_container.graphics.drawRoundRect(0, 0, m_initialWidth, UIDefs.TUNABLES_UI_ITEM_SIZE, UIDefs.TUNABLES_UI_ROUND_RECT_CORNER_SIZE);
++		m_container.graphics.endFill();
++	}
++	
++	//========================================================
++	// Event Callbacks
++	//========================================================
++	
++	/**
++	 * Resets the value to field to its original value.
++	 * @param	e
++	 */
++	private function onResetClicked(e:MouseEvent):Void
+ 	{
+-		graphics.clear();
+-		blendMode = BlendMode.ADD;
+-		graphics.lineStyle(UIDefs.TUNABLES_UI_OUTLINE_SIZE, UIDefs.TUNABLES_UI_OUTLINE_COLOR);
+-		graphics.beginFill(UIDefs.TUNABLES_UI_BG_COLOR);
++		if (e.currentTarget == m_resetButton)
++		{
++			updateVariableValue(m_originalValue);
++		}
+ 		
+-		graphics.drawRoundRect(x, y, m_initialWidth, m_initialHeight, UIDefs.TUNABLES_UI_ROUND_RECT_CORNER_SIZE);
+-		graphics.endFill();
++		//Set to stored value
++		var textField:TunableTextField = getTextField(VALUE_FIELD);
++		updateTextField(textField);
+ 	}
+ 	
++	private function updateVariableValue(newValue:Dynamic):Void
++	{
++		if (newValue == m_value)
++		{
++			return;
++		}
++		
++		var updateUI:Bool = false;
++		
++		//Newly added variables won't be a field yet.
++		if (Reflect.hasField(Tunables, m_name))
++		{
++			Reflect.setProperty(Tunables, m_name, newValue);
++			
++			//If it's a UI propery, send and event to cause UI refresh.
++			if (m_tags.indexOf(TunableDefs.UI_TAG) != -1)
++			{
++				updateUI = true;
++			}
++		}
++		m_value = newValue;
++		if (m_resetButton != null)
++		{
++			m_resetButton.visible = (m_value != m_originalValue);
++		}
++		
++		if (updateUI)
++		{
++			if (stage != null)
++			{
++				stage.dispatchEvent(new RefreshUIEvent());
++			}
++		}
++	}
++	
+ 	//=========================================================
+ 	// Data Property Implementations
+ 	//=========================================================
+@@ -315,7 +396,7 @@
+ 	 */
+ 	public function get_fieldSpace():Float
+ 	{
+-		return width - buttonSpace;
++		return m_initialWidth - buttonSpace;
+ 	}
+ 	
+ 	//=================================================================================
+@@ -377,12 +458,9 @@
+ 		var id:Int = field.fieldID;
+ 		var fieldID:TunableItemFields = EnumTools.createByIndex(TunableItemFields, id);
+ 		var textToShow:String = Std.string(getPropertyForField(fieldID));
+-		field.x = curX;
+-		field.y = 0;
+-		var targetFieldWidth:Float = Math.floor(initialFieldSpace * getWidthRatioForField(fieldID));
+-		field.width = Math.floor(initialFieldSpace * getWidthRatioForField(fieldID));
+-		field.height = m_initialHeight;
+ 		
++		positionField(field, initialFieldSpace, curX);
++		
+ 		field.addEventListener(FocusEvent.FOCUS_OUT, onDefocusTextField);
+ 
+ 		updateTextField(field);
+@@ -390,6 +468,28 @@
+ 	}
+ 	
+ 	/**
++	 * Positions the field in the item based on parameters.
++	 * @param	field
++	 * @param	initialFieldSpace
++	 * @param	curX
++	 */
++	private function positionField(field:TunableTextField, initialFieldSpace:Float, curX:Float):Void
++	{
++		if (field == null)
++		{
++			return;
++		}
++		
++		var fieldID:TunableItemFields = EnumTools.createByIndex(TunableItemFields, field.fieldID);
++		
++		field.x = curX;
++		field.y = 0;
++		var targetFieldWidth:Float = Math.floor(initialFieldSpace * getWidthRatioForField(fieldID));
++		field.width = Math.floor(initialFieldSpace * getWidthRatioForField(fieldID));
++		field.height = UIDefs.TUNABLES_UI_ITEM_SIZE;
++	}
++	
++	/**
+ 	 * CB for when the value field of this item loses the focus
+ 	 * @param	e
+ 	 */
+@@ -517,12 +617,7 @@
+ 		var newVal:Dynamic = getValueFromValueTextField();
+ 		if (validateFieldValue(newVal))
+ 		{
+-			//Newly added variables won't be a field yet.
+-			if (Reflect.hasField(Tunables, m_name))
+-			{
+-				Reflect.setProperty(Tunables, m_name, newVal);
+-			}
+-			m_value = newVal;
++			updateVariableValue(newVal);
+ 		}
+ 		//Set to stored value
+ 		var textField:TunableTextField = getTextField(VALUE_FIELD);
+Index: debug/tunables/tunableItems/TunableItemColumnLabels.hx
+===================================================================
+--- debug/tunables/tunableItems/TunableItemColumnLabels.hx	(revision 1409)
++++ debug/tunables/tunableItems/TunableItemColumnLabels.hx	(working copy)
+@@ -95,6 +95,14 @@
+ 			field.backgroundColor = TUNABLES_UI_HEADER_BG_COLOR;
+ 			field.textColor = TUNABLES_UI_HEADER_TEXT_COLOR;
+ 		}
++		
++		//Remove the reset button.
++		if (m_resetButton != null)
++		{
++			removeChild(m_resetButton);
++			m_resetButton.removeEventListener(MouseEvent.CLICK, onResetClicked);
++			m_resetButton = null;
++		}
+ 	}
+ 	
+ 	/**
+Index: debug/tunables/Tunables.hx
+===================================================================
+--- debug/tunables/Tunables.hx	(revision 1409)
++++ debug/tunables/Tunables.hx	(working copy)
+@@ -113,6 +113,45 @@
+ 		
+ 		return true;
+ 	}
++	
++	/**
++	 * Tries to grab the provided float field, returning a default on a failure.
++	 * @param	fieldName
++	 * @param	defaultVal
++	 * @return
++	 */
++	public static function getFloatField(fieldName:String, defaultVal:Float = 0):Float
++	{
++		if (Reflect.hasField(Tunables, fieldName))
++		{
++			var val:Float = Std.parseFloat(Reflect.field(Tunables, fieldName));
++			if (!Math.isNaN(val))
++			{
++				return val;
++			}
++		}
++		return defaultVal;
++	}
++	
++	/**
++	 * Tries to grab the provided int field, returning a default on a failure.
++	 * @param	fieldName
++	 * @param	defaultVal
++	 * @return
++	 */
++	public static function getIntField(fieldName:String, defaultVal:Int = 0):Int
++	{
++		if (Reflect.hasField(Tunables, fieldName))
++		{
++			var val:Null<Int> = Std.parseInt(Reflect.field(Tunables, fieldName));
++			if (val != null)
++			{
++				return val;
++			}
++		}
++		return defaultVal;
++	}
++	
+ 	#end
+ 	
+ }
+\ No newline at end of file
+Index: debug/tunables/TunablesMenu.hx
+===================================================================
+--- debug/tunables/TunablesMenu.hx	(revision 1409)
++++ debug/tunables/TunablesMenu.hx	(working copy)
+@@ -12,6 +12,7 @@
+ ///////////////////////////////////////////////////////////////////////////
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.tunables;
++import com.firstplayable.hxlib.events.RefreshUIEvent;
+ import com.firstplayable.hxlib.debug.tunables.ui.UIDefs;
+ import openfl.net.URLRequest;
+ import openfl.Lib;
+@@ -60,13 +61,6 @@
+ 		return UIDefs.TUNABLES_UI_ITEM_SIZE * UIDefs.TUNABLES_UI_BOTTOM_BAR_SIZE;
+ 	}
+ 	
+-	
+-	public static var BUTTON_SIZE(get, null):Float;
+-	public static function get_BUTTON_SIZE():Float
+-	{
+-		return UIDefs.TUNABLES_UI_ITEM_SIZE - UIDefs.TUNABLES_UI_OUTLINE_SIZE;
+-	}
+-	
+ 	public static var TunableItemMap:Map<String, Class<Dynamic>> = [
+ 	"Int" => TunableInt,
+ 	"Milliseconds" => TunableMilliseconds,
+@@ -227,7 +221,7 @@
+ 	private function initWindow():Void
+ 	{		
+ 		//add the info button
+-		m_infoButton = new InfoButton(BUTTON_SIZE);
++		m_infoButton = new InfoButton();
+ 		m_infoButton.addEventListener(MouseEvent.CLICK, onClickedInfo);
+ 		addChild(m_infoButton);
+ 		
+@@ -239,7 +233,7 @@
+ 		m_pagingWidget.pageCount = pageCount;
+ 		
+ 		//add buttons
+-		m_addButton = new AddItemButton(UIDefs.TUNABLES_UI_ITEM_SIZE);
++		m_addButton = new AddItemButton();
+ 		m_addButton.addEventListener(MouseEvent.CLICK, onClickedAddItem);
+ 		addChild(m_addButton);
+ 		
+@@ -248,6 +242,7 @@
+ 		
+ 		//add listeners
+ 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
++		stage.addEventListener(RefreshUIEvent.REFRESH_UI_EVENT, onUIRefresh);
+ 		m_pagingWidget.addEventListener(PagingEvent.PAGING_EVENT, onPagingEvent);
+ 	}
+ 	
+@@ -261,6 +256,7 @@
+ 		m_addButton.removeEventListener(MouseEvent.CLICK, onClickedAddItem);
+ 		m_pagingWidget.removeEventListener(PagingEvent.PAGING_EVENT, onPagingEvent);
+ 		m_infoButton.removeEventListener(MouseEvent.CLICK, onClickedInfo);
++		stage.removeEventListener(RefreshUIEvent.REFRESH_UI_EVENT, onUIRefresh);
+ 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+ 		
+ 		var itemLists:Array<List<TunableItem>> = getItemLists();
+@@ -334,7 +330,7 @@
+ 	
+ 	private function updateWindow(leftX:Float, topY:Float, rightX:Float, bottomY:Float):Void
+ 	{		
+-		//Debug.log('Drawing window: ($leftX,$topY)-($rightX,$bottomY)');
++		Debug.log('Drawing window: ($leftX,$topY)-($rightX,$bottomY)');
+ 		
+ 		graphics.clear();
+ 		blendMode = BlendMode.ADD;
+@@ -432,8 +428,14 @@
+ 		var itemLists:Array<List<TunableItem>> = getItemLists();
+ 		
+ 		var topY:Float = UIDefs.TUNABLES_UI_OUTLINE_SIZE;
++		trace("TUNABLES_UI_OUTLINE_SIZE: " + UIDefs.TUNABLES_UI_OUTLINE_SIZE);
+ 		var itemY:Float = topY;
++		trace("ITEM Y STARTS AT: " + itemY);
+ 		
++		trace("num var items: " + m_variableItems.length);
++		
++		trace("item size: " + UIDefs.TUNABLES_UI_ITEM_SIZE);
++		
+ 		//Add all items back
+ 		for (list in itemLists)
+ 		{
+@@ -445,15 +447,17 @@
+ 					var numPaddingItems:Int = NUM_ITEMS_PER_PAGE - m_variableItems.length;
+ 					var padding:Float = numPaddingItems * (UIDefs.TUNABLES_UI_ITEM_SIZE + UIDefs.TUNABLES_UI_OUTLINE_SIZE);
+ 					itemY += padding;
++					trace("itemY: " + itemY);
+ 				}
+ 			}
+ 			
+ 			for (nextItem in list)
+ 			{
++				trace("itemY: " + itemY);
+ 				nextItem.x = UIDefs.TUNABLES_UI_OUTLINE_SIZE;
+ 				nextItem.y = itemY;
+ 				
+-				itemY += UIDefs.TUNABLES_UI_ITEM_SIZE + UIDefs.TUNABLES_UI_OUTLINE_SIZE;
++				itemY += (UIDefs.TUNABLES_UI_ITEM_SIZE + UIDefs.TUNABLES_UI_OUTLINE_SIZE);
+ 			}
+ 		}
+ 		
+@@ -465,6 +469,7 @@
+ 			return;
+ 		}
+ 		var firstItemRect:Rectangle = firstItem.getBounds(stage);
++		trace("first item rect: " + firstItemRect);
+ 		
+ 		//Reposition the Help Button
+ 		removeChild(m_infoButton);
+@@ -473,7 +478,7 @@
+ 		addChild(m_infoButton);
+ 		
+ 		//Reposition the add button		
+-		m_addButton.x = itemWidth - (BUTTON_SIZE * 2) + (UIDefs.TUNABLES_UI_OUTLINE_SIZE) + 1;
++		m_addButton.x = itemWidth - (UIDefs.TUNABLES_UI_BTN_SIZE * 2) + (UIDefs.TUNABLES_UI_OUTLINE_SIZE) + 1;
+ 		var leftOverSpace:Float = BOTTOM_BAR_HEIGHT - UIDefs.TUNABLES_UI_ITEM_SIZE;
+ 		m_addButton.y = itemY + (leftOverSpace / 2) + 1;
+ 		
+@@ -486,6 +491,8 @@
+ 		
+ 		itemY += BOTTOM_BAR_HEIGHT;
+ 		
++		trace("itemY: " + itemY);
++		
+ 		//=================================================
+ 		//Determine window size
+ 		//=================================================
+@@ -812,6 +819,25 @@
+ 		#end
+ 	}
+ 	
++	/**
++	 * UI Parameters have changed, redraw items.
++	 * @param	e
++	 */
++	private function onUIRefresh(e:RefreshUIEvent):Void
++	{
++		//Refresh UI
++		for (list in getItemLists())
++		{
++			for ( item in list)
++			{
++				item.onRefreshUI(e);
++			}
++		}
++		
++		//Do standard item updating
++		refreshItems();
++	}
++	
+ 	//==================================================================
+ 	// Helper Functions
+ 	//==================================================================
+Index: debug/tunables/ui/AddItemButton.hx
+===================================================================
+--- debug/tunables/ui/AddItemButton.hx	(revision 1409)
++++ debug/tunables/ui/AddItemButton.hx	(working copy)
+@@ -13,6 +13,7 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.tunables.ui;
++import com.firstplayable.hxlib.events.RefreshUIEvent;
+ import com.firstplayable.hxlib.debug.tunables.ui.SymbolButton;
+ 
+ /**
+@@ -29,14 +30,7 @@
+ 	public static var TUNABLES_UI_BTN_ADD_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_ADD_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_ADD_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_ADD_COLOR");
+-		}
+-		else
+-		{
+-			return 0x00FF00;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_ADD_COLOR", 0x00FF00);
+ 	}
+ 	
+ 	/**
+@@ -45,14 +39,7 @@
+ 	public static var TUNABLES_UI_BTN_ADD_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_ADD_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_ADD_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_ADD_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x254B;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_ADD_SYMBOL", 0x254B);
+ 	}
+ 	
+ 	//==================================
+@@ -63,9 +50,12 @@
+ 	 * 
+ 	 * @param	buttonSize
+ 	 */
+-	public function new(buttonSize:Float) 
++	public function new(?getButtonSize:Void -> Float) 
+ 	{
+-		super(buttonSize, TUNABLES_UI_BTN_ADD_SYMBOL, TUNABLES_UI_BTN_ADD_COLOR);
++		var getAddSymbol:Void -> Int = function():Int { return TUNABLES_UI_BTN_ADD_SYMBOL; };
++		var getAddColor:Void -> Int = function():Int { return TUNABLES_UI_BTN_ADD_COLOR; };
++		
++		super(getAddSymbol, getButtonSize, getAddColor);
+ 	}
+ 	
+ }
+Index: debug/tunables/ui/InfoButton.hx
+===================================================================
+--- debug/tunables/ui/InfoButton.hx	(revision 1409)
++++ debug/tunables/ui/InfoButton.hx	(working copy)
+@@ -29,14 +29,7 @@
+ 	public static var TUNABLES_UI_BTN_INFO_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_INFO_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_INFO_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_INFO_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_INFO_COLOR", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -45,14 +38,7 @@
+ 	public static var TUNABLES_UI_BTN_INFO_BG_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_INFO_BG_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_INFO_BG_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_INFO_BG_COLOR");
+-		}
+-		else
+-		{
+-			return 0x004080;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_INFO_BG_COLOR", 0x004080);
+ 	}
+ 	
+ 	/**
+@@ -61,14 +47,7 @@
+ 	public static var TUNABLES_UI_BTN_INFO_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_INFO_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_INFO_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_INFO_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x2754;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_INFO_SYMBOL", 0x2754);
+ 	}
+ 	
+ 	//==================================
+@@ -79,9 +58,14 @@
+ 	 * 
+ 	 * @param	buttonSize
+ 	 */
+-	public function new(buttonSize:Float) 
++	public function new(?getButtonSize:Void -> Float) 
+ 	{
+-		super(buttonSize, TUNABLES_UI_BTN_INFO_SYMBOL, TUNABLES_UI_BTN_INFO_COLOR, TUNABLES_UI_BTN_INFO_BG_COLOR, CIRCLE);
++		var getSymbol:Void -> Int = function():Int { return TUNABLES_UI_BTN_INFO_SYMBOL; };
++		var getSymColor:Void -> Int = function():Int { return TUNABLES_UI_BTN_INFO_COLOR; };
++		var getFillColor:Void -> Int = function():Int { return TUNABLES_UI_BTN_INFO_BG_COLOR; };
++		var getShape:Void -> SymbolButtonShape = function():SymbolButtonShape { return CIRCLE; };
++		
++		super(getSymbol, getButtonSize, getSymColor, getFillColor, getShape);
+ 	}
+ 	
+ }
+Index: debug/tunables/ui/RemoveItemButton.hx
+===================================================================
+--- debug/tunables/ui/RemoveItemButton.hx	(revision 1409)
++++ debug/tunables/ui/RemoveItemButton.hx	(working copy)
+@@ -29,14 +29,7 @@
+ 	public static var TUNABLES_UI_BTN_DELETE_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_DELETE_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_DELETE_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_DELETE_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFF0000;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_DELETE_COLOR", 0xFF0000);
+ 	}
+ 	
+ 	/**
+@@ -45,14 +38,7 @@
+ 	public static var TUNABLES_UI_BTN_DELETE_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_DELETE_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_DELETE_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_DELETE_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x268A;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_DELETE_SYMBOL", 0x268A);
+ 	}
+ 	
+ 	//==================================
+@@ -63,9 +49,12 @@
+ 	 * 
+ 	 * @param	buttonSize
+ 	 */
+-	public function new(buttonSize:Float) 
++	public function new(?getButtonSize:Void -> Float) 
+ 	{
+-		super(buttonSize, TUNABLES_UI_BTN_DELETE_SYMBOL, TUNABLES_UI_BTN_DELETE_COLOR);
++		var getSymbol:Void -> Int = function():Int { return TUNABLES_UI_BTN_DELETE_SYMBOL; };
++		var getColor:Void -> Int = function():Int { return TUNABLES_UI_BTN_DELETE_COLOR; };
++		
++		super(getSymbol, getButtonSize, getColor);
+ 	}
+ 	
+ }
+Index: debug/tunables/ui/SymbolButton.hx
+===================================================================
+--- debug/tunables/ui/SymbolButton.hx	(revision 1409)
++++ debug/tunables/ui/SymbolButton.hx	(working copy)
+@@ -13,6 +13,8 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.tunables.ui;
++import openfl.events.Event;
++import com.firstplayable.hxlib.events.RefreshUIEvent;
+ import openfl.display.Shape;
+ import openfl.text.TextFormatAlign;
+ import openfl.text.TextFormat;
+@@ -33,36 +35,80 @@
+  */
+ class SymbolButton extends Sprite
+ {	
++	
++	//initial args
++	private var m_getButtonSize:Void -> Float;
++	private var m_getSymbolCode:Void -> Int;
++	private var m_getSymbolColor:Void -> Int;
++	private var m_getFillColor:Void -> Int;
++	private var m_getShape:Void -> SymbolButtonShape;
++	
+ 	/**
+ 	 * Constructs a symbol box
+-	 * @param	buttonSize
+-	 * @param	symbolCode: Unicode of the symbol to draw.
+-	 * @param	opt: symbolColor
+-	 * @param	opt: bg color
+-	 * @param	opt: shape of the button.
++	 * @param	getSymbolCode: Unicode of the symbol to draw.
++	 * @param	opt: getButtonSize
++	 * @param	opt: getSymbolColor
++	 * @param	opt: getFillColor
++	 * @param	opt: getShape
+ 	 */
+-	public function new(buttonSize:Float, symbolCode:Int, 
+-		?symbolColor:Int,
+-		?fillColor:Int,
+-		?shape:SymbolButtonShape) 
++	public function new( getSymbolCode:Void -> Int, 
++		?getButtonSize: Void -> Float,
++		?getSymbolColor:Void -> Int,
++		?getFillColor:Void -> Int,
++		?getShape:Void -> SymbolButtonShape) 
+ 	{
+ 		super();
+ 		
+-		if (symbolColor == null)
++		m_getButtonSize = getButtonSize;
++		m_getSymbolCode = getSymbolCode;
++		m_getSymbolColor = getSymbolColor;
++		m_getFillColor = getFillColor;
++		m_getShape = getShape;
++		
++		createButton();
++		
++		buttonMode = true;
++		
++		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
++	}
++	
++	public function release():Void
++	{
++		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
++		removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
++	}
++	
++	/**
++	 * Creates the button based on member parameters
++	 */
++	public function createButton():Void
++	{
++		if (m_getButtonSize == null)
+ 		{
+-			symbolColor = UIDefs.TUNABLES_UI_BTN_COLOR;
++			m_getButtonSize = function():Float{ return UIDefs.TUNABLES_UI_BTN_SIZE; };
+ 		}
+ 		
+-		if (fillColor == null)
++		if (m_getSymbolColor == null)
+ 		{
+-			fillColor = UIDefs.TUNABLES_UI_BTN_BG_COLOR;
++			m_getSymbolColor = function():Int{ return UIDefs.TUNABLES_UI_BTN_COLOR; };
+ 		}
+ 		
+-		if (shape == null)
++		if (m_getFillColor == null)
+ 		{
+-			shape = BOX;
++			m_getFillColor = function():Int{ return UIDefs.TUNABLES_UI_BTN_BG_COLOR; };
+ 		}
+ 		
++		if (m_getShape == null)
++		{
++			m_getShape = function():SymbolButtonShape{ return BOX; };
++		}
++		
++		var btnSize:Float = m_getButtonSize();
++		var symCode:Int = m_getSymbolCode();
++		var symColor:Int = m_getSymbolColor();
++		var fillColor:Int = m_getFillColor();
++		var shapeType:SymbolButtonShape = m_getShape();
++		
+ 		graphics.clear();
+ 		blendMode = BlendMode.ADD;
+ 		
+@@ -71,15 +117,15 @@
+ 		buttonShape.graphics.lineStyle(UIDefs.TUNABLES_UI_BTN_OUTLINE_SIZE, UIDefs.TUNABLES_UI_OUTLINE_COLOR);
+ 		buttonShape.graphics.beginFill(fillColor);
+ 		
+-		switch(shape)
++		switch(shapeType)
+ 		{
+ 			case BOX:
+ 			{
+-				buttonShape.graphics.drawRoundRect(0, 0, buttonSize, buttonSize, UIDefs.TUNABLES_UI_ROUND_RECT_CORNER_SIZE);
++				buttonShape.graphics.drawRoundRect(0, 0, btnSize, btnSize, UIDefs.TUNABLES_UI_ROUND_RECT_CORNER_SIZE);
+ 			}
+ 			case CIRCLE:
+ 			{
+-				var radius:Float = buttonSize / 2;
++				var radius:Float = btnSize / 2;
+ 				buttonShape.graphics.drawCircle(radius, radius, radius);
+ 			}
+ 		}
+@@ -91,17 +137,48 @@
+ 		var symbolField:TextField = new TextField();
+ 		var symbolFormat:TextFormat = new TextFormat();
+ 		symbolFormat.align = TextFormatAlign.CENTER;
+-		symbolFormat.color = symbolColor;
++		symbolFormat.color = symColor;
+ 		symbolFormat.bold = false;
+ 		symbolField.setTextFormat(symbolFormat);
+-		symbolField.width = buttonSize;
+-		symbolField.height = buttonSize;
+-		symbolField.text = String.fromCharCode(symbolCode);
++		symbolField.width = btnSize;
++		symbolField.height = btnSize;
++		symbolField.text = String.fromCharCode(symCode);
+ 		
+ 		addChild(symbolField);
++	}
++	
++	//=========================================================
++	// Event Callbacks
++	//=========================================================
++	
++	private function onAddedToStage(e:Event):Void
++	{
++		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
++		addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+ 		
+-		buttonMode = true;
++		stage.addEventListener(RefreshUIEvent.REFRESH_UI_EVENT, onRefreshUI);
+ 	}
+ 	
++	private function onRemovedFromStage(e:Event):Void
++	{
++		removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
++		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
++		
++		stage.removeEventListener(RefreshUIEvent.REFRESH_UI_EVENT, onRefreshUI);
++	}
++	
++	/**
++	 * Updates appearance
++	 * @param	e
++	 */
++	private function onRefreshUI(e:RefreshUIEvent):Void
++	{
++		//Remove the old button
++		removeChildren();
++		
++		//create button based on potentially updated parameters
++		createButton();
++	}
++	
+ }
+ #end
+Index: debug/tunables/ui/TunablePagingWidget.hx
+===================================================================
+--- debug/tunables/ui/TunablePagingWidget.hx	(revision 1409)
++++ debug/tunables/ui/TunablePagingWidget.hx	(working copy)
+@@ -58,14 +58,7 @@
+ 	public static var TUNABLES_UI_PAGE_WIDTH_FIELD(get, null):Float;
+ 	public static function get_TUNABLES_UI_PAGE_WIDTH_FIELD():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_PAGE_WIDTH_FIELD"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_PAGE_WIDTH_FIELD");
+-		}
+-		else
+-		{
+-			return 1/16;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_PAGE_WIDTH_FIELD", 1/16);
+ 	}
+ 	
+ 	/**
+@@ -74,14 +67,7 @@
+ 	public static var TUNABLES_UI_PAGE_WIDTH_SEPARATOR(get, null):Float;
+ 	public static function get_TUNABLES_UI_PAGE_WIDTH_SEPARATOR():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_PAGE_WIDTH_SEPARATOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_PAGE_WIDTH_SEPARATOR");
+-		}
+-		else
+-		{
+-			return 1/32;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_PAGE_WIDTH_SEPARATOR", 1/32);
+ 	}
+ 	
+ 	/**
+@@ -90,14 +76,7 @@
+ 	public static var TUNABLES_UI_PAGE_WIDTH_GAP(get, null):Float;
+ 	public static function get_TUNABLES_UI_PAGE_WIDTH_GAP():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_PAGE_WIDTH_GAP"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_PAGE_WIDTH_GAP");
+-		}
+-		else
+-		{
+-			return 1/32;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_PAGE_WIDTH_GAP", 1/32);
+ 	}
+ 	
+ 	//===============================
+@@ -109,14 +88,7 @@
+ 	public static var TUNABLES_UI_BTN_PAGING_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_PAGING_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_PAGING_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_PAGING_COLOR");
+-		}
+-		else
+-		{
+-			return UIDefs.TUNABLES_UI_BTN_COLOR;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_PAGING_COLOR", UIDefs.TUNABLES_UI_BTN_COLOR);
+ 	}
+ 	
+ 	/**
+@@ -125,14 +97,7 @@
+ 	public static var TUNABLES_UI_BTN_PAGE_FIRST_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_PAGE_FIRST_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_PAGE_FIRST_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_PAGE_FIRST_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x23EE;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_PAGE_FIRST_SYMBOL", 0x23EE);
+ 	}
+ 	
+ 	/**
+@@ -141,14 +106,7 @@
+ 	public static var TUNABLES_UI_BTN_PAGE_PREV_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_PAGE_PREV_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_PAGE_PREV_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_PAGE_PREV_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x23F4;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_PAGE_PREV_SYMBOL", 0x23F4);
+ 	}
+ 	
+ 	/**
+@@ -157,14 +115,7 @@
+ 	public static var TUNABLES_UI_BTN_PAGE_NEXT_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_PAGE_NEXT_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_PAGE_NEXT_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_PAGE_NEXT_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x23F5;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_PAGE_NEXT_SYMBOL", 0x23F5);
+ 	}
+ 	
+ 	/**
+@@ -173,14 +124,7 @@
+ 	public static var TUNABLES_UI_BTN_PAGE_LAST_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_PAGE_LAST_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_PAGE_LAST_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_PAGE_LAST_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x23ED;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_PAGE_LAST_SYMBOL", 0x23ED);
+ 	}
+ 	
+ 	/**
+@@ -251,7 +195,7 @@
+ 		var allButtonIDs:Array<PagingButtons> = EnumTools.createAll(PagingButtons);
+ 		for (id in allButtonIDs)
+ 		{
+-			var nextButton:SymbolButton = new SymbolButton(UIDefs.TUNABLES_UI_ITEM_SIZE, getSymbol(id));			
++			var nextButton:SymbolButton = new SymbolButton(function():Int { return getSymbol(id); });		
+ 			nextButton.visible = false;
+ 			
+ 			m_pagingButtons.push(nextButton);
+Index: debug/tunables/ui/TunableTextField.hx
+===================================================================
+--- debug/tunables/ui/TunableTextField.hx	(revision 1409)
++++ debug/tunables/ui/TunableTextField.hx	(working copy)
+@@ -13,6 +13,7 @@
+ #if (debug || build_cheats)
+ 
+ package com.firstplayable.hxlib.debug.tunables.ui;
++import com.firstplayable.hxlib.events.RefreshUIEvent;
+ 
+ import openfl.events.Event;
+ import openfl.events.FocusEvent;
+@@ -40,14 +41,7 @@
+ 	public static var TUNABLES_UI_READ_TEXT_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_READ_TEXT_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_READ_TEXT_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_READ_TEXT_COLOR");
+-		}
+-		else
+-		{
+-			return UIDefs.TUNABLES_UI_TEXT_COLOR;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_READ_TEXT_COLOR", UIDefs.TUNABLES_UI_TEXT_COLOR);
+ 	}
+ 	
+ 	/**
+@@ -56,14 +50,7 @@
+ 	public static var TUNABLES_UI_READ_BORDER_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_READ_BORDER_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_READ_BORDER_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_READ_BORDER_COLOR");
+-		}
+-		else
+-		{
+-			return UIDefs.TUNABLES_UI_OUTLINE_COLOR;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_READ_BORDER_COLOR", UIDefs.TUNABLES_UI_OUTLINE_COLOR);
+ 	}
+ 	
+ 	/**
+@@ -72,14 +59,7 @@
+ 	public static var TUNABLES_UI_READ_BG_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_READ_BG_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_READ_BG_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_READ_BG_COLOR");
+-		}
+-		else
+-		{
+-			return UIDefs.TUNABLES_UI_BG_COLOR;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_READ_BG_COLOR", UIDefs.TUNABLES_UI_BG_COLOR);
+ 	}
+ 	
+ 	//WRITE mode
+@@ -90,14 +70,7 @@
+ 	public static var TUNABLES_UI_WRITE_TEXT_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_WRITE_TEXT_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_WRITE_TEXT_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_WRITE_TEXT_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_WRITE_TEXT_COLOR", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -106,14 +79,7 @@
+ 	public static var TUNABLES_UI_WRITE_BORDER_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_WRITE_BORDER_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_WRITE_BORDER_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_WRITE_BORDER_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_WRITE_BORDER_COLOR", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -122,14 +88,7 @@
+ 	public static var TUNABLES_UI_WRITE_BG_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_WRITE_BG_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_WRITE_BG_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_WRITE_BG_COLOR");
+-		}
+-		else
+-		{
+-			return 0x646464;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_WRITE_BG_COLOR", 0x646464);
+ 	}
+ 	
+ 	//EDIT mode
+@@ -140,14 +99,7 @@
+ 	public static var TUNABLES_UI_EDIT_TEXT_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_EDIT_TEXT_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_EDIT_TEXT_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_EDIT_TEXT_COLOR");
+-		}
+-		else
+-		{
+-			return 0x000000;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_EDIT_TEXT_COLOR", 0x000000);
+ 	}
+ 	
+ 	/**
+@@ -156,14 +108,7 @@
+ 	public static var TUNABLES_UI_EDIT_BORDER_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_EDIT_BORDER_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_EDIT_BORDER_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_EDIT_BORDER_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_EDIT_BORDER_COLOR", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -172,14 +117,7 @@
+ 	public static var TUNABLES_UI_EDIT_BG_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_EDIT_BG_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_EDIT_BG_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_EDIT_BG_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_EDIT_BG_COLOR", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -359,5 +297,19 @@
+ 		}
+ 	}
+ 	
++	/**
++	 * Update the UI to reflect current parameters
++	 * @param	e
++	 */
++	public function onRefreshUI(e:RefreshUIEvent):Void
++	{
++		var textFormat = getTextFormat();
++		textFormat.size = UIDefs.TUNABLES_UI_TEXT_SIZE;
++		setTextFormat(textFormat);
++		
++		//Reset the mode to its current mode to bring in new params
++		modeID = m_modeID;
++	}
++	
+ }
+ #end
+Index: debug/tunables/ui/UIDefs.hx
+===================================================================
+--- debug/tunables/ui/UIDefs.hx	(revision 1409)
++++ debug/tunables/ui/UIDefs.hx	(working copy)
+@@ -33,14 +33,7 @@
+ 	public static var TUNABLES_UI_BG_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BG_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BG_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BG_COLOR");
+-		}
+-		else
+-		{
+-			return 0x000000;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BG_COLOR", 0x000000);
+ 	}
+ 	
+ 	/**
+@@ -49,14 +42,7 @@
+ 	public static var TUNABLES_UI_OUTLINE_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_OUTLINE_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_OUTLINE_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_OUTLINE_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_OUTLINE_COLOR", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -66,14 +52,7 @@
+ 	public static var TUNABLES_UI_OUTLINE_SIZE(get, null):Float;
+ 	public static function get_TUNABLES_UI_OUTLINE_SIZE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_OUTLINE_SIZE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_OUTLINE_SIZE");
+-		}
+-		else
+-		{
+-			return 2.0;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_OUTLINE_SIZE", 2.0);
+ 	}
+ 	
+ 	/**
+@@ -82,14 +61,7 @@
+ 	public static var TUNABLES_UI_BOTTOM_BAR_SIZE(get, null):Float;
+ 	public static function get_TUNABLES_UI_BOTTOM_BAR_SIZE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BOTTOM_BAR_SIZE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BOTTOM_BAR_SIZE");
+-		}
+-		else
+-		{
+-			return 1.6;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_BOTTOM_BAR_SIZE", 1.6);
+ 	}
+ 	
+ 	/**
+@@ -98,14 +70,7 @@
+ 	public static var TUNABLES_UI_ROUND_RECT_CORNER_SIZE(get, null):Float;
+ 	public static function get_TUNABLES_UI_ROUND_RECT_CORNER_SIZE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_ROUND_RECT_CORNER_SIZE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_ROUND_RECT_CORNER_SIZE");
+-		}
+-		else
+-		{
+-			return 5.0;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_ROUND_RECT_CORNER_SIZE", 5.0);
+ 	}
+ 	
+ 	//====================================================================
+@@ -118,14 +83,7 @@
+ 	public static var TUNABLES_UI_ITEM_SIZE(get, null):Float;
+ 	public static function get_TUNABLES_UI_ITEM_SIZE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_ITEM_SIZE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_ITEM_SIZE");
+-		}
+-		else
+-		{
+-			return 20;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_ITEM_SIZE", 20);
+ 	}
+ 	
+ 	/**
+@@ -135,14 +93,7 @@
+ 	public static var TUNABLES_UI_ITEMS_PER_PAGE(get, null):Int;
+ 	public static function get_TUNABLES_UI_ITEMS_PER_PAGE():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_ITEMS_PER_PAGE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_ITEMS_PER_PAGE");
+-		}
+-		else
+-		{
+-			return 20;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_ITEMS_PER_PAGE", 20);
+ 	}
+ 	
+ 	/**
+@@ -162,14 +113,7 @@
+ 	public static var TUNABLES_UI_TEXT_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_TEXT_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_TEXT_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_TEXT_COLOR");
+-		}
+-		else
+-		{
+-			return 0xFFFFFF;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_ITEMS_PER_PAGE", 0xFFFFFF);
+ 	}
+ 	
+ 	/**
+@@ -178,14 +122,7 @@
+ 	public static var TUNABLES_UI_TEXT_SIZE(get, null):Int;
+ 	public static function get_TUNABLES_UI_TEXT_SIZE():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_TEXT_SIZE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_TEXT_SIZE");
+-		}
+-		else
+-		{
+-			return 12;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_TEXT_SIZE", 12);
+ 	}
+ 	
+ 	//====================================================================
+@@ -193,19 +130,21 @@
+ 	//====================================================================
+ 	
+ 	/**
++	 * Get the size of of standard buttons.
++	 */
++	public static var TUNABLES_UI_BTN_SIZE(get, null):Float;
++	public static function get_TUNABLES_UI_BTN_SIZE():Float
++	{
++		return UIDefs.TUNABLES_UI_ITEM_SIZE - UIDefs.TUNABLES_UI_OUTLINE_SIZE;
++	}
++	
++	/**
+ 	 * The fill color for generic button symbols
+ 	 */
+ 	public static var TUNABLES_UI_BTN_BG_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_BG_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_BG_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_BG_COLOR");
+-		}
+-		else
+-		{
+-			return TUNABLES_UI_BG_COLOR;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_BG_COLOR", TUNABLES_UI_BG_COLOR);
+ 	}
+ 	
+ 	/**
+@@ -214,14 +153,7 @@
+ 	public static var TUNABLES_UI_BTN_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_COLOR");
+-		}
+-		else
+-		{
+-			return 0x00FF00;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_BG_COLOR", 0x00FF00);
+ 	}
+ 	
+ 	/**
+@@ -230,14 +162,7 @@
+ 	public static var TUNABLES_UI_BTN_OUTLINE_SIZE(get, null):Float;
+ 	public static function get_TUNABLES_UI_BTN_OUTLINE_SIZE():Float
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_OUTLINE_SIZE"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_OUTLINE_SIZE");
+-		}
+-		else
+-		{
+-			return 2.0;
+-		}
++		return Tunables.getFloatField("TUNABLES_UI_BTN_OUTLINE_SIZE", 2.0);
+ 	}
+ 	
+ 	/**
+@@ -246,14 +171,7 @@
+ 	public static var TUNABLES_UI_BTN_SEARCH_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_SEARCH_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_SEARCH_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_SEARCH_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x2315;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_SEARCH_SYMBOL", 0x2315);
+ 	}
+ 	
+ }
+Index: debug/tunables/ui/UndoButton.hx
+===================================================================
+--- debug/tunables/ui/UndoButton.hx	(revision 1409)
++++ debug/tunables/ui/UndoButton.hx	(working copy)
+@@ -30,14 +30,7 @@
+ 	public static var TUNABLES_UI_BTN_UNDO_COLOR(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_UNDO_COLOR():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_UNDO_COLOR"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_UNDO_COLOR");
+-		}
+-		else
+-		{
+-			return UIDefs.TUNABLES_UI_BTN_COLOR;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_UNDO_COLOR", UIDefs.TUNABLES_UI_BTN_COLOR);
+ 	}
+ 	
+ 	/**
+@@ -46,14 +39,7 @@
+ 	public static var TUNABLES_UI_BTN_UNDO_SYMBOL(get, null):Int;
+ 	public static function get_TUNABLES_UI_BTN_UNDO_SYMBOL():Int
+ 	{
+-		if (Reflect.hasField(Tunables, "TUNABLES_UI_BTN_UNDO_SYMBOL"))
+-		{
+-			return Reflect.field(Tunables, "TUNABLES_UI_BTN_UNDO_SYMBOL");
+-		}
+-		else
+-		{
+-			return 0x238C;
+-		}
++		return Tunables.getIntField("TUNABLES_UI_BTN_UNDO_SYMBOL", 0x2936);
+ 	}
+ 	
+ 	//==================================
+@@ -64,9 +50,12 @@
+ 	 * 
+ 	 * @param	buttonSize
+ 	 */
+-	public function new(buttonSize:Float) 
++	public function new(?getButtonSize:Void -> Float) 
+ 	{
+-		super(buttonSize, TUNABLES_UI_BTN_UNDO_SYMBOL, TUNABLES_UI_BTN_UNDO_COLOR);
++		var getSymbol:Void -> Int = function():Int { return TUNABLES_UI_BTN_UNDO_SYMBOL; };
++		var getColor:Void -> Int = function():Int { return TUNABLES_UI_BTN_UNDO_COLOR; };
++		
++		super(getSymbol, getButtonSize, getColor);
+ 	}
+ 	
+ }
+Index: events/RefreshUIEvent.hx
+===================================================================
+--- events/RefreshUIEvent.hx	(nonexistent)
++++ events/RefreshUIEvent.hx	(working copy)
+@@ -0,0 +1,30 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.events;
++import openfl.events.Event;
++
++/**
++ * Any event sent when UI display parameters have changed, and interested GUIs
++ * should update themselves accordingly. 
++ */
++class RefreshUIEvent extends Event
++{
++	public static inline var REFRESH_UI_EVENT:String = "REFRESH UI";
++	
++	public function new()
++	{
++		super(REFRESH_UI_EVENT);
++	}
++	
++}
+\ No newline at end of file

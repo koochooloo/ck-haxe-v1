@@ -1,0 +1,288 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_next_question",
+            "record" : true,
+            "id" : 13,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Next",
+                "position" : [ -80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomRight",
+                "scale" : [ 0.75, 0.75 ],
+                "loadParams" : true
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "pnl_answer",
+            "priority" : 2,
+            "inheritable" : { 
+                "position" : [ 450, 517 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_answer_vo",
+                "record" : true,
+                "id" : 3,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 36, 118 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ref_answer_one",
+                "record" : true,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/ImageDefaultAnswer",
+                    "position" : [ 171, 118 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ref_answer_two",
+                "record" : true,
+                "id" : 1,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/ImageDefaultAnswer",
+                    "position" : [ 385, 118 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ref_answer_three",
+                "record" : true,
+                "id" : 2,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/ImageDefaultAnswer",
+                    "position" : [ 598, 118 ],
+                    "loadParams" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_answer_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-TranslucentBacking",
+                    "position" : [ 1, 0 ],
+                    "scale" : [ 2.8, 0.92 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_story_compact",
+            "priority" : 5,
+            "inheritable" : { 
+                "position" : [ 201, 23 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_story_vo",
+                "record" : true,
+                "id" : 4,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 46, 66 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_expand",
+                "record" : true,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/PanelExpand",
+                    "position" : [ 472, 231 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_story",
+                "record" : true,
+                "priority" : 10,
+                "text" : "Question text.",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 85, 45 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/OpenSans-SemiBold.ttf:24",
+                    "size" : [ 850, 150 ],
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_question_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 3.85, 0.9 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_question_panel_header",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/headers/StoryRibbon",
+                    "position" : [ 473, 45 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_question",
+            "priority" : 10,
+            "inheritable" : { 
+                "position" : [ 450, 293 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_question_vo",
+                "record" : true,
+                "id" : 4,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 43, 40 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_question",
+                "record" : true,
+                "priority" : 10,
+                "text" : "Question text.",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 67, 19 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/OpenSans-SemiBold.ttf:24",
+                    "size" : [ 610, 170 ],
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_question_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-SecondaryPanel",
+                    "scale" : [ 2.8, 0.8 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_question_header",
+                "priority" : 4,
+                "inheritable" : { 
+                    "resource" : "UI/headers/Question",
+                    "position" : [ 90, 12 ],
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "pnl_story_expanded",
+            "priority" : 20,
+            "inheritable" : { 
+                "position" : [ 201, 23 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_story_vo",
+                "record" : true,
+                "id" : 4,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_sound2",
+                    "position" : [ 46, 66 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_close",
+                "record" : true,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/PanelClose",
+                    "position" : [ 472, 716 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_question",
+                "record" : true,
+                "priority" : 10,
+                "text" : "Question text.",
+                "inheritable" : { 
+                    "opacity" : 25,
+                    "position" : [ 85, 50 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 850, 640 ],
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "spr_question_panel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "scale" : [ 3.85, 2.85 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_question_panel_header",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/headers/StoryRibbon",
+                    "position" : [ 473, 45 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_chef",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-Backpack",
+                "position" : [ -379, 0 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "scale" : [ 0.7, 0.7 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

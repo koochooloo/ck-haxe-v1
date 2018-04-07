@@ -1,0 +1,477 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "borderPanel" : [ { 
+            "name" : "ingredient_bounds",
+            "record" : true,
+            "inheritable" : { 
+                "position" : [ 224, 192 ],
+                "boundingBox" : [ 0, 0, 400, 380 ]
+            }
+        }, { 
+            "name" : "tool_bounds",
+            "record" : true,
+            "inheritable" : { 
+                "position" : [ 320, 641 ],
+                "boundingBox" : [ 0, 0, 700, 125 ]
+            }
+        } ],
+        "button" : [ { 
+            "name" : "btn_back",
+            "record" : true,
+            "priority" : 6,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_Back",
+                "position" : [ 80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomLeft",
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_next",
+            "record" : true,
+            "priority" : 6,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_Next",
+                "position" : [ -80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomRight",
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_ingredientScrollBar",
+            "record" : true,
+            "priority" : 9,
+            "inheritable" : { 
+                "position" : [ 655, 272 ],
+                "scale" : [ 0.4, 2 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_toolScrollBar",
+            "record" : true,
+            "priority" : 9,
+            "inheritable" : { 
+                "position" : [ 1039, 672 ],
+                "scale" : [ 0.3, 0.8 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_favorite",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_favorites",
+                "position" : [ 433, 168 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 0.8, 0.8 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_pageRight",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factNext",
+                "position" : [ 1124, 352 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_pageLeft",
+            "record" : true,
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/Buttons/btn_factPrevious",
+                "position" : [ 729, 353 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "headerText",
+            "record" : true,
+            "priority" : 20,
+            "text" : "RecipeName",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "group_ingredient1",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 223, 190 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_ingredient1",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_info",
+                    "position" : [ 34, 32 ],
+                    "scale" : [ 0.85, 0.85 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_ingredient1",
+                "record" : true,
+                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
+                "inheritable" : { 
+                    "position" : [ 60, 8 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "left or top", "center" ],
+                    "size" : [ 380, 80 ],
+                    "spacing" : 2,
+                    "clipOverflow" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_ingredient2",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 223, 265 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_ingredient2",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_info",
+                    "position" : [ 30, 30 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_ingredient2",
+                "record" : true,
+                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
+                "inheritable" : { 
+                    "position" : [ 62, 6 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "left or top", "center" ],
+                    "size" : [ 380, 80 ],
+                    "spacing" : 2,
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_tool1",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 329, 644 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_tool1",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_store",
+                    "position" : [ 31, 32 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tool1",
+                "record" : true,
+                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
+                "inheritable" : { 
+                    "position" : [ 70, -1 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "left or top", "center" ],
+                    "size" : [ 270, 80 ],
+                    "wrapOverflow" : true,
+                    "clipOverflow" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_tool2",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "position" : [ 695, 644 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_tool2",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_store",
+                    "position" : [ 30, 32 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tool2",
+                "record" : true,
+                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
+                "inheritable" : { 
+                    "position" : [ 69, -1 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "left or top", "center" ],
+                    "size" : [ 270, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ]
+        }, { 
+            "name" : "group_tool3",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "position" : [ 328, 718 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_tool3",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "2d/Buttons/btn_store",
+                    "position" : [ 31, 32 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_tool3",
+                "record" : true,
+                "priority" : 10,
+                "text" : "Bacon ipsum dolor amet prosciutto landjaeger venison. ",
+                "inheritable" : { 
+                    "position" : [ 70, -1 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "textAlignment" : [ "left or top", "center" ],
+                    "size" : [ 270, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "2d/BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_ingredient",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+                "position" : [ -478, -252 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 1.9, 1.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_tools",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanel",
+                "position" : [ -414, 227 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 3.25, 0.55 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_woodPanel",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-WoodenPanel",
+                "position" : [ 30, -243 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 1.65, 1.65 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_scrollBacking_tools",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+                "position" : [ 1036, 637 ],
+                "scale" : [ 1, 0.7 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "handleTools",
+            "record" : true,
+            "priority" : 7,
+            "inheritable" : { 
+                "resource" : "2d/UI/scrollHandle",
+                "position" : [ 1039, 656 ],
+                "scale" : [ 0.8, 0.4 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_scrollBacking_ingredients",
+            "record" : true,
+            "priority" : 8,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-ScrollBarBacking",
+                "position" : [ 650, 199 ],
+                "scale" : [ 1, 2.85 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "handleIngredients",
+            "record" : true,
+            "priority" : 9,
+            "inheritable" : { 
+                "resource" : "2d/UI/scrollHandle",
+                "position" : [ 653, 236 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_ingredient_top",
+            "record" : true,
+            "priority" : 9,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanelTop",
+                "position" : [ -478, -252 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 1.9, 1.75 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "recipeImage",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/UI/BlackPixel",
+                "position" : [ 750, 179 ],
+                "scale" : [ 350, 350 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_scrollBounds_tools",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "position" : [ 300, 627 ],
+                "scale" : [ 760, 120 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_scrollBounds_ingredients",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "2d/UI/WhitePixel",
+                "position" : [ 230, 175 ],
+                "scale" : [ 440, 375 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_tools_top",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "2d/UI/9patch/9patch-DefaultPanelTop",
+                "position" : [ -414, 227 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "scale" : [ 3.25, 0.55 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_header_ribbon",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/headers/RibbonSmall",
+                "position" : [ 686, 640 ],
+                "scale" : [ 0.55, 1 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_header_ribbon_ingredients",
+            "priority" : 20,
+            "inheritable" : { 
+                "resource" : "2d/UI/headers/RibbonBig",
+                "position" : [ 438, 187 ],
+                "scale" : [ 0.9, 0.9 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_header_tools",
+            "priority" : 21,
+            "inheritable" : { 
+                "resource" : "2d/UI/headers/RibbonSmall_Tools",
+                "position" : [ 686, 623 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_header_ingredients",
+            "priority" : 21,
+            "inheritable" : { 
+                "resource" : "2d/UI/headers/RibbonBig_Ingredients",
+                "position" : [ 436, 143 ],
+                "scale" : [ 0.9, 0.9 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

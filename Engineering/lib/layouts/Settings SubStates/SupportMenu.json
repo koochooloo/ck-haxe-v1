@@ -1,0 +1,121 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_x",
+            "record" : true,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_x",
+                "position" : [ 1102, 444 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_check",
+            "record" : true,
+            "id" : 1,
+            "priority" : 2,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_checkSmall",
+                "position" : [ 1102, 624 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_assess",
+            "record" : true,
+            "id" : 2,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/9patch/9patch-DefaultAnswer",
+                "position" : [ 728, 320 ],
+                "scale" : [ 2, 1 ],
+                "visible" : false,
+                "loadParams" : true
+            },
+            "label" : [ { 
+                "name" : "lbl_assess",
+                "record" : true,
+                "priority" : 10,
+                "text" : "ASSESSMENT_BUTTON",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 32, 16 ],
+                    "loadParams" : false,
+                    "color" : [ 0, 0, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "autoSize" : true
+                }
+            } ]
+        } ],
+        "label" : [ { 
+            "name" : "lbl_tut4",
+            "record" : true,
+            "priority" : 2,
+            "text" : "SUPPORT",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 662, 446 ],
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "size" : [ 400, 180 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_assess_dialogue",
+            "record" : true,
+            "priority" : 2,
+            "text" : "ASSESSMENT_DIALOGUE",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "position" : [ 663, 446 ],
+                "visible" : false,
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "size" : [ 400, 180 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "girlHat",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-Backpack",
+                "position" : [ 464, 768 ],
+                "scale" : [ 1.2, 1.2 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ui_help",
+            "priority" : 1,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-SpeechBubble",
+                "position" : [ 644, 436 ],
+                "scale" : [ 1.7, 1 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

@@ -1,0 +1,306 @@
+Index: src/game/ui/states/CountryMenu.hx
+===================================================================
+--- src/game/ui/states/CountryMenu.hx	(revision 793)
++++ src/game/ui/states/CountryMenu.hx	(working copy)
+@@ -27,6 +27,7 @@
+ import game.net.NetAssets;
+ import game.ui.ScrollingManager;
+ import game.ui.SpeckMenu;
++import game.ui.VirtualScrollingMenu;
+ import haxe.ds.Option;
+ import openfl.display.Bitmap;
+ import openfl.display.DisplayObjectContainer;
+@@ -73,7 +74,7 @@
+ 
+ 	// ------ Member vars:
+ 	private var m_countryListPanel:DisplayObjectContainer;
+-	private var m_scrollMenu:ScrollingManager;
++	private var m_scrollMenu:VirtualScrollingMenu;
+ 	private var DEFAULT_SEARCH:String;
+ 	private var m_fromGlobe = false;
+ 	
+@@ -89,16 +90,22 @@
+ 		// Grab country list menu container from paist
+ 		m_countryListPanel = cast getChildByName( "group_countryPanel" );
+ 		
++		var bounds:OPSprite = cast getChildByName( "spr_scrollBounds" );
++		var ref1:DisplayObjectContainer = cast getChildByName( "grp_country3" );
++		var ref2:DisplayObjectContainer = cast getChildByName( "grp_country4" );
++		m_scrollMenu = new VirtualScrollingMenu( bounds, Orientation.VERTICAL, ref1, ref2 );
++		this.addChild( m_scrollMenu );
++		/*
+ 		// Set up the scrolling menu 
+ 		var scrollBorder:DisplayObjectContainer = cast getChildByName( "scroll_bounds" );
+ 		m_scrollMenu = new ScrollingManager( scrollBorder.x, scrollBorder.y, SCROLLWIDTH, SCROLLHEIGHT, m_countryListPanel, "vertical", DISPLAYNUM );
+ 		m_scrollMenu.addScrollBar( cast m_countryListPanel.getChildByName( "scrollHandle" ), cast m_countryListPanel.getChildByName( "spr_scrollBacking" ) );
+ 		m_countryListPanel.addChild( m_scrollMenu );
++		*/
+ 		
+ 		// Enable search bar 
+ 		var searchBar:OPSprite = cast getChildByName( "ui_cSearch" );
+ 		var searchText:TextField = cast getChildByName( "lbl_cSearch" );
+-		
+ 		DEFAULT_SEARCH = searchText.text;
+ 		searchText.selectable = true;
+ 		searchText.type = TextFieldType.INPUT;
+@@ -109,7 +116,7 @@
+ 		sortCountries();
+ 		buildCountryList( DEFAULT_SEARCH );
+ 		
+-		m_scrollMenu.init();
++		//m_scrollMenu.init();
+ 	}
+ 	
+ 	// Sort countries in the list based on availability
+@@ -181,7 +188,7 @@
+ 		else  // Country flag button - show & edit popup with selected data
+ 		{
+ 			// Get the country from the button name 
+-			var country:Country = SpeckGlobals.dataManager.allCountries.get( caller.name );
++			/*var country:Country = SpeckGlobals.dataManager.allCountries.get( caller.name );
+ 			
+ 			// Set new country param for flow
+ 			FlowController.data.selectedCountry = country;
+@@ -196,8 +203,10 @@
+ 			// Adjust globe - country menu is present on the main menu
+ 			SpeckGlobals.hud.mainMenuRef.focusInCountry( country.code );
+ 			
+-			WebAudio.instance.play( "SFX/country1_click" );
++			WebAudio.instance.play( "SFX/country1_click" );*/
+ 			
++			trace( "CLICKED A COUNTRY BUTTON!" );
++			
+ 			return;
+ 		}
+ 		
+@@ -210,7 +219,7 @@
+ 	
+ 	private function buildCountryList( filter:String ):Void
+ 	{
+-		m_scrollMenu.clear(); 
++		//m_scrollMenu.clear(); 
+ 		m_offset = POSITION_OFFSET;
+ 		
+ 		// Create country buttons/labels for available countries
+@@ -358,7 +367,8 @@
+ 	
+ 	// Create/refresh scrolling list items
+ 	private function drawCountries( filter:String, list:Array< Country >, comingSoon:Bool ):Void
+-	{		
++	{	
++		/*
+ 		// Get paist reference
+ 		var button:GraphicButton = cast m_countryListPanel.getChildByName( "btn_country1" );
+ 		var label:TextField = cast m_countryListPanel.getChildByName( "countryName1" );
+@@ -470,6 +480,7 @@
+ 		}
+ 		
+ 		showMasks();
++		*/
+ 	}
+ 	
+ 	private function showMasks():Void
+Index: src/game/ui/VirtualScrollingItem.hx
+===================================================================
+--- src/game/ui/VirtualScrollingItem.hx	(revision 806)
++++ src/game/ui/VirtualScrollingItem.hx	(working copy)
+@@ -113,6 +113,7 @@
+ 	 * */
+ 	public function incrementPosition( distance:Float, orientation:Orientation ):Void
+ 	{
++		trace( "incrementing item position for " + debugName + " by " + distance );
+ 		switch( orientation )
+ 		{
+ 			case Orientation.HORIZONTAL:	group.x += distance;
+Index: src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- src/game/ui/VirtualScrollingMenu.hx	(revision 806)
++++ src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -13,6 +13,7 @@
+ 
+ package game.ui;
+ import com.firstplayable.hxlib.display.OPSprite;
++import format.swf.Data.FontLayoutData;
+ import haxe.ds.Option;
+ import openfl.display.DisplayObjectContainer;
+ import openfl.events.Event;
+@@ -93,7 +94,14 @@
+ 	// Movement helpers
+ 	private var m_isMouseDown:Bool;
+ 	private var m_prevPos:Float;
+-	private static inline var SWIPE_THRESHOLD:Float = 5; // Number of pixels between mouse up/down events that articulates a swipe vs tap action
++	private var m_swipeTime:Int; // Incremented every frame after mouseDown to help calc. swipe velocity (pixels/frame)
++	private var m_velocity:Float;
++	private var m_distance:Float;
++	private var m_drag:Float;
++	private var m_isTweening:Bool;
++	private static inline var DRAG:Float = 2;
++	private static inline var TAP_THRESHOLD:Float = 5; // Number of pixels between mouse up/down events that articulates a pan/swipe vs tap action
++	private static inline var SWIPE_THRESHOLD:Float = 0; // Number of pixels between mouse up/down events that articulates a swipe vs a pan/tap action
+ 	
+ 	
+ 	/**
+@@ -111,6 +119,10 @@
+ 		m_dataset = new Array();
+ 		m_scrollingItems = new Array();
+ 		m_isMouseDown = false;
++		m_swipeTime = 0;
++		m_velocity = 0;
++		m_distance = 0;
++		m_isTweening = false;
+ 		
+ 		// Use bounding sprite to determine scroll limits
+ 		switch ( orientation )
+@@ -339,25 +351,38 @@
+ 	private function onMouseUp( e:MouseEvent ):Void
+ 	{
+ 		m_isMouseDown = false;
+-		
++
+ 		var pos:Float = switch ( m_orientation )
+ 		{
+ 			case HORIZONTAL: e.localX;
+ 			case VERTICAL: 	 e.localY;
+ 		}
+-		
+-		var minPrevPos:Float = m_prevPos - SWIPE_THRESHOLD;
+-		var maxPrevPos:Float = m_prevPos + SWIPE_THRESHOLD;
+-		var isTapAction:Bool = (pos >= minPrevPos) && (pos <= maxPrevPos);
++		var distance:Float = pos - m_prevPos;
++
++		// ---------------------------------------------------
++		// Test for tap action - attempt to tap item button
++		// ---------------------------------------------------
++		var isTapAction:Bool = ( Math.abs( distance ) <= TAP_THRESHOLD);
+ 		if ( isTapAction )
+ 		{
+ 			tap( e.localX, e.localY );
+ 		}
++		
++		// ---------------------------------------------------
++		// Test for swipe action - init tweens
++		// ---------------------------------------------------
++		var isSwipeAction:Bool = Math.abs( distance ) >= SWIPE_THRESHOLD;
++		if ( isSwipeAction && !m_isTweening )
++		{
++			initTween( distance );
++		}
++
+ 	}
+ 	
+ 	private function onMouseDown( e:MouseEvent ):Void
+ 	{
+ 		m_isMouseDown = true;
++		m_swipeTime = 0;
+ 		
+ 		m_prevPos = switch ( m_orientation )
+ 		{
+@@ -374,6 +399,9 @@
+ 			return;
+ 		}
+ 		
++		// ---------------------------------------------------
++		// Pan items with the mouse drag
++		// ---------------------------------------------------
+ 		var pos:Float = switch ( m_orientation )
+ 		{
+ 			case HORIZONTAL: e.localX;
+@@ -383,6 +411,15 @@
+ 		var distance:Float = pos - m_prevPos;
+ 		m_prevPos = pos;
+ 		
++		for ( item in m_scrollingItems )
++		{
++			item.incrementPosition( distance, m_orientation );
++		}
++		
++		// ---------------------------------------------------
++		// Add item to top/bottom depending on direction
++		// to maintain illusion of infinite scroll
++		// ---------------------------------------------------
+ 		var dir:Direction;
+ 		if ( distance > 0 )
+ 		{
+@@ -393,11 +430,6 @@
+ 			dir = BACKWARD;
+ 		}
+ 		
+-		for ( item in m_scrollingItems )
+-		{
+-			item.incrementPosition( distance, m_orientation );
+-		}
+-		
+ 		handleVirtualReposition( dir );
+ 	}
+ 	
+@@ -408,9 +440,58 @@
+ 	
+ 	private function onFrame( e:Event ):Void
+ 	{
++		if ( m_isMouseDown )
++		{
++			m_swipeTime++; // Increment swipe time per frame spent potentially swiping
++		}
+ 		
++		if ( m_isTweening )
++		{	
++			if ( (m_drag < 0 && m_velocity <= 0) || (m_drag > 0 && m_velocity >= 0) )
++			{
++				m_isTweening = false;
++			}
++			else 
++			{
++				for ( item in m_scrollingItems )
++				{
++					tweenItem( item );
++				}
++			}
++		}
+ 	}
++
++	/**
++	 * Moves objects with momentum
++	 */
++	private function initTween( distance:Float ):Void
++	{
++		if ( m_swipeTime == 0 )
++		{
++			return;
++		}
++		
++		m_velocity = (distance / m_swipeTime) * 1.5; // TEMP 
++
++		
++		if ( m_velocity > 0 )
++		{
++			m_drag = DRAG * (-1);
++		}
++		else
++		{
++			m_drag = DRAG;
++		}
++		
++		m_isTweening = true;
++	}
+ 	
++	private function tweenItem( item:VirtualScrollingItem ):Void
++	{	
++		item.incrementPosition( m_velocity, m_orientation );
++		m_velocity += m_drag;
++	}
++	
+ 	// ===================================
+ 	// Object interaction helpers
+ 	// ===================================
+@@ -445,6 +526,11 @@
+ 		// Clear items
+ 		for ( item in m_scrollingItems )
+ 		{
++			if ( item.hasEventListener( Event.ENTER_FRAME ) ) 
++			{
++				removeEventListener( Event.ENTER_FRAME, tweenItem );
++			}
++			
+ 			item.clear();
+ 		}
+ 		

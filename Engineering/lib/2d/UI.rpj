@@ -1,0 +1,1234 @@
+<ResourceProject version="3.0">
+  <Head>
+  </Head>
+  <Body>
+    <resources name="UI/">
+      <paramDefaults>
+        <paramDefault name="bounds" value="Automatic;Bounds" />
+        <paramDefault name="center" value="Automatic;(Center,Bottom)" />
+      </paramDefaults>
+      <resources name="9patch/">
+        <paramDefaults>
+          <paramDefault name="bounds" value="Automatic;Bounds" />
+          <paramDefault name="center" value="Automatic;(Left,Top)" />
+        </paramDefaults>
+        <resource name="9patch-AnswerPanel" path="UI/9patch/9patch-AnswerPanel.png" md5="4035d6c6a1128bd3a16b6145d20bd50d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="233" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-DefaultPanel" path="UI/9patch/9patch-DefaultPanel.png" md5="3f3abf51d5508c6509023d3d1a3f1bfd">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Automatic;(Left,Top)" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="9patch-DefaultPanelTop" path="UI/9patch/9patch-DefaultPanelTop.png" md5="882b1c6076280f2c66e48629e598caf7">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-Filter_down" path="UI/9patch/9patch-Filter_down.png" md5="28d5aa2bfe15e91b79eadfcd7b0a6835">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="129" height="60" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-Filter_up" path="UI/9patch/9patch-Filter_up.png" md5="92af8c356263f642e2ec9205dea18a65">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="129" height="60" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-IndentedPanel" path="UI/9patch/9patch-IndentedPanel.png" md5="e3cb8b322d385f4dbab47ca4853a9773">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="129" height="129" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-IndentedPanelTop" path="UI/9patch/9patch-IndentedPanelTop.png" md5="12ca9fc0e80695c9d13351ca1073835a">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="129" height="129" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-ScrollBarBacking" path="UI/9patch/9patch-ScrollBarBacking.png" md5="62457989292deabb806892af360b878b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="9" height="129" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-SecondaryPanel" path="UI/9patch/9patch-SecondaryPanel.png" md5="66dfe8f3b65e6b853ae9ff960f97c7d0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-SpeechBubble" path="UI/9patch/9patch-SpeechBubble.png" md5="21941d19c07ce54818b93b7a12cf0ff0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-TextInputField_active" path="UI/9patch/9patch-TextInputField_active.png" md5="a523bbc5908ae373e70bc7345506589e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="101" height="57" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-TextInputField_default" path="UI/9patch/9patch-TextInputField_default.png" md5="1a6f319292887666ce6f3291dd6e307f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="101" height="57" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-TranslucentBacking" path="UI/9patch/9patch-TranslucentBacking.png" md5="9432002ede46b182ba08549be90fbb20">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-WhitePanel" path="UI/9patch/9patch-WhitePanel.png" md5="ef6afd32f463f207410c9ed87a43fce0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="9patch-WoodenPanel" path="UI/9patch/9patch-WoodenPanel.png" md5="c74a21d5e1e2b69e6df2d29f3e47f156">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="0" y="0" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="257" height="257" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="chef/">
+        <resource name="Chef-Backpack" path="UI/chef/Chef-Backpack.png" md5="c6339cceedf5764a1b487aa0881fee3c">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="152" y="470" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="305" height="471" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Chef-spoon" path="UI/chef/Chef-spoon.png" md5="d5194ee870d008bb6cba21a85884ef04">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="182" y="469" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="364" height="470" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="countries/" />
+      <resources name="headers/">
+        <resource name="Question" path="UI/headers/Question.png" md5="c7203e7d6e5feee1b51c945a92765099">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="69" y="33" paramType="Default" />
+            <box name="bounds" x="2" y="2" width="134" height="32" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="QuestionRibbon" path="UI/headers/QuestionRibbon.png" md5="e2fcf01bc49d2154db84976607ab2a33">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="105" y="60" paramType="Default" />
+            <box name="bounds" x="2" y="2" width="207" height="59" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="RibbonBig" path="UI/headers/RibbonBig.png" md5="aff7e059e32ac13aa83195436f918daf">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="212" y="106" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="424" height="107" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="RibbonBig_About" path="UI/headers/RibbonBig_About.png" md5="54a0b7ff2ab09e6b2bda8f5ab00566cb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="67" y="41" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="134" height="42" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="RibbonBig_Allergens" path="UI/headers/RibbonBig_Allergens.png" md5="f627c16efdfed124d3c052a6f71d56eb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="93" y="43" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="186" height="44" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="RibbonBig_Ingredients" path="UI/headers/RibbonBig_Ingredients.png" md5="416c17c19da7f4962200bd1cb9fa62f5">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="112" y="50" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="224" height="51" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="RibbonSmall" path="UI/headers/RibbonSmall.png" md5="a350ad7b49fb7eca5e82d1dac30ed320">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="103" y="58" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="207" height="59" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="RibbonSmall_Tools" path="UI/headers/RibbonSmall_Tools.png" md5="e4add338efa1d0bbe87dea11624fe9a7">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="45" y="30" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="90" height="31" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="StoryRibbon" path="UI/headers/StoryRibbon.png" md5="fd4110a3e3558f98d466426023520d29">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="105" y="60" paramType="Default" />
+            <box name="bounds" x="2" y="2" width="207" height="59" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="imgref/">
+        <resource name="AnswerImgRef" path="UI/imgref/AnswerImgRef.png" md5="4e2c748637829f4a3ab6ddedb80f06b9">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="75" y="149" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="150" height="150" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="QuestionImgRef" path="UI/imgref/QuestionImgRef.png" md5="a3fac5f50244a883f4dd1b994dc11d70">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="164" y="247" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="329" height="248" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="passport/">
+        <resources name="vfx_stamp/">
+          <resource name="vfx_stamp0001" path="UI/passport/vfx_stamp/vfx_stamp0001.png" md5="9f7f51695a8868ea9aefa76690254bc6">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="162" paramType="Default" />
+              <box name="bounds" x="120" y="136" width="60" height="27" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0002" path="UI/passport/vfx_stamp/vfx_stamp0002.png" md5="27203f569c6a06130e7644c59ccb9790">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="169" paramType="Default" />
+              <box name="bounds" x="105" y="130" width="90" height="40" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0003" path="UI/passport/vfx_stamp/vfx_stamp0003.png" md5="c09091d26f2ef08008fc1aaaf20d321b">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="175" paramType="Default" />
+              <box name="bounds" x="91" y="124" width="118" height="52" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0004" path="UI/passport/vfx_stamp/vfx_stamp0004.png" md5="dd5963b71575047f73214b3b9453a1e9">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="181" paramType="Default" />
+              <box name="bounds" x="78" y="118" width="145" height="64" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0005" path="UI/passport/vfx_stamp/vfx_stamp0005.png" md5="a358fbc98cc73353f369d184fa2b224e">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="138" y="233" paramType="Default" />
+              <box name="bounds" x="7" y="54" width="263" height="180" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0006" path="UI/passport/vfx_stamp/vfx_stamp0006.png" md5="6a649fa0739df6ec6ef96bb536ae2b82">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="139" y="233" paramType="Default" />
+              <box name="bounds" x="8" y="54" width="262" height="180" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0007" path="UI/passport/vfx_stamp/vfx_stamp0007.png" md5="7aba9f049bf1df4e4a0b648fe9f8b7d8">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="206" paramType="Default" />
+              <box name="bounds" x="32" y="38" width="237" height="169" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0008" path="UI/passport/vfx_stamp/vfx_stamp0008.png" md5="9ba9bbafe23fa99fc806f201b3d4064e">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="185" paramType="Default" />
+              <box name="bounds" x="70" y="114" width="160" height="72" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0009" path="UI/passport/vfx_stamp/vfx_stamp0009.png" md5="9c2f9175da13beea2e659cb00fea6b00">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="179" paramType="Default" />
+              <box name="bounds" x="80" y="121" width="141" height="59" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0010" path="UI/passport/vfx_stamp/vfx_stamp0010.png" md5="927927c94430fefde0a77506cb491981">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="169" paramType="Default" />
+              <box name="bounds" x="96" y="130" width="109" height="40" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0011" path="UI/passport/vfx_stamp/vfx_stamp0011.png" md5="39176d7c4800ea8b908ccd80e08f8942">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="160" paramType="Default" />
+              <box name="bounds" x="110" y="138" width="80" height="23" paramType="Default" />
+            </params>
+          </resource>
+          <resource name="vfx_stamp0012" path="UI/passport/vfx_stamp/vfx_stamp0012.png" md5="7a9d6fb2e456755ab17738f658e07a63">
+            <conversions>
+              <conversion type=".generic" />
+              <conversion type=".generic_clip_plt" />
+              <conversion type=".ds_plt" />
+              <conversion type=".ncr" args="l2" />
+            </conversions>
+            <params>
+              <vector name="center" x="150" y="156" paramType="Default" />
+              <box name="bounds" x="117" y="142" width="67" height="15" paramType="Default" />
+            </params>
+          </resource>
+        </resources>
+        <resource name="DialogBubble" path="UI/passport/DialogBubble.png" md5="81979fd58e45af0bab80f91f9b19a889">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="145" y="206" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="291" height="207" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="PassportBook" path="UI/passport/PassportBook.png" md5="18f7ae9c51854d0d3da7bf8379479227">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="331" y="495" paramType="Default" />
+            <box name="bounds" x="0" y="0" width="662" height="496" paramType="Default" />
+          </params>
+        </resource>
+        <resource name="Stamp-Angola" path="UI/passport/Stamp-Angola.png" md5="43e5253954a7fb6902d5bae34d8000f4">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="125" height="125" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Cambodia" path="UI/passport/Stamp-Cambodia.png" md5="f97c583f8aed6f693a0a00af64f5abdb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-China" path="UI/passport/Stamp-China.png" md5="2aa60b0deb394bf5b4434ead99b0536e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-CostaRica" path="UI/passport/Stamp-CostaRica.png" md5="a7303ac667ed97bbe7e7bc67b7fef52e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Egypt" path="UI/passport/Stamp-Egypt.png" md5="e08e9c8d1aa17fe474ca3244aa6426ae">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-ElSalvador" path="UI/passport/Stamp-ElSalvador.png" md5="dc7afbea015f57f7339a02433884923d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamper" path="UI/passport/Stamper.png" md5="9c3a75c100f9db0dced5cae92f83cce2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="84" y="74" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="169" height="148" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Ethiopia" path="UI/passport/Stamp-Ethiopia.png" md5="73980e59a7bf631d5bd361641f15d65b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="StampField_glow" path="UI/passport/StampField_glow.png" md5="96eaf9319f12430fc9c5a38c1ff552da">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="64" y="64" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="1" y="1" width="127" height="127" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-France" path="UI/passport/Stamp-France.png" md5="fa990def3b4e7861ecc32f4bec250d72">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Germany" path="UI/passport/Stamp-Germany.png" md5="20313a3b8ccf6697e920204ea4315d23">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Greece" path="UI/passport/Stamp-Greece.png" md5="62367281a5d0a88f450a1b180248dc4e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-India" path="UI/passport/Stamp-India.png" md5="782180eaa246c517d54729711c560fd2">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="125" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Iran" path="UI/passport/Stamp-Iran.png" md5="64417935857a31cb30193e1b5219bc3b">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Ireland" path="UI/passport/Stamp-Ireland.png" md5="891c02bac5a2e20d61b46fb45146b620">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Israel" path="UI/passport/Stamp-Israel.png" md5="cd1f0f141bad4344017547bec0df2caa">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Italy" path="UI/passport/Stamp-Italy.png" md5="febf4a7c6d6f26176feb4161e5868ce8">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="125" height="125" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Japan" path="UI/passport/Stamp-Japan.png" md5="e7e8e37d3f9f46684bbb57073f47735d">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Kenya" path="UI/passport/Stamp-Kenya.png" md5="3b2f830eed64d4c5186dfed4d6707eca">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Korea" path="UI/passport/Stamp-Korea.png" md5="7d9ef6ff74cdbbed94b3660adf26334c">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Mexico" path="UI/passport/Stamp-Mexico.png" md5="a54eba016e948e7a077c33160fccd5e1">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Nigeria" path="UI/passport/Stamp-Nigeria.png" md5="fa6155622fc5e2b8c2da78b672b573e6">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Peru" path="UI/passport/Stamp-Peru.png" md5="a50c0da9f3976494025839446e364cec">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Philippines" path="UI/passport/Stamp-Philippines.png" md5="d53fc2ee42aaa71ccd978da5e9c15359">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Russia" path="UI/passport/Stamp-Russia.png" md5="8a2b778eaa3cab62556699236f2e3708">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Spain" path="UI/passport/Stamp-Spain.png" md5="b9af7cc6bc8ba766bb08ce58d76f10ba">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-SriLanka" path="UI/passport/Stamp-SriLanka.png" md5="4de5b628206d943b103f84beaf2da784">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="122" height="122" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Thailand" path="UI/passport/Stamp-Thailand.png" md5="f88b1df4bf297c6497667265f95d9f20">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Turkey" path="UI/passport/Stamp-Turkey.png" md5="adcfc901aa3dc79302e40d1f7d02d1fb">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="61" y="61" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="123" height="123" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-UnitedKingdom" path="UI/passport/Stamp-UnitedKingdom.png" md5="0a3b4c17000abe6596dfa4cd4f7f64a1">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-USA" path="UI/passport/Stamp-USA.png" md5="c78010ce2298dddcbb25199e9ecf8dd4">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="Stamp-Vietnam" path="UI/passport/Stamp-Vietnam.png" md5="00a5c2a7559f38b49a1e093fddd5000f">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="62" y="62" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="124" height="124" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="vfx_stamp" path="UI/passport/vfx_stamp.ifl" md5="b6a0861b575d7e11c18a69802ab7438e">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="138" y="233" paramType="Default" />
+            <box name="bounds" x="7" y="38" width="263" height="196" paramType="Default" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="recipes/" />
+      <resources name="recipesLarge/">
+        <resource name="loading" path="UI/recipesLarge/loading.png" md5="bb1b2112e09d37fe4a79d54496190355">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="87" y="165" paramType="Automatic;(Left,Top)" />
+            <box name="bounds" x="87" y="165" width="225" height="46" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+      </resources>
+      <resources name="zoomSlider/">
+        <resource name="ZoomSliderBacking" path="UI/zoomSlider/ZoomSliderBacking.png">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="17" y="338" />
+            <box name="bounds" x="0" y="44" width="35" height="256" />
+          </params>
+        </resource>
+        <resource name="ZoomSliderHandle_down" path="UI/zoomSlider/ZoomSliderHandle_down.png" md5="74193c4f0452b1f8f7e5c216702ac7af">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="26" y="26" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="53" height="53" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="ZoomSliderHandle_over" path="UI/zoomSlider/ZoomSliderHandle_over.png" md5="4616c811f3582e8ebee57eff66e4f91c">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="25" y="25" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="50" height="50" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+        <resource name="ZoomSliderHandle_up" path="UI/zoomSlider/ZoomSliderHandle_up.png" md5="a289b10b3a0cb06be33718e784a9f1c0">
+          <conversions>
+            <conversion type=".generic" />
+            <conversion type=".generic_clip_plt" />
+            <conversion type=".ds_plt" />
+            <conversion type=".ncr" args="l2" />
+          </conversions>
+          <params>
+            <vector name="center" x="24" y="24" paramType="Automatic;(Center,Middle)" />
+            <box name="bounds" x="0" y="0" width="48" height="48" paramType="Automatic;Bounds" />
+          </params>
+        </resource>
+      </resources>
+      <resource name="BlackPixel" path="UI/BlackPixel.png" md5="2d7f31ba08bd5549c3da75efa959ecb6">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="0" y="0" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="1" height="1" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="bubble_bottomLeft1" path="UI/bubble_bottomLeft1.png" md5="d6dc3c5e2b9e9572a409d95967669086">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="257" y="210" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="514" height="211" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="bubble_bottomRight2" path="UI/bubble_bottomRight2.png" md5="fbc25573ee6df6a175efd6cbf67fd7a2">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="257" y="210" paramType="Default" />
+          <box name="bounds" x="1" y="0" width="513" height="211" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="bubble_topLeft1" path="UI/bubble_topLeft1.png" md5="1ec70a4083a948165083ce64a3c92dfb">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="257" y="210" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="514" height="211" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="bubble_topRight1" path="UI/bubble_topRight1.png" md5="4e7a341eaab6014346d95bda07dfd486">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="257" y="210" paramType="Default" />
+          <box name="bounds" x="1" y="0" width="513" height="211" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="chefBig" path="UI/chefBig.png" md5="1896b318d67b0471ae8745015f301c57">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="79" y="51" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="158" height="103" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="chefLittle" path="UI/chefLittle.png" md5="35becfa06b6164204ad63510284443ad">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="61" y="78" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="122" height="157" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="CorrectAnswer" path="UI/CorrectAnswer.png" md5="ac8769d6e6bff1882e3bc29986d0128b">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="29" y="31" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="2" width="59" height="59" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="panel_settings" path="UI/panel_settings.png" md5="a55c0a095222e9d233d338855c4b8b6b">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="50" y="463" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="100" height="464" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="panel_small" path="UI/panel_small.png" md5="84d4d039999f5f1c5bb390a2f7838871">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="484" y="101" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="968" height="203" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="scrollHandle" path="UI/scrollHandle.png" md5="2e5532e388592a5a8cd10a557211baa0">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="7" y="42" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="15" height="85" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="search" path="UI/search.png" md5="e7224b0d7ebc939d6f71824f8b47d5e8">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="151" y="55" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="302" height="56" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="settingsAbout" path="UI/settingsAbout.png" md5="e321621132f52fd1e2b8d05fd165c93c">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="68" y="41" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="136" height="42" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="settingsAllergens" path="UI/settingsAllergens.png" md5="1f27e009e495a334880ceff322f1f681">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="97" y="52" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="195" height="53" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="settingsSupport" path="UI/settingsSupport.png" md5="14107fb303ce307799ec8315c0d50f9f">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="86" y="49" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="172" height="50" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="settingsTutorial" path="UI/settingsTutorial.png" md5="4893d8a08cb9e74c4da1589088a2d2cf">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="84" y="44" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="168" height="45" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="stepNumber" path="UI/stepNumber.png" md5="04386bd77a286c7282bc078e0277e99a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="64" y="65" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="0" width="129" height="130" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="TitleLogo" path="UI/TitleLogo.png" md5="538f94edd32f71ecf1aac5cd7da3038a">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="121" y="241" paramType="Default" />
+          <box name="bounds" x="0" y="0" width="242" height="242" paramType="Default" />
+        </params>
+      </resource>
+      <resource name="WhitePixel" path="UI/WhitePixel.png" md5="5df0ac2d51cfecbde35e8dd1ba3a8d77">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="0" y="0" paramType="Automatic;(Left,Top)" />
+          <box name="bounds" x="0" y="0" width="1" height="1" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+      <resource name="WrongAnswer" path="UI/WrongAnswer.png" md5="85163cc79495c5bbc777cd5c2a5618fc">
+        <conversions>
+          <conversion type=".generic" />
+          <conversion type=".generic_clip_plt" />
+          <conversion type=".ds_plt" />
+          <conversion type=".ncr" args="l2" />
+        </conversions>
+        <params>
+          <vector name="center" x="29" y="31" paramType="Automatic;(Center,Middle)" />
+          <box name="bounds" x="0" y="2" width="59" height="59" paramType="Automatic;Bounds" />
+        </params>
+      </resource>
+    </resources>
+  </Body>
+</ResourceProject>

@@ -1,0 +1,7 @@
+************* Module MappedData
+W: 50, 0: Unnecessary semicolon (unnecessary-semicolon)
+W: 51, 0: Unnecessary semicolon (unnecessary-semicolon)
+W: 53,23: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+R:158, 0: Too few public methods (0/2) (too-few-public-methods)
+R:202, 0: Too few public methods (1/2) (too-few-public-methods)
+R:216, 0: Too few public methods (0/2) (too-few-public-methods)

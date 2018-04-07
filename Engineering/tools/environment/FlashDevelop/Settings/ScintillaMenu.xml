@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<scintillamenu>
+	<menu label="Label.Edit" name="EditMenu">
+		<button label="Label.CutLine" click="ScintillaCommand" tag="LineCut" />
+		<button label="Label.CopyLine" click="ScintillaCommand" tag="LineCopy" />
+		<button label="Label.DeleteLine" click="ScintillaCommand" tag="LineDelete" />
+		<button label="Label.MoveLineUp" click="ScintillaCommand" tag="MoveLineUp" />
+		<button label="Label.MoveLineDown" click="ScintillaCommand" tag="MoveLineDown" />
+		<button label="Label.TransposeLines" click="ScintillaCommand" tag="LineTranspose" />
+		<button label="Label.DuplicateSelection" click="ScintillaCommand" tag="SmartSelectionDuplicate" />
+		<button label="Label.SortLineGroups" click="SortLineGroups" flags="Enable:Enable:HasSelection" />
+		<button label="Label.SortLines" click="SortLines" flags="Enable:Enable:HasSelection" />
+		<separator />
+		<button label="Label.ToUppercase" click="ScintillaCommand" tag="UpperCase" image="458" flags="Enable:HasSelection" />
+		<button label="Label.ToLowercase" click="ScintillaCommand" tag="LowerCase" image="446" flags="Enable:HasSelection" />
+		<separator />
+		<button label="Label.LineComment" click="ToggleLineComment" />
+		<button label="Label.BlockComment" click="ToggleBlockComment" />
+		<separator />
+		<button label="Label.SaveAsTemplate" click="SaveAsTemplate" flags="Enable:HasSelection" />
+		<button label="Label.SaveAsSnippet" click="SaveAsSnippet" flags="Enable:HasSelection" />
+	</menu>
+	<menu label="Label.Insert" name="InsertMenu">
+		<button label="Label.FromFile" click="InsertFile" tag="$(OpenFile)" image="315" />
+		<button label="Label.FileDetails" click="InsertFileDetails" flags="Enable:!IsUntitled" image="315|16|3|3" />
+		<button label="Label.Timestamp" click="InsertTimestamp" tag="g" image="163" />
+		<separator />
+		<button label="Label.Snippet" click="InsertSnippet" tag="null" image="341" />
+		<button label="Label.Color" click="InsertColor" image="328" />
+		<button label="Label.GUID" click="InsertGUID" />
+		<separator />
+		<button label="Label.Hash" click="InsertHash" />
+	</menu>
+	<menu label="Label.Search" name="SearchMenu">
+		<button label="Label.QuickFind" click="QuickFind" image="299" />
+		<button label="Label.QuickFindNext" click="FindNext" image="484|9|3|-4" flags="Enable:IsEditable" />
+		<button label="Label.QuickFindPrevious" click="FindPrevious" image="484|1|3|-4" flags="Enable:IsEditable" />
+		<separator />
+		<button label="Label.FindAndReplace" click="FindAndReplace" image="484" flags="Enable:IsEditable" />
+		<button label="Label.FindAndReplaceInFiles" click="FindAndReplaceInFiles" image="209" />
+		<separator />
+		<button label="Label.GotoMatchingBrace" click="GoToMatchingBrace" image="67" />
+		<button label="Label.GotoPositionOrLine" click="GoTo" image="67" />
+		<separator />
+		<button label="Label.ToggleBookmark" click="ToggleBookmark" image="402" />
+		<button label="Label.NextBookmark" click="NextBookmark" image="402|9|3|3" flags="Enable:HasBookmarks" />
+		<button label="Label.PrevBookmark" click="PrevBookmark" image="402|1|-3|3" flags="Enable:HasBookmarks" />
+		<button label="Label.ClearBookmarks" click="ClearBookmarks" image="402|4|4|4" flags="Enable:HasBookmarks" />
+	</menu>
+	<separator />
+	<button label="Label.Undo" click="ScintillaCommand" tag="Undo" image="73" flags="Enable:CanUndo" keyid="EditMenu.Undo" />
+	<button label="Label.Redo" click="ScintillaCommand" tag="Redo" image="65" flags="Enable:CanRedo" keyid="EditMenu.Redo" />
+	<separator />
+	<button label="Label.Cut" click="ScintillaCommand" tag="CutAllowLine" image="158" keyid="EditMenu.Cut" />
+	<button label="Label.Copy" click="ScintillaCommand" tag="CopyAllowLineEx" image="278" keyid="EditMenu.Copy" />
+	<button label="Label.Paste" click="SmartPaste" image="283" flags="Enable:CanPaste" keyid="EditMenu.Paste"/>
+	<separator />
+	<button label="Label.SelectAll" click="ScintillaCommand" tag="SelectAll" keyid="EditMenu.SelectAll" />
+</scintillamenu>

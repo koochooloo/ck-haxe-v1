@@ -1,0 +1,84 @@
+Index: haxe/lib/lime/2,9,0/lime/graphics/Image.hx
+===================================================================
+--- haxe/lib/lime/2,9,0/lime/graphics/Image.hx	(revision 1082)
++++ haxe/lib/lime/2,9,0/lime/graphics/Image.hx	(working copy)
+@@ -92,7 +92,9 @@
+ 	public var x:Float;
+ 	public var y:Float;
+ 	
++	public var subrect:Rectangle;
+ 	
++	
+ 	public function new (buffer:ImageBuffer = null, offsetX:Int = 0, offsetY:Int = 0, width:Int = -1, height:Int = -1, color:Null<Int> = null, type:ImageType = null) {
+ 		
+ 		this.offsetX = offsetX;
+Index: haxe/lib/openfl/3,6,0-beta/openfl/_internal/renderer/canvas/CanvasBitmap.hx
+===================================================================
+--- haxe/lib/openfl/3,6,0-beta/openfl/_internal/renderer/canvas/CanvasBitmap.hx	(revision 1082)
++++ haxe/lib/openfl/3,6,0-beta/openfl/_internal/renderer/canvas/CanvasBitmap.hx	(working copy)
+@@ -51,9 +51,31 @@
+ 				
+ 			}
+ 			
++			var image:Image = bitmap.bitmapData.image;
+ 			if (scrollRect == null) {
+ 				
+-				context.drawImage (bitmap.bitmapData.image.src, 0, 0);
++				if ( image.subrect == null )
++				{
++					
++					context.drawImage (bitmap.bitmapData.image.src, 0, 0);
++					
++				} else {
++					
++					var src:Dynamic;
++					if ( Std.is( image, SubrectImage ) )
++					{
++						var srImg:SubrectImage = cast image;
++						src = srImg.subrectSource.src;
++					}
++					else
++					{
++						src = image.src;
++					}
++					
++					var subrect = image.subrect;
++					context.drawImage (src, subrect.x, subrect.y, subrect.width, subrect.height, 0, 0, subrect.width, subrect.height);
++					
++				}
+ 				
+ 			} else {
+ 				
+Index: haxe/lib/spritesheet/1,2,0/spritesheet/Spritesheet.hx
+===================================================================
+--- haxe/lib/spritesheet/1,2,0/spritesheet/Spritesheet.hx	(revision 1082)
++++ haxe/lib/spritesheet/1,2,0/spritesheet/Spritesheet.hx	(working copy)
+@@ -1,6 +1,7 @@
+ package spritesheet;
+ 
+ 
++import com.firstplayable.hxlib.display.SubrectImage;
+ import flash.display.BitmapData;
+ import flash.geom.Point;
+ import flash.geom.Rectangle;
+@@ -93,12 +94,16 @@
+ 			
+ 		} else {
+ 			
+-			var bitmapData = new BitmapData (frame.width, frame.height, true);
++			
++			var srImage:SubrectImage = SubrectImage.fromImageSubrect( sourceImage, new lime.math.Rectangle( frame.x, frame.y, frame.width, frame.height ) );
++			var bitmapData = BitmapData.fromImage( srImage, srImage.transparent );
++			
++			//var bitmapData = new BitmapData (frame.width, frame.height, true);
+ 			var sourceRectangle = new Rectangle (frame.x, frame.y, frame.width, frame.height);
+ 			var targetPoint = new Point ();
+-			
+-			bitmapData.copyPixels (sourceImage, sourceRectangle, targetPoint);
+-			
++			//
++			//bitmapData.copyPixels (sourceImage, sourceRectangle, targetPoint);
++			//
+ 			if (sourceImageAlpha != null) {
+ 				
+ 				bitmapData.copyChannel (sourceImageAlpha, sourceRectangle, targetPoint, 2, 8);

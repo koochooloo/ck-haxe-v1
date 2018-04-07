@@ -1,0 +1,314 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "panel" : [ { 
+            "name" : "group_countryPanel",
+            "record" : true,
+            "priority" : 1,
+            "inheritable" : { 
+                "position" : [ 148, 136 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_group_country1",
+                "record" : true,
+                "id" : 1,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_country",
+                    "position" : [ 24, 53 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_group_country2",
+                "record" : true,
+                "id" : 2,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_country",
+                    "position" : [ 25, 134 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "countriesQuit",
+                "record" : true,
+                "id" : 5,
+                "priority" : 9,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 515, 9 ],
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "countryName1",
+                "record" : true,
+                "priority" : 7,
+                "text" : "CountryName",
+                "inheritable" : { 
+                    "position" : [ 138, 47 ],
+                    "visible" : false,
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "size" : [ 360, 80 ],
+                    "wrapOverflow" : true
+                }
+            }, { 
+                "name" : "countryName2",
+                "record" : true,
+                "priority" : 7,
+                "text" : "CountryName",
+                "inheritable" : { 
+                    "position" : [ 138, 127 ],
+                    "visible" : false,
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "size" : [ 310, 80 ],
+                    "wrapOverflow" : true
+                }
+            }, { 
+                "name" : "lbl_cSearch",
+                "record" : true,
+                "priority" : 11,
+                "text" : "SEARCH",
+                "stringTable" : "GameStrings",
+                "inheritable" : { 
+                    "position" : [ 46, -91 ],
+                    "touchable" : true,
+                    "loadParams" : false,
+                    "color" : [ 20, 20, 20 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "size" : [ 450, 80 ]
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "countryPanel",
+                "record" : true,
+                "priority" : 3,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanel",
+                    "position" : [ 2, 0 ],
+                    "scale" : [ 2.1, 1.9 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_scrollBacking",
+                "record" : true,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-ScrollBarBacking",
+                    "position" : [ 510, 54 ],
+                    "scale" : [ 1, 3.1 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "scrollHandle",
+                "record" : true,
+                "priority" : 8,
+                "inheritable" : { 
+                    "resource" : "UI/scrollHandle",
+                    "position" : [ 513, 96 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "countryPanel_top",
+                "record" : true,
+                "priority" : 8,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-DefaultPanelTop",
+                    "position" : [ 3, 0 ],
+                    "scale" : [ 2.1, 1.9 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "ui_cSearch",
+                "record" : true,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-TextInputField_default",
+                    "position" : [ 2, -94 ],
+                    "scale" : [ 5.35, 1 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "spr_scrollBounds",
+                "record" : true,
+                "priority" : 50,
+                "inheritable" : { 
+                    "resource" : "UI/WhitePixel",
+                    "position" : [ 22, 39 ],
+                    "scale" : [ 475, 430 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        }, { 
+            "name" : "grp_country3",
+            "record" : true,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 173, 189 ],
+                "loadParams" : false,
+                "clip" : true
+            },
+            "button" : [ { 
+                "name" : "btn_country3",
+                "record" : true,
+                "id" : 13,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_country",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "countryName3",
+                "record" : true,
+                "priority" : 7,
+                "text" : "c",
+                "inheritable" : { 
+                    "position" : [ 113, -10 ],
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "size" : [ 350, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ]
+        }, { 
+            "name" : "grp_country4",
+            "record" : true,
+            "priority" : 6,
+            "inheritable" : { 
+                "position" : [ 173, 269 ],
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_country4",
+                "record" : true,
+                "id" : 14,
+                "priority" : 7,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_country",
+                    "loadParams" : true
+                }
+            } ],
+            "label" : [ { 
+                "name" : "countryName4",
+                "record" : true,
+                "priority" : 7,
+                "text" : "c",
+                "inheritable" : { 
+                    "position" : [ 113, -10 ],
+                    "loadParams" : false,
+                    "color" : [ 7, 3, 0 ],
+                    "font" : "/fonts/CarterOne.ttf:30",
+                    "size" : [ 360, 80 ],
+                    "wrapOverflow" : true
+                }
+            } ]
+        }, { 
+            "name" : "popup_about",
+            "record" : true,
+            "priority" : 8,
+            "inheritable" : { 
+                "position" : [ -83, 16 ],
+                "visible" : false,
+                "loadParams" : false
+            },
+            "button" : [ { 
+                "name" : "btn_check",
+                "record" : true,
+                "id" : 3,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_check",
+                    "position" : [ 635, 684 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_x",
+                "record" : true,
+                "id" : 4,
+                "priority" : 5,
+                "inheritable" : { 
+                    "resource" : "Buttons/btn_x",
+                    "position" : [ 462, 48 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "btn_comingSoon",
+                "record" : true,
+                "priority" : 10,
+                "inheritable" : { 
+                    "resource" : "Buttons/btnComingSoon",
+                    "position" : [ 940, 630 ],
+                    "touchable" : false,
+                    "loadParams" : true,
+                    "enabled" : false
+                }
+            } ],
+            "label" : [ { 
+                "name" : "lbl_about",
+                "record" : true,
+                "priority" : 5,
+                "text" : "countryInfo",
+                "inheritable" : { 
+                    "position" : [ 124, 59 ],
+                    "loadParams" : false,
+                    "color" : [ 1, 1, 1 ],
+                    "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                    "size" : [ 310, 200 ],
+                    "wrapOverflow" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "girl_noHat_1",
+                "record" : true,
+                "priority" : 4,
+                "inheritable" : { 
+                    "resource" : "Characters/girl_noHat_1",
+                    "position" : [ 382, 768 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "bubble",
+                "record" : true,
+                "priority" : 4,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-SpeechBubble",
+                    "position" : [ 91, 52 ],
+                    "scale" : [ 1.5, 1 ],
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        } ]
+    }
+}

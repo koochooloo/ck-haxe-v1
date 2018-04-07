@@ -1,0 +1,45 @@
+
+Processing config files...
+Found config file: C:\Projects\speck\trunk\Engineering\tools\StxConfig_Strings.txt
+...processing complete
+
+Importing files from Google...
+Found file to import: Gamestrings
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\Gamestrings.xls
+Processing a sheet...
+Sheet: Gamestrings
+Total rows: 108 (when Sheet = ALL, this is total of all rows)
+Total cols: 2
+	Col 0 is named 'StringID'
+	Col 1 is named 'English'
+Spreadsheet examined!
+
+...importing complete
+
+Gathering data from spreadsheets...
+Gathering data from: Gamestrings
+Examining C:\Projects\speck\trunk\Engineering\lib\strings\Gamestrings.xls
+Processing a sheet...
+Sheet: Gamestrings
+Total rows: 108 (when Sheet = ALL, this is total of all rows)
+Total cols: 2
+	Col 0 is named 'StringID'
+	Col 1 is named 'English'
+Spreadsheet examined!
+
+...gathering data complete
+
+Exporting to Haxe...
+Exporting: Gamestrings
+The filter string is: '["StringID", "English"]'
+  Including column 'StringID'
+  Including column 'English'
+Exporting to Human...
+Exporting: Gamestrings
+The filter string is: '["StringID", "English"]'
+  Including column 'StringID'
+  Including column 'English'
+...exporting complete
+
+Cleaning up SpreadsheetToXml execution.
+Trying Unlock: C:\Projects\speck\trunk\Engineering\lib\strings\Gamestrings.xls

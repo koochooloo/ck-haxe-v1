@@ -1,0 +1,266 @@
+Index: anim/SpritesheetAnim.hx
+===================================================================
+--- anim/SpritesheetAnim.hx	(revision 1306)
++++ anim/SpritesheetAnim.hx	(working copy)
+@@ -320,16 +320,16 @@
+     }
+ 	
+ 	 /**
+-     * Returns an array of this object's Vulnerable Boxes
++     * Returns an array of this object's param boxes of a requested type
+ 	 * @return returns an empty or populated array of ParamBoxData
+      */
+-	public function getVulnerableBoxes():Array<ParamBoxData>
++	public function getParamBoxes(type:ParamBoxType):Array<ParamBoxData>
+ 	{
+ 		var boxes:Array<ParamBoxData> = [];
+ 		if ( m_animSrc != null )
+         {
+             var sprite:OPSprite = cast m_animSrc;
+-            boxes = sprite.getVulnerableBoxes(); //< returned as a copy
++            boxes = sprite.getParamBoxes(type); //< returned as a copy
+         }
+         return boxes;
+ 	}
+Index: OPSprite.hx
+===================================================================
+--- OPSprite.hx	(revision 1306)
++++ OPSprite.hx	(working copy)
+@@ -17,6 +17,8 @@
+ import com.firstplayable.hxlib.display.Params.ParamsIter;
+ import com.firstplayable.hxlib.utils.MathUtils;
+ import format.swf.Data.Rect;
++import haxe.EnumFlags;
++import haxe.EnumTools;
+ import lime.ui.MouseCursor;
+ import openfl.display.BitmapData;
+ import openfl.display.Bitmap;
+@@ -40,9 +42,11 @@
+ 
+ 	private static var ms_showBounds:Bool = false; //< TODO: compiler const?
+ 	private var m_boundsDataShape:Shape;
+-	private static var ms_showVulnerable:Bool = false; //< TODO: compiler const?
+-	private var m_vulnDataShapes:Array<Shape>;
+ 	
++	private static var ms_showAllParamShapes:Bool = false; //< TODO compiler const
++	private static var ms_showParamShapeFlags:EnumFlags<ParamBoxType> = new EnumFlags<ParamBoxType>(0);
++	private var m_paramBoxShapes:Array<Shape>;
++	
+ 	private var m_img( default, set ):Bitmap = null;
+ 	private var m_userData:SpriteBoxData = null;
+ 	private var m_paramsData:SpriteBoxData = null;
+@@ -158,10 +162,10 @@
+ 	
+ 	//-----------------------------------------------------------------------------------------------------------
+ 	/**
+-	 * Returns an array of ParamBoxData representing the VulnerableBoxes for the current frame.
++	 * Returns an array of ParamBoxData representing the requested param box type for the current frame.
+ 	 * @return Empty or Populated array of ParamBoxData
+ 	 */
+-	public function getVulnerableBoxes():Array<ParamBoxData>
++	public function getParamBoxes(boxType:ParamBoxType):Array<ParamBoxData>
+ 	{
+ 		var vulnBoxes:Array<ParamBoxData> = [];
+ 		
+@@ -185,7 +189,8 @@
+ 			var params:Params = objWithParams.getParams();
+ 			if ( params != null )
+ 			{
+-				var vulnParamIter:ParamsIter = params.getAll(Params.VULNERABLE_BOX, animFrameIdx, Params.FRAME_OVERLAP);
++				var paramName:String = ParamBoxData.GetParamBoxNameFromType(boxType);
++				var vulnParamIter:ParamsIter = params.getAll(paramName, animFrameIdx, Params.FRAME_OVERLAP);
+ 				while (vulnParamIter.hasNext())
+ 				{
+ 					var param:Dynamic = vulnParamIter.next();
+@@ -197,8 +202,7 @@
+ 					var id:Null<Int> = Params.getParamId(param);
+ 					var frame:Null<Int> = Params.getParamFrame(param);
+ 					var lastFrame:Null<Int> = Params.getParamLastFrame(param);
+-					var type:ParamBoxType = ParamBoxData.ParamNameToBoxType(Params.VULNERABLE_BOX);
+-					var nextVulnBox:ParamBoxData = new ParamBoxData(type, rect, id, frame, lastFrame);
++					var nextVulnBox:ParamBoxData = new ParamBoxData(boxType, rect, id, frame, lastFrame);
+ 					vulnBoxes.push(nextVulnBox);
+ 				}
+ 			}
+@@ -370,38 +374,45 @@
+ 			}
+ 		}
+ 		
+-		if (ms_showVulnerable)
++		if (shouldShowAnyParamBoxType())
+ 		{			
+-			if (m_vulnDataShapes != null)
++			if (m_paramBoxShapes != null)
+ 			{
+-				for (shape in m_vulnDataShapes)
++				for (shape in m_paramBoxShapes)
+ 				{
+ 					removeChild(shape);
+ 				}
+ 			}		
+-			m_vulnDataShapes = [];
++			m_paramBoxShapes = [];
+ 			
+-			var vulnBoxes:Array<ParamBoxData> = getVulnerableBoxes();
+-			if ( vulnBoxes.length > 0 )
++			var boxTypes:Array<ParamBoxType> = EnumTools.createAll(ParamBoxType);
++			for (boxType in boxTypes)
+ 			{
+-				var boxAlpha:Float = 0.3;
+-				
+-				for (vulnBox in vulnBoxes)
++				if (shouldDrawParamBoxType(boxType))
+ 				{
+-					var box:Rectangle = vulnBox.box;
+-					var boxTopLeftX:Float = box.x;
+-					var boxTopLeftY:Float = box.y;
++					var boxColor:Int = ParamBoxData.GetDebugColorForBoxType(boxType);
+ 					
+-					var nextBox:Shape = new Shape();
+-					addChild(nextBox);
+-					
+-					nextBox.graphics.clear();
+-					nextBox.blendMode = BlendMode.ADD;
+-					nextBox.graphics.beginFill( 0x80FFFF, boxAlpha );
+-					nextBox.graphics.drawRect( boxTopLeftX, boxTopLeftY, box.width, box.height );
+-					nextBox.graphics.endFill();
+-					
+-					m_vulnDataShapes.push(nextBox);
++					var paramBoxes:Array<ParamBoxData> = getParamBoxes(boxType);
++					if ( paramBoxes.length > 0 )
++					{	
++						for (paramBox in paramBoxes)
++						{
++							var box:Rectangle = paramBox.box;
++							var boxTopLeftX:Float = box.x;
++							var boxTopLeftY:Float = box.y;
++							
++							var nextBox:Shape = new Shape();
++							addChild(nextBox);
++							
++							nextBox.graphics.clear();
++							nextBox.blendMode = BlendMode.ADD;
++							nextBox.graphics.beginFill( boxColor, ParamBoxData.DEBUG_BOX_ALPHA );
++							nextBox.graphics.drawRect( boxTopLeftX, boxTopLeftY, box.width, box.height );
++							nextBox.graphics.endFill();
++							
++							m_paramBoxShapes.push(nextBox);
++						}
++					}
+ 				}
+ 			}
+ 		}
+@@ -627,20 +638,48 @@
+ 	
+ 	//-----------------------------------------------------------------------------------------------------------
+ 	
+-	public static function showSpriteVulnerableBoxes():Void
++	public static function showAllSpriteParamBoxes():Void
+ 	{
+-		ms_showVulnerable = true;
++		ms_showAllParamShapes = true;
+ 	}
+ 	
+ 	//-----------------------------------------------------------------------------------------------------------
+ 	
+-	public static function hideSpriteVulnerableBoxes():Void
++	public static function hideAllSpriteParamBoxes():Void
+ 	{
+-		ms_showVulnerable = false;
++		ms_showAllParamShapes = false;
+ 	}
++	
++	//-----------------------------------------------------------------------------------------------------------
++	
++	public static function showSpriteParamBox(boxType:ParamBoxType):Void
++	{
++		ms_showParamShapeFlags.set(boxType);
++	}
++	
++	//-----------------------------------------------------------------------------------------------------------
+ 
++	public static function hideSpriteParamBox(boxType:ParamBoxType):Void
++	{
++		ms_showParamShapeFlags.unset(boxType);
++	}
++	
+ 	//-----------------------------------------------------------------------------------------------------------
++
++	public static function shouldShowAnyParamBoxType():Bool
++	{
++		return (ms_showParamShapeFlags.toInt() != 0) || ms_showAllParamShapes;
++	}
+ 	
++	//-----------------------------------------------------------------------------------------------------------
++
++	public static function shouldDrawParamBoxType(boxType:ParamBoxType):Bool
++	{
++		return ms_showParamShapeFlags.has(boxType) || ms_showAllParamShapes;
++	}
++	
++	//-----------------------------------------------------------------------------------------------------------
++	
+ 	public function setScale( size:Float ):Void
+ 	{
+ 		scaleGridUpdate( size, size );
+Index: ParamBoxData.hx
+===================================================================
+--- ParamBoxData.hx	(revision 1306)
++++ ParamBoxData.hx	(working copy)
+@@ -14,6 +14,7 @@
+ package com.firstplayable.hxlib.display;
+ 
+ import com.firstplayable.hxlib.Debug;
++import com.firstplayable.hxlib.display.Params;
+ import com.firstplayable.hxlib.loader.SpriteDataManager;
+ import openfl.geom.Point;
+ import openfl.geom.Rectangle;
+@@ -24,7 +25,6 @@
+ 	VULNERABLE;
+ 	ATTACK;
+ 	ATTACK_SELECT;
+-	UNKNOWN;
+ }
+ 
+ class ParamBoxData
+@@ -35,25 +35,26 @@
+ 	public var frame(default, null):Int;
+ 	public var endFrame(default, null):Int;
+ 	
+-	public static function ParamNameToBoxType(name:String):ParamBoxType
++	public static inline var DEBUG_BOX_ALPHA:Float = 0.3;
++	
++	public static function GetParamBoxNameFromType(boxType:ParamBoxType):String
+ 	{
+-		if (name == Params.VULNERABLE_BOX)
++		switch(boxType)
+ 		{
+-			return VULNERABLE;
++			case VULNERABLE: return Params.VULNERABLE_BOX;
++			case ATTACK: return Params.ATTACK_BOX;
++			case ATTACK_SELECT: return Params.ATTACK_SELECT_BOX;
+ 		}
+-		else if (name == Params.ATTACK_BOX)
++	}
++	
++	public static function GetDebugColorForBoxType(boxType:ParamBoxType):Int
++	{
++		switch(boxType)
+ 		{
+-			return ATTACK;
++			case VULNERABLE: return 0x80FFFF;
++			case ATTACK: return 0xFF0000;
++			case ATTACK_SELECT: return 0xFF8000;
+ 		}
+-		else if ( name == Params.ATTACK_SELECT_BOX)
+-		{
+-			return ATTACK_SELECT;
+-		}
+-		else
+-		{
+-			Debug.warn("unknown ParamBox requested: " + name);
+-			return UNKNOWN;
+-		}
+ 	}
+ 
+ 	public function new( tp:ParamBoxType, bx:Rectangle, i:Null<Int>, fr:Null<Int>, endFr:Null<Int> ) 

@@ -1,0 +1,166 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_factNext",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_factNext",
+                "position" : [ 1139, 642 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "btn_factPrevious",
+            "record" : true,
+            "priority" : 10,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_factPrevious",
+                "position" : [ 458, 642 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "vo_hello",
+            "record" : true,
+            "priority" : 11,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_sound2",
+                "position" : [ 1206, 503 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "lbl_fact",
+            "record" : true,
+            "priority" : 6,
+            "text" : "Bacon ipsum dolor amet fatback capicola andouille frankfurter boudin biltong tri-tip cupim. Jowl picanha sausage, jerky doner frankfurter pancetta tenderloin sirloin beef ribs prosciutto landjaeger venison. ",
+            "inheritable" : { 
+                "position" : [ 441, 545 ],
+                "positionRelative" : false,
+                "loadParams" : false,
+                "color" : [ 1, 1, 1 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:26",
+                "size" : [ 710, 188 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "CountryName",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -235, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        } ],
+        "panel" : [ { 
+            "name" : "pnl_countryImage",
+            "priority" : 50,
+            "inheritable" : { 
+                "position" : [ 411, 88 ],
+                "loadParams" : false
+            },
+            "label" : [ { 
+                "name" : "refpt",
+                "record" : true,
+                "priority" : 26,
+                "inheritable" : { 
+                    "position" : [ 62, 40 ],
+                    "loadParams" : false,
+                    "autoSize" : true
+                }
+            } ],
+            "spriteObject" : [ { 
+                "name" : "pnl_woodPanel",
+                "priority" : 20,
+                "inheritable" : { 
+                    "resource" : "UI/9patch/9patch-WoodenPanel",
+                    "scale" : [ 3, 1.7 ],
+                    "loadParams" : true
+                }
+            }, { 
+                "name" : "countryImage",
+                "record" : true,
+                "priority" : 25,
+                "inheritable" : { 
+                    "resource" : "UI/BlackPixel",
+                    "position" : [ 62, 40 ],
+                    "scale" : [ 650, 360 ],
+                    "visible" : false,
+                    "loadParams" : true
+                }
+            } ]
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_scrollBounds",
+            "record" : true,
+            "inheritable" : { 
+                "resource" : "UI/BlackPixel",
+                "opacity" : 20,
+                "position" : [ 442, 536 ],
+                "scale" : [ 710, 210 ],
+                "visible" : false,
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_chef",
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-Backpack",
+                "position" : [ -379, 0 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "scale" : [ 0.7, 0.7 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_indentedPanel",
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-IndentedPanel",
+                "position" : [ 411, 535 ],
+                "scale" : [ 6, 1.6 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "pnl_indentedPanel_top",
+            "priority" : 9,
+            "inheritable" : { 
+                "resource" : "UI/9patch/9patch-IndentedPanelTop",
+                "position" : [ 411, 535 ],
+                "scale" : [ 6, 1.6 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

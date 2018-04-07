@@ -1,0 +1,105 @@
+{ 
+    "fileProperties" : { 
+        "contentType" : "menu",
+        "version" : 3.2,
+        "platform" : [ "Responsive" ],
+        "CustomPlatformSize" : { 
+            "Responsive" : [ 1366, 768 ]
+        },
+        "screenOrientation" : "Landscape"
+    },
+    "topMenu" : { 
+        "menuProperties" : { 
+            "priority" : 100,
+            "inheritable" : { 
+                "loadParams" : false
+            }
+        },
+        "button" : [ { 
+            "name" : "btn_leave",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "Buttons/btn_Next",
+                "position" : [ -80, -80 ],
+                "positionRelative" : false,
+                "origin" : "bottomRight",
+                "scale" : [ 0.75, 0.75 ],
+                "loadParams" : true
+            }
+        } ],
+        "label" : [ { 
+            "name" : "headerText_country",
+            "record" : true,
+            "priority" : 8,
+            "text" : "Passport",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ -363, 10 ],
+                "positionRelative" : false,
+                "origin" : "topCenter",
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/CarterOne.ttf:36",
+                "textAlignment" : [ "center", "left or top" ],
+                "size" : [ 700, 100 ],
+                "wrapOverflow" : true
+            }
+        }, { 
+            "name" : "lbl_passport",
+            "record" : true,
+            "priority" : 10,
+            "text" : "PASSPORT",
+            "stringTable" : "GameStrings",
+            "inheritable" : { 
+                "opacity" : 25,
+                "position" : [ 224, 128 ],
+                "loadParams" : false,
+                "color" : [ 0, 0, 0 ],
+                "font" : "/fonts/DidactGothic-Regular.ttf:30",
+                "size" : [ 250, 150 ],
+                "wrapOverflow" : true,
+                "clipOverflow" : true
+            }
+        } ],
+        "spriteObject" : [ { 
+            "name" : "bg",
+            "inheritable" : { 
+                "resource" : "BG/bg_skyBase",
+                "position" : [ 683, 768 ],
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_chef",
+            "record" : true,
+            "priority" : 4,
+            "inheritable" : { 
+                "resource" : "UI/chef/Chef-Backpack",
+                "position" : [ -333, 0 ],
+                "positionRelative" : false,
+                "origin" : "bottomCenter",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "ref_passport",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/passport/PassportBook",
+                "position" : [ 157, 236 ],
+                "positionRelative" : false,
+                "origin" : "middleCenter",
+                "loadParams" : true
+            }
+        }, { 
+            "name" : "spr_dialogBubble",
+            "record" : true,
+            "priority" : 5,
+            "inheritable" : { 
+                "resource" : "UI/passport/DialogBubble",
+                "position" : [ 350, 315 ],
+                "loadParams" : true
+            }
+        } ]
+    }
+}

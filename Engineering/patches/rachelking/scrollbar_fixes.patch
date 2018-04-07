@@ -1,0 +1,654 @@
+Index: src/game/ui/MultidimensionalScrollingMenu.hx
+===================================================================
+--- src/game/ui/MultidimensionalScrollingMenu.hx	(revision 903)
++++ src/game/ui/MultidimensionalScrollingMenu.hx	(working copy)
+@@ -102,7 +102,7 @@
+ 		if ( rightRef != null )
+ 		{
+ 			m_colSpacing = rightRef.x - centerRef.x; // Includes item size + padding
+-			m_visibleCols = Math.floor( m_scrollArea.width / m_colSpacing );
++			m_visibleCols = Math.ceil( m_scrollArea.width / m_colSpacing );
+ 		}
+ 		
+ 		// ----------------------------------------------------
+@@ -112,7 +112,7 @@
+ 		if ( bottomRef != null )
+ 		{
+ 			m_rowSpacing = bottomRef.y - centerRef.y;
+-			m_visibleRows = Math.floor( m_scrollArea.height / m_rowSpacing );
++			m_visibleRows = Math.ceil( m_scrollArea.height / m_rowSpacing );
+ 		}
+ 		
+ 		// ----------------------------------------------------
+@@ -392,4 +392,55 @@
+ 		var lastItem:VirtualScrollingItem = m_scrollingItems[ m_scrollingItems.length - 1 ];
+ 		return ( lastItem.pos(m_orientation) >= m_lowerScrollLimit);
+ 	}
++	
++	/**
++	 * 	NOTE: only works for vertical scrolling lists. 
++	 *	TODO - Functionality for horizontal menu scrollbars
++	 */
++	private override function repositionScrollBar( listScrollDistance:Float )
++	{
++		// Early return if no scrollbar 
++		if ( m_scrollBar == null || m_scrollBar.visible == false )
++		{
++			return;
++		}
++		
++		// ---------------------------------------------------
++		// Calculate scroll bar movement 
++		// ---------------------------------------------------
++		
++		// Calculate top and bottom for scroll bar and scroll track sprites
++		// 		Scroll track top/bottom calc'd here are the effective top/bottom for the scroll bar. 
++		// 		That is, they take the bar sprite size/anchoring into account.
++		// NOTE: Scroll bar is anchored at the center
++		var anchorOffset:Float = m_scrollBar.height / 2;
++		var trackTop:Float = Math.floor( m_scrollTrack.y);
++		var trackBottom:Float = Math.floor( m_scrollTrack.y + m_scrollTrack.height); 
++		var barTop:Float = Math.floor( m_scrollBar.y - anchorOffset) ;
++		var barBottom:Float = Math.floor( m_scrollBar.y + anchorOffset);
++		
++		// Amount of space the scrollbar has to move
++		var scrollBarSpace:Float = trackBottom - trackTop;
++		
++		// Amount of space the whole list of items has ***outside of the visible field***
++		var viewSpace:Float = switch ( m_orientation )
++		{
++			case Orientation.HORIZONTAL: m_scrollArea.width;
++			case Orientation.VERTICAL: m_scrollArea.height;
++		}
++		
++		var listSpace:Float = (( m_dataset.length * m_itemSize )/m_visibleCols) - viewSpace ; // px
++		
++		// Ratio between scrollbar movement space and total movement space
++		var movementRatio:Float = (scrollBarSpace / listSpace); // px
++		
++		// Amount the scrollbar moves is the amount scroll (dist) multiplied by the ratio between spaces.
++		// 		Sign is flipped so the scrollbar moves with the items (opposite dir) 
++		var scrollBarDistance:Float = listScrollDistance * movementRatio * -1 / VirtualScrollingMenu.VELOCITY_DAMPING;
++		
++		// ---------------------------------------------------
++		// Update scroll bar position
++		// ---------------------------------------------------
++		m_scrollBar.y += scrollBarDistance;
++	}
+ }
+\ No newline at end of file
+Index: src/game/ui/VirtualScrollingItem.hx
+===================================================================
+--- src/game/ui/VirtualScrollingItem.hx	(revision 903)
++++ src/game/ui/VirtualScrollingItem.hx	(working copy)
+@@ -35,7 +35,7 @@
+ class VirtualScrollingItem extends DisplayObjectContainer
+ {
+ 	private var refGroup:DisplayObjectContainer;
+-	private var group:DisplayObjectContainer;
++	public var group:DisplayObjectContainer;
+ 	public var  debugName:Int;
+ 	
+ 	// Display objects (update these for individual-list functionality. 
+@@ -43,6 +43,7 @@
+ 	private var m_image:OPSprite;
+ 	private var m_buttons:Array< GraphicButton >; // List should be in display order, since it is populated from __children; reverse to hit front layered buttons first?
+ 	private var m_label:TextField;
++	private var m_secondaryLabel:TextField;
+ 
+ 	
+ 	// Button overstate scaling
+@@ -86,13 +87,28 @@
+ 			}
+ 			else if ( Std.is( child, TextField ) )
+ 			{
+-				createTextFromRef( cast (child, TextField), count );
++				if ( m_label == null )
++				{
++					m_label = createTextFromRef( cast (child, TextField), count );
++				}
++				else
++				{
++					m_secondaryLabel = createTextFromRef( cast (child, TextField), count );
++				}
+ 			}
+ 			else if ( Std.is( child, OPSprite ) )
+ 			{
+-				createSpriteFromRef( cast (child, OPSprite) );
++				m_image = createSpriteFromRef( cast (child, OPSprite) );
+ 			}
+ 		}
++		/*
++		if ( m_label != null && m_secondaryLabel != null )
++		{
++			trace( "------------------------------------ " );
++			trace( "\t Primary " + m_label.text );
++			trace( "\t Secondary: " + m_secondaryLabel.text );
++			trace( "------------------------------------ " );			
++		}*/
+ 	}
+ 	
+ 	/**
+@@ -122,14 +138,25 @@
+ 	{
+ 		switch ( data.imgSrc )
+ 		{
+-			case Some( src ): setImage( src );
++			case Some( bitmap ): setImage( bitmap );
+ 			case None: //
+ 		}
+ 		switch ( data.label )
+ 		{
+-			case Some( text ): setText( text );
++			case Some( text ):
++			{
++				setText( text, m_label );
++			}
+ 			case None: //
+ 		}
++		switch ( data.secondaryLabel )
++		{
++			case Some( text ): 
++			{
++				setText( text, m_secondaryLabel );
++			}
++			case None: //
++		}
+ 		switch ( data.primaryButtonSrc )
+ 		{
+ 			case Some( bitmap ): setButton( bitmap, m_buttons[0] );
+@@ -140,6 +167,9 @@
+ 			case Some( bitmap ): setButton( bitmap, m_buttons[1] );
+ 			case None: //
+ 		}
++		
++		m_baseScaleX = group.scaleX;
++		m_baseScaleY = group.scaleY;
+ 	}
+ 	
+ 	/**
+@@ -147,10 +177,10 @@
+ 	 * Assumes one image in display list
+ 	 * Naiive - TODO database integration
+ 	 */
+-	private function setImage( src:String ):Void
++	private function setImage( bitmap:Bitmap ):Void
+ 	{
+-		var bitmap:Bitmap = ResMan.instance.getImage( src );
+ 		m_image.changeImage( bitmap );
++		m_image.visible = true;
+ 	}
+ 	
+ 	/**
+@@ -158,18 +188,19 @@
+ 	 * Assumes one image in display list
+ 	 * Naiive - TODO database integration
+ 	 */
+-	private function setText( text:String ):Void
++	private function setText( text:String, label:TextField ):Void
+ 	{
+-		var refWidth = m_label.width;
+-		var refHeight = m_label.height;
++		var refWidth = label.width;
++		var refHeight = label.height;
+ 		
+-		m_label.text = text;
++		label.text = text;
+ 		
+-		if ( m_label.autoSize == TextFieldAutoSize.NONE )
++		if ( label.autoSize == TextFieldAutoSize.NONE )
+ 		{
+-			m_label.width = refWidth;
+-			m_label.height = refHeight;
++			label.width = refWidth;
++			label.height = refHeight;
+ 		}
++		
+ 	}
+ 	
+ 	private function setButton( bitmap:Bitmap, button:GraphicButton ):Void
+@@ -267,21 +298,21 @@
+ 	 */
+ 	public function handleButtonOverState( posX:Float, posY:Float ):Void
+ 	{
++		
+ 		for ( button in m_buttons )
+ 		{
+-			var scaledUp:Bool = ( button.scaleX > m_baseScaleX && button.scaleY > m_baseScaleY );
+-			var scaledDown:Bool = ( button.scaleX <= m_baseScaleX && button.scaleY <= m_baseScaleY );
++			var scaledUp:Bool = ( group.scaleX > m_baseScaleX && group.scaleY > m_baseScaleY );
++			var scaledDown:Bool = ( group.scaleX <= m_baseScaleX && group.scaleY <= m_baseScaleY );
+ 			
+-			// If scaled up and mouse isn't over the button, scale down again
+ 			if ( !pointInObject( posX, posY, button ) && scaledUp ) 
+ 			{
+-				button.scaleX /= BUTTON_OVERSTATE_SCALE;
+-				button.scaleY /= BUTTON_OVERSTATE_SCALE;	
++				group.scaleX /= BUTTON_OVERSTATE_SCALE;
++				group.scaleY /= BUTTON_OVERSTATE_SCALE;	
+ 			}
+ 			else if ( pointInObject( posX, posY, button ) && scaledDown )
+ 			{
+-				button.scaleX *= BUTTON_OVERSTATE_SCALE;
+-				button.scaleY *= BUTTON_OVERSTATE_SCALE;
++				group.scaleX *= BUTTON_OVERSTATE_SCALE;
++				group.scaleY *= BUTTON_OVERSTATE_SCALE;
+ 			}
+ 		}
+ 	}
+@@ -339,11 +370,7 @@
+ 		newBtn.cursor = ref.cursor;
+ 		newBtn.rotation = ref.rotation;
+ 		newBtn.name = ref.name;
+-		
+-		m_baseScaleX = ref.scaleX;
+-		m_baseScaleY = ref.scaleY;
+ 
+-
+ 		m_buttons.push( newBtn );
+ 		group.addChild( newBtn );
+ 	
+@@ -368,11 +395,10 @@
+ 		newTxt.autoSize = ref.autoSize;
+ 		newTxt.width = ref.width;
+ 		newTxt.height = ref.height;
+-		
+ 		m_label = newTxt;
+ 		group.addChild( newTxt );
+ 		
+-		return m_label;
++		return newTxt;
+ 	}
+ 	
+ 	/**
+@@ -380,7 +406,9 @@
+ 	 */
+ 	private function createSpriteFromRef( ref:OPSprite ):OPSprite
+ 	{
+-		var newSprite:OPSprite = new OPSprite( ref.getBitmap(), ref.getBoundsData() );
++		var newSprite:OPSprite = new OPSprite();
++		newSprite.bitmapData = ref.getBitmapData();
++
+ 		newSprite.width = ref.width;
+ 		newSprite.height = ref.height;
+ 		newSprite.x = ref.x;
+@@ -388,12 +416,11 @@
+ 		newSprite.visible = ref.visible;
+ 		newSprite.alpha = ref.alpha;
+ 		newSprite.rotation = ref.rotation;
+-		newSprite.name = ref.name; 
++		newSprite.name = ref.name + debugName;
++		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
++		group.addChildAt( newSprite, group.numChildren );
+ 		
+-		m_image = newSprite;
+-		group.addChild( newSprite );
+-		
+-		return m_image;
++		return newSprite;
+ 	}
+ 	
+ 	private function createDOCFromRef( ref:DisplayObjectContainer ):DisplayObjectContainer
+@@ -407,4 +434,34 @@
+ 	 
+ 	   return newDOC;
+ 	}
++	
++	public function print():Void
++	{
++		trace( "Group: " + debugName );
++		trace( "Position: (" + group.x + ", " + group.y + ")" );
++		trace( "Dimensions: " + group.width + " " + group.height );
++		trace( "visible: " + group.visible );
++		trace( "alpha: " + group.alpha );
++		trace( "group parent: " + group.parent );
++		trace( "mask: " + group.mask );
++		for ( child in group.__children )
++		{
++			trace( "\t" + child );
++			trace( "\t\t Position: (" + child.x + ", " + child.y + ")" );
++			trace( "\t\t Dimensions: " + child.width + " " + child.height );
++			trace( "\t\t visible: " + child.visible );
++			trace( "\t\t alpha: " + child.alpha );
++			
++			if ( Std.is( child, OPSprite ) && !Std.is( child, GraphicButton ) )
++			{
++				var img:OPSprite = cast child;
++				trace( "\t\t bitmap:" + img.bitmapData );
++				trace( "\t\t bitmap:" + img.getBitmap().name );
++				trace( "\t\t sprite mask: " + img.mask );
++				
++			}
++		}
++	}
++	
++	
+ }
+\ No newline at end of file
+Index: src/game/ui/VirtualScrollingMenu.hx
+===================================================================
+--- src/game/ui/VirtualScrollingMenu.hx	(revision 903)
++++ src/game/ui/VirtualScrollingMenu.hx	(working copy)
+@@ -12,6 +12,7 @@
+ ///////////////////////////////////////////////////////////////////////////
+ 
+ package game.ui;
++import away3d.textfield.TextField;
+ import com.firstplayable.hxlib.Debug;
+ import com.firstplayable.hxlib.display.OPSprite;
+ import game.ui.VirtualScrollingMenu.ScrollingData;
+@@ -32,17 +33,20 @@
+  */
+ class ScrollingData
+ {
+-	public var imgSrc(default, null):Option< String >; // bitmap src URL
++	public var imgSrc(default, null):Option< Bitmap >; // bitmap src URL
+ 	public var primaryButtonSrc(default, null):Option< Bitmap >;
+-	public var secondaryButtonSrc(default, null):Option< Bitmap >; 
++	public var secondaryButtonSrc(default, null):Option< Bitmap >;
+ 	public var label(default, null):Option< String >;  // text used to populate scrolling item label
++	public var secondaryLabel(default, null):Option< String >;
+ 	
+-	public function new( ?img:String, ?pBtn:Bitmap, ?sBtn:Bitmap, ?lbl:String )
++	public function new( ?img:Bitmap, ?pBtn:Bitmap,?sBtn:Bitmap, ?lbl:String, ?lbl2:String )
+ 	{
+ 		imgSrc = (img != null) ? Some(img):None;
+ 		primaryButtonSrc = (pBtn != null) ? Some(pBtn):None;
++		label = (lbl != null) ? Some(lbl):None;
++		secondaryLabel = (lbl2 != null) ? Some(lbl2):None;
+ 		secondaryButtonSrc = (sBtn != null) ? Some(sBtn):None;
+-		label = (lbl != null) ? Some(lbl):None;
++
+ 	}
+ }
+ 
+@@ -96,6 +100,7 @@
+ 	private var m_orientation:Orientation; // Horizontal or vertical
+ 	private var m_itemSpacing:Float; // Pixels - Vertical/horizontal space between item placement, depending on orientation. Includes item size + padding.
+ 	private var m_itemSize:Float; // Pixels - Horizontal = width, vertical = height. List assumes uniform items.
++	private var m_paistRef:DisplayObjectContainer; // Keep main ref for redrawing items
+ 	
+ 	// Movement helpers
+ 	private var m_isMouseDown:Bool;
+@@ -117,9 +122,6 @@
+ 	private var m_scrollBar:OPSprite;
+ 	private var m_scrollTrack:OPSprite;
+ 	
+-	
+-	
+-	
+ 	/**
+ 	 * Setup requires: 
+ 	 * 		- two example groups of display objects for reference
+@@ -192,6 +194,7 @@
+ 		// - Start & End pos
+ 		// - List of scrolling items
+ 		// ---------------------------------------------------
++		m_paistRef = refGroup1;
+ 		addRef( refGroup1, refGroup2 );
+ 		
+ 		// ---------------------------------------------------
+@@ -241,9 +244,21 @@
+ 			case VERTICAL:   refGroup1.y = m_startPos;
+ 		}
+ 		
++		populateScrollingItems();
++		
++		// Hide ref when we're done using it
++		refGroup1.visible = false; 
++		refGroup2.visible = false;
++	}
++	
++	private function populateScrollingItems()
++	{
+ 		// Populate scrollingItems using the visible item number. 
+ 		// Number of virtually scrolling display objects should be 1 + visibleItems 
+ 		//		( All that are visible and one just below view; list display starts off at the top)
++		var startX:Float = m_paistRef.x;
++		var startY:Float = m_paistRef.y;
++		
+ 		var numItems:Int = m_visibleItems + 1;
+ 		var count:Int = 0;
+ 		
+@@ -254,13 +269,13 @@
+ 			{
+ 				switch( m_orientation )
+ 				{
+-					case HORIZONTAL: refGroup1.x += m_itemSpacing;
+-					case VERTICAL:   refGroup1.y += m_itemSpacing;
++					case HORIZONTAL: m_paistRef.x += m_itemSpacing;
++					case VERTICAL:   m_paistRef.y += m_itemSpacing;
+ 				}
+ 			}
+ 
+ 			// Create & add scrolling item
+-			var item = new VirtualScrollingItem( refGroup1, count );
++			var item = new VirtualScrollingItem( m_paistRef, count );
+ 			m_scrollingItems.push( item );
+ 			
+ 			// Add mask to scrolling item
+@@ -272,9 +287,8 @@
+ 			count++;
+ 		}
+ 		
+-		// Hide ref when we're done using it
+-		refGroup1.visible = false; 
+-		refGroup2.visible = false;
++		m_paistRef.x = startX;
++		m_paistRef.y = startY;
+ 	}
+ 	
+ 	/**
+@@ -289,7 +303,8 @@
+ 		start();
+ 		
+ 		// Hide scroll bar if it is not needed
+-		if ( m_visibleItems >= m_dataset.length )
++		var haveScrollUI:Bool = m_scrollBar != null && m_scrollTrack != null;
++		if ( haveScrollUI && (m_visibleItems >= m_dataset.length) )
+ 		{
+ 			m_scrollBar.visible = false;
+ 			m_scrollTrack.visible = false;
+@@ -339,9 +354,9 @@
+ 	/**
+ 	 * Adds data to virtual scrolling menu, to be populated onto objects
+ 	 */
+-	public function addData( imgSrc:String, pBtnSrc:Bitmap, sBtnSrc:Bitmap, lbl:String )
++	public function addData( ?imgSrc:Bitmap, ?pBtnSrc:Bitmap, ?sBtnSrc:Bitmap, ?lbl:String, ?lbl2:String )
+ 	{
+-		var data:ScrollingData = new ScrollingData( imgSrc, pBtnSrc, sBtnSrc, lbl );
++		var data:ScrollingData = new ScrollingData( imgSrc, pBtnSrc, sBtnSrc, lbl, lbl2 );
+ 		m_dataset.push( data );
+ 	}
+ 
+@@ -350,7 +365,14 @@
+ 	 */
+ 	private function atUpperScrollLimit():Bool
+ 	{
+-		return ( (scrolledOneItemForward() && m_userPos <= 0) );
++		// Early return for empty items 
++		if ( m_scrollingItems.length < 1 )
++		{
++			Debug.log( "Cannot detect upper scroll limits; no data available." );
++			return true;
++		}
++		
++		return ( scrolledOneItemForward() && m_userPos <= 0);
+ 	}
+ 	
+ 	/**
+@@ -358,6 +380,13 @@
+ 	 */
+ 	private function atLowerScrollLimit():Bool
+ 	{
++		// Early return for empty items 
++		if ( m_scrollingItems.length < 1 )
++		{
++			Debug.log( "Cannot detect lower scroll limits; no data available." );
++			return true;
++		}
++		
+ 		var lastDataPos:Int = m_dataset.length - 1;
+ 		return  scrolledOneItemBackward() && ( m_userPos >= (lastDataPos - m_visibleItems ) );
+ 	}
+@@ -424,6 +453,13 @@
+ 	 */
+ 	private function scrolledOneItemForward():Bool
+ 	{
++		// Early return for empty items 
++		if ( m_scrollingItems.length < 1 )
++		{
++			Debug.log( "Cannot scroll forward. No items in scrolling list." );
++			return false;
++		}
++		
+ 		var firstItem:VirtualScrollingItem = m_scrollingItems[ 0 ];
+ 		return ( firstItem.pos(m_orientation) >= m_upperScrollLimit);
+ 	}
+@@ -434,6 +470,13 @@
+ 	 */
+ 	private function scrolledOneItemBackward():Bool
+ 	{
++		// Early return for empty items 
++		if ( m_scrollingItems.length < 1 )
++		{
++			Debug.log( "Cannot scroll backward. No items in scrolling list." );
++			return false;
++		}
++		
+ 		var lastItem:VirtualScrollingItem = m_scrollingItems[ m_scrollingItems.length - 1 ];
+ 		return ( lastItem.pos( m_orientation ) + m_itemSize <= m_lowerScrollLimit );
+ 	}
+@@ -444,6 +487,13 @@
+ 	 * */
+ 	private function repositionAtStart():VirtualScrollingItem
+ 	{
++		// Early return for empty items 
++		if ( m_scrollingItems.length < 1 )
++		{
++			Debug.log( "Cannot reposition items at start of list. No items in scrolling list." );
++			return null;
++		}
++		
+ 		var lastItem:VirtualScrollingItem = m_scrollingItems.pop();
+ 		var firstItem:VirtualScrollingItem = m_scrollingItems[ 0 ];
+ 		
+@@ -460,6 +510,13 @@
+ 	 * */
+ 	private function repositionAtEnd():VirtualScrollingItem
+ 	{
++		// Early return for empty items 
++		if ( m_scrollingItems.length < 1 )
++		{
++			Debug.log( "Cannot reposition items at end of list. No items in scrolling list." );
++			return null;
++		}
++		
+ 		var firstItem:VirtualScrollingItem = m_scrollingItems.shift();
+ 		var lastItem:VirtualScrollingItem = m_scrollingItems[ m_scrollingItems.length - 1 ];
+ 		
+@@ -579,7 +636,6 @@
+ 		m_overPos = pos;
+ 		
+ 		m_direction = getDirection( distance );
+-		
+ 		// ----------------------------------------------------------
+ 		// Early return if we are scrolling towards respective limits
+ 		// ----------------------------------------------------------
+@@ -757,11 +813,17 @@
+ 		// Amount of space the scrollbar has to move
+ 		var scrollBarSpace:Float = trackBottom - trackTop;
+ 		
+-		// Amount of space the whole list of items has outside of the visible field
+-		var listSpace:Float = m_dataset.length * m_itemSize; // px
++		// Amount of space the whole list of items has ***outside of the visible field***
++		var viewSpace:Float = switch ( m_orientation )
++		{
++			case Orientation.HORIZONTAL: m_scrollArea.width;
++			case Orientation.VERTICAL: m_scrollArea.height;
++		}
+ 		
++		var listSpace:Float = (m_dataset.length * m_itemSize) - viewSpace ; // px
++		
+ 		// Ratio between scrollbar movement space and total movement space
+-		var movementRatio:Float = scrollBarSpace/listSpace; // px
++		var movementRatio:Float = (scrollBarSpace / listSpace); // px
+ 		
+ 		// Amount the scrollbar moves is the amount scroll (dist) multiplied by the ratio between spaces.
+ 		// 		Sign is flipped so the scrollbar moves with the items (opposite dir) 
+@@ -784,6 +846,17 @@
+ 	
+ 	private function dispose():Void
+ 	{
++		removeScrollListeners();
++		
++		// Clear menu
++		clearData();
++		
++		// Remove event listeners from menu
++		this.removeEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
++	}
++	
++	private function removeScrollListeners():Void
++	{
+ 		// Remove listeners from the scroll interaction sprite
+ 		m_scrollArea.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp ); 
+ 		m_scrollArea.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown ); 
+@@ -790,15 +863,52 @@
+ 		m_scrollArea.removeEventListener( MouseEvent.MOUSE_MOVE, onMouseMove );
+ 		m_scrollArea.removeEventListener( MouseEvent.MOUSE_OUT, onMouseOut);
+ 		m_scrollArea.removeEventListener( Event.ENTER_FRAME, onFrame );
++	}
++	
++	/**
++	 * Clears scroll data for reinitialization. 
++	 */
++	public function reset():Void
++	{
++		m_paistRef.visible = true;
+ 		
+-		// Remove listeners from items
+-		// Clear items
++		clearData();
++	}
++	
++	/**
++	 * To be called after clearing data; at the moment used for search functionality
++	 */
++	public function reInit()
++	{
++		populateScrollingItems();
++		init();
++		
++		// Clear list if there is no data
++		if ( m_dataset.length < 1 )
++		{
++			clearData();
++			Debug.log( "No data availabile on reinitialization." );
++		}
++		
++		m_paistRef.visible = false;
++	}
++	
++	/**
++	 * Clears scroll data and display objects from the menu. Also removes event listeners.
++	 */
++	private function clearData():Void
++	{
++		m_isTweening = false;
++		removeScrollListeners();
++		
++		m_userPos = 0;
++		m_dataset = [];
++		
+ 		for ( item in m_scrollingItems )
+ 		{
+ 			item.clear();
+ 		}
+ 		
+-		// Remove event listeners from menu
+-		this.removeEventListener( Event.REMOVED_FROM_STAGE, onRemoved );
++		m_scrollingItems = [];
+ 	}
+ }
+\ No newline at end of file

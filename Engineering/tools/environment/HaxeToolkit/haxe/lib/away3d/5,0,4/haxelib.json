@@ -1,0 +1,10 @@
+{
+	"name": "away3d",
+	"url": "http://www.away3d.com",
+	"license": "Apache",
+	"tags": [ "away3d", "3d", "engine", "openfl", "cross", "cpp", "flash", "game", "js", "web", "ios", "android" ],
+	"description": "Away3D is an open source platform for developing interactive 3D graphics for video games and applications.",
+	"version": "5.0.4",
+	"releasenote": "Minor parser fixes",
+	"contributors": [ "Greg209", "singmajesty", "p.j.shand" ]
+}

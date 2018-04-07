@@ -1,0 +1,1079 @@
+Index: debug/events/MenuUpdatedEvent.hx
+===================================================================
+--- debug/events/MenuUpdatedEvent.hx	(nonexistent)
++++ debug/events/MenuUpdatedEvent.hx	(working copy)
+@@ -0,0 +1,36 @@
++//
++// Copyright (C) 2017, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.debug.events;
++import openfl.events.Event;
++
++/**
++ * Event that is thrown when a message that a paist menu has been
++ * updated.
++ */
++class MenuUpdatedEvent extends Event
++{
++	public static inline var MENU_UPDATED_EVENT:String = "PAIST MENU UPDATED";
++
++	public var m_layout:String;
++	public var m_data:Dynamic;
++	
++	public function new(layout:String, newData:Dynamic) 
++	{
++		super(MENU_UPDATED_EVENT);
++		
++		m_layout = layout;
++		m_data = newData;
++	}
++	
++}
+\ No newline at end of file
+Index: debug/menuEdit/EditableMenu.hx
+===================================================================
+--- debug/menuEdit/EditableMenu.hx	(revision 1563)
++++ debug/menuEdit/EditableMenu.hx	(working copy)
+@@ -13,6 +13,15 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.menuEdit;
++import com.firstplayable.hxlib.debug.tunables.Tunables;
++import openfl.display.BlendMode;
++import openfl.display.Shape;
++import openfl.geom.Rectangle;
++import openfl.display.Bitmap;
++import com.firstplayable.hxlib.display.OPSprite;
++import openfl.text.TextField;
++import openfl.geom.Point;
++import openfl.events.MouseEvent;
+ import com.firstplayable.hxlib.debug.menuEdit.Menus;
+ import openfl.display.DisplayObjectContainer;
+ import openfl.display.DisplayObject;
+@@ -31,11 +40,24 @@
+  */
+ class EditableMenu extends GenericMenu 
+ {
++	//================================================
++	// Members
++	//================================================
++	
++	private var m_dragging:DisplayObject;
++	private var m_dragOffset:Point;
++	
++	private var m_childrenMap:Map<String, DisplayObject>;
+ 
++	//================================================
++	// Methods
++	//================================================
+ 	public function new(menuName:String) 
+ 	{
+ 		super(menuName);
+ 		
++		m_childrenMap = getNamedChildrenMap();
++		
+ 		addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+ 	}
+ 	
+@@ -48,7 +70,28 @@
+ 		removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+ 		addEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
+ 		
++		for (child in getNamedChildrenMap())
++		{
++			if (Std.is(child, DisplayObjectContainer) && !Std.is(child, Bitmap))
++			{
++				var container:DisplayObjectContainer = cast child;
++				container.mouseEnabled = true;
++				container.mouseChildren = true;
++				container.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
++			}
++			if (Std.is(child, TextField))
++			{
++				var field:TextField = cast child;
++				field.mouseEnabled = true;
++				field.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
++			}
++		}
++		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
++		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
++		
+ 		//add functionality here
++		m_dragging = null;
++		m_dragOffset = null;
+ 	}
+ 	
+ 	/**
+@@ -57,10 +100,19 @@
+ 	 */
+ 	private function onRemovedFromStage( e:Event ):Void
+ 	{
++		for (child in m_childrenMap)
++		{
++			child.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
++		}
++		stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
++		stage.removeEventListener(MouseEvent.MOUSE_UP,   onMouseUp);
++		
+ 		removeEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
+ 		addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+ 		
+ 		//add functionality here
++		m_dragging = null;
++		m_dragOffset = null;
+ 	}
+ 	
+ 	/**
+@@ -68,10 +120,41 @@
+ 	 */
+ 	public function release():Void
+ 	{
++		removeEventListener(MouseEvent.MOUSE_DOWN, 	onMouseDown);
++		
++		if (stage != null)
++		{
++			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
++			stage.removeEventListener(MouseEvent.MOUSE_UP,   onMouseUp);
++		}
++		
+ 		removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+ 		removeEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
++		
++		m_dragging = null;
++		m_dragOffset = null;
+ 	}
+ 	
++	public function getAllChildren():Map<String, DisplayObject>
++	{
++		var map:Map<String, DisplayObject> = new Map<String, DisplayObject>();
++		
++		var namedMap:Map<String, DisplayObject> = getNamedChildrenMap();
++		var namelessMap:Map<String, DisplayObject> = getNamelessChildrenMap();
++		
++		for (key in namedMap.keys())
++		{
++			map[key] = namedMap[key];
++		}
++		
++		for (key in namelessMap.keys())
++		{
++			map[key] = namelessMap[key];
++		}
++		
++		return map;
++	}
++	
+ 	/**
+ 	 * Gets a map of all the named children of this menu by name
+ 	 * @return
+@@ -147,5 +230,126 @@
+ 		
+ 		return childrenMap;
+ 	}
++	
++	//===============================================
++	// Allows Editing the menu
++	//===============================================
++	
++	private function onMouseDown(e:MouseEvent):Void
++	{
++		var theTarget:DisplayObject = cast e.currentTarget;
++		
++		if (m_dragging == null)
++		{
++			Debug.log("=========================");
++			Debug.log("new target " + theTarget.name);
++			grabTarget(e);
++			return;
++		}
++		
++		var tgtIdx:Int = getPriority(theTarget);
++		
++		var curentIdx:Int = getPriority(m_dragging);
++		
++		Debug.log("=========================");
++		Debug.log("new target " + theTarget.name + " priority: " + tgtIdx);
++		Debug.log("old target " + m_dragging.name + " priority: " + curentIdx);
++		
++		if (tgtIdx > curentIdx)
++		{
++			grabTarget(e);
++		}
++	}
++	
++	/**
++	 * Tries to find the effective priority of the target object
++	 * compared to this object.
++	 * @param	targetObject
++	 * @return
++	 */
++	private function getPriority(targetObject:DisplayObject):Int
++	{
++		var idx:Int = getChildIndex(targetObject);
++		if (idx != -1)
++		{
++			return idx;
++		}
++		
++		//==================================
++		// Check if is descendant
++		//==================================
++		for (i in 0...numChildren)
++		{
++			var nextChild:DisplayObject = getChildAt(i);
++			if (Std.is(nextChild, DisplayObjectContainer))
++			{
++				var container:DisplayObjectContainer = cast nextChild;
++				var searchIdx:Int = getPriorityHelper(targetObject, container);
++				if (searchIdx != -1)
++				{
++					return i;
++				}
++			}
++		}
++		
++		//Not found.
++		return -1;
++	}
++	
++	private static function getPriorityHelper(targetObject:DisplayObject, parentObject:DisplayObjectContainer):Int
++	{
++		var idx:Int = parentObject.getChildIndex(targetObject);
++		if (idx != -1)
++		{
++			return idx;
++		}
++		
++		for (i in 0...parentObject.numChildren)
++		{
++			var nextChild:DisplayObject = parentObject.getChildAt(i);
++			if (Std.is(nextChild, DisplayObjectContainer))
++			{
++				var container:DisplayObjectContainer = cast nextChild;
++				var nextIdx:Int = getPriorityHelper(targetObject, container);
++				if (nextIdx != -1)
++				{
++					return nextIdx;
++				}
++			}
++		}
++		
++		return -1;
++	}
++	
++	private function grabTarget(e:MouseEvent):Void
++	{
++		m_dragging = e.currentTarget;
++		
++		var curPos:Point = new Point(m_dragging.x, m_dragging.y);
++		curPos = m_dragging.parent.localToGlobal(curPos);
++		
++		var stagePoint:Point = new Point(e.stageX, e.stageY);
++		
++		m_dragOffset = curPos.subtract(stagePoint);
++		
++		Debug.log("grabbed " + m_dragging.name);
++	}
++	
++	private function onMouseMove(e:MouseEvent):Void
++	{
++		if (m_dragging != null)
++		{
++			var rawPoint:Point = new Point(e.stageX + m_dragOffset.x, e.stageY + m_dragOffset.y);
++			var dragPoint:Point = m_dragging.parent.globalToLocal(rawPoint);
++			m_dragging.x = dragPoint.x;
++			m_dragging.y = dragPoint.y;
++		}
++	}
++	
++	private function onMouseUp(e:MouseEvent):Void
++	{
++		m_dragging = null;
++		m_dragOffset = null;
++	}
+ }
+ #end
+Index: debug/menuEdit/menuEditItems/MenuEditItem.hx
+===================================================================
+--- debug/menuEdit/menuEditItems/MenuEditItem.hx	(revision 1563)
++++ debug/menuEdit/menuEditItems/MenuEditItem.hx	(working copy)
+@@ -192,6 +192,22 @@
+ 	}
+ 	
+ 	/**
++	 * Called when the menu this owns is updated.
++	 * @param	newMenu
++	 */
++	public function updateMenu(newMenu:MenuData):Void
++	{
++		m_menu = newMenu;
++		
++		for (field in m_textFields)
++		{
++			updateTextField(field);
++		}
++		
++		updateToggleStatus();
++	}
++	
++	/**
+ 	 * Called when this item is deleted.
+ 	 */
+ 	public function release():Void
+@@ -283,22 +299,66 @@
+ 		//Don't muck with a menu that is in the middle of loading!
+ 		if (m_menu.status == LOADING)
+ 		{
++			Debug.log("menu is loading. Ignore: " + m_menu.name);
+ 			return;
+ 		}
+ 		
+ 		if (m_menu.visible == SHOWN)
+ 		{
++			Debug.log("hide menu: " + m_menu.name);
+ 			Menus.hideMenu(m_menu.name);
+ 			m_toggleVisibleBtn.toggleState = false;
+ 		}
+ 		else if (m_menu.visible == HIDDEN)
+ 		{
++			Debug.log("show menu: " + m_menu.name);
++			
+ 			Menus.showMenu(m_menu.name);
+ 			m_toggleVisibleBtn.toggleState = true;
+ 		}
+ 	}
+ 	
++	public function onMenuLoaded(e:MenuLoadedEvent):Void
++	{
++		if (e.loadedMenu == m_menu.name)
++		{
++			var currentMenuData:MenuData = Menus.getMenuData(e.loadedMenu);
++			Debug.log("onMenuLoaded. my data: " + m_menu + "\n current data: " + currentMenuData);
++			
++			if ((currentMenuData.status == UNLOADED) && (currentMenuData.menu == null))
++			{
++				Debug.log("menu removed!");
++				updateMenu(currentMenuData);
++			}
++			else if(m_menu.menu != currentMenuData.menu)
++			{
++				Debug.log("menu changed!!!");
++				updateMenu(currentMenuData);
++			}
++			else
++			{
++				Debug.log("same menu");
++				updateToggleStatus();
++			}
++		}
++	}
++	
+ 	/**
++	 * Updates the toggle state to reflect the current status of the menu
++	 */
++	private function updateToggleStatus():Void
++	{
++		if (m_menu.status == UNLOADED)
++		{
++			m_toggleVisibleBtn.toggleState = false;
++		}
++		else
++		{
++			m_toggleVisibleBtn.toggleState = true;
++		}
++	}
++	
++	/**
+ 	 * Updates the visibility of the item
+ 	 * @param	e
+ 	 */
+Index: debug/menuEdit/MenuEditState.hx
+===================================================================
+--- debug/menuEdit/MenuEditState.hx	(revision 1563)
++++ debug/menuEdit/MenuEditState.hx	(working copy)
+@@ -13,6 +13,7 @@
+ 
+ #if (debug || build_cheats)
+ package com.firstplayable.hxlib.debug.menuEdit;
++import com.firstplayable.hxlib.debug.events.MenuUpdatedEvent;
+ 
+ import com.firstplayable.hxlib.debug.tunables.Tunables;
+ import com.firstplayable.hxlib.display.GameDisplay;
+@@ -43,6 +44,9 @@
+ 	{
+ 		super.enter(p);
+ 		
++		MenuUpdateClient.connect();
++		MenuUpdateClient.addEventListenerToActiveClient(MenuUpdatedEvent.MENU_UPDATED_EVENT, onMenuUpdated);
++		
+ 		if (Menus.ALL_LAYOUTS == null)
+ 		{
+ 			Debug.warn("no menu list!");
+@@ -61,6 +65,9 @@
+ 	
+ 	override public function exit():Void 
+ 	{
++		MenuUpdateClient.removeEventListenerFromActiveClient(MenuUpdatedEvent.MENU_UPDATED_EVENT, onMenuUpdated);
++		MenuUpdateClient.close();
++		
+ 		m_menuViewer.show(false);
+ 		m_menuViewer.release();
+ 		m_menuViewer = null;
+@@ -72,5 +79,37 @@
+ 		
+ 		super.exit();
+ 	}
++	
++	/**
++	 * Handles a menu being updated.
++	 * @param	e
++	 */
++	private function onMenuUpdated(e:MenuUpdatedEvent):Void
++	{
++		if (!Menus.menuExists(e.m_layout))
++		{
++			Debug.log("menu updated that Menus doesn't know about: " + e.m_layout);
++			return;
++		}
++		
++		var shouldReshowMenu:Bool = Menus.getMenuVisible(e.m_layout);
++		
++		Menus.unloadMenu(e.m_layout);
++		
++		var paistMenuFileURL:String = ResMan.instance.getPaistFileByName(e.m_layout);
++		
++		Debug.log("paistMenuFileURL: " + paistMenuFileURL);
++		var menuResource:ResContext = {
++			src:paistMenuFileURL,
++			content:e.m_data
++		};
++		
++		ResMan.instance.updateRes(e.m_layout, menuResource);
++		
++		if (shouldReshowMenu)
++		{
++			Menus.showMenu(e.m_layout);
++		}
++	}
+ }
+ #end
+Index: debug/menuEdit/Menus.hx
+===================================================================
+--- debug/menuEdit/Menus.hx	(revision 1563)
++++ debug/menuEdit/Menus.hx	(working copy)
+@@ -229,18 +229,25 @@
+ 			return;
+ 		}
+ 		
++		var menuData:MenuData = getMenuData(menuName);
++		Debug.log("Pre menu data: " + menuData);
++		
+ 		//Desconstruct menu first if it is constructed.
+ 		if (getMenuConstructed(menuName))
+ 		{
++			Debug.log("deconstruct: " + menuName + " in unload menu");
+ 			deconstructMenu(menuName);
+ 		}
+ 		
+-		var menuData:MenuData = getMenuData(menuName);
+-		
+ 		//Unload menu
+ 		// TODO: This clears the baked JSON making it impossible to return
+ 		//ResMan.instance.unload(menuName);
+ 		menuData.status = UNLOADED;	
++		menuData.menu = null;
++		
++		var postMenuData:MenuData = getMenuData(menuName);
++		Debug.log("Post menu data: " + postMenuData);
++		
+ 		DebugDefs.debugEventTarget.dispatchEvent(new MenuLoadedEvent(menuName, UNLOADED));
+ 	}
+ 	
+@@ -356,6 +363,7 @@
+ 				//If we don't have a menu yet, construct it!
+ 				if (menuData.menu == null)
+ 				{
++					Debug.log("construct a new menu!");
+ 					menuData.menu = new EditableMenu(menuName);
+ 					GameDisplay.attach(LayerName.PRIMARY, menuData.menu);
+ 				}
+@@ -362,6 +370,8 @@
+ 				menuData.menu.visible = true;
+ 				menuData.visible = SHOWN;
+ 				
++				Debug.log("menu bounds: " + menuData.menu.getBounds(GameDisplay.getLayer(Std.string(LayerName.PRIMARY))));
++				
+ 				//Send the shown event once all the state has been updated.
+ 				DebugDefs.debugEventTarget.dispatchEvent(new ShowMenuEvent(menuName, true));
+ 				
+@@ -474,6 +484,7 @@
+ 		//If the menu is currently constructed, get rid of it
+ 		if (getMenuConstructed(menuName))
+ 		{
++			Debug.log("deconstruct menu in unregisterMenu");
+ 			deconstructMenu(menuName);
+ 		}
+ 		
+@@ -487,7 +498,6 @@
+ 			}
+ 		}
+ 		
+-		menuData.menu = null;
+ 		ms_menuTable.remove(menuName);
+ 	}
+ 	
+Index: debug/menuEdit/MenuUpdateClient.hx
+===================================================================
+--- debug/menuEdit/MenuUpdateClient.hx	(nonexistent)
++++ debug/menuEdit/MenuUpdateClient.hx	(working copy)
+@@ -0,0 +1,213 @@
++//
++// Copyright (C) 2016, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.debug.menuEdit;
++import com.firstplayable.hxlib.debug.events.MenuUpdatedEvent;
++import com.firstplayable.hxlib.net.BaseClient;
++import com.firstplayable.hxlib.utils.json.JsonMenuPlugIn;
++import com.firstplayable.hxlib.utils.json.JsonUtils;
++import haxe.Json;
++import openfl.events.Event;
++import openfl.events.EventDispatcher;
++import openfl.events.IOErrorEvent;
++import openfl.events.ProgressEvent;
++import openfl.net.Socket;
++
++/**
++ * Class that listens for updates to JSON menus, and informs the rest of the
++ * Menu Edit system.
++ */
++class MenuUpdateClient extends BaseClient
++{	
++	private static var ms_client:MenuUpdateClient = null;
++	
++	public static function connect():Void
++	{
++		if (ms_client == null)
++		{
++			ms_client = new MenuUpdateClient();
++		}
++		
++		ms_client.start();
++	}
++	
++	public static function close():Void
++	{
++		if (ms_client != null)
++		{
++			ms_client.stop();
++		}
++	}
++	
++	public static function release():Void
++	{
++		if (ms_client != null)
++		{
++			ms_client.stop();
++			ms_client = null;
++		}
++	}
++	
++	public static function reset():Void
++	{
++		release();
++		connect();
++	}
++	
++	/**
++	 * Adds an event listener to the active client
++	 * @param	type
++	 * @param	listener
++	 */
++	public static function addEventListenerToActiveClient(type:String, listener:Dynamic->Void):Void
++	{
++		if (ms_client == null)
++		{
++			Debug.warn("No client exists! Please start the client first.");
++			return;
++		}
++		
++		ms_client.addEventListener(type, listener);
++	}
++	
++	/**
++	 * Remove an event listener from the active client
++	 * @param	type
++	 * @param	listener
++	 */
++	public static function removeEventListenerFromActiveClient(type:String, listener:Dynamic->Void):Void
++	{
++		if (ms_client == null)
++		{
++			Debug.warn("No client exists! Please start the client first.");
++			return;
++		}
++		
++		ms_client.removeEventListener(type, listener);
++	}
++	
++	//==================================================================
++	// Instance code
++	//==================================================================
++	
++	public function new()
++	{
++		super();
++	}
++	
++	override private function onStop():Void
++	{
++		super.onStop();
++	}
++	
++	//==================================================================
++	// Callbacks
++	//==================================================================
++	
++	override private function onConnect(e:Event):Void
++	{
++		super.onConnect(e);
++	}
++	
++	override private function onClose(e:Event):Void
++	{
++		super.onClose(e);
++	}
++	
++	override private function onError(e:IOErrorEvent):Void
++	{
++		super.onError(e);
++	}
++	
++	override private function onSocketData(e:ProgressEvent):Void
++	{
++		super.onSocketData(e);
++		
++		var socketMessageString:String = m_socket.readUTFBytes(cast(e.bytesLoaded, Int));
++		
++		try
++		{
++			var socketMessage:Dynamic = Json.parse(socketMessageString);
++			if (socketMessage.messageType != "PAIST_FILE_UPDATED")
++			{
++				Debug.log("unhandled message type: " + socketMessage.messageType);
++				return;
++			}
++			
++			var messageData:Dynamic = socketMessage.messageData;
++			
++			var updatedLayout:String = socketMessage.messageData.layoutName;
++			var paistData:Dynamic = socketMessage.messageData.layoutData;
++			cleanPaistData(paistData);
++			
++			Debug.log("Layout Updated: (" + updatedLayout + ")");
++			dispatchEvent(new MenuUpdatedEvent(updatedLayout, paistData));
++		}
++		catch (e:Dynamic)
++		{
++			Debug.warn("Error with socket message: " + Std.string(e) + "\n" + socketMessageString);
++		}
++	}
++	
++	/**
++	 * Fixes paist data so it's in the format we expect.
++	 * @param	rawData
++	 * @return
++	 */
++	private static function cleanPaistData(rawData:Dynamic):Dynamic
++	{
++		Debug.log("Pre data: " + Std.string(rawData));
++		
++		var topMenuVal:Dynamic = Reflect.getProperty( rawData, "topMenu" );
++		for (objectType in JsonMenuPlugIn.OBJECT_TYPES)
++		{
++			Debug.log("next type: " + objectType);
++			var items:Array<Dynamic> = Reflect.getProperty( topMenuVal, objectType );      
++			if ( items == null )
++			{
++				// EARLY RETUN--no items to create
++				Debug.log("no items of type: " + objectType);
++				continue;
++			}
++			
++			// Create each object of type specified in the JSON data
++			for ( nextItem in items )
++			{
++				Debug.log("next item: " + Std.string(nextItem));
++				
++				if (!Reflect.hasField(nextItem, "inheritable"))
++				{
++					continue;
++				}
++				
++				var inheritable:Dynamic = Reflect.field(nextItem, "inheritable");
++				if (!Reflect.hasField(inheritable, "resource"))
++				{
++					continue;
++				}
++				
++				var oldRes:String = nextItem.inheritable.resource;
++				var newRes:String = "2d/" + oldRes;
++				
++				Debug.log(oldRes + "=>" + newRes);
++				
++				nextItem.inheritable.resource = newRes;
++			}
++		}
++		
++		Debug.log("post data: " + Std.string(rawData));
++		
++		return rawData;
++	}
++	
++}
+\ No newline at end of file
+Index: debug/menuEdit/MenuViewer.hx
+===================================================================
+--- debug/menuEdit/MenuViewer.hx	(revision 1563)
++++ debug/menuEdit/MenuViewer.hx	(working copy)
+@@ -713,6 +713,11 @@
+ 		{
+ 			filterAllItems();
+ 		}
++		
++		for (item in m_allMenuItems)
++		{
++			item.onMenuLoaded(e);
++		}
+ 	}
+ 	
+ 	//==================================================================
+Index: loader/LibraryLoader.hx
+===================================================================
+--- loader/LibraryLoader.hx	(revision 1563)
++++ loader/LibraryLoader.hx	(working copy)
+@@ -41,7 +41,7 @@
+  */
+ class LibraryLoader
+ {
+-	private static inline var HUSH:Bool = true;
++	private static inline var HUSH:Bool = false;
+ 	
+ 	/**
+ 	 * Helper function that determines if a provided object is a Library list.
+@@ -150,6 +150,7 @@
+ 			{
+ 				case PAIST:
+ 				{
++					Debug.log("loading paist menu: " + nextLibrary.name);
+ 					ResMan.instance.load(nextLibrary.name, loadCallback);
+ 				}
+ 				case SPRITESHEET:
+Index: loader/ResMan.hx
+===================================================================
+--- loader/ResMan.hx	(revision 1563)
++++ loader/ResMan.hx	(working copy)
+@@ -253,6 +253,7 @@
+ 		{
+ 			for ( res in list )
+ 			{
++				Debug.log("adding res: " + res);
+ 				addRes( libName, res );
+ 			}
+ 		}
+@@ -283,6 +284,11 @@
+ 		var lib = m_collections.get( libName );
+ 		if ( lib == null )
+ 		{
++			if (libName.indexOf("GameSelect") != -1)
++			{
++				Debug.log("got here to addRes: " + libName);
++			}
++			Debug.log("add lib: " + libName);
+ 			lib = addLib( libName );
+ 		}
+ 
+@@ -354,6 +360,30 @@
+ 		//log( "asset '" + resKey + "' registered" );
+ 	}
+ 	
++	public function updateRes(libName:String, res:ResContext):Void
++	{
++		var lib = m_collections.get(libName);
++		if (lib == null)
++		{
++			Debug.log("no res called " + libName + ", adding");
++			addRes(libName, res);
++			return;
++		}
++		
++		res.src = verifyPath( res.src );
++		var resKey:String = ( res.rename == null ) ? res.src : res.rename; // TODO verifyPath on res.rename?
++		
++		var resIndex:Int = lib.indexOf(resKey);
++		if (resIndex == -1)
++		{
++			Debug.warn("something's gone wrong. We have lib " + libName + ", but nothing tied to: " + resKey);
++			return;
++		}
++		
++		Debug.log("updated " + libName + " from:\n " + m_assets.get(resKey) + " to: \n" + res);
++		m_assets.set(resKey, res);
++	}
++	
+ 	/**
+ 	 * Loads a library or single asset by name. This method is asynchronous.
+ 	 * Subsquent calls to load while currently loading will push the next items onto a list.
+@@ -362,6 +392,11 @@
+ 	 */
+ 	public function load( name:Dynamic, onComplete:Void->Void = null ):Void
+ 	{
++		if (name == "layouts/GameSelect.json")
++		{
++			Debug.log("got here to GameSelect");
++		}
++		
+ 		var resOrLibName = Std.string( name ); // TODO verifyPath?
+ 		var loadCall:LoadCall = { name:resOrLibName, onComplete:onComplete };
+ 
+Index: net/BaseClient.hx
+===================================================================
+--- net/BaseClient.hx	(nonexistent)
++++ net/BaseClient.hx	(working copy)
+@@ -0,0 +1,176 @@
++//
++// Copyright (C) 2016, 1st Playable Productions, LLC. All rights reserved.
++//
++// UNPUBLISHED -- Rights reserved under the copyright laws of the United
++// States. Use of a copyright notice is precautionary only and does not
++// imply publication or disclosure.
++//
++// THIS DOCUMENTATION CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION
++// OF 1ST PLAYABLE PRODUCTIONS, LLC. ANY DUPLICATION, MODIFICATION,
++// DISTRIBUTION, OR DISCLOSURE IS STRICTLY PROHIBITED WITHOUT THE PRIOR
++// EXPRESS WRITTEN PERMISSION OF 1ST PLAYABLE PRODUCTIONS, LLC.
++///////////////////////////////////////////////////////////////////////////
++
++package com.firstplayable.hxlib.net;
++import openfl.events.Event;
++import openfl.events.EventDispatcher;
++import openfl.events.IOErrorEvent;
++import openfl.events.ProgressEvent;
++import openfl.net.Socket;
++
++/**
++ * Boiler plate base class for standard socket server in OpenFL.
++ */
++class BaseClient extends EventDispatcher
++{
++	private static inline var DEFAULT_HOST:String = "127.0.0.1";
++	private static inline var DEFAULT_PORT:Int = 9001;
++	
++	private var m_host:String;
++	private var m_port:Int;
++	
++	private var m_socket:Socket;
++
++	/**
++	 * Constructs a Client that tries to connect on the provided Host and Port.
++	 * @param	host
++	 * @param	port
++	 */
++	public function new(host:String = DEFAULT_HOST, port:Int = DEFAULT_PORT)
++	{
++		super();
++		
++		m_host = host;
++		m_port = port;
++		
++		m_socket = new Socket();
++	}
++	
++	/**
++	 * Begin attempt to connect to server
++	 */
++	public function start():Void
++	{
++		Debug.log("attempting to connect to " + m_host + " on port: " + m_port);
++		
++		m_socket.addEventListener(Event.CONNECT, onConnect);
++		m_socket.addEventListener(Event.CLOSE, onClose);
++		m_socket.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
++		m_socket.addEventListener(IOErrorEvent.IO_ERROR, onError);
++		
++		m_socket.connect(m_host, m_port);
++	}
++	
++	/**
++	 * Close the socket.
++	 */
++	public function stop():Void
++	{
++		m_socket.close();
++		
++		onStop();
++	}
++	
++	/**
++	 * Clean up when closing the client, or the connection is force closed.
++	 * Override for additional cleanup
++	 */
++	private function onStop():Void
++	{	
++		m_socket.removeEventListener(Event.CONNECT, onConnect);
++		m_socket.removeEventListener(Event.CLOSE, onClose);
++		m_socket.removeEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
++		m_socket.removeEventListener(IOErrorEvent.IO_ERROR, onError);
++	}
++	
++	//==================================================================
++	// Callbacks
++	//==================================================================
++	
++	/**
++	 * Event sent when the connection starts
++	 * Override for specific handling.
++	 * @param	e
++	 */
++	private function onConnect(e:Event):Void
++	{
++		Debug.log("Connected to " + m_host + " on port: " + m_port);
++	}
++	
++	/**
++	 * Event sent when the connection closes
++	 * Override for specific handling.
++	 * @param	e
++	 */
++	private function onClose(e:Event):Void
++	{
++		Debug.log("Closed connection to " + m_host + " on port: " + m_port);
++		onStop();
++	}
++	
++	/**
++	 * Event sent when an error occurs with the connection.
++	 * Override for specific handling.
++	 * @param	e
++	 */
++	private function onError(e:IOErrorEvent):Void
++	{
++		Debug.warn("Error on server! " + e);
++		onStop();
++	}
++	
++	/**
++	 * Event sent whenever data is received on the socket.
++	 * Does not contain the data itself, you need to pull it
++	 * from the socket.
++	 * @param	e
++	 */
++	private function onSocketData(e:ProgressEvent):Void
++	{
++		Debug.log("Data received: (" + e.bytesLoaded + "/" + e.bytesTotal + ")");
++	}
++	
++}
++
++/**
++ * Boiler plate code to copy to make your own client
++ */
++#if false
++class TemplateClient extends BaseClient
++{
++	public function new()
++	{
++		super();
++	}
++	
++	override private function onStop():Void
++	{
++		super.onStop();
++	}
++	
++	//==================================================================
++	// Callbacks
++	//==================================================================
++	
++	override private function onConnect(e:Event):Void
++	{
++		super.onConnect(e);
++	}
++	
++	override private function onClose(e:Event):Void
++	{
++		super.onClose(e);
++	}
++	
++	override private function onError(e:IOErrorEvent):Void
++	{
++		super.onError(e);
++	}
++	
++	override private function onSocketData(e:ProgressEvent):Void
++	{
++		super.onSocketData(e);
++	}
++	
++}
++#end
+Index: utils/json/JsonMenuPlugIn.hx
+===================================================================
+--- utils/json/JsonMenuPlugIn.hx	(revision 1563)
++++ utils/json/JsonMenuPlugIn.hx	(working copy)
+@@ -33,6 +33,14 @@
+  */
+ class JsonMenuPlugIn implements IJsonBasePlugIn
+ {
++	public static var OBJECT_TYPES:Array<String> = [
++		"spriteObject",
++		"button",
++		"label",
++		"panel",
++		"borderPanel"
++	];
++	
+ 	private static inline var MAX_OPACITY:Int = 31;
+ 	
+     // contains the functions that construct the objects and set their type-specifc props
+@@ -65,15 +73,16 @@
+     {
+         var json:Dynamic = ResMan.instance.getJson( m_jsonFileName );
+ 		
++		Debug.log("creating menu from: " + json);
++		
+         var topMenuVal:Dynamic = Reflect.getProperty( json, "topMenu" );
+         
+         var menuAsDoc:DisplayObjectContainer = m_rMenu.as( DisplayObjectContainer );
+         
+-        startProduction( topMenuVal, "spriteObject", menuAsDoc );
+-        startProduction( topMenuVal, "button", menuAsDoc );
+-        startProduction( topMenuVal, "label", menuAsDoc );
+-        startProduction( topMenuVal, "panel", menuAsDoc );
+-        startProduction( topMenuVal, "borderPanel", menuAsDoc );
++		for (objectType in OBJECT_TYPES)
++		{
++			startProduction( topMenuVal, objectType, menuAsDoc );
++		}
+         
+         addObjectsToMenu( menuAsDoc );
+ 		

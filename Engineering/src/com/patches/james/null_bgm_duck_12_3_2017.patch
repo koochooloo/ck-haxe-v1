@@ -1,0 +1,43 @@
+Index: WebAudio.hx
+===================================================================
+--- WebAudio.hx	(revision 1561)
++++ WebAudio.hx	(working copy)
+@@ -1069,6 +1069,12 @@
+ 	  */
+ 	public function toggleBGM(?play:Bool):Bool
+ 	{
++		if (m_curBgm == null)
++		{
++			Debug.log_if(!HUSH, "No BGM to toggle!");
++			return false;
++		}
++		
+ 		if (play == null)
+ 		{
+ 			#if js
+@@ -1093,6 +1099,12 @@
+ 	public function duckBGM():Void
+ 	{
+ 		#if js
++		if (m_curBgm == null)
++		{
++			Debug.log_if(!HUSH, "No BGM to duck!");
++			return; // EARLY RETURN
++		}
++		
+ 		var volume:Float = bgmVolume;// m_curBgm.sound.volume();
+ 		if (!HUSH) { Debug.log( "Ducking BGM from " + m_curBgm.sound.volume() + " to " + duckedBgmVolume ); }
+ 		m_curBgm.sound.fade( volume, duckedBgmVolume, BGM_DUCK_MS );
+@@ -1104,6 +1116,12 @@
+ 	public function unDuckBGM():Void
+ 	{
+ 		#if js
++		if (m_curBgm == null)
++		{
++			Debug.log_if(!HUSH, "No BGM to unduck!");
++			return; // EARLY RETURN
++		}
++		
+ 		//Note that the sound.volume() is maintained through the fade so we can return to what it was originally set at
+ 		var volume:Float = bgmVolume;//m_curBgm.sound.volume();
+ 		if (!HUSH) { Debug.log( "Unducking BGM from " + duckedBgmVolume + " to " + m_curBgm.sound.volume() ); }

@@ -1,0 +1,9 @@
+{
+    "key": "1LZs7_jT4ixS5t_f5NDbCVAEoUDYlpRPj",
+    "target_directory": "../drive_s3_copy/images/",
+    "valid_mime_types": [
+      "image/jpeg",
+      "image/gif",
+      "image/png"
+    ]
+}
